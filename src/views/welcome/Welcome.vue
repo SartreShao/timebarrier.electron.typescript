@@ -13,7 +13,17 @@
     </header>
   </div>
 </template>
+<script lang="ts">
+import { ref, reactive } from "@vue/composition-api";
 
+export default {
+  setup() {
+    const count = ref(0);
+    const object = reactive({ foo: "bar" });
+    return { count, reactive };
+  }
+};
+</script>
 <style lang="stylus" scoped>
 img {
   position fixed
