@@ -14,15 +14,49 @@
   </div>
 </template>
 <script lang="ts">
-import { ref, reactive } from "@vue/composition-api";
+/** 
+  @vue/composition-api Lifecycle Hooks snippets
+  
+  @remarks
 
-export default {
+  - beforeCreate -> use setup()
+
+  - created -> use setup()
+
+  - beforeMount -> onBeforeMounted
+
+  - mounted -> onMounted
+
+  - beforeUpdate -> onUpdated
+
+  - destroyed -> onUnmounted
+
+  - errorCaptured -> onErrorCaptured
+
+  Reference: {@link https://vue-composition-api-rfc.netlify.com/api.html#lifecycle-hooks}
+*/
+import {
+  ref,
+  reactive,
+  onMounted,
+  onUpdated,
+  onUnmounted,
+  createComponent
+} from "@vue/composition-api";
+
+export default createComponent({
   setup() {
-    const count = ref(0);
-    const object = reactive({ foo: "bar" });
-    return { count, reactive };
+    onMounted(() => {
+      console.log("mounted!");
+    });
+    onUpdated(() => {
+      console.log("updated!");
+    });
+    onUnmounted(() => {
+      console.log("unmounted!");
+    });
   }
-};
+});
 </script>
 <style lang="stylus" scoped>
 img {
