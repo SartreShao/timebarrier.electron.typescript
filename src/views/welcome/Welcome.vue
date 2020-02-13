@@ -44,17 +44,24 @@ import {
   createComponent
 } from "@vue/composition-api";
 
+import { Router, Time } from "../../lib/vue-utils";
+import Api from "../../data-source/api";
+
 export default createComponent({
-  setup() {
-    onMounted(() => {
-      console.log("mounted!");
-    });
-    onUpdated(() => {
-      console.log("updated!");
-    });
-    onUnmounted(() => {
-      console.log("unmounted!");
-    });
+  async setup(props, context) {
+    // 初始状态
+    const SLEET_TIME = 2000;
+    const ROUTE_PLAN = "plan";
+    const ROUTE_LOGIN = "login";
+    const router = context.root.$router;
+
+    // 开始动画保留 2000ms
+    await Time.sleep(SLEET_TIME);
+
+    // 依据登录情况跳转不同页面
+    Api.isLoggedIn()
+      ? Router.replace(router, ROUTE_PLAN)
+      : Router.replace(router, ROUTE_LOGIN);
   }
 });
 </script>
