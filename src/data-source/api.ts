@@ -3,10 +3,9 @@ import { Log } from "../lib/vue-utils";
 
 export default {
   /**
-   * Get current LeanCloud user
+   * 获取当前的 LeanCloud User
    *
-   * @returns { AV.User } currentUser 登录状态下返回
-   * @returns { null } null 未登录状态下返回
+   * @returns { AV.User | null } 如果登录了，返回 AV.User 的实例；如果未登录，返回 null 值
    */
   getCurrentUser: () => {
     const currentUser = AV.User.current();

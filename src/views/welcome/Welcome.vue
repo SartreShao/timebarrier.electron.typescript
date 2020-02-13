@@ -18,21 +18,13 @@
   @vue/composition-api Lifecycle Hooks snippets
   
   @remarks
-
   - beforeCreate -> use setup()
-
   - created -> use setup()
-
   - beforeMount -> onBeforeMounted
-
   - mounted -> onMounted
-
   - beforeUpdate -> onUpdated
-
   - destroyed -> onUnmounted
-
   - errorCaptured -> onErrorCaptured
-
   Reference: {@link https://vue-composition-api-rfc.netlify.com/api.html#lifecycle-hooks}
 */
 import {
