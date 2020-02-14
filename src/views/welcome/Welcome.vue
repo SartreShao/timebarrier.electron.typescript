@@ -20,7 +20,7 @@ import { SplashPage } from "../../lib/vue-viewmodels";
 
 export default createComponent({
   async setup(props, context) {
-    SplashPage.init(2000, context.root.$router, "plan", "login");
+    await SplashPage.init(2000, context.root.$router, "plan", "login");
   }
 });
 </script>

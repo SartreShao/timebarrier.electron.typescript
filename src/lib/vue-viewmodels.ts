@@ -18,15 +18,16 @@ const SplashPage = {
     routerInstance: VueRouter,
     indexLocation: RawLocation,
     loginLocation: RawLocation
-  ) => {
-    // 开始动画保留 2000ms 或 residenceTime
-    await Time.sleep(residenceTime);
+  ) =>
+    new Promise(async (resolve, reject) => {
+      // 开始动画保留 2000ms 或 residenceTime
+      await Time.sleep(residenceTime);
 
-    // 依据登录情况跳转不同页面
-    Api.isLoggedIn()
-      ? Router.replace(routerInstance, indexLocation)
-      : Router.replace(routerInstance, loginLocation);
-  }
+      // 依据登录情况跳转不同页面
+      Api.isLoggedIn()
+        ? Router.replace(routerInstance, indexLocation)
+        : Router.replace(routerInstance, loginLocation);
+    })
 };
 
 export { SplashPage };
