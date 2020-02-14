@@ -14,46 +14,13 @@
   </div>
 </template>
 <script lang="ts">
-/** 
-  @vue/composition-api Lifecycle Hooks snippets
-  
-  @remarks
-  - beforeCreate -> use setup()
-  - created -> use setup()
-  - beforeMount -> onBeforeMounted
-  - mounted -> onMounted
-  - beforeUpdate -> onUpdated
-  - destroyed -> onUnmounted
-  - errorCaptured -> onErrorCaptured
-  Reference: {@link https://vue-composition-api-rfc.netlify.com/api.html#lifecycle-hooks}
-*/
-import {
-  ref,
-  reactive,
-  onMounted,
-  onUpdated,
-  onUnmounted,
-  createComponent
-} from "@vue/composition-api";
+import { createComponent } from "@vue/composition-api";
 
-import { Router, Time } from "../../lib/vue-utils";
-import Api from "../../data-source/api";
+import { SplashPage } from "../../lib/vue-viewmodels";
 
 export default createComponent({
   async setup(props, context) {
-    // 初始状态
-    const SLEET_TIME = 2000;
-    const ROUTE_PLAN = "plan";
-    const ROUTE_LOGIN = "login";
-    const router = context.root.$router;
-
-    // 开始动画保留 2000ms
-    await Time.sleep(SLEET_TIME);
-
-    // 依据登录情况跳转不同页面
-    Api.isLoggedIn()
-      ? Router.replace(router, ROUTE_PLAN)
-      : Router.replace(router, ROUTE_LOGIN);
+    SplashPage.init(2000, context.root.$router, "plan", "login");
   }
 });
 </script>

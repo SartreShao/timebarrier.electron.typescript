@@ -1,9 +1,9 @@
-import VueRouter from "vue-router";
+import VueRouter, { RawLocation } from "vue-router";
 
 const isDev = false;
 
 const Router = {
-  replace: (router: VueRouter, location: string): void => {
+  replace: (router: VueRouter, location: RawLocation): void => {
     router.replace(location);
   }
 };
