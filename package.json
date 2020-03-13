@@ -17,6 +17,7 @@
   "dependencies": {
     "@vue/composition-api": "^0.3.4",
     "core-js": "^3.4.4",
+    "element-ui": "^2.13.0",
     "leancloud-storage": "^4.2.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

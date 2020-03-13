@@ -4,6 +4,8 @@ import router from "./router";
 import store from "./store";
 import VueCompositionApi from "@vue/composition-api";
 import * as AV from "leancloud-storage";
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
 
 AV.init({
   appId: "1vrLSxhVS6DqUox0scqmyhCt-gzGzoHsz",
@@ -14,6 +16,7 @@ AV.init({
 Vue.config.productionTip = false;
 
 Vue.use(VueCompositionApi);
+Vue.use(ElementUI);
 
 new Vue({
   router,
