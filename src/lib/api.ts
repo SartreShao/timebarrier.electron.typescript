@@ -21,5 +21,22 @@ export default {
     const result = this.getCurrentUser() !== null;
     Log.success("isLoggedIn", result);
     return result;
-  }
+  },
+  /**
+   * 使用用户名、验证码登录
+   */
+  loginWithVerificationCode: (phoneNumber: string, verificationCode: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const user = await AV.User.signUpOrlogInWithMobilePhone(
+          phoneNumber,
+          verificationCode
+        );
+        Log.success("loginWithVerificationCode success", user);
+        resolve(user);
+      } catch (error) {
+        Log.error("loginWithVerificationCode error", error);
+        reject(error);
+      }
+    })
 };
