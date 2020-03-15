@@ -53,7 +53,7 @@ export default {
   sendSmsVerifyCode: (phoneNumber: string) =>
     new Promise(async (resolve, reject) => {
       try {
-        await AV.User.requestLoginSmsCode(phoneNumber);
+        await AV.Cloud.requestSmsCode(phoneNumber);
         Log.success("sendSmsVerifyCode");
         resolve();
       } catch (error) {
