@@ -90,7 +90,12 @@ export default createComponent({
     const input_verificationCode: Ref<string> = ref("");
     // 点击事件：发送验证码
     const click_sendVerificationCodeButton = () => {
-      LoginPage.sendVerificationCode(interval, countDown);
+      LoginPage.sendVerificationCode(
+        context.root,
+        interval,
+        countDown,
+        input_phoneNumber.value
+      );
     };
     // 点击事件：登录
     const click_loginButton = () => {

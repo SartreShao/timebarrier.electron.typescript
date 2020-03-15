@@ -24,6 +24,11 @@ export default {
   },
   /**
    * 使用用户名、验证码登录
+   *
+   * @param phoneNumber 手机号
+   * @param verificationCode 验证码
+   *
+   * @returns { AV.User | Error }
    */
   loginWithVerificationCode: (phoneNumber: string, verificationCode: string) =>
     new Promise(async (resolve, reject) => {
@@ -32,10 +37,27 @@ export default {
           phoneNumber,
           verificationCode
         );
-        Log.success("loginWithVerificationCode success", user);
+        Log.success("loginWithVerificationCode", user);
         resolve(user);
       } catch (error) {
-        Log.error("loginWithVerificationCode error", error);
+        Log.error("loginWithVerificationCode", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 发送验证码
+   *
+   * @param phoneNumber 手机号
+   * @returns { undefined | Error }
+   */
+  sendSmsVerifyCode: (phoneNumber: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.User.requestLoginSmsCode(phoneNumber);
+        Log.success("sendSmsVerifyCode");
+        resolve();
+      } catch (error) {
+        Log.error("sendSmsVerifyCode", error);
         reject(error);
       }
     })

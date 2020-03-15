@@ -2,10 +2,12 @@ import VueRouter, { RawLocation } from "vue-router";
 import { Router, Time, Check, UI } from "./vue-utils";
 import Api from "./api";
 import { ref, Ref } from "@vue/composition-api";
+import { ElNotification } from "element-ui/types/notification";
 import {
-  ElNotificationOptions,
-  ElNotificationComponent
-} from "element-ui/types/notification";
+  LoadingServiceOptions,
+  ElLoadingComponent
+} from "element-ui/types/loading";
+
 /**
  * 启动页
  */
@@ -39,9 +41,20 @@ const SplashPage = {
  */
 const LoginPage = {
   /**
-   * 登录
+   * 用户点击登录
+   *
+   * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
+   * @param phoneNumber 手机号
+   * @param verificationCode 验证码
    * */
-  login: async (vue: Vue, phoneNumber: string, verificationCode: string) => {
+  login: async (
+    vue: {
+      $notify: ElNotification;
+      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
+    },
+    phoneNumber: string,
+    verificationCode: string
+  ) => {
     // 检查计算属性是否符合要求
     if (!Check.isPhoneNumber(phoneNumber)) {
       UI.showNotification(vue.$notify, "错误", "请输入正确的手机号", "error");
@@ -69,30 +82,70 @@ const LoginPage = {
       UI.showNotification(vue.$notify, "登录失败", "用户名或密码错误", "error");
     }
   },
+  /**
+   * 用户点击发送验证码
+   *
+   * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
+   * @param interval 计时器实例，请传入一个 ref(null) 作为初始状态
+   * @param countDown 计时器表盘值，请传入 ref(30) 作为初始状态
+   * @param phoneNumber 接收验证码的手机号
+   */
   sendVerificationCode: async (
+    vue: {
+      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
+      $notify: ElNotification;
+    },
     interval: Ref<NodeJS.Timeout | null>,
-    countDown: Ref<number>
+    countDown: Ref<number>,
+    phoneNumber: string
   ) => {
+    // 检查手机号是否符合要求
+    if (!Check.isPhoneNumber(phoneNumber)) {
+      UI.showNotification(vue.$notify, "错误", "请输入正确的手机号", "error");
+      return;
+    }
+
+    // 如果 interva 是 null =》 当前状态是未开始计时
     if (interval.value === null) {
-      countDown.value = 30;
-      interval.value = setInterval(() => {
-        // 如果当前表盘值为 0
-        if (countDown.value === 0) {
-          // 停止倒计时
-          if (interval.value !== null) {
-            clearInterval(interval.value);
+      const loadingInstance = UI.showLoading(vue.$loading, "正在发送验证码");
+
+      // 尝试发送验证码
+      try {
+        await Api.sendSmsVerifyCode(phoneNumber);
+
+        // 验证码发送成功
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(vue.$notify, "验证码发送成功", "", "success");
+
+        countDown.value = 30;
+        interval.value = setInterval(() => {
+          // 如果当前表盘值为 0
+          if (countDown.value === 0) {
+            // 停止倒计时
+            if (interval.value !== null) {
+              clearInterval(interval.value);
+            }
+
+            // 清空 interval 实例
+            interval.value = null;
+
+            // 重制表盘值为 30
+            countDown.value = 30;
           }
 
-          // 清空 interval 实例
-          interval.value = null;
-
-          // 重制表盘值为 30
-          countDown.value = 30;
-        }
-
-        // 如果当前表盘值不为 0，则表盘值减 1
-        countDown.value = countDown.value - 1;
-      }, 1000);
+          // 如果当前表盘值不为 0，则表盘值减 1
+          countDown.value = countDown.value - 1;
+        }, 1000);
+      } catch (error) {
+        // 验证码发送失败
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "验证码发送失败",
+          `错误信息：${error}`,
+          "error"
+        );
+      }
     }
   }
 };

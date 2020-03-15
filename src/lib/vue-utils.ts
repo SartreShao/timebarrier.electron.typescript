@@ -26,7 +26,7 @@ const Time = {
 };
 
 const Log = {
-  success: (functionName: string, result: any) => {
+  success: (functionName: string, result?: any) => {
     if (isDev) {
       console.log(functionName + " success", result);
     }
