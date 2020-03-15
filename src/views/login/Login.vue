@@ -39,7 +39,9 @@
         v-model="input_verificationCode"
       />
       <div class="placeholder"></div>
-      <send-sms-button class="send"></send-sms-button>
+      <div class="send" @click="click_sendVerificationCodeButton">
+        {{ interval ? "重新发送(" + countDown + ")" : "发送验证码" }}
+      </div>
     </div>
 
     <!-- 按钮 -->
@@ -73,17 +75,40 @@
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  reactive,
-  onMounted,
-  onUpdated,
-  onUnmounted,
-  createComponent
-} from "@vue/composition-api";
+import { ref, createComponent, watch, Ref } from "@vue/composition-api";
+import { LoginPage } from "../../lib/vue-viewmodels";
 
 export default createComponent({
-  setup() {}
+  setup(props, context) {
+    // 倒计时器 instance
+    const interval: Ref<NodeJS.Timeout | null> = ref(null);
+    // 倒计时表盘值
+    const countDown: Ref<number> = ref(30);
+    // 用户输入：手机号
+    const input_phoneNumber: Ref<string> = ref("");
+    // 用户输入：验证码
+    const input_verificationCode: Ref<string> = ref("");
+    // 点击事件：发送验证码
+    const click_sendVerificationCodeButton = () => {
+      LoginPage.sendVerificationCode(interval, countDown);
+    };
+    // 点击事件：登录
+    const click_loginButton = () => {
+      LoginPage.login(
+        context.root,
+        input_phoneNumber.value,
+        input_verificationCode.value
+      );
+    };
+    return {
+      input_phoneNumber,
+      input_verificationCode,
+      click_sendVerificationCodeButton,
+      click_loginButton,
+      interval,
+      countDown
+    };
+  }
 });
 </script>
 
