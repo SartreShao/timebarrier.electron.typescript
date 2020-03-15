@@ -142,7 +142,7 @@ const LoginPage = {
         UI.showNotification(
           vue.$notify,
           "验证码发送失败",
-          `错误信息：${error}`,
+          `错误信息：${error.message}`,
           "error"
         );
       }

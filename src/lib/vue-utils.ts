@@ -13,7 +13,7 @@ import {
   LoadingServiceOptions
 } from "element-ui/types/loading";
 
-const isDev = false;
+const isDev = true;
 
 const Router = {
   replace: (router: VueRouter, location: RawLocation): void => {
