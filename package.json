@@ -16,6 +16,8 @@
   "main": "background.js",
   "dependencies": {
     "@leancloud/adapter-types": "^1.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
     "@vue/composition-api": "^0.5.0",
     "core-js": "^3.4.4",
     "element-ui": "^2.13.0",
