@@ -14,11 +14,11 @@
   </div>
 </template>
 <script lang="ts">
-import { createComponent } from "@vue/composition-api";
+import { defineComponent } from "@vue/composition-api";
 
 import { SplashPage } from "../../lib/vue-viewmodels";
 
-export default createComponent({
+export default defineComponent({
   setup(props, context) {
     SplashPage.init(2000, context.root.$router, "plan", "login");
   }

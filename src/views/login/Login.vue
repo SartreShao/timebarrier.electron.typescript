@@ -75,10 +75,10 @@
 </template>
 
 <script lang="ts">
-import { ref, createComponent, watch, Ref } from "@vue/composition-api";
+import { ref, defineComponent, watch, Ref } from "@vue/composition-api";
 import { LoginPage } from "../../lib/vue-viewmodels";
 
-export default createComponent({
+export default defineComponent({
   setup(props, context) {
     // 倒计时器 instance
     const interval: Ref<NodeJS.Timeout | null> = ref(null);
