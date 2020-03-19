@@ -51,9 +51,11 @@ const LoginPage = {
     vue: {
       $notify: ElNotification;
       $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
+      $router: VueRouter;
     },
     phoneNumber: string,
-    verificationCode: string
+    verificationCode: string,
+    indexLocation: RawLocation
   ) => {
     // 检查计算属性是否符合要求
     if (!Check.isPhoneNumber(phoneNumber)) {
@@ -76,6 +78,9 @@ const LoginPage = {
       // 登录成功=》隐藏 loading=》显示登录成功通知
       UI.hideLoading(loadingInstance);
       UI.showNotification(vue.$notify, "登录成功", "", "success");
+
+      // 登录成功后跳转到对应路由
+      Router.replace(vue.$router, indexLocation);
     } catch (error) {
       // 登录失败=》隐藏 loading=》
       UI.hideLoading(loadingInstance);
