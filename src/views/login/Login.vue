@@ -102,7 +102,8 @@ export default defineComponent({
       LoginPage.login(
         context.root,
         input_phoneNumber.value,
-        input_verificationCode.value
+        input_verificationCode.value,
+        "plan"
       );
     };
     return {
