@@ -7,7 +7,7 @@ import {
   LoadingServiceOptions,
   ElLoadingComponent
 } from "element-ui/types/loading";
-
+import AV from "leancloud-storage";
 /**
  * 启动页
  */
@@ -155,4 +155,61 @@ const LoginPage = {
   }
 };
 
-export { SplashPage, LoginPage };
+/**
+ * 计划页
+ */
+const PlanPage = {
+  /**
+   * 初始化计划列表
+   *
+   * @param temporaryPlanList 临时计划列表
+   * @param dailyPlanList 每日计划列表
+   * @param completedPlanList 已完成的计划列表
+   */
+  init: async (
+    vue: {
+      $notify: ElNotification;
+      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
+    },
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 显示 loading
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取计划列表");
+
+    // 尝试获取计划列表
+    try {
+      // 获取临时计划列表
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+
+      // 获取每日计划列表
+      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+
+      // 获取已完成计划列表
+      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 获取列表成功
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取计划列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  }
+};
+
+export { SplashPage, LoginPage, PlanPage };
