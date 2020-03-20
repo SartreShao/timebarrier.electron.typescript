@@ -34,13 +34,13 @@
 
       <section class="training"></section>
 
-      <div class="completed-container" @click="click_finishedPlanListButton">
+      <div class="completed-container" @click="click_completedPlanListButton">
         已完成
       </div>
     </main>
     <el-drawer
       title="已完成的番茄"
-      :visible.sync="isFinishedPlanDrawerDisplayed"
+      :visible.sync="isCompletedPlanDrawerDisplayed"
       direction="btt"
       size="69.64%"
     >
@@ -50,7 +50,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref } from "@vue/composition-api";
+import { defineComponent, ref, Ref, onMounted } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
 export default defineComponent({
@@ -61,7 +61,7 @@ export default defineComponent({
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object> = ref([]);
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
-    const isFinishedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
+    const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       console.log(input_plan.value);
@@ -69,17 +69,19 @@ export default defineComponent({
     // 点击事件：点击「完成计划」按钮
     const click_completePlanButton = (item: AV.Object) => {};
     // 点击事件：点击「已完成的计划列表」按钮
-    const click_finishedPlanListButton = () => {
-      isFinishedPlanDrawerDisplayed.value = true;
+    const click_completedPlanListButton = () => {
+      isCompletedPlanDrawerDisplayed.value = true;
     };
+
+    onMounted(() => {});
 
     return {
       input_plan,
       temporaryPlanList,
-      isFinishedPlanDrawerDisplayed,
+      isCompletedPlanDrawerDisplayed,
       keyUpEnter_planInputBox,
       click_completePlanButton,
-      click_finishedPlanListButton
+      click_completedPlanListButton
     };
   }
 });
@@ -225,4 +227,5 @@ export default defineComponent({
       letter-spacing 0.03vw
     }
   }
-}</style>
+}
+</style>
