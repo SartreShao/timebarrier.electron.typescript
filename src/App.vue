@@ -10,6 +10,13 @@
   width 100%
   height 100%
 }
+body, h1, h2, h3, h4, h5, h6 {
+  margin 0
+  margin-block-start 0
+  margin-block-end 0
+  margin-inline-start 0
+  margin-inline-end 0
+}
 ::-webkit-scrollbar {
   display none
 }
