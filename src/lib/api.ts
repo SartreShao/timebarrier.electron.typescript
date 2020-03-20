@@ -18,7 +18,7 @@ export default {
    * @remark 通用函数
    * @returns { boolean } 当用户登录时，返回 true；未登录时返回 false
    */
-  isLoggedIn() {
+  isLoggedIn(): boolean {
     const result = this.getCurrentUser() !== null;
     Log.success("isLoggedIn", result);
     return result;
@@ -31,7 +31,10 @@ export default {
    *
    * @returns { AV.User | Error }
    */
-  loginWithVerificationCode: (phoneNumber: string, verificationCode: string) =>
+  loginWithVerificationCode: (
+    phoneNumber: string,
+    verificationCode: string
+  ): Promise<AV.User> =>
     new Promise(async (resolve, reject) => {
       try {
         const user = await AV.User.signUpOrlogInWithMobilePhone(
@@ -70,16 +73,17 @@ export default {
    * @param currentPage 可选参数，当前页码（从 1 开始）
    * @param pageSize 可选参数，每页加载数量（1-1000）
    *
+   * @returns { Promise<AV.Object[]> | Error }
    */
   fetchPlanList: (
     user: AV.User,
     planType: PlanType,
     currentPage?: number,
     pageSize?: number
-  ) =>
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
-        const query = new AV.Query("Plan")
+        const query = new AV.Query<AV.Object>("Plan")
           .skip(
             currentPage ? (currentPage - 1) * (pageSize ? pageSize : 1000) : 0
           )
