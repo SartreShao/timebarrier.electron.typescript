@@ -50,16 +50,41 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  Ref,
+  onMounted,
+  inject
+} from "@vue/composition-api";
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
+import { PlanPage } from "@/lib/vue-viewmodels";
+import Store from "../../store";
+
 export default defineComponent({
   components: { BottomBar },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
     // 服务器拉取的数据：临时计划的列表
-    const temporaryPlanList: Ref<AV.Object> = ref([]);
+    // 依赖注入=》全局状态
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+    // 服务器拉取的数据：每日计划的列表
+    // 依赖注入=》全局状态
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+    // 服务器拉取的数据：已完成计划的列表
+    // 依赖注入=》全局状体
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
     // 在计划输入框回车：创建计划
@@ -73,7 +98,14 @@ export default defineComponent({
       isCompletedPlanDrawerDisplayed.value = true;
     };
 
-    onMounted(() => {});
+    onMounted(() => {
+      PlanPage.init(
+        context.root,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    });
 
     return {
       input_plan,
