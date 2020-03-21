@@ -68,19 +68,16 @@ export default defineComponent({
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
     // 服务器拉取的数据：临时计划的列表
-    // 依赖注入=》全局状态
     const temporaryPlanList: Ref<AV.Object[]> = inject(
       Store.temporaryPlanList,
       ref<AV.Object[]>([])
     );
     // 服务器拉取的数据：每日计划的列表
-    // 依赖注入=》全局状态
     const dailyPlanList: Ref<AV.Object[]> = inject(
       Store.dailyPlanList,
       ref<AV.Object[]>([])
     );
     // 服务器拉取的数据：已完成计划的列表
-    // 依赖注入=》全局状体
     const completedPlanList: Ref<AV.Object[]> = inject(
       Store.completedPlanList,
       ref<AV.Object[]>([])
@@ -89,7 +86,13 @@ export default defineComponent({
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
-      console.log(input_plan.value);
+      PlanPage.createPlan(
+        context.root,
+        input_plan,
+        true,
+        temporaryPlanList,
+        dailyPlanList
+      );
     };
     // 点击事件：点击「完成计划」按钮
     const click_completePlanButton = (item: AV.Object) => {};

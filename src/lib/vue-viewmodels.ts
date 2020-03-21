@@ -1,20 +1,16 @@
+import AV from "leancloud-storage";
+import { Ref } from "@vue/composition-api";
 import VueRouter, { RawLocation } from "vue-router";
 import { Router, Time, Check, UI } from "./vue-utils";
+import { ElementVue } from "./types/vue-viewmodels";
 import Api from "./api";
-import { ref, Ref } from "@vue/composition-api";
-import { ElNotification } from "element-ui/types/notification";
-import {
-  LoadingServiceOptions,
-  ElLoadingComponent
-} from "element-ui/types/loading";
-import AV from "leancloud-storage";
 /**
  * 启动页
  */
 const SplashPage = {
   /**
    * 启动页标准启动方法：停留两秒钟，然后进入首页或登录页
-   *
+   * @remark 通用函数
    * @param residenceTime 停留时间 - 单位：毫秒，建议传入值：2000
    * @param routerInstance VueRouter 实例
    * @param indexRoute 首页的 Route 路径
@@ -42,17 +38,13 @@ const SplashPage = {
 const LoginPage = {
   /**
    * 用户点击登录
-   *
+   * @remark 通用函数
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param phoneNumber 手机号
    * @param verificationCode 验证码
    * */
   login: async (
-    vue: {
-      $notify: ElNotification;
-      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
-      $router: VueRouter;
-    },
+    vue: ElementVue,
     phoneNumber: string,
     verificationCode: string,
     indexLocation: RawLocation
@@ -89,17 +81,14 @@ const LoginPage = {
   },
   /**
    * 用户点击发送验证码
-   *
+   * @remark 通用函数
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param interval 计时器实例，请传入一个 ref(null) 作为初始状态
    * @param countDown 计时器表盘值，请传入 ref(30) 作为初始状态
    * @param phoneNumber 接收验证码的手机号
    */
   sendVerificationCode: async (
-    vue: {
-      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
-      $notify: ElNotification;
-    },
+    vue: ElementVue,
     interval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     phoneNumber: string
@@ -161,19 +150,16 @@ const LoginPage = {
 const PlanPage = {
   /**
    * 初始化计划列表
-   *
-   * @param temporaryPlanList 临时计划列表
-   * @param dailyPlanList 每日计划列表
-   * @param completedPlanList 已完成的计划列表
+   * @remark 时间壁垒专用函数
+   * @param temporaryPlanList 临时计划列表，如果不需要刷新，请传入 null
+   * @param dailyPlanList 每日计划列表，如果不需要刷新，请传入 null
+   * @param completedPlanList 已完成的计划列表，如果不需要刷新，请传入 null
    */
   init: async (
-    vue: {
-      $notify: ElNotification;
-      $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
-    },
-    temporaryPlanList: Ref<AV.Object[]>,
-    dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    vue: ElementVue,
+    temporaryPlanList: Ref<AV.Object[]> | null,
+    dailyPlanList: Ref<AV.Object[]> | null,
+    completedPlanList: Ref<AV.Object[]> | null
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -190,13 +176,19 @@ const PlanPage = {
     // 尝试获取计划列表
     try {
       // 获取临时计划列表
-      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      if (temporaryPlanList !== null) {
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      }
 
       // 获取每日计划列表
-      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      if (dailyPlanList !== null) {
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      }
 
       // 获取已完成计划列表
-      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+      if (completedPlanList !== null) {
+        completedPlanList.value = await Api.fetchPlanList(user, "completed");
+      }
 
       // 获取列表成功
       UI.hideLoading(loadingInstance);
@@ -205,6 +197,67 @@ const PlanPage = {
       UI.showNotification(
         vue.$notify,
         "获取计划列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * 创建临时计划
+   *
+   * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
+   * @param name 计划名称
+   * @param isTemporary 是否为临时计划
+   * @param temporaryPlanList 临时计划的列表，用于创建 Plan 后更新列表数据
+   * @param dailyPlanList 每日计划的列表，用于创建 Plan 后更新列表数据
+   */
+  createPlan: async function(
+    vue: ElementVue,
+    name: Ref<string>,
+    isTemporary: boolean,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>
+  ) {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 检测传入数据
+    if (name.value.length === 0) {
+      // doing nothing
+      return;
+    }
+
+    // 显示 loading
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建计划");
+
+    try {
+      // 创建计划
+      await Api.createPlan(name.value, isTemporary, user);
+
+      // 刷新计划列表
+      if (isTemporary) {
+        // 更新临时计划
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      } else {
+        // 更新每日计划列表
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      }
+
+      name.value = "";
+      // 创建计划成功
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      // 创建计划失败
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "创建计划失败",
         `失败原因：${error.message}`,
         "error"
       );
