@@ -67,23 +67,28 @@ export default defineComponent({
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
+
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object[]> = inject(
       Store.temporaryPlanList,
       ref<AV.Object[]>([])
     );
+
     // 服务器拉取的数据：每日计划的列表
     const dailyPlanList: Ref<AV.Object[]> = inject(
       Store.dailyPlanList,
       ref<AV.Object[]>([])
     );
+
     // 服务器拉取的数据：已完成计划的列表
     const completedPlanList: Ref<AV.Object[]> = inject(
       Store.completedPlanList,
       ref<AV.Object[]>([])
     );
+
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
+
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
@@ -94,8 +99,20 @@ export default defineComponent({
         dailyPlanList
       );
     };
+
     // 点击事件：点击「完成计划」按钮
-    const click_completePlanButton = (item: AV.Object) => {};
+    const click_completePlanButton = (plan: AV.Object) => {
+      if (plan.id !== undefined) {
+        PlanPage.completePlan(
+          context.root,
+          plan.id,
+          plan.attributes.isTemporary,
+          temporaryPlanList,
+          dailyPlanList
+        );
+      }
+    };
+
     // 点击事件：点击「已完成的计划列表」按钮
     const click_completedPlanListButton = () => {
       isCompletedPlanDrawerDisplayed.value = true;

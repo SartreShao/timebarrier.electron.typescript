@@ -140,5 +140,24 @@ export default {
         Log.error("createPlan", error);
         reject(error);
       }
+    }),
+  /**
+   * 完成 Plan
+   *
+   * @remark 时间壁垒专用函数
+   * @param planId 需要被标记为「完成」的 Plan 的 objectId
+   */
+  completePlan: (planId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan = await new AV.Query("Plan").get(planId);
+        plan.set("isFinished", true);
+        await plan.save();
+        Log.success("completePlan", plan);
+        resolve(plan);
+      } catch (error) {
+        Log.error("completePlan", error);
+        reject(error);
+      }
     })
 };

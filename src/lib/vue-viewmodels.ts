@@ -211,13 +211,13 @@ const PlanPage = {
    * @param temporaryPlanList 临时计划的列表，用于创建 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于创建 Plan 后更新列表数据
    */
-  createPlan: async function(
+  createPlan: async (
     vue: ElementVue,
     name: Ref<string>,
     isTemporary: boolean,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>
-  ) {
+  ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
 
@@ -233,9 +233,6 @@ const PlanPage = {
       return;
     }
 
-    // 显示 loading
-    const loadingInstance = UI.showLoading(vue.$loading, "正在创建计划");
-
     try {
       // 创建计划
       await Api.createPlan(name.value, isTemporary, user);
@@ -250,14 +247,55 @@ const PlanPage = {
       }
 
       name.value = "";
-      // 创建计划成功
-      UI.hideLoading(loadingInstance);
     } catch (error) {
-      // 创建计划失败
-      UI.hideLoading(loadingInstance);
       UI.showNotification(
         vue.$notify,
         "创建计划失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * 完成计划
+   *
+   * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
+   * @param planId plan.objectId 需要标记为完成的 Plan 的 objectId
+   * @param isTemporary plan 的类型是否是临时计划
+   * @param temporaryPlanList 临时计划的列表，用于完成 Plan 后更新列表数据
+   * @param dailyPlanList 每日计划的列表，用于完成 Plan 后更新列表数据
+   */
+  completePlan: async (
+    vue: ElementVue,
+    planId: string,
+    isTemporary: boolean,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>
+  ) => {
+    try {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 尝试完成 Plan
+      await Api.completePlan(planId);
+      // 刷新计划列表
+      if (isTemporary) {
+        // 更新临时计划
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      } else {
+        // 更新每日计划列表
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      }
+    } catch (error) {
+      UI.showNotification(
+        vue.$notify,
+        "完成计划失败",
         `失败原因：${error.message}`,
         "error"
       );
