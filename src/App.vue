@@ -3,7 +3,17 @@
     <router-view />
   </div>
 </template>
-
+<script lang="ts">
+import Vue from "vue";
+import { defineComponent } from "@vue/composition-api";
+import Store from "./store";
+export default defineComponent({
+  setup() {
+    // 提供依赖注入
+    Store.useProvider();
+  }
+});
+</script>
 <style lang="stylus">
 @import './public/public.stylus'
 #app {
