@@ -2,6 +2,8 @@ import * as AV from "leancloud-storage";
 import { Log } from "../lib/vue-utils";
 import { PlanType } from "./types/vue-viewmodels";
 
+const Plan = AV.Object.extend("Plan");
+
 export default {
   /**
    * 获取当前的 LeanCloud User
@@ -88,17 +90,23 @@ export default {
             currentPage ? (currentPage - 1) * (pageSize ? pageSize : 1000) : 0
           )
           .limit(pageSize ? pageSize : 1000)
-          .equalTo("user", user);
+          .equalTo("user", user)
+          .descending("updatedAt");
 
         switch (planType) {
           case "temporary": {
-            query.equalTo("isTemporary", true).equalTo("isFinished", false);
+            query.equalTo("isTemporary", true);
+            query.equalTo("isFinished", false);
+            break;
           }
           case "daily": {
-            query.equalTo("isTemporary", false).equalTo("isFinished", false);
+            query.equalTo("isTemporary", false);
+            query.equalTo("isFinished", false);
+            break;
           }
           case "completed": {
             query.equalTo("isFinished", true);
+            break;
           }
         }
         const planList = await query.find();
@@ -106,6 +114,30 @@ export default {
         resolve(planList);
       } catch (error) {
         Log.error(`fetchPlanList ${planType}`, error);
+        reject(error);
+      }
+    }),
+  /**
+   * 创建 Plan
+   *
+   * @remark 时间壁垒专用函数
+   * @param name 计划名称
+   * @param isTemporary 该计划是否为临时计划
+   * @param user 创建计划的人
+   */
+  createPlan: (name: string, isTemporary: boolean, user: AV.User) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan = await new Plan()
+          .set("name", name)
+          .set("isTemporary", isTemporary)
+          .set("isFinished", false)
+          .set("user", user)
+          .save();
+        Log.success("createPlan", plan);
+        resolve(plan);
+      } catch (error) {
+        Log.error("createPlan", error);
         reject(error);
       }
     })
