@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, watch, Ref } from "@vue/composition-api";
+import { ref, defineComponent, Ref } from "@vue/composition-api";
 import { LoginPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
