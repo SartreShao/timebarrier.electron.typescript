@@ -159,5 +159,23 @@ export default {
         Log.error("completePlan", error);
         reject(error);
       }
+    }),
+  /**
+   * 取消完成 Plan
+   *
+   * @remark 时间壁垒专用函数
+   * @param planId 需要被取消标记为「完成」的 Plan 的 objectId
+   */
+  cancelCompletePlan: (planId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan = await new AV.Query("Plan").get(planId);
+        await plan.set("isFinished", false).save();
+        Log.success("cancelCompletePlan", plan);
+        resolve(plan);
+      } catch (error) {
+        Log.error("cancelCompletePlan", error);
+        reject(error);
+      }
     })
 };

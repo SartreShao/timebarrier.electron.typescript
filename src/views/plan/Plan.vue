@@ -38,6 +38,7 @@
         已完成
       </div>
     </main>
+
     <el-drawer
       class="finished-plan-container"
       title="已完成的番茄"
@@ -45,10 +46,11 @@
       direction="btt"
       size="69.64%"
     >
+      <!-- 临时任务 -->
       <section class="temporary">
         <div
           class="item-container"
-          v-for="item in temporaryPlanList"
+          v-for="item in completedPlanList"
           v-bind:key="item.id"
         >
           <h2>临时任务</h2>
@@ -57,7 +59,7 @@
           <img
             :src="assets.icon_finished"
             class="cancel-finished-button"
-            @click="click_completePlanButton(item)"
+            @click="click_cancelCompletePlanButton(item)"
           />
         </div>
       </section>
@@ -125,7 +127,22 @@ export default defineComponent({
           plan.id,
           plan.attributes.isTemporary,
           temporaryPlanList,
-          dailyPlanList
+          dailyPlanList,
+          completedPlanList
+        );
+      }
+    };
+
+    // 点击时间：点击「取消完成计划」按钮
+    const click_cancelCompletePlanButton = (plan: AV.Object) => {
+      if (plan.id !== undefined) {
+        PlanPage.cancelCompletePlan(
+          context.root,
+          plan.id,
+          plan.attributes.isTemporary,
+          temporaryPlanList,
+          dailyPlanList,
+          completedPlanList
         );
       }
     };
@@ -147,10 +164,12 @@ export default defineComponent({
     return {
       input_plan,
       temporaryPlanList,
+      completedPlanList,
       isCompletedPlanDrawerDisplayed,
       keyUpEnter_planInputBox,
       click_completePlanButton,
       click_completedPlanListButton,
+      click_cancelCompletePlanButton,
       assets: {
         icon_finished
       }
