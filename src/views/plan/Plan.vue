@@ -39,12 +39,28 @@
       </div>
     </main>
     <el-drawer
+      class="finished-plan-container"
       title="已完成的番茄"
       :visible.sync="isCompletedPlanDrawerDisplayed"
       direction="btt"
       size="69.64%"
     >
-      <section class="temporary"></section>
+      <section class="temporary">
+        <div
+          class="item-container"
+          v-for="item in temporaryPlanList"
+          v-bind:key="item.id"
+        >
+          <h2>临时任务</h2>
+          <div class="placeholder"></div>
+          <h3>{{ item.attributes.name }}</h3>
+          <img
+            :src="assets.icon_finished"
+            class="cancel-finished-button"
+            @click="click_completePlanButton(item)"
+          />
+        </div>
+      </section>
     </el-drawer>
     <bottom-bar></bottom-bar>
   </div>
@@ -61,6 +77,7 @@ import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
 import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "../../store";
+import icon_finished from "../../assets/icon_finished.svg";
 
 export default defineComponent({
   components: { BottomBar },
@@ -133,7 +150,10 @@ export default defineComponent({
       isCompletedPlanDrawerDisplayed,
       keyUpEnter_planInputBox,
       click_completePlanButton,
-      click_completedPlanListButton
+      click_completedPlanListButton,
+      assets: {
+        icon_finished
+      }
     };
   }
 });
@@ -250,8 +270,8 @@ export default defineComponent({
         }
         div.finished-button {
           cursor pointer
-          width 4.8vw
-          height 4.8vw
+          width 2.7vh
+          height 2.7vh
           border-radius 2.4vw
           border solid 0.15vw #959595
           background-color #ffffff
@@ -281,6 +301,67 @@ export default defineComponent({
       font-size 1.95vh
       color #D1D1D1
       letter-spacing 0.03vw
+    }
+  }
+}
+.finished-plan-container >>> .el-drawer__body {
+  display flex
+  flex-direction column
+  overflow scroll
+  align-items center
+  section.temporary {
+    flex-shrink 0
+    margin-top 2.1vh
+    margin-bottom 2.1vh
+    width 95.73vw
+    display flex
+    flex-direction column
+    div.item-container {
+      width 95.73vw
+      height 7.2vh
+      background white
+      display flex
+      align-items center
+      position relative
+      margin-bottom 7px
+      box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+      h2 {
+        font-size 2.02vh
+        font-weight 500
+        font-stretch normal
+        font-style normal
+        line-height 1.44
+        letter-spacing 0.02vh
+        color #434343
+        margin-left 4.67vw
+        margin-right 3.27vw
+      }
+      div.placeholder {
+        width 0.13vw
+        height 2.92vh
+        background #707070
+      }
+      h3 {
+        font-size 2.02vh
+        font-weight 500
+        font-stretch normal
+        font-style normal
+        line-height 1.44
+        letter-spacing 0.02vh
+        color #434343
+        margin-left 3.27vw
+        width 57.73vw
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+      }
+      img.cancel-finished-button {
+        cursor pointer
+        width 2.7vh
+        height 2.7vh
+        position absolute
+        right 4.13vw
+      }
     }
   }
 }

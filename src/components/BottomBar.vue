@@ -118,11 +118,11 @@ footer {
   .icon2 {
     width 4.27vw
     cursor pointer
-    height 4.27vw
+    height 2.4vh
   }
   .icon3 {
     width 4.41vw
-    height 4.41vw
+    height 2.48vh
     cursor pointer
   }
   .icon4 {
@@ -135,7 +135,7 @@ footer {
     cursor pointer
     width 14.4vw
     height 4.87vh
-    border-radius 1.87vw
+    border-radius 1.05vh
     background-color #3846cf
     display flex
     align-items center
