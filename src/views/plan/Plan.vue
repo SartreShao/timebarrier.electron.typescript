@@ -35,7 +35,7 @@
       <section class="training"></section>
 
       <div class="completed-container" @click="click_completedPlanListButton">
-        已完成
+        已完成 · {{ completedPlanList.length }}
       </div>
     </main>
 
