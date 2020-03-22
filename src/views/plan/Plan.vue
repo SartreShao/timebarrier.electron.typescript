@@ -204,6 +204,7 @@ export default defineComponent({
     flex-direction column
     align-items center
     section.temporary {
+      flex-shrink 0
       margin-top 2.1vh
       margin-bottom 2.1vh
       width 95.73vw
@@ -260,13 +261,16 @@ export default defineComponent({
       }
     }
     section.training {
+      flex-shrink 0
       width 95.73vw
       display flex
       flex-direction column
     }
     div.completed-container {
+      flex-shrink 0
       cursor pointer
       margin-top 3.75vh
+      margin-bottom 3.75vh
       width 30.27vw
       height 5.17vh
       border-radius 3.15vh
