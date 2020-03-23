@@ -29,18 +29,20 @@
       <img class="icon4" :src="assets.icon_me" alt="icon_me" />
     </footer>
 
+    <!-- 提交番茄的抽屉菜单 -->
     <el-drawer
       title="提交番茄"
       :visible.sync="isCommitPlanDrawerDisplayed"
       direction="btt"
       size="86.64%"
     >
+      <!-- 提交番茄的临时计划列表 -->
       <section class="temporary">
         <div v-for="item in temporaryPlanList" v-bind:key="item.id">
           <div
             v-bind:class="{
-              'item-container': !item.selected,
-              'item-container-selected': item.selected
+              'item-container': !item.attributes.selected,
+              'item-container-selected': item.attributes.selected
             }"
             @click="clickPlanItem(item)"
           >
@@ -137,6 +139,12 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
+    // 用户输入：临时任务名称
+    const input_plan: Ref<string> = ref("");
+
+    // 用户输入：提交的番茄描述
+    const input_description: Ref<string> = ref("");
+
     // 提交番茄的窗口的显示控制
     const isCommitPlanDrawerDisplayed = ref(false);
 
@@ -160,18 +168,31 @@ export default defineComponent({
         context.root,
         tomatoCloudStatus,
         interval,
-        countDown
+        countDown,
+        isCommitPlanDrawerDisplayed
       );
+    };
+
+    // 点击事件
+    const clickPlanItem = (plan: AV.Object) => {
+      TomatoTimerPage.selectPlanToCommit(plan);
     };
 
     const clickCommit = () => {};
 
+    // 用户输入：创建回车
+    const keyUpEnter_planInputBox = () => {};
+
     return {
+      input_plan,
+      input_description,
+      keyUpEnter_planInputBox,
       clickTomatoClock,
       isCommitPlanDrawerDisplayed,
       temporaryPlanList,
       clickCommit,
       clickGiveUp,
+      clickPlanItem,
       tomatoCloudStatus,
       countDownForUI,
       countDown,

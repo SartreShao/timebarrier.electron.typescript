@@ -9,6 +9,9 @@ import {
   MessageBoxData
 } from "element-ui/types/message-box";
 
+/**
+ * 计划的类别
+ */
 export type PlanType = "temporary" | "daily" | "completed";
 
 export interface ElementVue {
@@ -22,4 +25,7 @@ export interface ElementVue {
   ) => Promise<MessageBoxData>;
 }
 
+/**
+ * 番茄时钟的状态
+ */
 export type TomatoCloudStatus = "prepared" | "finished" | "processive";

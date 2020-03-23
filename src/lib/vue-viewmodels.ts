@@ -446,22 +446,35 @@ const TomatoTimerPage = {
     vue: ElementVue,
     tomatoCloudStatus: Ref<TomatoCloudStatus>,
     interval: Ref<NodeJS.Timeout | null>,
-    countDown: Ref<number>
+    countDown: Ref<number>,
+    isCommitPlanDrawerDisplayed: Ref<boolean>
   ) => {
     try {
       // 询问用户是否放弃番茄
       await UI.showConfirm(
         vue.$confirm,
         "您目前正在一个番茄工作实践中，要放弃这个番茄吗？",
-        "防窃番茄"
+        "放弃番茄"
       );
       // 放弃番茄
       tomatoCloudStatus.value = "prepared";
       interval.value = null;
       countDown.value = 1500;
+      isCommitPlanDrawerDisplayed.value = false;
     } catch (error) {
       // doing nothing
     }
+  },
+  /**
+   * 操作 Plan 的临时属性 selected
+   * @param plan 传入数据应为 Api.fetchPlanList() 返回数据的子项
+   */
+  selectPlanToCommit: (plan: {
+    attributes: {
+      selected: boolean;
+    };
+  }) => {
+    plan.attributes.selected = !plan.attributes.selected;
   }
 };
 

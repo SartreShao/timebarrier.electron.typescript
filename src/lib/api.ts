@@ -110,6 +110,12 @@ export default {
           }
         }
         const planList = await query.find();
+
+        // Plan 的临时属性，用于提交番茄
+        planList.forEach(plan => {
+          plan.attributes.selected = false;
+        });
+
         Log.success(`fetchPlanList ${planType}`, planList);
         resolve(planList);
       } catch (error) {
