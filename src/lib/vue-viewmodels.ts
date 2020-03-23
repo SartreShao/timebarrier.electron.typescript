@@ -397,7 +397,7 @@ const TomatoTimerPage = {
             clearInterval(interval.value);
             tomatoCloudStatus.value = "finished";
           }
-        }, 1000);
+        }, 1);
         break;
       }
       case "finished": {
