@@ -5,7 +5,7 @@
 
       <img class="icon2" :src="assets.icon_target" alt="icon_target" />
 
-      <div @click="clickTomatoClock">
+      <div @click="click_tomatoClockButton">
         <img
           :src="assets.icon_play"
           alt="icon_play"
@@ -44,7 +44,7 @@
               'item-container': !item.attributes.selected,
               'item-container-selected': item.attributes.selected
             }"
-            @click="clickPlanItem(item)"
+            @click="click_PlanItemSelector(item)"
           >
             <h2>临时任务</h2>
             <div class="placeholder"></div>
@@ -74,8 +74,8 @@
           v-model="input_description"
         />
         <section class="button-container">
-          <div class="give-up" @click="clickGiveUp">放弃</div>
-          <div class="commit" @click="clickCommit">提交</div>
+          <div class="give-up" @click="click_giveUpTomatoButton">放弃</div>
+          <div class="commit" @click="click_CommitTomatoButton">提交</div>
         </section>
       </section>
     </el-drawer>
@@ -152,7 +152,7 @@ export default defineComponent({
     const countDownForUI = computed(() => UI.formatTime(countDown.value));
 
     // 点击事件：点击番茄时钟
-    const clickTomatoClock = () => {
+    const click_tomatoClockButton = () => {
       TomatoTimerPage.clickTomatoClock(
         context.root,
         tomatoCloudStatus,
@@ -163,7 +163,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击放弃一个正在进行的番茄
-    const clickGiveUp = () => {
+    const click_giveUpTomatoButton = () => {
       TomatoTimerPage.abandonTomato(
         context.root,
         tomatoCloudStatus,
@@ -174,7 +174,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击选择 Plan 的项目
-    const clickPlanItem = (plan: AV.Object) => {
+    const click_PlanItemSelector = (plan: AV.Object) => {
       TomatoTimerPage.selectPlanToCommit(
         plan,
         input_plan,
@@ -185,7 +185,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击提交番茄
-    const clickCommit = () => {
+    const click_CommitTomatoButton = () => {
       TomatoTimerPage.commitTomato(
         context.root,
         tomatoCloudStatus,
@@ -220,12 +220,12 @@ export default defineComponent({
       input_plan,
       input_description,
       keyUpEnter_planInputBox,
-      clickTomatoClock,
+      click_tomatoClockButton,
       isCommitPlanDrawerDisplayed,
       temporaryPlanList,
-      clickCommit,
-      clickGiveUp,
-      clickPlanItem,
+      click_CommitTomatoButton,
+      click_giveUpTomatoButton,
+      click_PlanItemSelector,
       tomatoCloudStatus,
       countDownForUI,
       countDown,
