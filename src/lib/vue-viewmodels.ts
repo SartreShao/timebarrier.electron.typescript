@@ -469,12 +469,55 @@ const TomatoTimerPage = {
    * 操作 Plan 的临时属性 selected
    * @param plan 传入数据应为 Api.fetchPlanList() 返回数据的子项
    */
-  selectPlanToCommit: (plan: {
-    attributes: {
-      selected: boolean;
-    };
-  }) => {
+  selectPlanToCommit: (
+    plan: {
+      attributes: {
+        selected: boolean;
+      };
+    },
+    input_plan: Ref<string>,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 修改 selected 的选择状态
     plan.attributes.selected = !plan.attributes.selected;
+
+    // 清空 input_plan 的值
+    input_plan.value = "";
+
+    // 遍历 temporaryPlanList
+    temporaryPlanList.value.forEach(plan => {
+      if (plan.attributes.selected === true) {
+        if (input_plan.value.length === 0) {
+          input_plan.value = plan.attributes.name;
+        } else {
+          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+        }
+      }
+    });
+
+    // 遍历 dailyPlanList
+    dailyPlanList.value.forEach(plan => {
+      if (plan.attributes.selected === true) {
+        if (input_plan.value.length === 0) {
+          input_plan.value = plan.attributes.name;
+        } else {
+          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+        }
+      }
+    });
+
+    // 遍历 completedPlanList
+    completedPlanList.value.forEach(plan => {
+      if (plan.attributes.selected === true) {
+        if (input_plan.value.length === 0) {
+          input_plan.value = plan.attributes.name;
+        } else {
+          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+        }
+      }
+    });
   }
 };
 

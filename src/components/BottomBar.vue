@@ -60,7 +60,7 @@
             <input
               class="input-plan"
               type="text"
-              placeholder="可输入临时任务"
+              placeholder="25 分钟做的事情"
               @keyup.enter="keyUpEnter_planInputBox"
               v-model="input_plan"
             />
@@ -70,7 +70,7 @@
         <textarea
           class="input-description"
           type="text"
-          placeholder="描述[可省略]"
+          placeholder="详细描述[可省略]"
           v-model="input_description"
         />
         <section class="button-container">
@@ -139,7 +139,7 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
-    // 用户输入：临时任务名称
+    // 用户输入：提交的番茄名称
     const input_plan: Ref<string> = ref("");
 
     // 用户输入：提交的番茄描述
@@ -175,7 +175,13 @@ export default defineComponent({
 
     // 点击事件
     const clickPlanItem = (plan: AV.Object) => {
-      TomatoTimerPage.selectPlanToCommit(plan);
+      TomatoTimerPage.selectPlanToCommit(
+        plan,
+        input_plan,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
     };
 
     const clickCommit = () => {};
@@ -417,6 +423,7 @@ section.footer {
         width 83.87vw
         height 5.17vh
         padding-left 3.07vw
+        padding-right 9vw
         border-radius 0.67vh
         box-sizing border-box
         background-color #f4f4f8
