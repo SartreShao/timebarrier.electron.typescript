@@ -272,7 +272,7 @@ footer {
 }
 section.temporary {
   width 100%
-  height 49.63vh
+  height 46vh
   overflow scroll
   display flex
   flex-direction column
@@ -338,7 +338,7 @@ section.temporary {
     align-items center
     position relative
     margin-bottom 7px
-    background #3846cf
+    background #222a36
     h2 {
       font-size 2.02vh
       font-weight 500
@@ -382,6 +382,7 @@ section.temporary {
   }
 }
 section.footer {
+  background #ffffff
   position absolute
   bottom 0
   width 100%
