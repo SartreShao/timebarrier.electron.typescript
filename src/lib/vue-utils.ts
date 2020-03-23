@@ -115,7 +115,7 @@ const UI = {
     loadingInstance.close();
   },
   // 格式化 1500s => 25:00
-  formatTime(second: number) {
+  formatTime(second: number): string {
     let sec = String(Math.trunc(second % 60));
     let min = String(Math.trunc(second / 60));
     if (sec.length < 2) {

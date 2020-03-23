@@ -2,7 +2,7 @@ import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
 import VueRouter, { RawLocation } from "vue-router";
 import { Router, Time, Check, UI } from "./vue-utils";
-import { ElementVue } from "./types/vue-viewmodels";
+import { ElementVue, TomatoCloudStatus } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
  * 启动页
@@ -354,4 +354,115 @@ const PlanPage = {
   }
 };
 
-export { SplashPage, LoginPage, PlanPage };
+/**
+ * 番茄计时器页
+ */
+const TomatoTimerPage = {
+  /**
+   * 点击番茄钟
+   *
+   * @param vue 还是绑定了 Element 后的 context.root
+   * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
+   * @param interval 计时器实例，由外部引入
+   * @param countDown 计时器表盘值，由外部引入
+   * @param isCommitPlanDrawerDisplayed 由于番茄钟完成后要弹起一个
+   */
+  clickTomatoClock: async (
+    vue: ElementVue,
+    tomatoCloudStatus: Ref<TomatoCloudStatus>,
+    interval: Ref<NodeJS.Timeout | null>,
+    countDown: Ref<number>,
+    isCommitPlanDrawerDisplayed: Ref<boolean>
+  ) => {
+    switch (tomatoCloudStatus.value) {
+      case "prepared": {
+        // 传入数据检测
+        if (interval.value !== null) {
+          UI.showNotification(
+            vue.$notify,
+            "开始计时失败",
+            "失败原因：计时器 (interval) 不为 null",
+            "error"
+          );
+          return;
+        }
+        // 修改番茄钟的状态为「正在进行」
+        tomatoCloudStatus.value = "processive";
+        // 重设表盘值为 1500s（25 分钟）
+        countDown.value = 1500;
+        // 开始计时
+        interval.value = setInterval(() => {
+          countDown.value--;
+          if (countDown.value === 0 && interval.value !== null) {
+            clearInterval(interval.value);
+            tomatoCloudStatus.value = "finished";
+          }
+        }, 1000);
+        break;
+      }
+      case "finished": {
+        isCommitPlanDrawerDisplayed.value = true;
+        break;
+      }
+      case "processive": {
+        if (interval.value === null) {
+          UI.showNotification(
+            vue.$notify,
+            "终止计时失败",
+            "失败原因：计时器 (interval) 为 null",
+            "error"
+          );
+          return;
+        }
+
+        try {
+          // 询问用户是否放弃番茄
+          await UI.showConfirm(
+            vue.$confirm,
+            "您目前正在一个番茄工作实践中，要放弃这个番茄吗？",
+            "放弃番茄"
+          );
+          // 确认放弃番茄
+          tomatoCloudStatus.value = "prepared";
+          countDown.value = 1500;
+          clearInterval(interval.value);
+          interval.value = null;
+        } catch (error) {
+          // doing nothing
+        }
+        break;
+      }
+    }
+  },
+  /**
+   * 点击放弃番茄
+   *
+   * @param vue 绑定 Element 后的 vue 根实例
+   * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
+   * @param interval 计时器实例，由外部引入
+   * @param countDown 计时器表盘值，由外部引入
+   */
+  abandonTomato: async (
+    vue: ElementVue,
+    tomatoCloudStatus: Ref<TomatoCloudStatus>,
+    interval: Ref<NodeJS.Timeout | null>,
+    countDown: Ref<number>
+  ) => {
+    try {
+      // 询问用户是否放弃番茄
+      await UI.showConfirm(
+        vue.$confirm,
+        "您目前正在一个番茄工作实践中，要放弃这个番茄吗？",
+        "防窃番茄"
+      );
+      // 放弃番茄
+      tomatoCloudStatus.value = "prepared";
+      interval.value = null;
+      countDown.value = 1500;
+    } catch (error) {
+      // doing nothing
+    }
+  }
+};
+
+export { SplashPage, LoginPage, PlanPage, TomatoTimerPage };

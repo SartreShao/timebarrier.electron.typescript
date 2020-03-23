@@ -9,17 +9,19 @@
         <img
           :src="assets.icon_play"
           alt="icon_play"
-          v-if="status === 'prepared'"
+          v-if="tomatoCloudStatus === 'prepared'"
         />
 
         <img
           :src="assets.icon_finished"
           class="finished"
           alt="icon_finished"
-          v-if="status === 'finished'"
+          v-if="tomatoCloudStatus === 'finished'"
         />
 
-        <span v-if="status === 'processive'">{{ ui.clock }}</span>
+        <span v-if="tomatoCloudStatus === 'processive'">{{
+          countDownForUI
+        }}</span>
       </div>
 
       <img class="icon3" :src="assets.icon_statistics" alt="icon_statistics" />
@@ -29,7 +31,7 @@
 
     <el-drawer
       title="提交番茄"
-      :visible.sync="commitDialog"
+      :visible.sync="isCommitPlanDrawerDisplayed"
       direction="btt"
       size="69.64%"
     >
@@ -66,27 +68,90 @@ import icon_play from "../assets/play.svg";
 import icon_finished from "../assets/finished.svg";
 
 import { UI } from "../lib/vue-utils";
+import AV from "leancloud-storage";
 
 import Api from "../lib/api";
-import { defineComponent, ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  inject,
+  Ref,
+  watch,
+  computed
+} from "@vue/composition-api";
+import Store from "../store";
+import { TomatoCloudStatus } from "../lib/types/vue-viewmodels";
+import { TomatoTimerPage } from "../lib/vue-viewmodels";
 
 export default defineComponent({
-  setup() {
-    const clickTomatoClock = () => {};
-    const commitDialog = ref(false);
-    const clickGiveUp = () => {};
+  setup(props, context) {
+    // 倒计时器 instance
+    const interval: Ref<NodeJS.Timeout | null> = ref(null);
+
+    // 倒计时表盘值
+    const countDown: Ref<number> = ref(1500);
+
+    // 番茄时钟的状态值
+    const tomatoCloudStatus: Ref<TomatoCloudStatus> = inject(
+      Store.tomatoCloudStatus,
+      ref<TomatoCloudStatus>("prepared")
+    );
+
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 提交番茄的窗口的显示控制
+    const isCommitPlanDrawerDisplayed = ref(false);
+
+    // 番茄钟表盘值
+    const countDownForUI = computed(() => UI.formatTime(countDown.value));
+
+    // 点击事件：点击番茄时钟
+    const clickTomatoClock = () => {
+      TomatoTimerPage.clickTomatoClock(
+        context.root,
+        tomatoCloudStatus,
+        interval,
+        countDown,
+        isCommitPlanDrawerDisplayed
+      );
+    };
+
+    // 点击时间：点击放弃一个正在进行的番茄
+    const clickGiveUp = () => {
+      TomatoTimerPage.abandonTomato(
+        context.root,
+        tomatoCloudStatus,
+        interval,
+        countDown
+      );
+    };
     const clickCommit = () => {};
-    const status = ref("");
-    const ui = ref();
-    const temporaryPlanList = ref([]);
+
     return {
       clickTomatoClock,
-      commitDialog,
-      ui,
+      isCommitPlanDrawerDisplayed,
       temporaryPlanList,
       clickCommit,
       clickGiveUp,
-      status,
+      tomatoCloudStatus,
+      countDownForUI,
+      countDown,
       assets: {
         icon_plan,
         icon_target,
