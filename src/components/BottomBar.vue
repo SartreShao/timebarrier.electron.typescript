@@ -44,7 +44,7 @@
               'item-container': !item.attributes.selected,
               'item-container-selected': item.attributes.selected
             }"
-            @click="click_PlanItemSelector(item)"
+            @click="click_planItemSelector(item)"
           >
             <h2>临时任务</h2>
             <div class="placeholder"></div>
@@ -75,7 +75,7 @@
         />
         <section class="button-container">
           <div class="give-up" @click="click_giveUpTomatoButton">放弃</div>
-          <div class="commit" @click="click_CommitTomatoButton">提交</div>
+          <div class="commit" @click="click_commitTomatoButton">提交</div>
         </section>
       </section>
     </el-drawer>
@@ -174,7 +174,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击选择 Plan 的项目
-    const click_PlanItemSelector = (plan: AV.Object) => {
+    const click_planItemSelector = (plan: AV.Object) => {
       TomatoTimerPage.selectPlanToCommit(
         plan,
         input_plan,
@@ -185,7 +185,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击提交番茄
-    const click_CommitTomatoButton = () => {
+    const click_commitTomatoButton = () => {
       TomatoTimerPage.commitTomato(
         context.root,
         tomatoCloudStatus,
@@ -223,9 +223,9 @@ export default defineComponent({
       click_tomatoClockButton,
       isCommitPlanDrawerDisplayed,
       temporaryPlanList,
-      click_CommitTomatoButton,
+      click_commitTomatoButton,
       click_giveUpTomatoButton,
-      click_PlanItemSelector,
+      click_planItemSelector,
       tomatoCloudStatus,
       countDownForUI,
       countDown,
