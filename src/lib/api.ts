@@ -3,6 +3,8 @@ import { Log } from "../lib/vue-utils";
 import { PlanType } from "./types/vue-viewmodels";
 
 const Plan = AV.Object.extend("Plan");
+const Tomato = AV.Object.extend("Tomato");
+const TomatoPlan = AV.Object.extend("TomatoPlan");
 
 export default {
   /**
@@ -181,6 +183,61 @@ export default {
         resolve(plan);
       } catch (error) {
         Log.error("cancelCompletePlan", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 创建 Tomato
+   *
+   * @remark 时间壁垒专用函数
+   * @param name 番茄的名字
+   * @param descending 番茄的描述
+   * @param user 番茄的创建者
+   */
+  createTomato: (
+    name: string,
+    description: string,
+    user: AV.User
+  ): Promise<AV.Object> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const tomato = await new Tomato()
+          .set("name", name)
+          .set("user", user)
+          .set("description", description)
+          .save();
+        Log.success("createTomato", tomato);
+        resolve(tomato);
+      } catch (error) {
+        Log.error("createTomato", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 创建 TomatoPlan
+   *
+   * @remark 时间壁垒专用函数
+   * @param totamtoId 番茄的 objectId
+   * @param planIdList 提交的 plan 的 id List
+   */
+  createTomatoPlan: (
+    tomatoId: string,
+    planIdList: string[]
+  ): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const tomatoPlanList: AV.Object[] = [];
+        planIdList.forEach(planId => {
+          const tomatoPlan = new TomatoPlan()
+            .set("tomato", AV.Object.createWithoutData("Tomato", tomatoId))
+            .set("plan", AV.Object.createWithoutData("Plan", planId));
+          tomatoPlanList.push(tomatoPlan);
+        });
+        await AV.Object.saveAll(tomatoPlanList);
+        Log.success("createTomatoPlan", tomatoPlanList);
+        resolve(tomatoPlanList);
+      } catch (error) {
+        Log.error("createTomatoPlan", error);
         reject(error);
       }
     })

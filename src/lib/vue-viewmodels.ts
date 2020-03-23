@@ -518,6 +518,99 @@ const TomatoTimerPage = {
         }
       }
     });
+  },
+  /**
+   * 提交番茄
+   */
+  commitTomato: async (
+    vue: ElementVue,
+    tomatoCloudStatus: Ref<TomatoCloudStatus>,
+    interval: Ref<NodeJS.Timeout | null>,
+    countDown: Ref<number>,
+    isCommitPlanDrawerDisplayed: Ref<boolean>,
+    input_plan: Ref<string>,
+    input_description: Ref<string>,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 检查传入参数
+    if (input_plan.value.length === 0) {
+      UI.showNotification(
+        vue.$notify,
+        "提交番茄失败",
+        "请选择您完成的任务，或手动输入做过的事",
+        "warning"
+      );
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在提交番茄");
+
+    try {
+      // 尝试提交番茄
+      const tomato: AV.Object = await Api.createTomato(
+        input_plan.value,
+        input_description.value,
+        user
+      );
+
+      // 遍历 PlanList 寻找被选择的 Plan
+      const planIdList: string[] = [];
+
+      temporaryPlanList.value.forEach(plan => {
+        if (plan.attributes.selected === true && plan.id !== undefined) {
+          planIdList.push(plan.id);
+        }
+      });
+
+      dailyPlanList.value.forEach(plan => {
+        if (plan.attributes.selected === true && plan.id !== undefined) {
+          planIdList.push(plan.id);
+        }
+      });
+
+      completedPlanList.value.forEach(plan => {
+        if (plan.attributes.selected === true && plan.id !== undefined) {
+          planIdList.push(plan.id);
+        }
+      });
+
+      // 类型检测
+      if (tomato.id === undefined) {
+        throw "tomato.id === undefined";
+      }
+
+      // 创建 TomatoPlan
+      await Api.createTomatoPlan(tomato.id, planIdList);
+
+      // 结束 Loading
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, "提交番茄成功", "", "success");
+
+      // 更新番茄钟状态
+      tomatoCloudStatus.value = "prepared";
+      interval.value = null;
+      countDown.value = 1500;
+      isCommitPlanDrawerDisplayed.value = false;
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "提交番茄失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
   }
 };
 

@@ -173,7 +173,7 @@ export default defineComponent({
       );
     };
 
-    // 点击事件
+    // 点击事件：点击选择 Plan 的项目
     const clickPlanItem = (plan: AV.Object) => {
       TomatoTimerPage.selectPlanToCommit(
         plan,
@@ -184,10 +184,37 @@ export default defineComponent({
       );
     };
 
-    const clickCommit = () => {};
+    // 点击事件：点击提交番茄
+    const clickCommit = () => {
+      TomatoTimerPage.commitTomato(
+        context.root,
+        tomatoCloudStatus,
+        interval,
+        countDown,
+        isCommitPlanDrawerDisplayed,
+        input_plan,
+        input_description,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    };
 
     // 用户输入：创建回车
-    const keyUpEnter_planInputBox = () => {};
+    const keyUpEnter_planInputBox = () => {
+      TomatoTimerPage.commitTomato(
+        context.root,
+        tomatoCloudStatus,
+        interval,
+        countDown,
+        isCommitPlanDrawerDisplayed,
+        input_plan,
+        input_description,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    };
 
     return {
       input_plan,
