@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <header>
+      <div style="height:1vh"></div>
+
       <section class="title">
+        <img :src="assets.icon_logo" alt="icon_logo" />
         <h1>时间壁垒</h1>
       </section>
 
@@ -80,6 +83,7 @@ import BottomBar from "../../components/BottomBar.vue";
 import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "../../store";
 import icon_finished from "../../assets/icon_finished.svg";
+import icon_logo from "../../assets/icon_logo.svg";
 
 export default defineComponent({
   components: { BottomBar },
@@ -171,7 +175,8 @@ export default defineComponent({
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
       assets: {
-        icon_finished
+        icon_finished,
+        icon_logo
       }
     };
   }
@@ -196,6 +201,7 @@ export default defineComponent({
       justify-content center
       align-items center
       background white
+      position relative
       h1 {
         font-family SourceHanSansSC
         font-size 2.62vh
@@ -204,7 +210,17 @@ export default defineComponent({
         font-style normal
         letter-spacing -0.03vh
         text-align center
-        color #1b1d2e
+        color #222A36
+      }
+      img {
+        top 0
+        bottom 0
+        margin-top auto
+        margin-bottom auto
+        left 6.06vw
+        position absolute
+        width 2.89vh
+        height 2.89vh
       }
     }
     section.create-plan {
@@ -222,6 +238,7 @@ export default defineComponent({
         text-align center
       }
       input::-webkit-input-placeholder {
+        opacity 0.6
         font-size 2.02vh
         font-weight normal
         font-stretch normal
@@ -234,11 +251,11 @@ export default defineComponent({
   }
   main {
     position fixed
-    top 11.77vh
-    height 81.41vh
+    top 12.77vh
+    height 80.41vh
     overflow scroll
     width 100%
-    background #f0f1f3
+    background #F5F5F5
     display flex
     flex-direction column
     align-items center
@@ -272,6 +289,7 @@ export default defineComponent({
           width 0.13vw
           height 2.92vh
           background #707070
+          opacity 0.4
         }
         h3 {
           font-size 2.02vh
@@ -292,6 +310,7 @@ export default defineComponent({
           width 2.7vh
           height 2.7vh
           border-radius 2.4vw
+          opacity 0.5
           border solid 0.15vw #959595
           background-color #ffffff
           position absolute

@@ -279,7 +279,7 @@ footer {
     width 14.4vw
     height 4.87vh
     border-radius 1.05vh
-    background-color #3846cf
+    background-color #222A36
     display flex
     align-items center
     justify-content center

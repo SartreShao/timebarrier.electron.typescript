@@ -35,8 +35,8 @@ body, h1, h2, h3, h4, h5, h6 {
   max-width 420px
 }
 .el-button--primary {
-  background-color #3846CF !important
-  border-color #3846CF !important
+  background-color #222A36 !important
+  border-color #222A36 !important
 }
 .el-drawer__header {
   margin-bottom 3.9vh !important
