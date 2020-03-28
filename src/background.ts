@@ -26,7 +26,8 @@ function createWindow() {
     maxWidth: 375,
     maxHeight: 667,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      backgroundThrottling: false
     }
   });
 
