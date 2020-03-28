@@ -396,6 +396,7 @@ const TomatoTimerPage = {
           if (countDown.value === 0 && interval.value !== null) {
             clearInterval(interval.value);
             tomatoCloudStatus.value = "finished";
+            new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
         }, 1000);
         break;
