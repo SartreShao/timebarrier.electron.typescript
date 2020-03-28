@@ -1,15 +1,19 @@
 "use strict";
 
-import { app, protocol, BrowserWindow } from "electron";
+import { app, protocol, BrowserWindow, Tray, Menu } from "electron";
 import {
   createProtocol,
   installVueDevtools
 } from "vue-cli-plugin-electron-builder/lib";
+import path from "path";
+
 const isDevelopment = process.env.NODE_ENV !== "production";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null;
+let tray: Tray | null = null;
+let forceQuit = false;
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -44,7 +48,25 @@ function createWindow() {
   win.on("closed", () => {
     win = null;
   });
+
+  win.on("close", event => {
+    if (process.platform === "darwin") {
+      if (!forceQuit) {
+        if (win !== null) {
+          win.hide();
+          win.setSkipTaskbar(true);
+          event.preventDefault();
+        }
+      }
+    }
+  });
 }
+
+app.on("before-quit", () => {
+  if (process.platform === "darwin") {
+    forceQuit = true;
+  }
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
@@ -80,6 +102,15 @@ app.on("ready", async () => {
     //   console.error('Vue Devtools failed to install:', e.toString())
     // }
   }
+  tray = new Tray(path.join(__static, "icon.png"));
+
+  // 左键点击状态栏=》显示窗口
+  tray.on("click", () => {
+    if (win !== null) {
+      win.show();
+      win.setSkipTaskbar(true);
+    }
+  });
   createWindow();
 });
 
