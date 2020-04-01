@@ -82,6 +82,9 @@ app.on("activate", () => {
   // dock icon is clicked and there are no other windows open.
   if (win === null) {
     createWindow();
+  } else {
+    win.show();
+    win.setSkipTaskbar(true);
   }
 });
 
