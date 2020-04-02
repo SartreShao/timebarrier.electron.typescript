@@ -16,6 +16,7 @@ export default defineComponent({
 </script>
 <style lang="stylus">
 @import './public/public.stylus'
+
 #app {
   width 100%
   height 100%
