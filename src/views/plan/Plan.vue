@@ -67,6 +67,49 @@
         </div>
       </section>
     </el-drawer>
+
+    <el-drawer
+      class="edit-plan-container"
+      title="编辑计划"
+      direction="btt"
+      size="86.64%"
+      :visible.sync="isPlanEditorDrawerDisplayed"
+    >
+      <input type="text" class="input-plan-name" placeholder="输入计划名称" />
+
+      <el-select placeholder="选择计划类型" class="input-plan-type"></el-select>
+
+      <div class="add-plan-related">
+        <img :src="assets.icon_add" alt="icon_add" />
+        <span>关联相关能力</span>
+      </div>
+
+      <div class="add-plan-related">
+        <img :src="assets.icon_add" alt="icon_add" />
+        <span>添加每日目标</span>
+      </div>
+
+      <textarea
+        class="input-plan-description"
+        placeholder="输入计划描述"
+      ></textarea>
+
+      <div class="radio-container">
+        <div>
+          <span>激活该计划</span
+          ><img :src="assets.icon_selected" alt="icon_selected" />
+        </div>
+        <div>
+          <span>完成该计划</span
+          ><img :src="assets.icon_unselected" alt="icon_unselected" />
+        </div>
+      </div>
+
+      <div class="button-container">
+        <div class="delete-button">删除</div>
+        <div class="save-button">保存</div>
+      </div>
+    </el-drawer>
     <bottom-bar></bottom-bar>
   </div>
 </template>
@@ -84,7 +127,9 @@ import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "../../store";
 import icon_finished from "../../assets/icon_finished.svg";
 import icon_logo from "../../assets/icon_logo.svg";
-
+import icon_add from "../../assets/icon_add.svg";
+import icon_selected from "../../assets/selected_icon.svg";
+import icon_unselected from "../../assets/unselected_icon.svg";
 export default defineComponent({
   components: { BottomBar },
   setup(props, context) {
@@ -111,6 +156,9 @@ export default defineComponent({
 
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
+
+    // 「展示 `编辑计划` 的抽屉」是否已经打开
+    const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(true);
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
@@ -170,13 +218,17 @@ export default defineComponent({
       temporaryPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
+      isPlanEditorDrawerDisplayed,
       keyUpEnter_planInputBox,
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
       assets: {
         icon_finished,
-        icon_logo
+        icon_logo,
+        icon_add,
+        icon_selected,
+        icon_unselected
       }
     };
   }
@@ -267,6 +319,7 @@ export default defineComponent({
       display flex
       flex-direction column
       div.item-container {
+        cursor pointer
         width 95.73vw
         height 7.2vh
         background white
@@ -402,5 +455,187 @@ export default defineComponent({
       }
     }
   }
+}
+.edit-plan-container >>> .el-drawer__body {
+  display flex
+  flex-direction column
+  overflow scroll
+  align-items center
+}
+.input-plan-name {
+  width 89.6vw
+  height 6.9vh
+  border-radius 0.67vh
+  border solid 0.15vh #ebebf3
+  padding-left 4.8vw
+  padding-right 4.8vw
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #363636
+}
+.input-plan-name::-webkit-input-placeholder {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #969294
+}
+.input-plan-type >>> .el-input__inner {
+  width 89.6vw
+  height 6.9vh
+  border-radius 0.67vh
+  border solid 0.15vh #ebebf3
+  padding-left 4.8vw
+  padding-right 4.8vw
+  margin-top 2.4vh
+}
+.input-plan-type >>> .el-input__inner::-webkit-input-placeholder {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #969294
+}
+.add-plan-related {
+  width 89.6vw
+  height 6.9vh
+  margin-top 2.4vh
+  border-radius 0.67vh
+  background-color #f0f0f6
+  display flex
+  align-items center
+  cursor pointer
+  img {
+    width 1.92vh
+    height 1.92vh
+    margin-left 3.92vw
+    margin-right 2.8vw
+    opacity 0.5
+  }
+  span {
+    opacity 0.5
+    font-size 1.95vh
+    font-weight normal
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing 0.02vh
+    text-align left
+    color #636971
+  }
+}
+.input-plan-description {
+  width 89.6vw
+  height 16.79vh
+  border-radius 0.67vh
+  margin-top 2.4vh
+  border solid 0.15vh #ebebf3
+  resize none
+  padding-top 2.1vh
+  padding-bottom 2.1vh
+  padding-left 4.8vw
+  padding-right 4.8vw
+}
+.input-plan-description::-webkit-input-placeholder {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.02vh
+  text-align left
+  color #969294
+}
+.radio-container {
+  display flex
+  margin-top 2.4vh
+  width 89.6vw
+  justify-content space-between
+  div {
+    cursor pointer
+    width 42.93vw
+    height 6.9vh
+    border-radius 0.67vh
+    background-color #f4f4f8
+    display flex
+    align-items center
+    span {
+      opacity 0.3
+      font-size 2.02vh
+      font-weight normal
+      font-stretch normal
+      font-style normal
+      line-height 1.44
+      letter-spacing 0.02vh
+      text-align center
+      color #222a36
+      margin-left 4.8vw
+    }
+    img {
+      width 2.1vh
+      height 2.1vh
+      margin-left 12.27vw
+    }
+  }
+}
+.button-container {
+  position fixed
+  bottom 0
+  width 100%
+  height 9.25vh
+  box-shadow 0 -0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+  background-color #ffffff
+  display flex
+  justify-content space-between
+  align-items center
+}
+.delete-button {
+  width 46.8vw
+  height 6.82vh
+  border-radius 0.75vh
+  background-color #959595
+  font-size 1.8vh
+  font-weight bold
+  font-stretch normal
+  font-style normal
+  line-height 1.5
+  letter-spacing 0.04vh
+  text-align center
+  color #ffffff
+  display flex
+  justify-content center
+  align-items center
+  margin-left 2.13vw
+  cursor pointer
+}
+.save-button {
+  width 46.8vw
+  height 6.82vh
+  border-radius 0.75vh
+  background-color #222a36
+  font-size 1.8vh
+  font-weight bold
+  font-stretch normal
+  font-style normal
+  line-height 1.5
+  letter-spacing 0.04vh
+  text-align center
+  color #ffffff
+  display flex
+  justify-content center
+  align-items center
+  margin-right 2.13vw
+  cursor pointer
 }
 </style>
