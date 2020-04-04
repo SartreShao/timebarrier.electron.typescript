@@ -186,6 +186,43 @@ export default {
         reject(error);
       }
     }),
+
+  /**
+   * 编辑 Plan
+   *
+   * @remark 时间壁垒专用函数
+   * @param planId 计划的 objectId
+   * @param name 计划的名称
+   * @param type 计划的类型
+   * @param description 计划的描述
+   * @param isActived 计划是否被激活
+   * @param isFinished 计划是否已经结束
+   */
+  editPlan: (
+    planId: string,
+    name: string,
+    type: PlanType,
+    description: string,
+    isActived: boolean,
+    isFinished: boolean
+  ) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan = await new AV.Query("Plan").get(planId);
+        await plan
+          .set("name", name)
+          .set("type", type)
+          .set("description", description)
+          .set("isActived", isActived)
+          .set("isFinished", isFinished)
+          .save();
+        Log.success("editPlan", plan);
+        resolve(plan);
+      } catch (error) {
+        Log.error("editPlan", error);
+        reject(error);
+      }
+    }),
   /**
    * 创建 Tomato
    *
