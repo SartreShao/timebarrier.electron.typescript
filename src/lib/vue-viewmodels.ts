@@ -6,6 +6,7 @@ import {
   ElementVue,
   TomatoCloudStatus,
   PlanType,
+  InputPlanType,
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -365,24 +366,88 @@ const PlanPage = {
    */
   editPlan: async (
     isPlanEditorDrawerDisplayed: Ref<boolean>,
-    input_editingPlan: {
-      name: string;
-      type: PlanType;
-      description: string;
-      isActived: boolean;
-      isFinished: boolean;
-    },
+    input_editingPlan: InputPlanType,
     plan: AV.Object
   ) => {
     // 打开抽屉菜单
     isPlanEditorDrawerDisplayed.value = true;
 
     // 初始化用户的输入
+    input_editingPlan.id = plan.id;
     input_editingPlan.name = plan.attributes.name;
     input_editingPlan.type = plan.attributes.type;
     input_editingPlan.description = plan.attributes.description;
     input_editingPlan.isActived = plan.attributes.isActived;
     input_editingPlan.isFinished = plan.attributes.isFinished;
+  },
+  /**
+   * 保存计划
+   *
+   * @param vue ElementVue
+   * @param isPlanEditorDrawerDisplayed 传入 PlanEditor 的编辑抽屉菜单的控制变量
+   * @param input_editingPlan 用户输入的 Plan 信息接收器 input_editingPlan
+   */
+  savePlan: async (
+    vue: ElementVue,
+    isPlanEditorDrawerDisplayed: Ref<boolean>,
+    input_editingPlan: InputPlanType,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_editingPlan.id !== undefined) {
+      // 显示进度条
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在保存您的计划..."
+      );
+
+      // 尝试保存 Plan
+      try {
+        await Api.editPlan(
+          input_editingPlan.id,
+          input_editingPlan.name,
+          input_editingPlan.type,
+          input_editingPlan.description,
+          input_editingPlan.isActived,
+          input_editingPlan.isFinished
+        );
+
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+        completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+        // 保存成功
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(vue.$notify, "计划保存成功", "", "success");
+        // 关闭窗口
+        isPlanEditorDrawerDisplayed.value = false;
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "计划保存失败",
+          `错误原因：${error.message},`,
+          "error"
+        );
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "错误原因：input_editingPlan.id is undefined",
+        "error"
+      );
+    }
   },
 };
 

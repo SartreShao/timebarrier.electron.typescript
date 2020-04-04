@@ -56,6 +56,7 @@
           class="item-container"
           v-for="item in completedPlanList"
           v-bind:key="item.id"
+          @click="click_editPlanButton(item)"
         >
           <h2>临时任务</h2>
           <div class="placeholder"></div>
@@ -139,7 +140,7 @@
 
       <div class="button-container">
         <div class="delete-button">删除</div>
-        <div class="save-button">保存</div>
+        <div class="save-button" @click="click_savePlanButton">保存</div>
       </div>
     </el-drawer>
     <bottom-bar></bottom-bar>
@@ -163,7 +164,7 @@ import icon_logo from "../../assets/icon_logo.svg";
 import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
-import { PlanType } from "@/lib/types/vue-viewmodels";
+import { PlanType, InputPlanType } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { BottomBar },
   setup(props, context) {
@@ -171,13 +172,8 @@ export default defineComponent({
     const input_plan: Ref<string> = ref("");
 
     // 用户输入：当前编辑的「计划」
-    const input_editingPlan: {
-      name: string;
-      type: PlanType;
-      description: string;
-      isActived: boolean;
-      isFinished: boolean;
-    } = reactive({
+    const input_editingPlan: InputPlanType = reactive({
+      id: undefined,
       name: "",
       type: "temporary",
       description: "",
@@ -258,6 +254,18 @@ export default defineComponent({
       PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
     };
 
+    // 点击事件：点击「保存计划」按钮
+    const click_savePlanButton = () => {
+      PlanPage.savePlan(
+        context.root,
+        isPlanEditorDrawerDisplayed,
+        input_editingPlan,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -280,6 +288,7 @@ export default defineComponent({
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
       click_editPlanButton,
+      click_savePlanButton,
       assets: {
         icon_finished,
         icon_logo,

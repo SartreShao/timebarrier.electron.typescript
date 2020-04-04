@@ -14,6 +14,15 @@ import {
  */
 export type PlanType = "temporary" | "daily";
 
+export type InputPlanType = {
+  id: string | undefined;
+  name: string;
+  type: PlanType;
+  description: string;
+  isActived: boolean;
+  isFinished: boolean;
+};
+
 export interface ElementVue {
   $notify: ElNotification;
   $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
