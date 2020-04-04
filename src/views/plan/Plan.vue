@@ -546,6 +546,14 @@ export default defineComponent({
   padding-bottom 2.1vh
   padding-left 4.8vw
   padding-right 4.8vw
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #363636
 }
 .input-plan-description::-webkit-input-placeholder {
   font-size 1.95vh
