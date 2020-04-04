@@ -2,7 +2,11 @@ import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
 import VueRouter, { RawLocation } from "vue-router";
 import { Router, Time, Check, UI } from "./vue-utils";
-import { ElementVue, TomatoCloudStatus } from "./types/vue-viewmodels";
+import {
+  ElementVue,
+  TomatoCloudStatus,
+  PlanType,
+} from "./types/vue-viewmodels";
 import Api from "./api";
 /**
  * 启动页
@@ -29,7 +33,7 @@ const SplashPage = {
     Api.isLoggedIn()
       ? Router.replace(routerInstance, indexLocation)
       : Router.replace(routerInstance, loginLocation);
-  }
+  },
 };
 
 /**
@@ -141,7 +145,7 @@ const LoginPage = {
         );
       }
     }
-  }
+  },
 };
 
 /**
@@ -207,14 +211,14 @@ const PlanPage = {
    *
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param name 计划名称
-   * @param isTemporary 是否为临时计划
+   * @param type 计划类别
    * @param temporaryPlanList 临时计划的列表，用于创建 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于创建 Plan 后更新列表数据
    */
   createPlan: async (
     vue: ElementVue,
     name: Ref<string>,
-    isTemporary: boolean,
+    type: PlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>
   ) => {
@@ -235,13 +239,13 @@ const PlanPage = {
 
     try {
       // 创建计划
-      await Api.createPlan(name.value, isTemporary, user);
+      await Api.createPlan(name.value, type, user);
 
       // 刷新计划列表
-      if (isTemporary) {
+      if (type === "temporary") {
         // 更新临时计划
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      } else {
+      } else if (type === "daily") {
         // 更新每日计划列表
         dailyPlanList.value = await Api.fetchPlanList(user, "daily");
       }
@@ -261,14 +265,14 @@ const PlanPage = {
    *
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param planId plan.objectId 需要标记为完成的 Plan 的 objectId
-   * @param isTemporary plan 的类型是否是临时计划
+   * @param type plan 的类型
    * @param temporaryPlanList 临时计划的列表，用于完成 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于完成 Plan 后更新列表数据
    */
   completePlan: async (
     vue: ElementVue,
     planId: string,
-    isTemporary: boolean,
+    type: PlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
@@ -286,10 +290,10 @@ const PlanPage = {
       // 尝试完成 Plan
       await Api.completePlan(planId);
       // 刷新计划列表
-      if (isTemporary) {
+      if (type === "temporary") {
         // 更新临时计划
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      } else {
+      } else if (type === "daily") {
         // 更新每日计划列表
         dailyPlanList.value = await Api.fetchPlanList(user, "daily");
       }
@@ -309,14 +313,14 @@ const PlanPage = {
    *
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param planId plan.objectId 需要取消标记为完成的 Plan 的 objectId
-   * @param isTemporary plan 的类型是否是临时计划
+   * @param type plan 的类型
    * @param temporaryPlanList 临时计划的列表，用于完成 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于完成 Plan 后更新列表数据
    */
   cancelCompletePlan: async (
     vue: ElementVue,
     planId: string,
-    isTemporary: boolean,
+    type: PlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
@@ -334,10 +338,10 @@ const PlanPage = {
       // 尝试完成 Plan
       await Api.cancelCompletePlan(planId);
       // 刷新计划列表
-      if (isTemporary) {
+      if (type === "temporary") {
         // 更新临时计划
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      } else {
+      } else if (type === "daily") {
         // 更新每日计划列表
         dailyPlanList.value = await Api.fetchPlanList(user, "daily");
       }
@@ -351,7 +355,7 @@ const PlanPage = {
         "error"
       );
     }
-  }
+  },
 };
 
 /**
@@ -488,7 +492,7 @@ const TomatoTimerPage = {
     input_plan.value = "";
 
     // 遍历 temporaryPlanList
-    temporaryPlanList.value.forEach(plan => {
+    temporaryPlanList.value.forEach((plan) => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -499,7 +503,7 @@ const TomatoTimerPage = {
     });
 
     // 遍历 dailyPlanList
-    dailyPlanList.value.forEach(plan => {
+    dailyPlanList.value.forEach((plan) => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -510,7 +514,7 @@ const TomatoTimerPage = {
     });
 
     // 遍历 completedPlanList
-    completedPlanList.value.forEach(plan => {
+    completedPlanList.value.forEach((plan) => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -568,19 +572,19 @@ const TomatoTimerPage = {
       // 遍历 PlanList 寻找被选择的 Plan
       const planIdList: string[] = [];
 
-      temporaryPlanList.value.forEach(plan => {
+      temporaryPlanList.value.forEach((plan) => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
       });
 
-      dailyPlanList.value.forEach(plan => {
+      dailyPlanList.value.forEach((plan) => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
       });
 
-      completedPlanList.value.forEach(plan => {
+      completedPlanList.value.forEach((plan) => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
@@ -612,7 +616,7 @@ const TomatoTimerPage = {
         "error"
       );
     }
-  }
+  },
 };
 
 export { SplashPage, LoginPage, PlanPage, TomatoTimerPage };

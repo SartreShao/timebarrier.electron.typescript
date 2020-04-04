@@ -81,7 +81,7 @@ export default {
    */
   fetchPlanList: (
     user: AV.User,
-    planType: PlanType,
+    planType: PlanType | "completed",
     currentPage?: number,
     pageSize?: number
   ): Promise<AV.Object[]> =>
@@ -97,12 +97,12 @@ export default {
 
         switch (planType) {
           case "temporary": {
-            query.equalTo("isTemporary", true);
+            query.equalTo("type", "temporary");
             query.equalTo("isFinished", false);
             break;
           }
           case "daily": {
-            query.equalTo("isTemporary", false);
+            query.equalTo("type", "daily");
             query.equalTo("isFinished", false);
             break;
           }
@@ -114,7 +114,7 @@ export default {
         const planList = await query.find();
 
         // Plan 的临时属性，用于提交番茄
-        planList.forEach(plan => {
+        planList.forEach((plan) => {
           plan.attributes.selected = false;
         });
 
@@ -130,15 +130,15 @@ export default {
    *
    * @remark 时间壁垒专用函数
    * @param name 计划名称
-   * @param isTemporary 该计划是否为临时计划
+   * @param type 计划类型
    * @param user 创建计划的人
    */
-  createPlan: (name: string, isTemporary: boolean, user: AV.User) =>
+  createPlan: (name: string, type: PlanType, user: AV.User) =>
     new Promise(async (resolve, reject) => {
       try {
         const plan = await new Plan()
           .set("name", name)
-          .set("isTemporary", isTemporary)
+          .set("type", type)
           .set("isFinished", false)
           .set("user", user)
           .save();
@@ -227,7 +227,7 @@ export default {
     new Promise(async (resolve, reject) => {
       try {
         const tomatoPlanList: AV.Object[] = [];
-        planIdList.forEach(planId => {
+        planIdList.forEach((planId) => {
           const tomatoPlan = new TomatoPlan()
             .set("tomato", AV.Object.createWithoutData("Tomato", tomatoId))
             .set("plan", AV.Object.createWithoutData("Plan", planId));
@@ -240,5 +240,5 @@ export default {
         Log.error("createTomatoPlan", error);
         reject(error);
       }
-    })
+    }),
 };

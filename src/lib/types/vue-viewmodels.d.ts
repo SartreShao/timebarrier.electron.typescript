@@ -1,18 +1,18 @@
 import { ElNotification } from "element-ui/types/notification";
 import {
   LoadingServiceOptions,
-  ElLoadingComponent
+  ElLoadingComponent,
 } from "element-ui/types/loading";
 import VueRouter from "vue-router";
 import {
   ElMessageBoxOptions,
-  MessageBoxData
+  MessageBoxData,
 } from "element-ui/types/message-box";
 
 /**
  * 计划的类别
  */
-export type PlanType = "temporary" | "daily" | "completed";
+export type PlanType = "temporary" | "daily";
 
 export interface ElementVue {
   $notify: ElNotification;

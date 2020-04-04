@@ -24,13 +24,14 @@
           class="item-container"
           v-for="item in temporaryPlanList"
           v-bind:key="item.id"
+          @click="click_editPlanButton(item)"
         >
           <h2>临时任务</h2>
           <div class="placeholder"></div>
           <h3>{{ item.attributes.name }}</h3>
           <div
             class="finished-button"
-            @click="click_completePlanButton(item)"
+            @click.stop="click_completePlanButton(item)"
           ></div>
         </div>
       </section>
@@ -75,7 +76,12 @@
       size="86.64%"
       :visible.sync="isPlanEditorDrawerDisplayed"
     >
-      <input type="text" class="input-plan-name" placeholder="输入计划名称" />
+      <input
+        type="text"
+        class="input-plan-name"
+        placeholder="输入计划名称"
+        v-model="input_editingPlan.name"
+      />
 
       <el-select placeholder="选择计划类型" class="input-plan-type"></el-select>
 
@@ -92,6 +98,7 @@
       <textarea
         class="input-plan-description"
         placeholder="输入计划描述"
+        v-model="input_editingPlan.description"
       ></textarea>
 
       <div class="radio-container">
@@ -119,7 +126,8 @@ import {
   ref,
   Ref,
   onMounted,
-  inject
+  inject,
+  reactive
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
@@ -130,11 +138,27 @@ import icon_logo from "../../assets/icon_logo.svg";
 import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
+import { PlanType } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { BottomBar },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
+
+    // 用户输入：当前编辑的「计划」
+    const input_editingPlan: {
+      name: string;
+      type: PlanType;
+      description: string;
+      isActived: boolean;
+      isFinished: boolean;
+    } = reactive({
+      name: "",
+      type: "temporary",
+      description: "",
+      isActived: false,
+      isFinished: false
+    });
 
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object[]> = inject(
@@ -158,14 +182,14 @@ export default defineComponent({
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
 
     // 「展示 `编辑计划` 的抽屉」是否已经打开
-    const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(true);
+    const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(false);
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
         context.root,
         input_plan,
-        true,
+        "temporary",
         temporaryPlanList,
         dailyPlanList
       );
@@ -177,7 +201,7 @@ export default defineComponent({
         PlanPage.completePlan(
           context.root,
           plan.id,
-          plan.attributes.isTemporary,
+          plan.attributes.type,
           temporaryPlanList,
           dailyPlanList,
           completedPlanList
@@ -191,7 +215,7 @@ export default defineComponent({
         PlanPage.cancelCompletePlan(
           context.root,
           plan.id,
-          plan.attributes.isTemporary,
+          plan.attributes.type,
           temporaryPlanList,
           dailyPlanList,
           completedPlanList
@@ -202,6 +226,16 @@ export default defineComponent({
     // 点击事件：点击「已完成的计划列表」按钮
     const click_completedPlanListButton = () => {
       isCompletedPlanDrawerDisplayed.value = true;
+    };
+
+    // 点击事件：点击「编辑计划」按钮
+    const click_editPlanButton = (plan: AV.Object) => {
+      isPlanEditorDrawerDisplayed.value = true;
+      input_editingPlan.name = plan.attributes.name;
+      input_editingPlan.type = plan.attributes.type;
+      input_editingPlan.description = plan.attributes.description;
+      input_editingPlan.isActived = plan.attributes.isActived;
+      input_editingPlan.isFinished = plan.attributes.isFinished;
     };
 
     onMounted(() => {
@@ -215,6 +249,7 @@ export default defineComponent({
 
     return {
       input_plan,
+      input_editingPlan,
       temporaryPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
@@ -223,6 +258,7 @@ export default defineComponent({
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
+      click_editPlanButton,
       assets: {
         icon_finished,
         icon_logo,
