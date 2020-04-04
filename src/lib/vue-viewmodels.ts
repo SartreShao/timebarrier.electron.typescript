@@ -356,6 +356,34 @@ const PlanPage = {
       );
     }
   },
+  /**
+   * 编辑计划
+   *
+   * @param isPlanEditorDrawerDisplayed 传入 PlanEditor 的编辑抽屉菜单的控制变量
+   * @param input_editingPlan 传入等待用户输入的 Plan 信息接收器 input_editingPlan
+   * @param plan 传入选择的 Plan
+   */
+  editPlan: async (
+    isPlanEditorDrawerDisplayed: Ref<boolean>,
+    input_editingPlan: {
+      name: string;
+      type: PlanType;
+      description: string;
+      isActived: boolean;
+      isFinished: boolean;
+    },
+    plan: AV.Object
+  ) => {
+    // 打开抽屉菜单
+    isPlanEditorDrawerDisplayed.value = true;
+
+    // 初始化用户的输入
+    input_editingPlan.name = plan.attributes.name;
+    input_editingPlan.type = plan.attributes.type;
+    input_editingPlan.description = plan.attributes.description;
+    input_editingPlan.isActived = plan.attributes.isActived;
+    input_editingPlan.isFinished = plan.attributes.isFinished;
+  },
 };
 
 /**

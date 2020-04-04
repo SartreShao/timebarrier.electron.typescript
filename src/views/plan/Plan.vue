@@ -83,7 +83,14 @@
         v-model="input_editingPlan.name"
       />
 
-      <el-select placeholder="选择计划类型" class="input-plan-type"></el-select>
+      <el-select
+        placeholder="选择计划类型"
+        class="input-plan-type"
+        v-model="input_editingPlan.type"
+      >
+        <el-option label="临时计划" value="temporary"></el-option>
+        <el-option label="每日计划" value="daily"></el-option>
+      </el-select>
 
       <div class="add-plan-related">
         <img :src="assets.icon_add" alt="icon_add" />
@@ -102,13 +109,31 @@
       ></textarea>
 
       <div class="radio-container">
-        <div>
+        <div
+          @click="input_editingPlan.isActived = !input_editingPlan.isActived"
+        >
           <span>激活该计划</span
-          ><img :src="assets.icon_selected" alt="icon_selected" />
+          ><img
+            :src="
+              input_editingPlan.isActived
+                ? assets.icon_selected
+                : assets.icon_unselected
+            "
+            alt="icon_selected"
+          />
         </div>
-        <div>
+        <div
+          @click="input_editingPlan.isFinished = !input_editingPlan.isFinished"
+        >
           <span>完成该计划</span
-          ><img :src="assets.icon_unselected" alt="icon_unselected" />
+          ><img
+            :src="
+              input_editingPlan.isFinished
+                ? assets.icon_selected
+                : assets.icon_unselected
+            "
+            alt="icon_unselected"
+          />
         </div>
       </div>
 
@@ -230,14 +255,10 @@ export default defineComponent({
 
     // 点击事件：点击「编辑计划」按钮
     const click_editPlanButton = (plan: AV.Object) => {
-      isPlanEditorDrawerDisplayed.value = true;
-      input_editingPlan.name = plan.attributes.name;
-      input_editingPlan.type = plan.attributes.type;
-      input_editingPlan.description = plan.attributes.description;
-      input_editingPlan.isActived = plan.attributes.isActived;
-      input_editingPlan.isFinished = plan.attributes.isFinished;
+      PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
     };
 
+    // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
         context.root,
@@ -532,6 +553,14 @@ export default defineComponent({
   padding-left 4.8vw
   padding-right 4.8vw
   margin-top 2.4vh
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #363636
 }
 .input-plan-type >>> .el-input__inner::-webkit-input-placeholder {
   font-size 1.95vh
