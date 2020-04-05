@@ -386,6 +386,9 @@ const PlanPage = {
    * @param vue ElementVue
    * @param isPlanEditorDrawerDisplayed 传入 PlanEditor 的编辑抽屉菜单的控制变量
    * @param input_editingPlan 用户输入的 Plan 信息接收器 input_editingPlan
+   * @param temporaryPlanList 临时计划列表
+   * @param dailyPlanList 每日计划列表
+   * @param completedPlanList 已完成的计划列表
    */
   savePlan: async (
     vue: ElementVue,
@@ -439,6 +442,84 @@ const PlanPage = {
           `错误原因：${error.message},`,
           "error"
         );
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "错误原因：input_editingPlan.id is undefined",
+        "error"
+      );
+    }
+  },
+  /**
+   * 删除计划
+   * @param vue ElementVue
+   * @param isPlanEditorDrawerDisplayed 传入 PlanEditor 的编辑抽屉菜单的控制变量
+   * @param input_editingPlan 用户输入的 Plan 信息接收器 input_editingPlan
+   * @param temporaryPlanList 临时计划列表
+   * @param dailyPlanList 每日计划列表
+   * @param completedPlanList 已完成的计划列表
+   */
+  deletePlan: async (
+    vue: ElementVue,
+    isPlanEditorDrawerDisplayed: Ref<boolean>,
+    input_editingPlan: InputPlanType,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_editingPlan.id !== undefined) {
+      // 弹窗询问用户是否确定删除
+      try {
+        await UI.showConfirm(
+          vue.$confirm,
+          "这将导致该计划及其背后的记录永久丢失",
+          "是否确定删掉该计划"
+        );
+
+        // 确定删除
+        // 显示进度条
+        const loadingInstance = UI.showLoading(
+          vue.$loading,
+          "正在删除您的计划..."
+        );
+
+        // 尝试删除计划，并刷新列表
+        try {
+          await Api.deletePlan(input_editingPlan.id);
+
+          temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+          dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+          completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+          // 保存成功
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(vue.$notify, "计划删除成功", "", "error");
+
+          // 关闭窗口
+          isPlanEditorDrawerDisplayed.value = false;
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "计划删除失败",
+            `错误原因：${error.message},`,
+            "error"
+          );
+        }
+      } catch (error) {
+        // 取消删除
+        // doing nothing
       }
     } else {
       UI.showNotification(

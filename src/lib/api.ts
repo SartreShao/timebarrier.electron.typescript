@@ -223,6 +223,24 @@ export default {
         reject(error);
       }
     }),
+
+  /**
+   * 删除 Plan
+   * @remark 时间壁垒专用函数
+   * @param planId 计划的 objectId
+   */
+  deletePlan: (planId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan = await new AV.Query("Plan").get(planId);
+        await plan.destroy();
+        Log.success("deletePlan");
+        resolve();
+      } catch (error) {
+        Log.error("deletePlan", error);
+        reject(error);
+      }
+    }),
   /**
    * 创建 Tomato
    *

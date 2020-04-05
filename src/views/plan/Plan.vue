@@ -139,7 +139,7 @@
       </div>
 
       <div class="button-container">
-        <div class="delete-button">删除</div>
+        <div class="delete-button" @click="click_deletePlanButton">删除</div>
         <div class="save-button" @click="click_savePlanButton">保存</div>
       </div>
     </el-drawer>
@@ -266,6 +266,18 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击「删除计划」按钮
+    const click_deletePlanButton = () => {
+      PlanPage.deletePlan(
+        context.root,
+        isPlanEditorDrawerDisplayed,
+        input_editingPlan,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -289,6 +301,7 @@ export default defineComponent({
       click_cancelCompletePlanButton,
       click_editPlanButton,
       click_savePlanButton,
+      click_deletePlanButton,
       assets: {
         icon_finished,
         icon_logo,
