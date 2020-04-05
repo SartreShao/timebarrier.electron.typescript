@@ -5,6 +5,7 @@ import { PlanType } from "./types/vue-viewmodels";
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
 const TomatoPlan = AV.Object.extend("TomatoPlan");
+const Ability = AV.Object.extend("Ability");
 
 export default {
   /**
@@ -295,6 +296,34 @@ export default {
         resolve(tomatoPlanList);
       } catch (error) {
         Log.error("createTomatoPlan", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 创建能力
+   * @param name 能力名称
+   * @param description 能力描述
+   * @param isFinished 能力是否训练完毕
+   * @param isActived 能力是否正在激活状态
+   */
+  createAbility: (
+    name: string,
+    description: string,
+    isFinished: boolean,
+    isActived: boolean
+  ) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const ability = await new Ability()
+          .set("name", name)
+          .set("description", description)
+          .set("isFinished", isFinished)
+          .set("isActived", isActived)
+          .save();
+        Log.success("createAbility", ability);
+        resolve(ability);
+      } catch (error) {
+        Log.error("createAbility", error);
         reject(error);
       }
     }),
