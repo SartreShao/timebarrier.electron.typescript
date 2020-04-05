@@ -634,7 +634,7 @@ export default defineComponent({
   height 6.9vh
   margin-top 2.4vh
   border-radius 0.67vh
-  background-color #f0f0f6
+  background-color #F4F4F8
   display flex
   align-items center
   cursor pointer
