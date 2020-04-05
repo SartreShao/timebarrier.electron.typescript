@@ -21,6 +21,7 @@ export type InputPlanType = {
   description: string;
   isActived: boolean;
   isFinished: boolean;
+  target: string;
 };
 
 export interface ElementVue {

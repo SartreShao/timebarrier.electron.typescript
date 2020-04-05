@@ -374,6 +374,7 @@ const PlanPage = {
 
     // 初始化用户的输入
     input_editingPlan.id = plan.id;
+    input_editingPlan.target = plan.attributes.target;
     input_editingPlan.name = plan.attributes.name;
     input_editingPlan.type = plan.attributes.type;
     input_editingPlan.description = plan.attributes.description;
@@ -419,6 +420,7 @@ const PlanPage = {
         await Api.editPlan(
           input_editingPlan.id,
           input_editingPlan.name,
+          Number(input_editingPlan.target),
           input_editingPlan.type,
           input_editingPlan.description,
           input_editingPlan.isActived,

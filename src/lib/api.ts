@@ -201,6 +201,7 @@ export default {
   editPlan: (
     planId: string,
     name: string,
+    target: number,
     type: PlanType,
     description: string,
     isActived: boolean,
@@ -211,6 +212,7 @@ export default {
         const plan = await new AV.Query("Plan").get(planId);
         await plan
           .set("name", name)
+          .set("target", target)
           .set("type", type)
           .set("description", description)
           .set("isActived", isActived)

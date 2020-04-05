@@ -11,7 +11,7 @@
       <section class="create-plan">
         <input
           type="text"
-          placeholder="点击添加一个临时任务"
+          placeholder="点击添加一个临时计划"
           @keyup.enter="keyUpEnter_planInputBox"
           v-model="input_plan"
         />
@@ -26,7 +26,7 @@
           v-bind:key="item.id"
           @click="click_editPlanButton(item)"
         >
-          <h2>临时任务</h2>
+          <h2>临时计划</h2>
           <div class="placeholder"></div>
           <h3>{{ item.attributes.name }}</h3>
           <div
@@ -50,7 +50,7 @@
       direction="btt"
       size="69.64%"
     >
-      <!-- 临时任务 -->
+      <!-- 临时计划 -->
       <section class="temporary">
         <div
           class="item-container"
@@ -58,7 +58,7 @@
           v-bind:key="item.id"
           @click="click_editPlanButton(item)"
         >
-          <h2>临时任务</h2>
+          <h2>临时计划</h2>
           <div class="placeholder"></div>
           <h3>{{ item.attributes.name }}</h3>
           <img
@@ -93,14 +93,18 @@
         <el-option label="每日计划" value="daily"></el-option>
       </el-select>
 
-      <div class="add-plan-related">
-        <img :src="assets.icon_add" alt="icon_add" />
-        <span>关联相关能力</span>
-      </div>
+      <input
+        :disabled="input_editingPlan.type === `temporary`"
+        class="input-plan-target"
+        v-bind:class="{ opacity40: input_editingPlan.type === `temporary` }"
+        type="number"
+        placeholder="每日目标番茄（0-24）"
+        v-model="input_editingPlan.target"
+      />
 
       <div class="add-plan-related">
         <img :src="assets.icon_add" alt="icon_add" />
-        <span>添加每日目标</span>
+        <span>关联相关能力</span>
       </div>
 
       <textarea
@@ -177,6 +181,7 @@ export default defineComponent({
       name: "",
       type: "temporary",
       description: "",
+      target: "0",
       isActived: false,
       isFinished: false
     });
@@ -566,6 +571,36 @@ export default defineComponent({
   letter-spacing 0.21px
   text-align left
   color #969294
+}
+.input-plan-target {
+  width 89.6vw
+  height 6.9vh
+  border-radius 0.67vh
+  border solid 0.15vh #ebebf3
+  padding-left 4.8vw
+  padding-right 4.8vw
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #363636
+  margin-top 2.4vh
+}
+.input-plan-target::-webkit-input-placeholder {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #969294
+}
+.opacity40 {
+  opacity 0.4
 }
 .input-plan-type >>> .el-input__inner {
   width 89.6vw
