@@ -168,14 +168,15 @@
       </div>
     </el-drawer>
 
-    <!-- 抽屉菜单：关联相关计划 -->
+    <!-- 抽屉菜单：关联相关能力 -->
     <el-drawer
       class="related-ability-container"
-      title="关联相关计划"
+      title="关联相关能力"
       direction="btt"
       size="86.64%"
       :visible.sync="isRelatedAbilityDrawerDisplayed"
     >
+      <!-- 输入框：创建新能力 -->
       <div class="input-ability-name-container">
         <input
           type="text"
@@ -184,6 +185,22 @@
         />
 
         <img :src="assets.icon_enter" alt="icon_enter" />
+      </div>
+
+      <!-- 包含框：能力 Ability -->
+      <section class="ability-container">
+        <div class="ability-item">
+          <span>跑步 10 公里</span>
+          <img src="" alt="" />
+        </div>
+      </section>
+
+      <div class="button-container">
+        <!-- 按钮：删除计划 -->
+        <div class="delete-button">删除</div>
+
+        <!-- 按钮：保存计划 -->
+        <div class="save-button">保存</div>
       </div>
     </el-drawer>
     <bottom-bar></bottom-bar>
@@ -867,5 +884,43 @@ export default defineComponent({
   margin-bottom auto
   width 3.27vw
   height 1.3vh
+}
+.ability-container {
+  margin-top 2.4vh
+  width 100%
+  display flex
+  flex-direction column
+  align-items center
+}
+.ability-item {
+  width 89.6vw
+  height 6.9vh
+  border-radius 0.67vh
+  background-color #f4f4f8
+  display flex
+  flex-direction row
+  justify-content space-between
+  align-items center
+  margin-bottom 1.5vh
+}
+.ability-item span {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.02vh
+  text-align left
+  color #969294
+  margin-left 4.8vw
+}
+.ability-item img {
+  cursor pointer
+  height 2.7vh
+  width 2.7vh
+  background white
+  border-radius 50%
+  border solid 0.07vh #d5d5d5
+  margin-right 5.87vw
 }
 </style>
