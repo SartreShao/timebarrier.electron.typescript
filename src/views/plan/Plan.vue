@@ -1,13 +1,17 @@
 <template>
   <div class="container">
+    <!-- 顶边栏 -->
     <header>
+      <!-- 状态栏占位 -->
       <div style="height:1vh"></div>
 
+      <!-- 标题与刷新按钮 -->
       <section class="title">
         <img :src="assets.icon_logo" alt="icon_logo" />
         <h1>时间壁垒</h1>
       </section>
 
+      <!-- 创建新计划的输入框 -->
       <section class="create-plan">
         <input
           type="text"
@@ -18,7 +22,9 @@
       </section>
     </header>
 
+    <!-- 主界面 -->
     <main>
+      <!-- 临时计划列表 -->
       <section class="temporary">
         <div
           class="item-container"
@@ -38,11 +44,13 @@
 
       <section class="training"></section>
 
+      <!-- 「已完成」按钮 -->
       <div class="completed-container" @click="click_completedPlanListButton">
         已完成 · {{ completedPlanList.length }}
       </div>
     </main>
 
+    <!-- 抽屉菜单：已完成的番茄 -->
     <el-drawer
       class="finished-plan-container"
       title="已完成的番茄"
@@ -70,6 +78,7 @@
       </section>
     </el-drawer>
 
+    <!-- 抽屉菜单：编辑计划 -->
     <el-drawer
       class="edit-plan-container"
       title="编辑计划"
@@ -77,6 +86,7 @@
       size="86.64%"
       :visible.sync="isPlanEditorDrawerDisplayed"
     >
+      <!-- 输入框：计划名称 -->
       <input
         type="text"
         class="input-plan-name"
@@ -84,6 +94,7 @@
         v-model="input_editingPlan.name"
       />
 
+      <!-- 单选框：计划类别 -->
       <el-select
         placeholder="选择计划类型"
         class="input-plan-type"
@@ -93,6 +104,7 @@
         <el-option label="每日计划" value="daily"></el-option>
       </el-select>
 
+      <!-- 输入框：目标番茄 -->
       <input
         :disabled="input_editingPlan.type === `temporary`"
         class="input-plan-target"
@@ -102,11 +114,13 @@
         v-model="input_editingPlan.target"
       />
 
-      <div class="add-plan-related">
+      <!-- 按钮：关联相关能力 -->
+      <div class="add-plan-related" @click="click_relatedAbilityButton">
         <img :src="assets.icon_add" alt="icon_add" />
         <span>关联相关能力</span>
       </div>
 
+      <!-- 输入框：计划描述 -->
       <textarea
         class="input-plan-description"
         placeholder="输入计划描述"
@@ -114,6 +128,7 @@
       ></textarea>
 
       <div class="radio-container">
+        <!-- 选择器：激活计划 -->
         <div
           @click="input_editingPlan.isActived = !input_editingPlan.isActived"
         >
@@ -127,6 +142,8 @@
             alt="icon_selected"
           />
         </div>
+
+        <!-- 选择器：完成计划 -->
         <div
           @click="input_editingPlan.isFinished = !input_editingPlan.isFinished"
         >
@@ -143,10 +160,21 @@
       </div>
 
       <div class="button-container">
+        <!-- 按钮：删除计划 -->
         <div class="delete-button" @click="click_deletePlanButton">删除</div>
+
+        <!-- 按钮：保存计划 -->
         <div class="save-button" @click="click_savePlanButton">保存</div>
       </div>
     </el-drawer>
+
+    <!-- 抽屉菜单：关联相关计划 -->
+    <el-drawer
+      title="关联相关计划"
+      direction="btt"
+      size="86.64%"
+      :visible.sync="isRelatedAbilityDrawerDisplayed"
+    ></el-drawer>
     <bottom-bar></bottom-bar>
   </div>
 </template>
@@ -209,6 +237,9 @@ export default defineComponent({
 
     // 「展示 `编辑计划` 的抽屉」是否已经打开
     const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(false);
+
+    // 「展示 `关联相关能力` 的抽屉」是否已经打开
+    const isRelatedAbilityDrawerDisplayed: Ref<boolean> = ref(false);
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
@@ -283,6 +314,12 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击「关联相关能力」按钮
+    const click_relatedAbilityButton = () => {
+      console.log("fuck");
+      isRelatedAbilityDrawerDisplayed.value = true;
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -300,6 +337,7 @@ export default defineComponent({
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
       isPlanEditorDrawerDisplayed,
+      isRelatedAbilityDrawerDisplayed,
       keyUpEnter_planInputBox,
       click_completePlanButton,
       click_completedPlanListButton,
@@ -307,6 +345,7 @@ export default defineComponent({
       click_editPlanButton,
       click_savePlanButton,
       click_deletePlanButton,
+      click_relatedAbilityButton,
       assets: {
         icon_finished,
         icon_logo,
