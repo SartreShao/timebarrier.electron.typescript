@@ -170,11 +170,22 @@
 
     <!-- 抽屉菜单：关联相关计划 -->
     <el-drawer
+      class="related-ability-container"
       title="关联相关计划"
       direction="btt"
       size="86.64%"
       :visible.sync="isRelatedAbilityDrawerDisplayed"
-    ></el-drawer>
+    >
+      <div class="input-ability-name-container">
+        <input
+          type="text"
+          placeholder="创建一个新能力"
+          class="input-ability-name"
+        />
+
+        <img :src="assets.icon_enter" alt="icon_enter" />
+      </div>
+    </el-drawer>
     <bottom-bar></bottom-bar>
   </div>
 </template>
@@ -196,6 +207,7 @@ import icon_logo from "../../assets/icon_logo.svg";
 import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
+import icon_enter from "../../assets/icon_enter.svg";
 import { PlanType, InputPlanType } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { BottomBar },
@@ -316,7 +328,6 @@ export default defineComponent({
 
     // 点击事件：点击「关联相关能力」按钮
     const click_relatedAbilityButton = () => {
-      console.log("fuck");
       isRelatedAbilityDrawerDisplayed.value = true;
     };
 
@@ -351,7 +362,8 @@ export default defineComponent({
         icon_logo,
         icon_add,
         icon_selected,
-        icon_unselected
+        icon_unselected,
+        icon_enter
       }
     };
   }
@@ -806,5 +818,54 @@ export default defineComponent({
   align-items center
   margin-right 2.13vw
   cursor pointer
+}
+.related-ability-container >>> .el-drawer__body {
+  display flex
+  flex-direction column
+  overflow scroll
+  align-items center
+}
+.input-ability-name {
+  position absolute
+  width 89.6vw
+  height 6.9vh
+  border-radius 0.67vh
+  border solid 0.15vh #ebebf3
+  padding-left 4.8vw
+  padding-right 4.8vw
+  box-sizing border-box
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.21px
+  text-align left
+  color #363636
+}
+.input-ability-name::-webkit-input-placeholder {
+  font-size 1.95vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.42
+  letter-spacing 0.02vh
+  text-align left
+  color #969294
+}
+.input-ability-name-container {
+  position relative
+  width 89.6vw
+  height 6.9vh
+}
+.input-ability-name-container img {
+  position absolute
+  right 5.93vw
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  width 3.27vw
+  height 1.3vh
 }
 </style>
