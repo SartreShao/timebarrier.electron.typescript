@@ -571,6 +571,10 @@ const PlanPage = {
       );
     }
   },
+  /**
+   * 创建一个 Ability
+   * 会先创建一个 Ability，然后再刷新 Ability 列表，最后在清空输入框
+   */
   createAbility: async (
     vue: ElementVue,
     input_ability: Ref<string>,
