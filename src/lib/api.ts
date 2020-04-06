@@ -116,9 +116,24 @@ export default {
         }
         const planList = await query.find();
 
-        // Plan 的临时属性，用于提交番茄
+        // 查询 plan 相关的 ability
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .include("plan")
+          .include("ability")
+          .containedIn("plan", planList)
+          .find();
+
         planList.forEach((plan) => {
+          plan.attributes.abilityListOfPlan = [];
           plan.attributes.selected = false;
+
+          abilityPlanList.forEach((abilityPlan) => {
+            if (plan.id === abilityPlan.attributes.plan.id) {
+              plan.attributes.abilityListOfPlan.push(
+                abilityPlan.attributes.ability
+              );
+            }
+          });
         });
 
         Log.success(`fetchPlanList ${planType}`, planList);
@@ -212,7 +227,8 @@ export default {
     type: PlanType,
     description: string,
     isActived: boolean,
-    isFinished: boolean
+    isFinished: boolean,
+    abilityIdList: string[]
   ) =>
     new Promise(async (resolve, reject) => {
       try {
@@ -225,6 +241,25 @@ export default {
           .set("isActived", isActived)
           .set("isFinished", isFinished)
           .save();
+
+        // 删除所有的相关的中间表
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .equalTo("plan", plan)
+          .find();
+
+        await AV.Object.destroyAll(abilityPlanList);
+
+        // 添加所有的相关的中间表
+        const list: AV.Object[] = [];
+        abilityIdList.forEach((abilityId) => {
+          list.push(
+            new AbilityPlan()
+              .set("plan", AV.Object.createWithoutData(Plan, planId))
+              .set("ability", AV.Object.createWithoutData(Ability, abilityId))
+          );
+        });
+
+        await AV.Object.saveAll(list);
         Log.success("editPlan", plan);
         resolve(plan);
       } catch (error) {

@@ -352,12 +352,7 @@ export default defineComponent({
 
     // 点击事件：点击「编辑计划」按钮
     const click_editPlanButton = (plan: AV.Object) => {
-      PlanPage.editPlan(
-        context.root,
-        isPlanEditorDrawerDisplayed,
-        input_editingPlan,
-        plan
-      );
+      PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
     };
 
     // 点击事件：点击「保存计划」按钮

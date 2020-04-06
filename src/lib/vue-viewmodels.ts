@@ -365,7 +365,6 @@ const PlanPage = {
    * @param plan 传入选择的 Plan
    */
   editPlan: async (
-    vue: ElementVue,
     isPlanEditorDrawerDisplayed: Ref<boolean>,
     input_editingPlan: InputPlanType,
     plan: AV.Object
@@ -381,27 +380,11 @@ const PlanPage = {
     input_editingPlan.description = plan.attributes.description;
     input_editingPlan.isActived = plan.attributes.isActived;
     input_editingPlan.isFinished = plan.attributes.isFinished;
-
-    // 请求 AbilityPlanList
-    try {
-      if (plan.id !== undefined) {
-        const abilityPlanList = await Api.fetchAbilityPlanList(null, plan.id);
-        const abilityList = abilityPlanList.map((abilityPlan) => {
-          return {
-            id: abilityPlan.attributes.ability.id,
-            name: abilityPlan.attributes.ability.attributes.name,
-          };
-        });
-        input_editingPlan.abilityList = abilityList;
-      } else {
-        UI.showNotification(
-          vue.$notify,
-          "出现错误",
-          "错误原因：plan.id is undefined",
-          "error"
-        );
+    input_editingPlan.abilityList = plan.attributes.abilityListOfPlan.map(
+      (ability: AV.Object) => {
+        return { id: ability.id, name: ability.attributes.name };
       }
-    } catch (error) {}
+    );
   },
   /**
    * 保存计划
@@ -446,7 +429,8 @@ const PlanPage = {
           input_editingPlan.type,
           input_editingPlan.description,
           input_editingPlan.isActived,
-          input_editingPlan.isFinished
+          input_editingPlan.isFinished,
+          input_editingPlan.abilityList.map((ability) => ability.id)
         );
 
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
@@ -554,6 +538,9 @@ const PlanPage = {
       );
     }
   },
+  /**
+   * 用户点击「关联相关能力」
+   */
   relatedAbility: async (
     vue: ElementVue,
     isRelatedAbilityDrawerDisplayed: Ref<boolean>,
