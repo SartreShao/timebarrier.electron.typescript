@@ -123,11 +123,11 @@ export default {
           .containedIn("plan", planList)
           .find();
 
-        planList.forEach((plan) => {
+        planList.forEach(plan => {
           plan.attributes.abilityListOfPlan = [];
           plan.attributes.selected = false;
 
-          abilityPlanList.forEach((abilityPlan) => {
+          abilityPlanList.forEach(abilityPlan => {
             if (plan.id === abilityPlan.attributes.plan.id) {
               plan.attributes.abilityListOfPlan.push(
                 abilityPlan.attributes.ability
@@ -251,7 +251,7 @@ export default {
 
         // 添加所有的相关的中间表
         const list: AV.Object[] = [];
-        abilityIdList.forEach((abilityId) => {
+        abilityIdList.forEach(abilityId => {
           list.push(
             new AbilityPlan()
               .set("plan", AV.Object.createWithoutData(Plan, planId))
@@ -326,7 +326,7 @@ export default {
     new Promise(async (resolve, reject) => {
       try {
         const tomatoPlanList: AV.Object[] = [];
-        planIdList.forEach((planId) => {
+        planIdList.forEach(planId => {
           const tomatoPlan = new TomatoPlan()
             .set("tomato", AV.Object.createWithoutData("Tomato", tomatoId))
             .set("plan", AV.Object.createWithoutData("Plan", planId));
@@ -439,12 +439,12 @@ export default {
         const abilityPlanList = await new AV.Query(AbilityPlan)
           .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
           .find();
-        abilityList.forEach((ability) => {
+        abilityList.forEach(ability => {
           ability.attributes.selected = false;
         });
 
-        abilityPlanList.forEach((abilityPlan) => {
-          abilityList.forEach((ability) => {
+        abilityPlanList.forEach(abilityPlan => {
+          abilityList.forEach(ability => {
             if (abilityPlan.attributes.ability.id === ability.id) {
               ability.attributes.selected = true;
             }
@@ -457,5 +457,5 @@ export default {
         Log.error("fetchAbilityListWithPlanSelect", error);
         reject(error);
       }
-    }),
+    })
 };
