@@ -532,6 +532,124 @@ const PlanPage = {
       );
     }
   },
+  relatedAbility: async (
+    vue: ElementVue,
+    isRelatedAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityList: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType
+  ) => {
+    // 打开抽屉菜单
+    isRelatedAbilityDrawerDisplayed.value = true;
+
+    if (input_editingPlan.id !== undefined) {
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的能力"
+      );
+
+      try {
+        input_abilityList.value = await Api.fetchAbilityListWithPlanSelect(
+          input_editingPlan.id
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "错误原因：input_editingPlan.id is undefined",
+        "error"
+      );
+    }
+  },
+  createAbility: async (
+    vue: ElementVue,
+    input_ability: Ref<string>,
+    input_abilityList: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 检测传入数据
+    if (input_ability.value.length === 0) {
+      // doing nothing
+      return;
+    }
+
+    try {
+      // 创建计划
+      await Api.createAbility(input_ability.value, user, "", false, true);
+
+      // 刷新能力列表
+      if (input_editingPlan.id !== undefined) {
+        // 尝试请求带有 selected 属性的 Ability
+        const loadingInstance = UI.showLoading(
+          vue.$loading,
+          "正在请求相关的能力"
+        );
+
+        try {
+          input_abilityList.value = await Api.fetchAbilityListWithPlanSelect(
+            input_editingPlan.id
+          );
+          UI.hideLoading(loadingInstance);
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "网络出错",
+            `错误原因：${error.message}`,
+            "error"
+          );
+        }
+      } else {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingPlan.id is undefined",
+          "error"
+        );
+      }
+
+      input_ability.value = "";
+    } catch (error) {
+      UI.showNotification(
+        vue.$notify,
+        "创建计划失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * @TO-FIX
+   */
+  selectAbilityToCommit: (ability: {
+    attributes: { selected: boolean; name: string };
+  }) => {
+    ability.attributes.selected = !ability.attributes.selected;
+
+    // 下面的纯粹是因为前面选择了后不刷新
+    const temp = ability.attributes.name;
+    ability.attributes.name = "";
+    ability.attributes.name = temp;
+  },
 };
 
 /**

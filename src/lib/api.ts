@@ -1,11 +1,13 @@
 import * as AV from "leancloud-storage";
 import { Log } from "../lib/vue-utils";
 import { PlanType } from "./types/vue-viewmodels";
+import { EROFS } from "constants";
 
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
 const TomatoPlan = AV.Object.extend("TomatoPlan");
 const Ability = AV.Object.extend("Ability");
+const AbilityPlan = AV.Object.extend("AbilityPlan");
 
 export default {
   /**
@@ -88,7 +90,7 @@ export default {
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
-        const query = new AV.Query<AV.Object>("Plan")
+        const query = new AV.Query(Plan)
           .skip(
             currentPage ? (currentPage - 1) * (pageSize ? pageSize : 1000) : 0
           )
@@ -134,7 +136,11 @@ export default {
    * @param type 计划类型
    * @param user 创建计划的人
    */
-  createPlan: (name: string, type: PlanType, user: AV.User) =>
+  createPlan: (
+    name: string,
+    type: PlanType,
+    user: AV.User
+  ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
         const plan = await new Plan()
@@ -159,7 +165,7 @@ export default {
   completePlan: (planId: string) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query("Plan").get(planId);
+        const plan = await new AV.Query(Plan).get(planId);
         plan.set("isFinished", true);
         await plan.save();
         Log.success("completePlan", plan);
@@ -178,7 +184,7 @@ export default {
   cancelCompletePlan: (planId: string) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query("Plan").get(planId);
+        const plan = await new AV.Query(Plan).get(planId);
         await plan.set("isFinished", false).save();
         Log.success("cancelCompletePlan", plan);
         resolve(plan);
@@ -210,7 +216,7 @@ export default {
   ) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query("Plan").get(planId);
+        const plan = await new AV.Query(Plan).get(planId);
         await plan
           .set("name", name)
           .set("target", target)
@@ -235,7 +241,7 @@ export default {
   deletePlan: (planId: string) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query("Plan").get(planId);
+        const plan = await new AV.Query(Plan).get(planId);
         await plan.destroy();
         Log.success("deletePlan");
         resolve();
@@ -308,6 +314,7 @@ export default {
    */
   createAbility: (
     name: string,
+    user: AV.User,
     description: string,
     isFinished: boolean,
     isActived: boolean
@@ -316,6 +323,7 @@ export default {
       try {
         const ability = await new Ability()
           .set("name", name)
+          .set("user", user)
           .set("description", description)
           .set("isFinished", isFinished)
           .set("isActived", isActived)
@@ -324,6 +332,61 @@ export default {
         resolve(ability);
       } catch (error) {
         Log.error("createAbility", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 请求 Ability 列表
+   * @param user 用户名称
+   * @param isFinished 计划是否已经被完成
+   * @param isActived 计划是否被激活
+   */
+  fetchAbilityList: (user: AV.User, isFinished: boolean, isActived?: boolean) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const query = await new AV.Query(Ability)
+          .equalTo("user", user)
+          .equalTo("isFinished", isFinished);
+        if (isActived !== undefined) {
+          query.equalTo("isActived", isActived);
+        }
+        const abilityList = await query.find();
+        Log.success("fetchAbilityList", abilityList);
+        resolve(abilityList);
+      } catch (error) {
+        Log.error("fetchAbilityList", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 请求 Ability 列表并且其中加入 selected 表示用户是否选择了该计划
+   */
+  fetchAbilityListWithPlanSelect: (planId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan: AV.Object = await new AV.Query(Plan).get(planId);
+        const userId: string = plan.attributes.user.id;
+        const abilityList = await new AV.Query(Ability)
+          .equalTo("user", AV.Object.createWithoutData("_User", userId))
+          .equalTo("isFinished", false)
+          .find();
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
+          .find();
+        abilityPlanList.forEach((abilityPlan) => {
+          abilityList.forEach((ability) => {
+            if (abilityPlan.attributes.ability.id === ability.id) {
+              ability.attributes.selected = true;
+            } else {
+              ability.attributes.selected = false;
+            }
+          });
+        });
+        Log.success("fetchAbilityListWithPlanSelect", abilityList);
+        resolve(abilityList);
+      } catch (error) {
+        console.log(error);
+        Log.error("fetchAbilityListWithPlanSelect", error);
         reject(error);
       }
     }),

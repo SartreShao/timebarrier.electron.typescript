@@ -182,6 +182,8 @@
           type="text"
           placeholder="创建一个新能力"
           class="input-ability-name"
+          @keyup.enter="keyUpEnter_abilityInputBox"
+          v-model="input_ability"
         />
 
         <img :src="assets.icon_enter" alt="icon_enter" />
@@ -189,9 +191,19 @@
 
       <!-- 包含框：能力 Ability -->
       <section class="ability-container">
-        <div class="ability-item">
-          <span>跑步 10 公里</span>
-          <img src="" alt="" />
+        <div
+          class="ability-item"
+          v-for="item in input_abilityList"
+          v-bind:key="item.id"
+          @click="click_abilityItemSelector(item)"
+        >
+          <span>{{ item.attributes.name }}</span>
+          <img
+            v-if="item.attributes.selected"
+            :src="assets.icon_finished"
+            alt="icon_finished"
+          />
+          <img v-else src="" alt="" />
         </div>
       </section>
 
@@ -232,6 +244,9 @@ export default defineComponent({
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
 
+    // 用户输入：创建的「能力」的名称
+    const input_ability: Ref<string> = ref("");
+
     // 用户输入：当前编辑的「计划」
     const input_editingPlan: InputPlanType = reactive({
       id: undefined,
@@ -242,6 +257,9 @@ export default defineComponent({
       isActived: false,
       isFinished: false
     });
+
+    // 用户输入：需要关联到计划的能力列表
+    const input_abilityList: Ref<AV.Object[]> = ref([]);
 
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object[]> = inject(
@@ -278,6 +296,16 @@ export default defineComponent({
         "temporary",
         temporaryPlanList,
         dailyPlanList
+      );
+    };
+
+    // 在能力输入框回车：创建能力
+    const keyUpEnter_abilityInputBox = () => {
+      PlanPage.createAbility(
+        context.root,
+        input_ability,
+        input_abilityList,
+        input_editingPlan
       );
     };
 
@@ -345,7 +373,17 @@ export default defineComponent({
 
     // 点击事件：点击「关联相关能力」按钮
     const click_relatedAbilityButton = () => {
-      isRelatedAbilityDrawerDisplayed.value = true;
+      PlanPage.relatedAbility(
+        context.root,
+        isRelatedAbilityDrawerDisplayed,
+        input_abilityList,
+        input_editingPlan
+      );
+    };
+
+    // 点击事件：点击选择 Ability 的项目
+    const click_abilityItemSelector = (ability: AV.Object) => {
+      PlanPage.selectAbilityToCommit(ability);
     };
 
     // 生命周期：初始化
@@ -360,13 +398,16 @@ export default defineComponent({
 
     return {
       input_plan,
+      input_ability,
       input_editingPlan,
+      input_abilityList,
       temporaryPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
       isPlanEditorDrawerDisplayed,
       isRelatedAbilityDrawerDisplayed,
       keyUpEnter_planInputBox,
+      keyUpEnter_abilityInputBox,
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
@@ -374,6 +415,7 @@ export default defineComponent({
       click_savePlanButton,
       click_deletePlanButton,
       click_relatedAbilityButton,
+      click_abilityItemSelector,
       assets: {
         icon_finished,
         icon_logo,
@@ -893,6 +935,7 @@ export default defineComponent({
   align-items center
 }
 .ability-item {
+  cursor pointer
   width 89.6vw
   height 6.9vh
   border-radius 0.67vh
@@ -915,7 +958,6 @@ export default defineComponent({
   margin-left 4.8vw
 }
 .ability-item img {
-  cursor pointer
   height 2.7vh
   width 2.7vh
   background white
