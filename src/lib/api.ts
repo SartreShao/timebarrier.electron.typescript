@@ -359,6 +359,37 @@ export default {
       }
     }),
   /**
+   * 请求 AbilityPlan 列表
+   * @param abilityId 能力 Id，可选参数
+   * @param planId 计划 Id，可选参数
+   */
+  fetchAbilityPlanList: (
+    abilityId: string | null,
+    planId: string | null
+  ): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const query = new AV.Query(AbilityPlan)
+          .include("plan")
+          .include("ability");
+        if (abilityId !== null) {
+          query.equalTo(
+            "ability",
+            AV.Object.createWithoutData(Ability, abilityId)
+          );
+        }
+        if (planId !== null) {
+          query.equalTo("plan", AV.Object.createWithoutData(Plan, planId));
+        }
+        const abilityPlanList = await query.find();
+        Log.success("fetchAbilityPlanList", abilityPlanList);
+        resolve(abilityPlanList);
+      } catch (error) {
+        Log.error("fetchAbilityPlanList", error);
+        reject(error);
+      }
+    }),
+  /**
    * 请求 Ability 列表并且其中加入 selected 表示用户是否选择了该计划
    */
   fetchAbilityListWithPlanSelect: (planId: string): Promise<AV.Object[]> =>

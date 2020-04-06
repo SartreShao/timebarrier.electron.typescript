@@ -116,8 +116,15 @@
 
       <!-- 按钮：关联相关能力 -->
       <div class="add-plan-related" @click="click_relatedAbilityButton">
-        <img :src="assets.icon_add" alt="icon_add" />
-        <span>关联相关能力</span>
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="input_editingPlan.abilityList.length === 0"
+        />
+        <span v-if="input_editingPlan.abilityList.length === 0"
+          >关联相关能力</span
+        >
+        <span v-else>{{ input_editingPlan.abilityList.join("、") }}</span>
       </div>
 
       <!-- 输入框：计划描述 -->
@@ -209,10 +216,10 @@
 
       <div class="button-container">
         <!-- 按钮：删除计划 -->
-        <div class="delete-button">删除</div>
+        <div class="delete-button">取消</div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button">保存</div>
+        <div class="save-button">选择</div>
       </div>
     </el-drawer>
     <bottom-bar></bottom-bar>
@@ -251,6 +258,7 @@ export default defineComponent({
     const input_editingPlan: InputPlanType = reactive({
       id: undefined,
       name: "",
+      abilityList: [],
       type: "temporary",
       description: "",
       target: "0",
@@ -344,7 +352,12 @@ export default defineComponent({
 
     // 点击事件：点击「编辑计划」按钮
     const click_editPlanButton = (plan: AV.Object) => {
-      PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
+      PlanPage.editPlan(
+        context.root,
+        isPlanEditorDrawerDisplayed,
+        input_editingPlan,
+        plan
+      );
     };
 
     // 点击事件：点击「保存计划」按钮
@@ -748,10 +761,10 @@ export default defineComponent({
   display flex
   align-items center
   cursor pointer
+  padding-left 3.92vw
   img {
     width 1.92vh
     height 1.92vh
-    margin-left 3.92vw
     margin-right 2.8vw
     opacity 0.5
   }
