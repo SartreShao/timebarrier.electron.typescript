@@ -126,7 +126,10 @@
           >关联相关能力</span
         >
         <span v-else>{{
-          input_editingPlan.abilityList.map(ability => ability.name).join("、")
+          "相关能力：" +
+            input_editingPlan.abilityList
+              .map(ability => ability.name)
+              .join("、")
         }}</span>
       </div>
 
