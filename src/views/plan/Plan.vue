@@ -106,6 +106,7 @@
 
       <!-- 输入框：目标番茄 -->
       <input
+        :hidden="input_editingPlan.type === `temporary`"
         :disabled="input_editingPlan.type === `temporary`"
         class="input-plan-target"
         v-bind:class="{ opacity40: input_editingPlan.type === `temporary` }"
@@ -124,7 +125,9 @@
         <span v-if="input_editingPlan.abilityList.length === 0"
           >关联相关能力</span
         >
-        <span v-else>{{ input_editingPlan.abilityList.join("、") }}</span>
+        <span v-else>{{
+          input_editingPlan.abilityList.map(ability => ability.name).join("、")
+        }}</span>
       </div>
 
       <!-- 输入框：计划描述 -->
@@ -215,11 +218,16 @@
       </section>
 
       <div class="button-container">
-        <!-- 按钮：删除计划 -->
-        <div class="delete-button">取消</div>
+        <!-- 按钮：取消计划 -->
+        <div
+          class="delete-button"
+          @click="isRelatedAbilityDrawerDisplayed = false"
+        >
+          取消
+        </div>
 
-        <!-- 按钮：保存计划 -->
-        <div class="save-button">选择</div>
+        <!-- 按钮：选择计划 -->
+        <div class="save-button" @click="click_saveAbility">选择</div>
       </div>
     </el-drawer>
     <bottom-bar></bottom-bar>
@@ -261,7 +269,7 @@ export default defineComponent({
       abilityList: [],
       type: "temporary",
       description: "",
-      target: "0",
+      target: "",
       isActived: false,
       isFinished: false
     });
@@ -394,6 +402,14 @@ export default defineComponent({
       PlanPage.selectAbilityToCommit(ability);
     };
 
+    // 点击事件：保存选择后的 Ability 结果
+    const click_saveAbility = () => {
+      PlanPage.saveSelectedAblityToEditingPlan(
+        isRelatedAbilityDrawerDisplayed,
+        input_abilityList,
+        input_editingPlan
+      );
+    };
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -424,6 +440,7 @@ export default defineComponent({
       click_deletePlanButton,
       click_relatedAbilityButton,
       click_abilityItemSelector,
+      click_saveAbility,
       assets: {
         icon_finished,
         icon_logo,

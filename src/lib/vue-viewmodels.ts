@@ -6,7 +6,7 @@ import {
   ElementVue,
   TomatoCloudStatus,
   PlanType,
-  InputPlanType,
+  InputPlanType
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -34,7 +34,7 @@ const SplashPage = {
     Api.isLoggedIn()
       ? Router.replace(routerInstance, indexLocation)
       : Router.replace(routerInstance, loginLocation);
-  },
+  }
 };
 
 /**
@@ -146,7 +146,7 @@ const LoginPage = {
         );
       }
     }
-  },
+  }
 };
 
 /**
@@ -430,7 +430,7 @@ const PlanPage = {
           input_editingPlan.description,
           input_editingPlan.isActived,
           input_editingPlan.isFinished,
-          input_editingPlan.abilityList.map((ability) => ability.id)
+          input_editingPlan.abilityList.map(ability => ability.id)
         );
 
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
@@ -663,6 +663,28 @@ const PlanPage = {
     ability.attributes.name = "";
     ability.attributes.name = temp;
   },
+  /**
+   * 将选择好的 Ability(input_abilityList) 保存到 input_editingPlan 的 ablityList 中
+   */
+  saveSelectedAblityToEditingPlan: (
+    isRelatedAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityList: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType
+  ) => {
+    isRelatedAbilityDrawerDisplayed.value = false;
+    const list: { id: string; name: string }[] = [];
+    input_abilityList.value.forEach(ability => {
+      if (ability.attributes.selected === true) {
+        if (ability.id !== undefined) {
+          list.push({
+            id: ability.id,
+            name: ability.attributes.name
+          });
+        }
+      }
+    });
+    input_editingPlan.abilityList = list;
+  }
 };
 
 /**
@@ -799,7 +821,7 @@ const TomatoTimerPage = {
     input_plan.value = "";
 
     // 遍历 temporaryPlanList
-    temporaryPlanList.value.forEach((plan) => {
+    temporaryPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -810,7 +832,7 @@ const TomatoTimerPage = {
     });
 
     // 遍历 dailyPlanList
-    dailyPlanList.value.forEach((plan) => {
+    dailyPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -821,7 +843,7 @@ const TomatoTimerPage = {
     });
 
     // 遍历 completedPlanList
-    completedPlanList.value.forEach((plan) => {
+    completedPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
         if (input_plan.value.length === 0) {
           input_plan.value = plan.attributes.name;
@@ -879,19 +901,19 @@ const TomatoTimerPage = {
       // 遍历 PlanList 寻找被选择的 Plan
       const planIdList: string[] = [];
 
-      temporaryPlanList.value.forEach((plan) => {
+      temporaryPlanList.value.forEach(plan => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
       });
 
-      dailyPlanList.value.forEach((plan) => {
+      dailyPlanList.value.forEach(plan => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
       });
 
-      completedPlanList.value.forEach((plan) => {
+      completedPlanList.value.forEach(plan => {
         if (plan.attributes.selected === true && plan.id !== undefined) {
           planIdList.push(plan.id);
         }
@@ -923,7 +945,7 @@ const TomatoTimerPage = {
         "error"
       );
     }
-  },
+  }
 };
 
 export { SplashPage, LoginPage, PlanPage, TomatoTimerPage };

@@ -96,7 +96,7 @@ export default {
           )
           .limit(pageSize ? pageSize : 1000)
           .equalTo("user", user)
-          .descending("updatedAt");
+          .descending("createdAt");
 
         switch (planType) {
           case "temporary": {
@@ -439,12 +439,14 @@ export default {
         const abilityPlanList = await new AV.Query(AbilityPlan)
           .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
           .find();
+        abilityList.forEach((ability) => {
+          ability.attributes.selected = false;
+        });
+
         abilityPlanList.forEach((abilityPlan) => {
           abilityList.forEach((ability) => {
             if (abilityPlan.attributes.ability.id === ability.id) {
               ability.attributes.selected = true;
-            } else {
-              ability.attributes.selected = false;
             }
           });
         });
