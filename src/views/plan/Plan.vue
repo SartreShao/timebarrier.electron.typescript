@@ -629,6 +629,7 @@ export default defineComponent({
         height 11.47vh
         flex-shrink 0
         background white
+        margin-bottom 1vh
         .plan-container {
           display flex
           flex-direction row cursor pointer
