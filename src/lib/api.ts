@@ -123,6 +123,8 @@ export default {
           .containedIn("plan", planList)
           .find();
 
+        // 添加属性：abilityListOfPlan - Plan 对应的 AbilityList
+        // 添加属性：selected
         planList.forEach(plan => {
           plan.attributes.abilityListOfPlan = [];
           plan.attributes.selected = false;
