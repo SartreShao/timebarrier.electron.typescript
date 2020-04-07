@@ -1,12 +1,12 @@
 import { ElNotification } from "element-ui/types/notification";
 import {
   LoadingServiceOptions,
-  ElLoadingComponent,
+  ElLoadingComponent
 } from "element-ui/types/loading";
 import VueRouter from "vue-router";
 import {
   ElMessageBoxOptions,
-  MessageBoxData,
+  MessageBoxData
 } from "element-ui/types/message-box";
 
 /**

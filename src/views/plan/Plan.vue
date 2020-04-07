@@ -24,8 +24,9 @@
 
     <!-- 主界面 -->
     <main>
+      <div style="height:2.1vh"></div>
       <!-- 临时计划列表 -->
-      <section class="temporary">
+      <section class="temporary" v-if="temporaryPlanList.length !== 0">
         <div
           class="item-container"
           v-for="item in temporaryPlanList"
@@ -42,7 +43,30 @@
         </div>
       </section>
 
-      <section class="training"></section>
+      <!-- 每日计划 -->
+      <section class="daily">
+        <div
+          class="item-container"
+          v-for="item in dailyPlanList"
+          v-bind:key="item.id"
+          @click="click_editPlanButton(item)"
+        >
+          <div class="plan-container">
+            <h2>每日计划</h2>
+            <div class="placeholder"></div>
+            <h3>{{ item.attributes.name }}</h3>
+            <img
+              class="start-button"
+              :src="assets.icon_start"
+              alt="icon_start"
+            />
+          </div>
+          <div class="plan-detail-container">
+            <span>提升 JavaScript 能力·已累计 20 小时</span>
+            <div>4 / 3 个番茄</div>
+          </div>
+        </div>
+      </section>
 
       <!-- 「已完成」按钮 -->
       <div class="completed-container" @click="click_completedPlanListButton">
@@ -72,7 +96,7 @@
           <img
             :src="assets.icon_finished"
             class="cancel-finished-button"
-            @click="click_cancelCompletePlanButton(item)"
+            @click.stop="click_cancelCompletePlanButton(item)"
           />
         </div>
       </section>
@@ -255,6 +279,7 @@ import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
 import icon_enter from "../../assets/icon_enter.svg";
+import icon_start from "../../assets/icon_start.svg";
 import { PlanType, InputPlanType } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { BottomBar },
@@ -429,6 +454,7 @@ export default defineComponent({
       input_editingPlan,
       input_abilityList,
       temporaryPlanList,
+      dailyPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
       isPlanEditorDrawerDisplayed,
@@ -450,7 +476,8 @@ export default defineComponent({
         icon_add,
         icon_selected,
         icon_unselected,
-        icon_enter
+        icon_enter,
+        icon_start
       }
     };
   }
@@ -535,8 +562,7 @@ export default defineComponent({
     align-items center
     section.temporary {
       flex-shrink 0
-      margin-top 2.1vh
-      margin-bottom 2.1vh
+      margin-bottom 1.57vh
       width 95.73vw
       display flex
       flex-direction column
@@ -548,7 +574,7 @@ export default defineComponent({
         display flex
         align-items center
         position relative
-        margin-bottom 7px
+        margin-bottom 0.52vh
         h2 {
           font-size 2.02vh
           font-weight 500
@@ -556,7 +582,7 @@ export default defineComponent({
           font-style normal
           line-height 1.44
           letter-spacing 0.02vh
-          color #434343
+          color #222a36
           margin-left 4.67vw
           margin-right 3.27vw
         }
@@ -573,7 +599,7 @@ export default defineComponent({
           font-style normal
           line-height 1.44
           letter-spacing 0.02vh
-          color #434343
+          color #222a36
           margin-left 3.27vw
           width 57.73vw
           overflow hidden
@@ -584,7 +610,7 @@ export default defineComponent({
           cursor pointer
           width 2.7vh
           height 2.7vh
-          border-radius 2.4vw
+          border-radius 50%
           opacity 0.5
           border solid 0.15vw #959595
           background-color #ffffff
@@ -593,11 +619,112 @@ export default defineComponent({
         }
       }
     }
-    section.training {
+    section.daily {
       flex-shrink 0
       width 95.73vw
       display flex
       flex-direction column
+      .item-container {
+        width 95.73vw
+        height 11.47vh
+        flex-shrink 0
+        background white
+        .plan-container {
+          display flex
+          flex-direction row cursor pointer
+          width 95.73vw
+          height 7.2vh
+          background white
+          display flex
+          align-items center
+          position relative
+          border-bottom dashed 1px #D5D5D5
+          h2 {
+            font-size 2.02vh
+            font-weight 500
+            font-stretch normal
+            font-style normal
+            line-height 1.44
+            letter-spacing 0.02vh
+            color #222a36
+            margin-left 4.67vw
+            margin-right 3.27vw
+          }
+          div.placeholder {
+            width 0.13vw
+            height 2.92vh
+            background #707070
+            opacity 0.4
+          }
+          h3 {
+            font-size 2.02vh
+            font-weight 500
+            font-stretch normal
+            font-style normal
+            line-height 1.44
+            letter-spacing 0.02vh
+            color #222a36
+            margin-left 3.27vw
+            width 57.73vw
+            overflow hidden
+            text-overflow ellipsis
+            white-space nowrap
+          }
+          img.start-button {
+            cursor pointer
+            width 2.7vh
+            height 2.7vh
+            border-radius 50%
+            opacity 0.5
+            position absolute
+            right 4.13vw
+            border solid 0.15vw #959595
+          }
+        }
+        .plan-detail-container {
+          width 95.73vw
+          height 4.27vh
+          box-shadow 0 3px 6px 0 rgba(0, 0, 0, 0.01)
+          background-color #ffffff
+          position relative
+          span {
+            height 2.4vh
+            opacity 0.4
+            font-size 1.65vh
+            font-weight normal
+            font-stretch normal
+            font-style normal
+            line-height 1.45
+            letter-spacing 0.01vh
+            text-align left
+            color #222a36
+            left 4.67vw
+            top 0
+            bottom 0
+            margin-top auto
+            margin-bottom auto
+            position absolute
+          }
+          div {
+            height 2.4vh
+            opacity 0.4
+            font-size 1.65vh
+            font-weight normal
+            font-stretch normal
+            font-style normal
+            line-height 1.45
+            letter-spacing 0.01vh
+            text-align left
+            color #222a36
+            right 4.13vw
+            top 0
+            bottom 0
+            margin-top auto
+            margin-bottom auto
+            position absolute
+          }
+        }
+      }
     }
     div.completed-container {
       flex-shrink 0
@@ -625,7 +752,7 @@ export default defineComponent({
   section.temporary {
     flex-shrink 0
     margin-top 2.1vh
-    margin-bottom 2.1vh
+    margin-bottom 1.57vh
     width 95.73vw
     display flex
     flex-direction column
@@ -636,7 +763,7 @@ export default defineComponent({
       display flex
       align-items center
       position relative
-      margin-bottom 7px
+      margin-bottom 0.52vh
       box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
       h2 {
         font-size 2.02vh
@@ -645,7 +772,7 @@ export default defineComponent({
         font-style normal
         line-height 1.44
         letter-spacing 0.02vh
-        color #434343
+        color #222a36
         margin-left 4.67vw
         margin-right 3.27vw
       }
@@ -661,7 +788,7 @@ export default defineComponent({
         font-style normal
         line-height 1.44
         letter-spacing 0.02vh
-        color #434343
+        color #222a36
         margin-left 3.27vw
         width 57.73vw
         overflow hidden
