@@ -1033,6 +1033,16 @@ const TomatoTimerPage = {
       completedPlanList.value.forEach(plan => {
         plan.attributes.selected = false;
       });
+
+      // 刷新更新的状态
+      // 获取临时计划列表
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+
+      // 获取每日计划列表
+      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+
+      // 获取已完成计划列表
+      completedPlanList.value = await Api.fetchPlanList(user, "completed");
     } catch (error) {
       UI.hideLoading(loadingInstance);
       UI.showNotification(
