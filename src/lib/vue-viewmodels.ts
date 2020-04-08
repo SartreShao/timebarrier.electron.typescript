@@ -707,13 +707,15 @@ const TomatoTimerPage = {
    * @param interval 计时器实例，由外部引入
    * @param countDown 计时器表盘值，由外部引入
    * @param isCommitPlanDrawerDisplayed 由于番茄钟完成后要弹起一个
+   * @param plan 如果是直接点击的 plan 开始的番茄，则行为有所不同
    */
   clickTomatoClock: async (
     vue: ElementVue,
     tomatoCloudStatus: Ref<TomatoCloudStatus>,
     interval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
-    isCommitPlanDrawerDisplayed: Ref<boolean>
+    isCommitPlanDrawerDisplayed: Ref<boolean> | null,
+    plan: AV.Object | null
   ) => {
     switch (tomatoCloudStatus.value) {
       case "prepared": {
@@ -727,6 +729,12 @@ const TomatoTimerPage = {
           );
           return;
         }
+
+        // 选择传入的 Plan
+        if (plan !== null) {
+          plan.attributes.selected = true;
+        }
+
         // 修改番茄钟的状态为「正在进行」
         tomatoCloudStatus.value = "processive";
         // 重设表盘值为 1500s（25 分钟）
@@ -739,11 +747,17 @@ const TomatoTimerPage = {
             tomatoCloudStatus.value = "finished";
             new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
-        }, 1000);
+        }, 1);
         break;
       }
       case "finished": {
-        isCommitPlanDrawerDisplayed.value = true;
+        if (plan !== null) {
+          UI.showNotification(vue.$notify, "请先提交番茄", "", "warning");
+          return;
+        }
+        if (isCommitPlanDrawerDisplayed !== null) {
+          isCommitPlanDrawerDisplayed.value = true;
+        }
         break;
       }
       case "processive": {
@@ -753,6 +767,16 @@ const TomatoTimerPage = {
             "终止计时失败",
             "失败原因：计时器 (interval) 为 null",
             "error"
+          );
+          return;
+        }
+
+        if (plan !== null) {
+          UI.showNotification(
+            vue.$notify,
+            "您正在一个番茄之中",
+            "请完成后再开始新的番茄",
+            "warning"
           );
           return;
         }

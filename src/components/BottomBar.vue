@@ -110,10 +110,13 @@ import { TomatoTimerPage } from "../lib/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     // 倒计时器 instance
-    const interval: Ref<NodeJS.Timeout | null> = ref(null);
+    const interval: Ref<NodeJS.Timeout | null> = inject(
+      Store.interval,
+      ref(null)
+    );
 
     // 倒计时表盘值
-    const countDown: Ref<number> = ref(1500);
+    const countDown: Ref<number> = inject(Store.countDown, ref(1500));
 
     // 番茄时钟的状态值
     const tomatoCloudStatus: Ref<TomatoCloudStatus> = inject(
@@ -158,7 +161,8 @@ export default defineComponent({
         tomatoCloudStatus,
         interval,
         countDown,
-        isCommitPlanDrawerDisplayed
+        isCommitPlanDrawerDisplayed,
+        null
       );
     };
 

@@ -11,6 +11,10 @@ const completedPlanList = Symbol();
 const dailyPlanList = Symbol();
 // 番茄钟的状态
 const tomatoCloudStatus = Symbol();
+// 番茄中的计时器
+const interval = Symbol();
+// 番茄钟的表盘值
+const countDown = Symbol();
 /**
  * 全局只调用一次，在 App.vue 中调用
  */
@@ -20,6 +24,8 @@ function useProvider() {
   provide(dailyPlanList, ref<AV.Object[]>([]));
   const preparedTomatoCloudStatus: TomatoCloudStatus = "prepared";
   provide(tomatoCloudStatus, ref<TomatoCloudStatus>(preparedTomatoCloudStatus));
+  provide(interval, ref<NodeJS.Timeout | null>(null));
+  provide(countDown, ref<number>(1500));
 }
 
 export default {
@@ -27,5 +33,7 @@ export default {
   temporaryPlanList,
   completedPlanList,
   dailyPlanList,
-  tomatoCloudStatus
+  tomatoCloudStatus,
+  interval,
+  countDown
 };

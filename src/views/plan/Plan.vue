@@ -56,6 +56,7 @@
             <div class="placeholder"></div>
             <h3>{{ item.attributes.name }}</h3>
             <img
+              @click.stop="click_startTomatoButton(item)"
               class="start-button"
               :src="assets.icon_start"
               alt="icon_start"
@@ -284,7 +285,7 @@ import {
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
-import { PlanPage } from "@/lib/vue-viewmodels";
+import { PlanPage, TomatoTimerPage } from "@/lib/vue-viewmodels";
 import Store from "../../store";
 import icon_finished from "../../assets/icon_finished.svg";
 import icon_logo from "../../assets/icon_logo.svg";
@@ -293,7 +294,11 @@ import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
 import icon_enter from "../../assets/icon_enter.svg";
 import icon_start from "../../assets/icon_start.svg";
-import { PlanType, InputPlanType } from "@/lib/types/vue-viewmodels";
+import {
+  PlanType,
+  InputPlanType,
+  TomatoCloudStatus
+} from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { BottomBar },
   setup(props, context) {
@@ -334,6 +339,21 @@ export default defineComponent({
     const completedPlanList: Ref<AV.Object[]> = inject(
       Store.completedPlanList,
       ref<AV.Object[]>([])
+    );
+
+    // 倒计时器 instance
+    const interval: Ref<NodeJS.Timeout | null> = inject(
+      Store.interval,
+      ref(null)
+    );
+
+    // 倒计时表盘值
+    const countDown: Ref<number> = inject(Store.countDown, ref(1500));
+
+    // 番茄时钟的状态值
+    const tomatoCloudStatus: Ref<TomatoCloudStatus> = inject(
+      Store.tomatoCloudStatus,
+      ref<TomatoCloudStatus>("prepared")
     );
 
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
@@ -451,6 +471,19 @@ export default defineComponent({
         input_editingPlan
       );
     };
+
+    // 点击事件：点击「每日计划」上的开始按钮
+    const click_startTomatoButton = (plan: AV.Object) => {
+      TomatoTimerPage.clickTomatoClock(
+        context.root,
+        tomatoCloudStatus,
+        interval,
+        countDown,
+        null,
+        plan
+      );
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -483,6 +516,7 @@ export default defineComponent({
       click_relatedAbilityButton,
       click_abilityItemSelector,
       click_saveAbility,
+      click_startTomatoButton,
       assets: {
         icon_finished,
         icon_logo,
