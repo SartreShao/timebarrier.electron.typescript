@@ -97,14 +97,16 @@
       size="69.64%"
     >
       <!-- 临时计划 -->
-      <section class="temporary">
+      <section class="finished">
         <div
           class="item-container"
           v-for="item in completedPlanList"
           v-bind:key="item.id"
           @click="click_editPlanButton(item)"
         >
-          <h2>临时计划</h2>
+          <h2>
+            {{ item.attributes.type === "daily" ? "每日计划" : "临时计划" }}
+          </h2>
           <div class="placeholder"></div>
           <h3>{{ item.attributes.name }}</h3>
           <img
@@ -797,9 +799,8 @@ export default defineComponent({
   flex-direction column
   overflow scroll
   align-items center
-  section.temporary {
+  section.finished {
     flex-shrink 0
-    margin-top 2.1vh
     margin-bottom 1.57vh
     width 95.73vw
     display flex
@@ -807,12 +808,11 @@ export default defineComponent({
     div.item-container {
       width 95.73vw
       height 7.2vh
-      background white
+      background #f0f1f3
       display flex
       align-items center
       position relative
       margin-bottom 0.52vh
-      box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
       h2 {
         font-size 2.02vh
         font-weight 500
