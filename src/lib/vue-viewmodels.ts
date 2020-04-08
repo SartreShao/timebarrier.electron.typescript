@@ -747,7 +747,7 @@ const TomatoTimerPage = {
             tomatoCloudStatus.value = "finished";
             new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
-        }, 1);
+        }, 1000);
         break;
       }
       case "finished": {
