@@ -65,10 +65,18 @@
             <span v-if="item.attributes.abilityListOfPlan.length !== 0">{{
               "提升" +
                 item.attributes.abilityListOfPlan[0].attributes.name +
-                " · 已累计 20 小时"
+                " · 已累计 " +
+                item.attributes.tomatoNumber / 2 +
+                " 个小时"
             }}</span>
-            <span v-else>已累计 20 个小时</span>
-            <div>4 / 3 个番茄</div>
+            <span v-else>{{
+              "已累计 " + item.attributes.tomatoNumber / 2 + " 个小时"
+            }}</span>
+            <div>
+              {{
+                `${item.attributes.todayTomatoNumber} / ${item.attributes.target} 个番茄`
+              }}
+            </div>
           </div>
         </div>
       </section>
