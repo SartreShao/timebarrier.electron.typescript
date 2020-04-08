@@ -298,7 +298,8 @@ export default {
   createTomato: (
     name: string,
     description: string,
-    user: AV.User
+    user: AV.User,
+    startTime: Date
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -306,6 +307,7 @@ export default {
           .set("name", name)
           .set("user", user)
           .set("description", description)
+          .set("startTime", startTime)
           .save();
         Log.success("createTomato", tomato);
         resolve(tomato);

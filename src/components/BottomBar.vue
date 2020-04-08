@@ -38,6 +38,38 @@
     >
       <!-- 提交番茄的临时计划列表 -->
       <section class="temporary">
+        <!-- 标题：近期完成的计划 -->
+        <span
+          v-if="hasRecentlyCompletedPlan.value"
+          class="recently-completed-plan"
+          >近期完成的计划</span
+        >
+
+        <!-- 刚刚完成的计划 -->
+        <div v-for="item in completedPlanList" v-bind:key="item.id">
+          <div
+            v-if="tomatoStartTime <= item.updatedAt"
+            v-bind:class="{
+              'item-container': !item.attributes.selected,
+              'item-container-selected': item.attributes.selected
+            }"
+            @click="click_planItemSelector(item)"
+          >
+            <h2>
+              {{ item.attributes.type === "daily" ? "每日计划" : "临时计划" }}
+            </h2>
+            <div class="placeholder"></div>
+            <h3>{{ item.attributes.name }}</h3>
+            <!-- <div class="finished-button"></div> -->
+          </div>
+        </div>
+
+        <div style="height: 3.37vh" v-if="hasRecentlyCompletedPlan.value"></div>
+
+        <!-- 标题：计划列表 -->
+        <span class="plan-list">计划列表</span>
+
+        <!-- 临时计划 -->
         <div v-for="item in temporaryPlanList" v-bind:key="item.id">
           <div
             v-bind:class="{
@@ -52,6 +84,8 @@
             <!-- <div class="finished-button"></div> -->
           </div>
         </div>
+
+        <!-- 每日计划 -->
         <div v-for="item in dailyPlanList" v-bind:key="item.id">
           <div
             v-bind:class="{
@@ -156,6 +190,27 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
+    // 近期完成的计划
+    const hasRecentlyCompletedPlan = computed(() => {
+      const list: AV.Object[] = [];
+      completedPlanList.value.forEach(plan => {
+        if (plan.updatedAt !== undefined) {
+          if (tomatoStartTime.value <= plan.updatedAt) {
+            list.push(plan);
+          }
+        }
+      });
+
+      let result: boolean;
+      if (list.length === 0) {
+        result = false;
+      } else {
+        result = true;
+      }
+      console.log(result);
+      return ref(result);
+    });
+
     // 用户输入：提交的番茄名称
     const input_plan: Ref<string> = ref("");
 
@@ -167,6 +222,12 @@ export default defineComponent({
 
     // 番茄钟表盘值
     const countDownForUI = computed(() => UI.formatTime(countDown.value));
+
+    // 番茄开始的时间
+    const tomatoStartTime: Ref<Date> = inject(
+      Store.tomatoStartTime,
+      ref<Date>(Date())
+    );
 
     // 点击事件：点击番茄时钟
     const click_tomatoClockButton = () => {
@@ -180,7 +241,8 @@ export default defineComponent({
         null,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        tomatoStartTime
       );
     };
 
@@ -218,7 +280,8 @@ export default defineComponent({
         input_description,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        tomatoStartTime
       );
     };
 
@@ -234,7 +297,8 @@ export default defineComponent({
         input_description,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        tomatoStartTime
       );
     };
 
@@ -246,10 +310,13 @@ export default defineComponent({
       isCommitPlanDrawerDisplayed,
       temporaryPlanList,
       dailyPlanList,
+      completedPlanList,
+      hasRecentlyCompletedPlan,
       click_commitTomatoButton,
       click_giveUpTomatoButton,
       click_planItemSelector,
       tomatoCloudStatus,
+      tomatoStartTime,
       countDownForUI,
       countDown,
       assets: {
@@ -333,16 +400,44 @@ section.temporary {
   display flex
   flex-direction column
   align-items center
+  .recently-completed-plan {
+    align-self flex-start
+    height 2.92vh
+    font-size 2.02vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing 0.02vh
+    text-align left
+    color #969294
+    margin-left 4vw
+    margin-bottom 1.35vh
+  }
+  .plan-list {
+    align-self flex-start
+    height 2.92vh
+    font-size 2.02vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing 0.02vh
+    text-align left
+    color #969294
+    margin-left 4vw
+    margin-bottom 1.35vh
+  }
   div.item-container {
     cursor pointer
-    width 95.73vw
+    width 92vw
     height 7.2vh
     background #f0f1f3
     display flex
     flex-shrink 0
     align-items center
     position relative
-    margin-bottom 7px
+    margin-bottom 0.52vh
     h2 {
       font-size 2.02vh
       font-weight 500
@@ -386,14 +481,14 @@ section.temporary {
   }
   div.item-container-selected {
     cursor pointer
-    width 95.73vw
+    width 92vw
     height 7.2vh
     box-shadow 0 0.4vw 0.8vw 0 rgba(0, 0, 0, 0.25)
     display flex
     flex-shrink 0
     align-items center
     position relative
-    margin-bottom 7px
+    margin-bottom 0.52vh
     background #222a36
     h2 {
       font-size 2.02vh

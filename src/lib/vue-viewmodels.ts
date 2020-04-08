@@ -731,7 +731,8 @@ const TomatoTimerPage = {
     plan: AV.Object | null,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    completedPlanList: Ref<AV.Object[]>,
+    tomatoStartTime: Ref<Date>
   ) => {
     switch (tomatoCloudStatus.value) {
       case "prepared": {
@@ -745,6 +746,9 @@ const TomatoTimerPage = {
           );
           return;
         }
+
+        // 记录开始的时间
+        tomatoStartTime.value = new Date();
 
         // 选择传入的 Plan
         if (plan !== null) {
@@ -952,7 +956,8 @@ const TomatoTimerPage = {
     input_description: Ref<string>,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    completedPlanList: Ref<AV.Object[]>,
+    tomatoStartTime: Ref<Date>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -981,7 +986,8 @@ const TomatoTimerPage = {
       const tomato: AV.Object = await Api.createTomato(
         input_plan.value,
         input_description.value,
-        user
+        user,
+        tomatoStartTime.value
       );
 
       // 遍历 PlanList 寻找被选择的 Plan
@@ -1022,6 +1028,11 @@ const TomatoTimerPage = {
       interval.value = null;
       countDown.value = 1500;
       isCommitPlanDrawerDisplayed.value = false;
+
+      // 清除用户的选择
+      completedPlanList.value.forEach(plan => {
+        plan.attributes.selected = false;
+      });
     } catch (error) {
       UI.hideLoading(loadingInstance);
       UI.showNotification(

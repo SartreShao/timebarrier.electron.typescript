@@ -358,6 +358,12 @@ export default defineComponent({
       ref<TomatoCloudStatus>("prepared")
     );
 
+    // 番茄开始的时间
+    const tomatoStartTime: Ref<Date> = inject(
+      Store.tomatoStartTime,
+      ref<Date>(Date())
+    );
+
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
 
@@ -486,7 +492,8 @@ export default defineComponent({
         plan,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        tomatoStartTime
       );
     };
 

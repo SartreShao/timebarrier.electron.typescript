@@ -15,6 +15,8 @@ const tomatoCloudStatus = Symbol();
 const interval = Symbol();
 // 番茄钟的表盘值
 const countDown = Symbol();
+// 番茄开始的时间
+const tomatoStartTime = Symbol();
 /**
  * 全局只调用一次，在 App.vue 中调用
  */
@@ -26,6 +28,7 @@ function useProvider() {
   provide(tomatoCloudStatus, ref<TomatoCloudStatus>(preparedTomatoCloudStatus));
   provide(interval, ref<NodeJS.Timeout | null>(null));
   provide(countDown, ref<number>(1500));
+  provide(tomatoStartTime, ref<Date>(Date()));
 }
 
 export default {
@@ -35,5 +38,6 @@ export default {
   dailyPlanList,
   tomatoCloudStatus,
   interval,
-  countDown
+  countDown,
+  tomatoStartTime
 };
