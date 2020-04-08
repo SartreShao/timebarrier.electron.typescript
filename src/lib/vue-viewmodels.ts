@@ -413,6 +413,14 @@ const PlanPage = {
       return;
     }
 
+    // 如果没有定义每日目标，则不允许保存为「每日计划」
+    if (input_editingPlan.type === "daily") {
+      if (input_editingPlan.target === undefined) {
+        UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
+        return;
+      }
+    }
+
     if (input_editingPlan.id !== undefined) {
       // 显示进度条
       const loadingInstance = UI.showLoading(
@@ -512,7 +520,7 @@ const PlanPage = {
 
           // 保存成功
           UI.hideLoading(loadingInstance);
-          UI.showNotification(vue.$notify, "计划删除成功", "", "error");
+          UI.showNotification(vue.$notify, "计划删除成功", "", "success");
 
           // 关闭窗口
           isPlanEditorDrawerDisplayed.value = false;

@@ -148,7 +148,7 @@
         class="input-plan-target"
         v-bind:class="{ opacity40: input_editingPlan.type === `temporary` }"
         type="number"
-        placeholder="每日目标番茄（0-24）"
+        placeholder="每日目标番茄（0-48）"
         v-model="input_editingPlan.target"
       />
 
