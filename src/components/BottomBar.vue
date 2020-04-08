@@ -46,10 +46,24 @@
             }"
             @click="click_planItemSelector(item)"
           >
-            <h2>临时任务</h2>
+            <h2>临时计划</h2>
             <div class="placeholder"></div>
             <h3>{{ item.attributes.name }}</h3>
-            <div class="finished-button"></div>
+            <!-- <div class="finished-button"></div> -->
+          </div>
+        </div>
+        <div v-for="item in dailyPlanList" v-bind:key="item.id">
+          <div
+            v-bind:class="{
+              'item-container': !item.attributes.selected,
+              'item-container-selected': item.attributes.selected
+            }"
+            @click="click_planItemSelector(item)"
+          >
+            <h2>每日计划</h2>
+            <div class="placeholder"></div>
+            <h3>{{ item.attributes.name }}</h3>
+            <!-- <div class="finished-button"></div> -->
           </div>
         </div>
       </section>
@@ -162,7 +176,11 @@ export default defineComponent({
         interval,
         countDown,
         isCommitPlanDrawerDisplayed,
-        null
+        input_plan,
+        null,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
       );
     };
 
@@ -227,6 +245,7 @@ export default defineComponent({
       click_tomatoClockButton,
       isCommitPlanDrawerDisplayed,
       temporaryPlanList,
+      dailyPlanList,
       click_commitTomatoButton,
       click_giveUpTomatoButton,
       click_planItemSelector,

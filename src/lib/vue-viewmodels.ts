@@ -702,12 +702,24 @@ const TomatoTimerPage = {
   /**
    * 点击番茄钟
    *
+   * 使用场景：
+   * 1. 点击「每日计划」上的「开始按钮」：
+   * - 传入 plan
+   * - 不传 isCommitPlanDrawerDisplayed
+   * - 不传 input_plan
+   *
+   * 2. 点击「底边栏」上的「开始按钮」：
+   * - 不传入 plan
+   * - 传入 isCommitPlanDrawerDisplayed
+   * - 传入 input_plan
+   *
    * @param vue 还是绑定了 Element 后的 context.root
    * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
    * @param interval 计时器实例，由外部引入
    * @param countDown 计时器表盘值，由外部引入
-   * @param isCommitPlanDrawerDisplayed 由于番茄钟完成后要弹起一个
-   * @param plan 如果是直接点击的 plan 开始的番茄，则行为有所不同
+   * @param isCommitPlanDrawerDisplayed 控制「提交番茄」抽屉是否打开的变量
+   * @param input_plan 提交番茄用的番茄名称
+   * @param plan 点击「每日计划」时，需传入的「被点击的计划」
    */
   clickTomatoClock: async (
     vue: ElementVue,
@@ -715,7 +727,11 @@ const TomatoTimerPage = {
     interval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean> | null,
-    plan: AV.Object | null
+    input_plan: Ref<string> | null,
+    plan: AV.Object | null,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
   ) => {
     switch (tomatoCloudStatus.value) {
       case "prepared": {
@@ -747,7 +763,7 @@ const TomatoTimerPage = {
             tomatoCloudStatus.value = "finished";
             new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
-        }, 1000);
+        }, 1);
         break;
       }
       case "finished": {
@@ -755,8 +771,46 @@ const TomatoTimerPage = {
           UI.showNotification(vue.$notify, "请先提交番茄", "", "warning");
           return;
         }
-        if (isCommitPlanDrawerDisplayed !== null) {
+        if (isCommitPlanDrawerDisplayed !== null && input_plan !== null) {
           isCommitPlanDrawerDisplayed.value = true;
+          // 清空 input_plan 的值
+          input_plan.value = "";
+
+          // 遍历 temporaryPlanList
+          temporaryPlanList.value.forEach(plan => {
+            if (plan.attributes.selected === true) {
+              if (input_plan.value.length === 0) {
+                input_plan.value = plan.attributes.name;
+              } else {
+                input_plan.value =
+                  input_plan.value + " + " + plan.attributes.name;
+              }
+            }
+          });
+
+          // 遍历 dailyPlanList
+          dailyPlanList.value.forEach(plan => {
+            if (plan.attributes.selected === true) {
+              if (input_plan.value.length === 0) {
+                input_plan.value = plan.attributes.name;
+              } else {
+                input_plan.value =
+                  input_plan.value + " + " + plan.attributes.name;
+              }
+            }
+          });
+
+          // 遍历 completedPlanList
+          completedPlanList.value.forEach(plan => {
+            if (plan.attributes.selected === true) {
+              if (input_plan.value.length === 0) {
+                input_plan.value = plan.attributes.name;
+              } else {
+                input_plan.value =
+                  input_plan.value + " + " + plan.attributes.name;
+              }
+            }
+          });
         }
         break;
       }

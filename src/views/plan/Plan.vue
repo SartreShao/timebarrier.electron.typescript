@@ -482,7 +482,11 @@ export default defineComponent({
         interval,
         countDown,
         null,
-        plan
+        null,
+        plan,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
       );
     };
 
