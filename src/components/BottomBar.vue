@@ -1,9 +1,19 @@
 <template>
   <div>
     <footer>
-      <img class="icon1" :src="assets.icon_plan" alt="icon_plan" />
+      <img
+        class="icon1"
+        :src="assets.icon_plan"
+        alt="icon_plan"
+        @click="click_planTab"
+      />
 
-      <img class="icon2" :src="assets.icon_target" alt="icon_target" />
+      <img
+        class="icon2"
+        :src="assets.icon_target"
+        alt="icon_target"
+        @click="click_targetAbilityTab"
+      />
 
       <div @click="click_tomatoClockButton">
         <img
@@ -24,9 +34,19 @@
         }}</span>
       </div>
 
-      <img class="icon3" :src="assets.icon_statistics" alt="icon_statistics" />
+      <img
+        class="icon3"
+        :src="assets.icon_statistics"
+        alt="icon_statistics"
+        @click="click_statisticTab"
+      />
 
-      <img class="icon4" :src="assets.icon_me" alt="icon_me" />
+      <img
+        class="icon4"
+        :src="assets.icon_me"
+        alt="icon_me"
+        @click="click_meTab"
+      />
     </footer>
 
     <!-- 提交番茄的抽屉菜单 -->
@@ -139,7 +159,7 @@ import icon_play from "../assets/play.svg";
 import icon_finished from "../assets/finished.svg";
 import icon_enter from "../assets/enter.svg";
 
-import { UI } from "../lib/vue-utils";
+import { UI, Router } from "../lib/vue-utils";
 import AV from "leancloud-storage";
 
 import Api from "../lib/api";
@@ -285,6 +305,26 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击「计划 TAB」
+    const click_planTab = () => {
+      Router.replace(context.root.$router, "/plan");
+    };
+
+    // 点击事件：点击「目标-能力 TAB」
+    const click_targetAbilityTab = () => {
+      Router.replace(context.root.$router, "/target-ability");
+    };
+
+    // 点击事件：点击「统计 TAB」
+    const click_statisticTab = () => {
+      Router.replace(context.root.$router, "/statistic");
+    };
+
+    // 点击事件：点击「我的 TAB」
+    const click_meTab = () => {
+      Router.replace(context.root.$router, "/me");
+    };
+
     // 用户输入：创建回车
     const keyUpEnter_planInputBox = () => {
       TomatoTimerPage.commitTomato(
@@ -315,6 +355,10 @@ export default defineComponent({
       click_commitTomatoButton,
       click_giveUpTomatoButton,
       click_planItemSelector,
+      click_planTab,
+      click_targetAbilityTab,
+      click_statisticTab,
+      click_meTab,
       tomatoCloudStatus,
       tomatoStartTime,
       countDownForUI,

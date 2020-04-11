@@ -1,30 +1,21 @@
 <template>
   <div class="container">
     <!-- 顶边栏 -->
-    <header>
-      <!-- 状态栏占位 -->
-      <div style="height:1vh"></div>
+    <top-bar></top-bar>
 
-      <!-- 标题与刷新按钮 -->
-      <section class="title">
-        <img :src="assets.icon_logo" alt="icon_logo" />
-        <h1>时间壁垒</h1>
-      </section>
-
-      <!-- 创建新计划的输入框 -->
-      <section class="create-plan">
-        <input
-          type="text"
-          placeholder="点击添加一个临时计划"
-          @keyup.enter="keyUpEnter_planInputBox"
-          v-model="input_plan"
-        />
-      </section>
-    </header>
+    <!-- 创建新计划的输入框 -->
+    <section class="new-plan-input-container">
+      <input
+        type="text"
+        placeholder="点击添加一个临时计划"
+        @keyup.enter="keyUpEnter_planInputBox"
+        v-model="input_plan"
+      />
+    </section>
 
     <!-- 主界面 -->
     <main>
-      <div style="height:2.1vh"></div>
+      <div style="height:2.1vh;flex-shrink:0"></div>
       <!-- 临时计划列表 -->
       <section class="temporary" v-if="temporaryPlanList.length !== 0">
         <div
@@ -287,6 +278,7 @@ import {
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
+import TopBar from "../../components/TopBar.vue";
 import { PlanPage, TomatoTimerPage } from "@/lib/vue-viewmodels";
 import Store from "../../store";
 import icon_finished from "../../assets/icon_finished.svg";
@@ -302,7 +294,7 @@ import {
   TomatoCloudStatus
 } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
-  components: { BottomBar },
+  components: { BottomBar, TopBar },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
@@ -545,60 +537,48 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+// 顶边栏高度
+topBarHeight = 6.52vh
+// 底边栏高度
+bottomBarHeight = 6.82vh
+// 输入框距离顶边栏的距离 = 顶边栏高度 + 1vh
+planInputContainerTop = topBarHeight + 1vh
+// 输入框包含者的高度
+planInputContainerHeight = 5.25vh
+// 主界面距离上面的高度
+mainMarginTop = planInputContainerHeight + planInputContainerTop
+// 主界面高度
+mainHeight = 100vh - mainMarginTop - bottomBarHeight
+// 主界面背景色
+mainColor = #F5F5F5
 .container {
   display flex
   flex-direction column
   background #f0f1f3
-  header {
-    width 100%
+  // 「创建新计划」输入框包含者
+  section.new-plan-input-container {
     display flex
-    flex-direction column
     background white
+    justify-content center
+    height planInputContainerHeight
     position fixed
-    top 0
-    section.title {
-      height 6.52vh
-      display flex
-      justify-content center
-      align-items center
-      background white
-      position relative
-      h1 {
-        font-family SourceHanSansSC
-        font-size 2.62vh
-        font-weight bold
-        font-stretch normal
-        font-style normal
-        letter-spacing -0.03vh
-        text-align center
-        color #222A36
-      }
-      img {
-        top 0
-        bottom 0
-        margin-top auto
-        margin-bottom auto
-        left 6.06vw
-        position absolute
-        width 2.89vh
-        height 2.89vh
-      }
-    }
-    section.create-plan {
-      display flex
-      justify-content center
-      height 5.25vh
+    top planInputContainerTop
+    left 0
+    right 0
+    margin-left auto
+    margin-right auto
+    // 输入框
+    input {
       opacity 0.54
-      input {
-        margin-top 0.3vh
-        width 92.67vw
-        height 3.9vh
-        background-color #e9e9e9
-        border-radius 1.95vh
-        border none
-        text-align center
-      }
-      input::-webkit-input-placeholder {
+      margin-top 0.3vh
+      width 92.67vw
+      height 3.9vh
+      background-color #e9e9e9
+      border-radius 1.95vh
+      border none
+      text-align center
+      // 输入框 placeholder
+      &::-webkit-input-placeholder {
         opacity 0.6
         font-size 2.02vh
         font-weight normal
@@ -612,11 +592,11 @@ export default defineComponent({
   }
   main {
     position fixed
-    top 12.77vh
-    height 80.41vh
+    top mainMarginTop
+    height mainHeight
     overflow scroll
     width 100%
-    background #F5F5F5
+    background mainColor
     display flex
     flex-direction column
     align-items center
