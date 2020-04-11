@@ -3,15 +3,21 @@
     <footer>
       <img
         class="icon1"
-        :src="assets.icon_plan"
-        alt="icon_plan"
+        :src="
+          currentTab === 'plan' ? assets.icon_plan_selected : assets.icon_plan
+        "
+        alt="icon_plan_selected"
         @click="click_planTab"
       />
 
       <img
         class="icon2"
-        :src="assets.icon_target"
-        alt="icon_target"
+        :src="
+          currentTab === 'target-ability'
+            ? assets.icon_target_ability_selected
+            : assets.icon_target_ability
+        "
+        alt="icon_target_ability"
         @click="click_targetAbilityTab"
       />
 
@@ -36,14 +42,18 @@
 
       <img
         class="icon3"
-        :src="assets.icon_statistics"
-        alt="icon_statistics"
+        :src="
+          currentTab === 'statistic'
+            ? assets.icon_statistic_selected
+            : assets.icon_statistic
+        "
+        alt="icon_statistic"
         @click="click_statisticTab"
       />
 
       <img
         class="icon4"
-        :src="assets.icon_me"
+        :src="currentTab === 'me' ? assets.icon_me_selected : assets.icon_me"
         alt="icon_me"
         @click="click_meTab"
       />
@@ -152,9 +162,13 @@
 
 <script lang="ts">
 import icon_plan from "../assets/plan.svg";
-import icon_target from "../assets/target.svg";
-import icon_statistics from "../assets/statistics.svg";
+import icon_plan_selected from "../assets/plan_selected.svg";
+import icon_target_ability from "../assets/target_ability.svg";
+import icon_target_ability_selected from "../assets/target_ability_selected.svg";
+import icon_statistic from "../assets/statistic.svg";
+import icon_statistic_selected from "../assets/statistic_selected.svg";
 import icon_me from "../assets/me.svg";
+import icon_me_selected from "../assets/me_selected.svg";
 import icon_play from "../assets/play.svg";
 import icon_finished from "../assets/finished.svg";
 import icon_enter from "../assets/enter.svg";
@@ -172,7 +186,7 @@ import {
   computed
 } from "@vue/composition-api";
 import Store from "../store";
-import { TomatoCloudStatus } from "../lib/types/vue-viewmodels";
+import { TomatoCloudStatus, TabType } from "../lib/types/vue-viewmodels";
 import { TomatoTimerPage } from "../lib/vue-viewmodels";
 
 export default defineComponent({
@@ -342,6 +356,30 @@ export default defineComponent({
       );
     };
 
+    // 当前的 TAB
+    const currentTab: Ref<TabType> = ref("plan");
+
+    // 观察：当前路由
+    watch(
+      () => context.root.$route,
+      (to, from) => {
+        switch (to.path) {
+          case "/plan":
+            currentTab.value = "plan";
+            break;
+          case "/target-ability":
+            currentTab.value = "target-ability";
+            break;
+          case "/statistic":
+            currentTab.value = "statistic";
+            break;
+          case "/me":
+            currentTab.value = "me";
+            break;
+        }
+      }
+    );
+
     return {
       input_plan,
       input_description,
@@ -363,11 +401,16 @@ export default defineComponent({
       tomatoStartTime,
       countDownForUI,
       countDown,
+      currentTab,
       assets: {
+        icon_plan_selected,
         icon_plan,
-        icon_target,
-        icon_statistics,
+        icon_target_ability_selected,
+        icon_target_ability,
+        icon_statistic,
+        icon_statistic_selected,
         icon_me,
+        icon_me_selected,
         icon_play,
         icon_finished,
         icon_enter

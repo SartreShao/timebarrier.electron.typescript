@@ -14,6 +14,7 @@ import {
  */
 export type PlanType = "temporary" | "daily";
 
+// 输入计划的类别
 export type InputPlanType = {
   id: string | undefined;
   name: string;
@@ -24,6 +25,9 @@ export type InputPlanType = {
   isFinished: boolean;
   target: string;
 };
+
+// 底边栏 TAB 的类别
+export type TabType = "plan" | "target-ability" | "statistic" | "me";
 
 export interface ElementVue {
   $notify: ElNotification;

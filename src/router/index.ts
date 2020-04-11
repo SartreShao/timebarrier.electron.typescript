@@ -24,6 +24,16 @@ const routes = [
     path: "/target-ability",
     name: "target-ability",
     component: () => import("../views/target-ability/TargetAbility.vue")
+  },
+  {
+    path: "/statistic",
+    name: "statistic",
+    component: () => import("../views/statistic/Statistic.vue")
+  },
+  {
+    path: "/me",
+    name: "me",
+    component: () => import("../views/me/Me.vue")
   }
 ];
 
