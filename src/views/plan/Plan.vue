@@ -537,20 +537,6 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
-// 顶边栏高度
-topBarHeight = 6.52vh
-// 底边栏高度
-bottomBarHeight = 6.82vh
-// 输入框距离顶边栏的距离 = 顶边栏高度 + 1vh
-planInputContainerTop = topBarHeight + 1vh
-// 输入框包含者的高度
-planInputContainerHeight = 5.25vh
-// 主界面距离上面的高度
-mainMarginTop = planInputContainerHeight + planInputContainerTop
-// 主界面高度
-mainHeight = 100vh - mainMarginTop - bottomBarHeight
-// 主界面背景色
-mainColor = #F5F5F5
 .container {
   display flex
   flex-direction column
@@ -560,9 +546,9 @@ mainColor = #F5F5F5
     display flex
     background white
     justify-content center
-    height planInputContainerHeight
+    height 5.25vh
     position fixed
-    top planInputContainerTop
+    top 7.52vh
     left 0
     right 0
     margin-left auto
@@ -592,11 +578,11 @@ mainColor = #F5F5F5
   }
   main {
     position fixed
-    top mainMarginTop
-    height mainHeight
+    top 12.77vh
+    height 80.41vh
     overflow scroll
     width 100%
-    background mainColor
+    background #F5F5F5
     display flex
     flex-direction column
     align-items center
