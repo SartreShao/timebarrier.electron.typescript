@@ -4,25 +4,50 @@
     <top-bar></top-bar>
     <!-- Tab 容器 -->
     <div class="tab-container">
-      <div class="tab-target">我的目标</div>
-      <div class="tab-ability-unselected">能力训练</div>
+      <div
+        :class="
+          currentTab === `target` ? `tab-target` : `tab-target-unselected`
+        "
+        @click="currentTab = `target`"
+      >
+        我的目标
+      </div>
+      <div
+        :class="
+          currentTab === `ability` ? `tab-ability` : `tab-ability-unselected`
+        "
+        @click="currentTab = `ability`"
+      >
+        能力训练
+      </div>
     </div>
     <!-- 主要界面 -->
     <main>
-      <target></target>
+      <target v-if="currentTab === `target`"></target>
+      <ability v-if="currentTab === `ability`"></ability>
     </main>
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, ref, Ref } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import Target from "./target/Target.vue";
+import Ability from "./ability/Ability.vue";
+import { TargetAbilityTabType } from "@/lib/types/vue-viewmodels";
+
 export default defineComponent({
-  components: { TopBar, BottomBar, Target },
-  setup() {}
+  components: { TopBar, BottomBar, Target, Ability },
+  setup() {
+    // 当前的 TAB：Ability｜Target
+    const currentTab: Ref<TargetAbilityTabType> = ref("target");
+
+    return {
+      currentTab
+    };
+  }
 });
 </script>
 

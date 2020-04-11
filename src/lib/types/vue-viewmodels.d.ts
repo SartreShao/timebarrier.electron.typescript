@@ -29,6 +29,9 @@ export type InputPlanType = {
 // 底边栏 TAB 的类别
 export type TabType = "plan" | "target-ability" | "statistic" | "me";
 
+// 「目标-能力」TAB 的类别
+export type TargetAbilityTabType = "target" | "ability";
+
 export interface ElementVue {
   $notify: ElNotification;
   $loading: (options: LoadingServiceOptions) => ElLoadingComponent;
