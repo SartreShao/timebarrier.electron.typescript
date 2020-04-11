@@ -16,8 +16,15 @@ import {
 const isDev = true;
 
 const Router = {
-  replace: (router: VueRouter, location: RawLocation): void => {
-    router.replace(location);
+  replace: async (router: VueRouter, location: RawLocation) => {
+    try {
+      if (router.currentRoute.path === location) {
+        return;
+      }
+      await router.replace(location);
+    } catch (error) {
+      console.log("relace router:", location, error);
+    }
   }
 };
 
