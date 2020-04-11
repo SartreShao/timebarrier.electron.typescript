@@ -241,7 +241,6 @@ export default defineComponent({
       } else {
         result = true;
       }
-      console.log(result);
       return ref(result);
     });
 
