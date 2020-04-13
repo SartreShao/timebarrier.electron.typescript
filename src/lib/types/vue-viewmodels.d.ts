@@ -47,6 +47,10 @@ export type InputTargetOrTargetSubjectType = {
     // 是否已完成
     isFinished: boolean;
   };
+  targetSubject: {
+    // 目标名称
+    targetSubjectName: string;
+  };
 };
 
 // 底边栏 TAB 的类别

@@ -52,11 +52,24 @@
       <!-- 占位框 -->
       <div style="height:2.4vh"></div>
 
+      <!-- 下面是创建目标类别 -->
+      <!-- 输入框：输入目标类别名称 -->
+      <input
+        v-if="input_creatingTargetOrTargetSubject.inputType === `targetSubject`"
+        type="text"
+        class="input-target"
+        placeholder="输入目标类别名称"
+        v-model="
+          input_creatingTargetOrTargetSubject.targetSubject.targetSubjectName
+        "
+      />
+
       <!-- 下面是创建目标 -->
 
       <!-- 单选框：目标的类别 -->
       <el-select
         class="select-target"
+        placeholder="请选择目标所属类别"
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
         v-model="input_creatingTargetOrTargetSubject.target.targetSubjectId"
       >
@@ -292,6 +305,9 @@ export default defineComponent({
           abilityList: [],
           isActived: true,
           isFinished: false
+        },
+        targetSubject: {
+          targetSubjectName: ""
         }
       }
     );
