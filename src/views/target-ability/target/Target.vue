@@ -9,43 +9,63 @@
       style="width:100%"
       v-for="targetSubject in targetSubjectList"
       v-bind:key="targetSubject.id"
+      @click="
+        targetSubject.attributes.showSubjectList = !targetSubject.attributes
+          .showSubjectList
+      "
     >
       <!-- 目标目录 -->
       <div class="target-subject-container">
         {{ targetSubject.attributes.name }}
-        <img :src="assets.icon_downward" alt="icon_downward" />
+        <img
+          class="icon-downward"
+          :src="assets.icon_downward"
+          alt="icon_downward"
+          v-if="targetSubject.attributes.showSubjectList === true"
+        />
+        <img
+          class="icon-leftward"
+          :src="assets.icon_leftward"
+          alt="icon_leftward"
+          v-else
+        />
       </div>
 
-      <!-- 目标 -->
       <div
-        class="target-item-container"
-        v-for="target in targetSubject.attributes.targetListOfTargetSubject"
-        v-bind:key="target.id"
+        style="width:100%"
+        v-if="targetSubject.attributes.showSubjectList === true"
       >
-        <!-- 完成目标 -->
-        <div class="finished-button-container">
-          <img
-            class="finished-button"
-            :src="assets.icon_red_finished_button"
-            alt="icon_red_finished_button"
-          />
-        </div>
-
-        <!-- 占位符 -->
-        <div class="placeholder"></div>
-
-        <!-- 目标主体 -->
-        <div class="target-body-container">
-          <div class="target-type">
-            {{
-              target.attributes.validityType === "time-bound"
-                ? "时限目标"
-                : "长期目标"
-            }}
+        <!-- 目标 -->
+        <div
+          class="target-item-container"
+          v-for="target in targetSubject.attributes.targetListOfTargetSubject"
+          v-bind:key="target.id"
+        >
+          <!-- 完成目标 -->
+          <div class="finished-button-container">
+            <img
+              class="finished-button"
+              :src="assets.icon_red_finished_button"
+              alt="icon_red_finished_button"
+            />
           </div>
-          <div class="target-name">{{ target.attributes.name }}</div>
-          <div class="target-description">
-            {{ target.attributes.description }}
+
+          <!-- 占位符 -->
+          <div class="placeholder"></div>
+
+          <!-- 目标主体 -->
+          <div class="target-body-container">
+            <div class="target-type">
+              {{
+                target.attributes.validityType === "time-bound"
+                  ? "时限目标"
+                  : "长期目标"
+              }}
+            </div>
+            <div class="target-name">{{ target.attributes.name }}</div>
+            <div class="target-description">
+              {{ target.attributes.description }}
+            </div>
           </div>
         </div>
       </div>
@@ -64,6 +84,7 @@ import {
 } from "@vue/composition-api";
 import icon_create_target from "../../../assets/icon_create_target.svg";
 import icon_downward from "../../../assets/icon_downward.svg";
+import icon_leftward from "../../../assets/icon_leftward.svg";
 import icon_red_finished_button from "../../../assets/icon_red_finished_button.svg";
 import Store from "../../../store";
 import AV from "leancloud-storage";
@@ -111,6 +132,7 @@ export default defineComponent({
       assets: {
         icon_create_target,
         icon_downward,
+        icon_leftward,
         icon_red_finished_button
       }
     };
@@ -163,12 +185,23 @@ export default defineComponent({
     letter-spacing 0.02vh
     text-align left
     color #9a9a9a
-    img {
+    img.icon-downward {
       position absolute
       width 2.35vw
       height 0.65vh
       opacity 0.5
       right 5.52vw
+      top 0
+      bottom 0
+      margin-top auto
+      margin-bottom auto
+    }
+    img.icon-leftward {
+      position absolute
+      width 1.16vw
+      height 1.32vh
+      right 6.12vw
+      opacity 0.5
       top 0
       bottom 0
       margin-top auto

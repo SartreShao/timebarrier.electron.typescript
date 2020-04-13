@@ -483,6 +483,7 @@ export default {
 
         targetSubjectList.forEach(targetSubject => {
           targetSubject.attributes.targetListOfTargetSubject = [];
+          targetSubject.attributes.showSubjectList = true;
           targetList.forEach(target => {
             if (
               target.attributes.targetSubject !== undefined &&
