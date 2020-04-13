@@ -5,6 +5,41 @@
       <img :src="assets.icon_create_target" alt="icon_create_target" />
     </div>
 
+    <!-- 无目录的目标 -->
+    <div
+      class="target-item-container"
+      v-for="target in unSubjectiveTargetList"
+      v-bind:key="target.id"
+    >
+      <!-- 完成目标 -->
+      <div class="finished-button-container">
+        <img
+          class="finished-button"
+          :src="assets.icon_red_finished_button"
+          alt="icon_red_finished_button"
+        />
+      </div>
+
+      <!-- 占位符 -->
+      <div class="placeholder"></div>
+
+      <!-- 目标主体 -->
+      <div class="target-body-container">
+        <div class="target-type">
+          {{
+            target.attributes.validityType === "time-bound"
+              ? "时限目标"
+              : "长期目标"
+          }}
+        </div>
+        <div class="target-name">{{ target.attributes.name }}</div>
+        <div class="target-description">
+          {{ target.attributes.description }}
+        </div>
+      </div>
+    </div>
+
+    <!-- 有目录的目标 -->
     <div
       style="width:100%"
       v-for="targetSubject in targetSubjectList"
@@ -70,6 +105,62 @@
         </div>
       </div>
     </div>
+
+    <!-- 已完成的目标目录 -->
+    <div
+      class="target-subject-container"
+      @click="isCompletedTargetShown = !isCompletedTargetShown"
+    >
+      已完成的目标
+      <img
+        class="icon-downward"
+        :src="assets.icon_downward"
+        alt="icon_downward"
+        v-if="isCompletedTargetShown === true"
+      />
+      <img
+        class="icon-leftward"
+        :src="assets.icon_leftward"
+        alt="icon_leftward"
+        v-else
+      />
+    </div>
+
+    <!-- 已完成的目标 -->
+    <div style="width:100%" v-if="isCompletedTargetShown === true">
+      <div
+        class="target-item-container"
+        v-for="target in completedTargetList"
+        v-bind:key="target.id"
+      >
+        <!-- 完成目标 -->
+        <div class="finished-button-container">
+          <img
+            class="finished-button"
+            :src="assets.icon_red_finished_button"
+            alt="icon_red_finished_button"
+          />
+        </div>
+
+        <!-- 占位符 -->
+        <div class="placeholder"></div>
+
+        <!-- 目标主体 -->
+        <div class="target-body-container">
+          <div class="target-type">
+            {{
+              target.attributes.validityType === "time-bound"
+                ? "时限目标"
+                : "长期目标"
+            }}
+          </div>
+          <div class="target-name">{{ target.attributes.name }}</div>
+          <div class="target-description">
+            {{ target.attributes.description }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -115,6 +206,9 @@ export default defineComponent({
       ref([])
     );
 
+    // 已完成的目标是否打开
+    const isCompletedTargetShown: Ref<boolean> = ref(false);
+
     // 生命周期：初始化
     onMounted(() => {
       TargetPage.init(
@@ -129,6 +223,8 @@ export default defineComponent({
       isCreateTargetDrawerDisplayed,
       unSubjectiveTargetList,
       targetSubjectList,
+      completedTargetList,
+      isCompletedTargetShown,
       assets: {
         icon_create_target,
         icon_downward,
