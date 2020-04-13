@@ -1064,12 +1064,12 @@ const TargetPage = {
    * 初始化 TargetPage
    *
    * @param vue ElementVue
-   * @param targetList 目标列表
+   * @param unSubjectiveTargetList 目标列表
    * @param targetSubjectList 目标类别列表
    */
   init: async (
     vue: ElementVue,
-    targetList: Ref<AV.Object[]>,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
     completedTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>
   ) => {
@@ -1087,10 +1087,13 @@ const TargetPage = {
 
     try {
       // 尝试获取目标列表
-      targetList.value = await Api.fetchTargetList(user, false);
+      unSubjectiveTargetList.value = await Api.fetchTargetList(
+        user,
+        "unsubjective"
+      );
 
       // 尝试获取已完成的目标列表
-      completedTargetList.value = await Api.fetchTargetList(user, true);
+      completedTargetList.value = await Api.fetchTargetList(user, "completed");
 
       // 尝试获取目标类别列表
       targetSubjectList.value = await Api.fetchTargetSubjectList(user);
@@ -1113,14 +1116,14 @@ const TargetPage = {
    * @param vue ElementVue
    * @parma input_creatingTargetOrTargetSubject 用户输入的表单
    * @param isCreateTargetDrawerDisplayed 控制抽屉菜单的控制变量
-   * @param targetList 全局变量：目标列表
+   * @param unSubjectiveTargetList 全局变量：目标列表
    * @param targetSubjectList 全局变量：目标类别列表
    */
   createTargetOrTargetSubject: async (
     vue: ElementVue,
     input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
     isCreateTargetDrawerDisplayed: Ref<boolean>,
-    targetList: Ref<AV.Object[]>,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
     completedTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>
   ) => {
@@ -1206,8 +1209,15 @@ const TargetPage = {
         );
 
         // 保存完成后，刷新 TargetList
-        targetList.value = await Api.fetchTargetList(user, false);
-        completedTargetList.value = await Api.fetchTargetList(user, true);
+        unSubjectiveTargetList.value = await Api.fetchTargetList(
+          user,
+          "unsubjective"
+        );
+        completedTargetList.value = await Api.fetchTargetList(
+          user,
+          "completed"
+        );
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
 
         // 保存成功
         UI.hideLoading(loadingInstance);

@@ -321,7 +321,10 @@ export default defineComponent({
     );
 
     //「目标」的列表
-    const targetList: Ref<AV.Object[]> = inject(Store.targetList, ref([]));
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
 
     // 已完成的「目标」列表
     const completedTargetList: Ref<AV.Object[]> = inject(
@@ -341,7 +344,7 @@ export default defineComponent({
         context.root,
         input_creatingTargetOrTargetSubject,
         isCreateTargetDrawerDisplayed,
-        targetList,
+        unSubjectiveTargetList,
         completedTargetList,
         targetSubjectList
       );

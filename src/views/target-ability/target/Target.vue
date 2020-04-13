@@ -5,32 +5,48 @@
       <img :src="assets.icon_create_target" alt="icon_create_target" />
     </div>
 
-    <!-- 目标目录 -->
-    <div class="target-subject-container">
-      职业目标
-      <img :src="assets.icon_downward" alt="icon_downward" />
-    </div>
-
-    <!-- 目标 -->
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
+    <div
+      style="width:100%"
+      v-for="targetSubject in targetSubjectList"
+      v-bind:key="targetSubject.id"
+    >
+      <!-- 目标目录 -->
+      <div class="target-subject-container">
+        {{ targetSubject.attributes.name }}
+        <img :src="assets.icon_downward" alt="icon_downward" />
       </div>
 
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
+      <!-- 目标 -->
+      <div
+        class="target-item-container"
+        v-for="target in targetSubject.attributes.targetListOfTargetSubject"
+        v-bind:key="target.id"
+      >
+        <!-- 完成目标 -->
+        <div class="finished-button-container">
+          <img
+            class="finished-button"
+            :src="assets.icon_red_finished_button"
+            alt="icon_red_finished_button"
+          />
+        </div>
 
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
+        <!-- 占位符 -->
+        <div class="placeholder"></div>
+
+        <!-- 目标主体 -->
+        <div class="target-body-container">
+          <div class="target-type">
+            {{
+              target.attributes.validityType === "time-bound"
+                ? "时限目标"
+                : "长期目标"
+            }}
+          </div>
+          <div class="target-name">{{ target.attributes.name }}</div>
+          <div class="target-description">
+            {{ target.attributes.description }}
+          </div>
         </div>
       </div>
     </div>
@@ -43,7 +59,8 @@ import {
   Ref,
   ref,
   inject,
-  onMounted
+  onMounted,
+  computed
 } from "@vue/composition-api";
 import icon_create_target from "../../../assets/icon_create_target.svg";
 import icon_downward from "../../../assets/icon_downward.svg";
@@ -59,8 +76,11 @@ export default defineComponent({
       ref(false)
     );
 
-    //「目标」的列表
-    const targetList: Ref<AV.Object[]> = inject(Store.targetList, ref([]));
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
 
     //「目标类别」的列表
     const targetSubjectList: Ref<AV.Object[]> = inject(
@@ -78,7 +98,7 @@ export default defineComponent({
     onMounted(() => {
       TargetPage.init(
         context.root,
-        targetList,
+        unSubjectiveTargetList,
         completedTargetList,
         targetSubjectList
       );
@@ -86,7 +106,7 @@ export default defineComponent({
 
     return {
       isCreateTargetDrawerDisplayed,
-      targetList,
+      unSubjectiveTargetList,
       targetSubjectList,
       assets: {
         icon_create_target,
@@ -126,6 +146,7 @@ export default defineComponent({
     }
   }
   .target-subject-container {
+    margin-bottom 0.15vh
     position relative
     height 6.52vh
     width 100%
@@ -159,7 +180,7 @@ export default defineComponent({
     width 100%
     display flex
     flex-direction row
-    margin-top 0.15vh
+    margin-bottom 0.15vh
     flex-shrink 0
     .finished-button-container {
       width 19.6vw

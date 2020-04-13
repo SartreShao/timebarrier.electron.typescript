@@ -474,6 +474,24 @@ export default {
         const targetSubjectList = await new AV.Query(TargetSubject)
           .equalTo("user", user)
           .find();
+
+        const targetList = await new AV.Query(Target)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .include("targetSubject")
+          .find();
+
+        targetSubjectList.forEach(targetSubject => {
+          targetSubject.attributes.targetListOfTargetSubject = [];
+          targetList.forEach(target => {
+            if (
+              target.attributes.targetSubject !== undefined &&
+              target.attributes.targetSubject.id === targetSubject.id
+            ) {
+              targetSubject.attributes.targetListOfTargetSubject.push(target);
+            }
+          });
+        });
         Log.success("fetchTargetSubjectList", targetSubjectList);
         resolve(targetSubjectList);
       } catch (error) {
@@ -484,13 +502,23 @@ export default {
   /**
    * 请求 Target 列表
    */
-  fetchTargetList: (user: AV.User, isFinished: boolean): Promise<AV.Object[]> =>
+  fetchTargetList: (
+    user: AV.User,
+    targetType: "completed" | "unsubjective"
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
-        const targetList = await new AV.Query(Target)
+        const targetListQuery = new AV.Query(Target)
           .equalTo("user", user)
-          .equalTo("isFinished", isFinished)
-          .find();
+          .include("targetSubject");
+
+        if (targetType === "completed") {
+          targetListQuery.equalTo("isFinished", true);
+        } else if (targetType === "unsubjective") {
+          targetListQuery.equalTo("targetSubject", null);
+        }
+
+        const targetList = await targetListQuery.find();
         Log.success("fetchTargetList", targetList);
         resolve(targetList);
       } catch (error) {
