@@ -31,11 +31,11 @@ export type InputTargetOrTargetSubjectType = {
   inputType: "target" | "targetSubject";
   target: {
     // 当选择为 `target` 时，单选框「目标类别」的值
-    targetSubjectId: string;
+    targetSubjectId: string | null;
     // 目标名称
-    targetName: string;
+    name: string;
     // 达成目标的条件
-    targetDescription: string;
+    description: string;
     // 目标有效期类型
     validityType: "time-bound" | "indefinite" | "";
     // 目标有效期
@@ -49,7 +49,7 @@ export type InputTargetOrTargetSubjectType = {
   };
   targetSubject: {
     // 目标名称
-    targetSubjectName: string;
+    name: string;
   };
 };
 

@@ -59,9 +59,7 @@
         type="text"
         class="input-target"
         placeholder="输入目标类别名称"
-        v-model="
-          input_creatingTargetOrTargetSubject.targetSubject.targetSubjectName
-        "
+        v-model="input_creatingTargetOrTargetSubject.targetSubject.name"
       />
 
       <!-- 下面是创建目标 -->
@@ -73,6 +71,8 @@
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
         v-model="input_creatingTargetOrTargetSubject.target.targetSubjectId"
       >
+        <el-option label="无" :value="null"></el-option>
+
         <el-option
           v-for="targetSubject in targetSubjectList"
           v-bind:key="targetSubject.id"
@@ -93,7 +93,7 @@
         type="text"
         class="input-target"
         placeholder="输入目标名称"
-        v-model="input_creatingTargetOrTargetSubject.target.targetName"
+        v-model="input_creatingTargetOrTargetSubject.target.name"
       />
 
       <!-- 占位框 -->
@@ -108,7 +108,7 @@
         type="text"
         class="input-target"
         placeholder="输入目标达成条件 or 目标详情"
-        v-model="input_creatingTargetOrTargetSubject.target.targetDescription"
+        v-model="input_creatingTargetOrTargetSubject.target.description"
       />
 
       <!-- 占位框 -->
@@ -247,10 +247,17 @@
 
       <div class="button-container">
         <!-- 按钮：删除计划 -->
-        <div class="delete-button">删除</div>
+        <div
+          class="delete-button"
+          @click="isCreateTargetDrawerDisplayed = false"
+        >
+          取消
+        </div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button">保存</div>
+        <div class="save-button" @click="click_saveTargetOrTargetSubject">
+          创建
+        </div>
       </div>
     </el-drawer>
 
@@ -279,10 +286,11 @@ import AV from "leancloud-storage";
 import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
+import { TargetPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopBar, BottomBar, Target, Ability },
-  setup() {
+  setup(props, context) {
     // 当前的 TAB：Ability｜Target
     const currentTab: Ref<TargetAbilityTabType> = ref("target");
 
@@ -298,8 +306,8 @@ export default defineComponent({
         inputType: "target", // 默认选择：目标
         target: {
           targetSubjectId: "", //默认：不选择
-          targetName: "",
-          targetDescription: "",
+          name: "",
+          description: "",
           validityType: "",
           validity: null,
           abilityList: [],
@@ -307,10 +315,13 @@ export default defineComponent({
           isFinished: false
         },
         targetSubject: {
-          targetSubjectName: ""
+          name: ""
         }
       }
     );
+
+    //「目标」的列表
+    const targetList: Ref<AV.Object[]> = inject(Store.targetList, ref([]));
 
     //「目标类别」的列表
     const targetSubjectList: Ref<AV.Object[]> = inject(
@@ -318,8 +329,20 @@ export default defineComponent({
       ref([])
     );
 
+    // 点击事件
+    const click_saveTargetOrTargetSubject = () => {
+      TargetPage.createTargetOrTargetSubject(
+        context.root,
+        input_creatingTargetOrTargetSubject,
+        isCreateTargetDrawerDisplayed,
+        targetList,
+        targetSubjectList
+      );
+    };
+
     return {
       currentTab,
+      click_saveTargetOrTargetSubject,
       isCreateTargetDrawerDisplayed,
       input_creatingTargetOrTargetSubject,
       targetSubjectList,

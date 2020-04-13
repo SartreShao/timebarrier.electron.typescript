@@ -9,6 +9,7 @@ const Ability = AV.Object.extend("Ability");
 const AbilityPlan = AV.Object.extend("AbilityPlan");
 const TargetSubject = AV.Object.extend("TargetSubject");
 const Target = AV.Object.extend("Target");
+const AbilityTarget = AV.Object.extend("AbilityTarget");
 
 export default {
   /**
@@ -493,6 +494,78 @@ export default {
         resolve(targetList);
       } catch (error) {
         Log.error("fetchTargetList", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 创建目标
+   */
+  createTarget: (
+    user: AV.User,
+    targetSubjectId: string | null,
+    name: string,
+    description: string,
+    validityType: "time-bound" | "indefinite",
+    validity: Date | null,
+    abilityList: { id: string; name: string }[],
+    isActived: boolean,
+    isFinished: boolean
+  ): Promise<AV.Object> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target = new Target()
+          .set("user", user)
+          .set("name", name)
+          .set("description", description)
+          .set("validityType", validityType)
+          .set("validity", validity)
+          .set("isActived", isActived)
+          .set("isFinished", isFinished);
+
+        if (targetSubjectId !== null) {
+          target.set(
+            "targetSubject",
+            AV.Object.createWithoutData("TargetSubject", targetSubjectId)
+          );
+        }
+
+        await target.save();
+
+        const abilityTargetList: AV.Object[] = [];
+
+        abilityList.forEach(ability => {
+          const abilityTarget = new AbilityTarget()
+            .set("ability", AV.Object.createWithoutData("Ability", ability.id))
+            .set("target", target);
+          abilityTargetList.push(abilityTarget);
+        });
+
+        if (abilityTargetList.length !== 0) {
+          await AV.Object.saveAll(abilityTargetList);
+        }
+
+        Log.success("createTarget", target);
+        resolve(target);
+      } catch (error) {
+        Log.error("createTarget", error);
+        reject(error);
+      }
+    }),
+
+  /**
+   * 创建目标类别
+   */
+  createTargetSubject: (user: AV.User, name: string): Promise<AV.Object> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetSubject = await new TargetSubject()
+          .set("user", user)
+          .set("name", name)
+          .save();
+        Log.success("createTargetSubject", targetSubject);
+        resolve(targetSubject);
+      } catch (error) {
+        Log.error("createTargetSubject", error);
         reject(error);
       }
     })

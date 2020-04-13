@@ -6,7 +6,8 @@ import {
   ElementVue,
   TomatoCloudStatus,
   PlanType,
-  InputPlanType
+  InputPlanType,
+  InputTargetOrTargetSubjectType
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -1059,6 +1060,13 @@ const TomatoTimerPage = {
  * 能力页
  */
 const TargetPage = {
+  /**
+   * 初始化 TargetPage
+   *
+   * @param vue ElementVue
+   * @param targetList 目标列表
+   * @param targetSubjectList 目标类别列表
+   */
   init: async (
     vue: ElementVue,
     targetList: Ref<AV.Object[]>,
@@ -1093,6 +1101,188 @@ const TargetPage = {
         `失败原因：${error.message}`,
         "error"
       );
+    }
+  },
+  /**
+   * 创建「目标」或「目标类别」
+   *
+   * @param vue ElementVue
+   * @parma input_creatingTargetOrTargetSubject 用户输入的表单
+   * @param isCreateTargetDrawerDisplayed 控制抽屉菜单的控制变量
+   * @param targetList 全局变量：目标列表
+   * @param targetSubjectList 全局变量：目标类别列表
+   */
+  createTargetOrTargetSubject: async (
+    vue: ElementVue,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    isCreateTargetDrawerDisplayed: Ref<boolean>,
+    targetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 判断是创建「目标」还是创建「目标类别」
+    if (input_creatingTargetOrTargetSubject.inputType === "target") {
+      // 如果是目标
+      // 判断依赖条件：目标所属类别
+      if (input_creatingTargetOrTargetSubject.target.targetSubjectId === "") {
+        UI.showNotification(
+          vue.$notify,
+          "请选择一个目标所属类别",
+          "",
+          "warning"
+        );
+        return;
+      }
+
+      // 判断依赖条件：目标名称
+      if (input_creatingTargetOrTargetSubject.target.name === "") {
+        UI.showNotification(vue.$notify, "请输入目标名称", "", "warning");
+        return;
+      }
+
+      // 判断依赖条件：达成目标所需条件
+      if (input_creatingTargetOrTargetSubject.target.description === "") {
+        UI.showNotification(
+          vue.$notify,
+          "请输入达成目标所需条件",
+          "",
+          "warning"
+        );
+        return;
+      }
+
+      // 判断依赖条件：目标有效期
+      if (input_creatingTargetOrTargetSubject.target.validityType === "") {
+        UI.showNotification(vue.$notify, "请选择目标有效期", "", "warning");
+        return;
+      }
+
+      // 判断依赖条件：目标名称
+      if (
+        input_creatingTargetOrTargetSubject.target.validityType ===
+          "time-bound" &&
+        input_creatingTargetOrTargetSubject.target.validity === null
+      ) {
+        UI.showNotification(
+          vue.$notify,
+          "请输入预计达成目标的日期",
+          "",
+          "warning"
+        );
+        return;
+      }
+
+      // 显示进度条
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在创建您的目标..."
+      );
+
+      // 尝试保存 Target
+      try {
+        await Api.createTarget(
+          user,
+          input_creatingTargetOrTargetSubject.target.targetSubjectId,
+          input_creatingTargetOrTargetSubject.target.name,
+          input_creatingTargetOrTargetSubject.target.description,
+          input_creatingTargetOrTargetSubject.target.validityType,
+          input_creatingTargetOrTargetSubject.target.validity,
+          input_creatingTargetOrTargetSubject.target.abilityList,
+          input_creatingTargetOrTargetSubject.target.isActived,
+          input_creatingTargetOrTargetSubject.target.isFinished
+        );
+
+        // 保存完成后，刷新 TargetList
+        targetList.value = await Api.fetchTargetList(user);
+
+        // 保存成功
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(vue.$notify, "目标创建成功", "", "success");
+
+        // 清除数据
+        input_creatingTargetOrTargetSubject.inputType = "target";
+        input_creatingTargetOrTargetSubject.target.targetSubjectId = "";
+        input_creatingTargetOrTargetSubject.target.name = "";
+        input_creatingTargetOrTargetSubject.target.description = "";
+        input_creatingTargetOrTargetSubject.target.validityType = "";
+        input_creatingTargetOrTargetSubject.target.validity = null;
+        input_creatingTargetOrTargetSubject.target.abilityList = [];
+        input_creatingTargetOrTargetSubject.target.isActived = true;
+        input_creatingTargetOrTargetSubject.target.isFinished = false;
+        input_creatingTargetOrTargetSubject.targetSubject.name = "";
+
+        // 关闭窗口
+        isCreateTargetDrawerDisplayed.value = false;
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "目标创建失败",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    } else if (
+      input_creatingTargetOrTargetSubject.inputType === "targetSubject"
+    ) {
+      // 如果是目标类别
+      // 判断依赖条件：目标名称
+      if (input_creatingTargetOrTargetSubject.targetSubject.name === "") {
+        UI.showNotification(vue.$notify, "请输入目标类别名称", "", "warning");
+        return;
+      }
+
+      // 显示进度条
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在创建您的目标类别..."
+      );
+
+      // 尝试保存 TargetSubject
+      try {
+        await Api.createTargetSubject(
+          user,
+          input_creatingTargetOrTargetSubject.targetSubject.name
+        );
+
+        // 保存完成后，刷新 TargetSubjectList
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+        // 保存成功
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(vue.$notify, "目标类别创建成功", "", "success");
+
+        // 清除数据
+        input_creatingTargetOrTargetSubject.inputType = "target";
+        input_creatingTargetOrTargetSubject.target.targetSubjectId = "";
+        input_creatingTargetOrTargetSubject.target.name = "";
+        input_creatingTargetOrTargetSubject.target.description = "";
+        input_creatingTargetOrTargetSubject.target.validityType = "";
+        input_creatingTargetOrTargetSubject.target.validity = null;
+        input_creatingTargetOrTargetSubject.target.abilityList = [];
+        input_creatingTargetOrTargetSubject.target.isActived = true;
+        input_creatingTargetOrTargetSubject.target.isFinished = false;
+        input_creatingTargetOrTargetSubject.targetSubject.name = "";
+
+        // 关闭窗口
+        isCreateTargetDrawerDisplayed.value = false;
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "目标类别创建失败",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
     }
   }
 };
