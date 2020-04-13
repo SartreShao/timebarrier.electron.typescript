@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 添加「目标」按钮 -->
-    <div class="add-button">
+    <div class="add-button" @click="isCreateTargetDrawerDisplayed = true">
       <img :src="assets.icon_create_target" alt="icon_create_target" />
     </div>
 
@@ -34,151 +34,54 @@
         </div>
       </div>
     </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
-    <div class="target-item-container">
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">长期计划</div>
-        <div class="target-name">拥有强健的身体</div>
-        <div class="target-description">
-          体重保持在 160 斤，每天锻炼一小时，早睡早起，按时吃饭
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import {
+  defineComponent,
+  Ref,
+  ref,
+  inject,
+  onMounted
+} from "@vue/composition-api";
 import icon_create_target from "../../../assets/icon_create_target.svg";
 import icon_downward from "../../../assets/icon_downward.svg";
 import icon_red_finished_button from "../../../assets/icon_red_finished_button.svg";
-
+import Store from "../../../store";
+import AV from "leancloud-storage";
+import { TargetPage } from "../../../lib/vue-viewmodels";
 export default defineComponent({
-  setup() {
+  setup(props, context) {
+    // 控制变量：「创建目标」的抽屉菜单是否打开
+    const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
+      Store.isCreateTargetDrawerDisplayed,
+      ref(false)
+    );
+
+    //「目标」的列表
+    const targetList: Ref<AV.Object[]> = inject(Store.targetList, ref([]));
+
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
+    );
+
+    // 生命周期：初始化
+    onMounted(() => {
+      TargetPage.init(context.root, targetList, targetSubjectList);
+    });
+
     return {
-      assets: { icon_create_target, icon_downward, icon_red_finished_button }
+      isCreateTargetDrawerDisplayed,
+      targetList,
+      targetSubjectList,
+      assets: {
+        icon_create_target,
+        icon_downward,
+        icon_red_finished_button
+      }
     };
   }
 });
@@ -195,7 +98,7 @@ export default defineComponent({
   align-items center
   margin-top 6.75vh
   .add-button {
-    z-index 99999
+    cursor pointer
     position fixed
     top 12.77vh
     flex-shrink 0

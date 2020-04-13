@@ -26,6 +26,29 @@ export type InputPlanType = {
   target: string;
 };
 
+// 输入目标的类别
+export type InputTargetOrTargetSubjectType = {
+  inputType: "target" | "targetSubject";
+  target: {
+    // 当选择为 `target` 时，单选框「目标类别」的值
+    targetSubjectId: string;
+    // 目标名称
+    targetName: string;
+    // 达成目标的条件
+    targetDescription: string;
+    // 目标有效期类型
+    validityType: "time-bound" | "indefinite" | "";
+    // 目标有效期
+    validity: Date | null;
+    // 关联的能力
+    abilityList: { id: string; name: string }[];
+    // 是否激活
+    isActived: boolean;
+    // 是否已完成
+    isFinished: boolean;
+  };
+};
+
 // 底边栏 TAB 的类别
 export type TabType = "plan" | "target-ability" | "statistic" | "me";
 

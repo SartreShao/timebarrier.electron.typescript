@@ -1055,4 +1055,46 @@ const TomatoTimerPage = {
   }
 };
 
-export { SplashPage, LoginPage, PlanPage, TomatoTimerPage };
+/**
+ * 能力页
+ */
+const TargetPage = {
+  init: async (
+    vue: ElementVue,
+    targetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 显示 loading
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取目标列表");
+
+    try {
+      // 尝试获取目标列表
+      targetList.value = await Api.fetchTargetList(user);
+
+      // 尝试获取目标类别列表
+      targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+      // 获取列表成功
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取目标列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  }
+};
+
+export { SplashPage, LoginPage, PlanPage, TomatoTimerPage, TargetPage };

@@ -16,7 +16,9 @@ export default defineComponent({
 </script>
 <style lang="stylus">
 @import './public/public.stylus'
-
+* {
+  flex-shrink 0
+}
 #app {
   width 100%
   height 100%

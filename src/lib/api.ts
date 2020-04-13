@@ -1,13 +1,14 @@
 import * as AV from "leancloud-storage";
 import { Log } from "../lib/vue-utils";
 import { PlanType } from "./types/vue-viewmodels";
-import { EROFS } from "constants";
 
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
 const TomatoPlan = AV.Object.extend("TomatoPlan");
 const Ability = AV.Object.extend("Ability");
 const AbilityPlan = AV.Object.extend("AbilityPlan");
+const TargetSubject = AV.Object.extend("TargetSubject");
+const Target = AV.Object.extend("Target");
 
 export default {
   /**
@@ -459,6 +460,39 @@ export default {
       } catch (error) {
         console.log(error);
         Log.error("fetchAbilityListWithPlanSelect", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 请求 TargetSubject
+   * @param user 当前登录的用户
+   */
+  fetchTargetSubjectList: (user: AV.User): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetSubjectList = await new AV.Query(TargetSubject)
+          .equalTo("user", user)
+          .find();
+        Log.success("fetchTargetSubjectList", targetSubjectList);
+        resolve(targetSubjectList);
+      } catch (error) {
+        Log.error("fetchTargetSubjectList", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 请求 Target 列表
+   */
+  fetchTargetList: (user: AV.User): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetList = await new AV.Query(Target)
+          .equalTo("user", user)
+          .find();
+        Log.success("fetchTargetList", targetList);
+        resolve(targetList);
+      } catch (error) {
+        Log.error("fetchTargetList", error);
         reject(error);
       }
     })
