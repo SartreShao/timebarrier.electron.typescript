@@ -323,6 +323,12 @@ export default defineComponent({
     //「目标」的列表
     const targetList: Ref<AV.Object[]> = inject(Store.targetList, ref([]));
 
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
+    );
+
     //「目标类别」的列表
     const targetSubjectList: Ref<AV.Object[]> = inject(
       Store.targetSubjectList,
@@ -336,6 +342,7 @@ export default defineComponent({
         input_creatingTargetOrTargetSubject,
         isCreateTargetDrawerDisplayed,
         targetList,
+        completedTargetList,
         targetSubjectList
       );
     };

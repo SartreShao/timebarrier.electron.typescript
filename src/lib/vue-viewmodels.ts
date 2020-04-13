@@ -1070,6 +1070,7 @@ const TargetPage = {
   init: async (
     vue: ElementVue,
     targetList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
@@ -1086,7 +1087,10 @@ const TargetPage = {
 
     try {
       // 尝试获取目标列表
-      targetList.value = await Api.fetchTargetList(user);
+      targetList.value = await Api.fetchTargetList(user, false);
+
+      // 尝试获取已完成的目标列表
+      completedTargetList.value = await Api.fetchTargetList(user, true);
 
       // 尝试获取目标类别列表
       targetSubjectList.value = await Api.fetchTargetSubjectList(user);
@@ -1117,6 +1121,7 @@ const TargetPage = {
     input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
     isCreateTargetDrawerDisplayed: Ref<boolean>,
     targetList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
@@ -1201,7 +1206,8 @@ const TargetPage = {
         );
 
         // 保存完成后，刷新 TargetList
-        targetList.value = await Api.fetchTargetList(user);
+        targetList.value = await Api.fetchTargetList(user, false);
+        completedTargetList.value = await Api.fetchTargetList(user, true);
 
         // 保存成功
         UI.hideLoading(loadingInstance);

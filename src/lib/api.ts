@@ -484,11 +484,12 @@ export default {
   /**
    * 请求 Target 列表
    */
-  fetchTargetList: (user: AV.User): Promise<AV.Object[]> =>
+  fetchTargetList: (user: AV.User, isFinished: boolean): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         const targetList = await new AV.Query(Target)
           .equalTo("user", user)
+          .equalTo("isFinished", isFinished)
           .find();
         Log.success("fetchTargetList", targetList);
         resolve(targetList);

@@ -13,6 +13,8 @@ const dailyPlanList = Symbol();
 const targetSubjectList = Symbol();
 // 「目标」的列表
 const targetList = Symbol();
+// 已完成的目标列表
+const completedTargetList = Symbol();
 // 番茄钟的状态
 const tomatoCloudStatus = Symbol();
 // 番茄中的计时器
@@ -34,6 +36,7 @@ function useProvider() {
   provide(dailyPlanList, ref<AV.Object[]>([]));
   provide(targetSubjectList, ref<AV.Object[]>([]));
   provide(targetList, ref<AV.Object[]>([]));
+  provide(completedTargetList, ref<AV.Object[]>([]));
   const preparedTomatoCloudStatus: TomatoCloudStatus = "prepared";
   provide(tomatoCloudStatus, ref<TomatoCloudStatus>(preparedTomatoCloudStatus));
   provide(interval, ref<NodeJS.Timeout | null>(null));
@@ -49,6 +52,7 @@ export default {
   dailyPlanList,
   targetSubjectList,
   targetList,
+  completedTargetList,
   tomatoCloudStatus,
   interval,
   countDown,

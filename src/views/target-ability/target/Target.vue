@@ -68,9 +68,20 @@ export default defineComponent({
       ref([])
     );
 
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
+    );
+
     // 生命周期：初始化
     onMounted(() => {
-      TargetPage.init(context.root, targetList, targetSubjectList);
+      TargetPage.init(
+        context.root,
+        targetList,
+        completedTargetList,
+        targetSubjectList
+      );
     });
 
     return {
