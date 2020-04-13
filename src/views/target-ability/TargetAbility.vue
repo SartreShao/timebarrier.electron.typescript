@@ -206,7 +206,7 @@
               .target.isActived
           "
         >
-          <span>激活该计划</span
+          <span>激活该目标</span
           ><img
             :src="
               input_creatingTargetOrTargetSubject.target.isActived
@@ -224,7 +224,7 @@
               .target.isFinished
           "
         >
-          <span>完成该计划</span
+          <span>完成该目标</span
           ><img
             :src="
               input_creatingTargetOrTargetSubject.target.isFinished
