@@ -40,6 +40,7 @@
           class="item-container"
           v-for="item in dailyPlanList"
           v-bind:key="item.id"
+          v-longpress="() => longClick(item)"
           @click="click_editPlanButton(item)"
         >
           <div class="plan-container">
@@ -499,6 +500,10 @@ export default defineComponent({
       );
     });
 
+    const longClick = (item: AV.Object) => {
+      console.log("long", item);
+    };
+
     return {
       input_plan,
       input_ability,
@@ -522,6 +527,7 @@ export default defineComponent({
       click_abilityItemSelector,
       click_saveAbility,
       click_startTomatoButton,
+      longClick,
       assets: {
         icon_finished,
         icon_logo,
