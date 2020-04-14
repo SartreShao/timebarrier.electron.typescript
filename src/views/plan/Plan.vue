@@ -22,7 +22,7 @@
           class="item-container"
           v-for="item in temporaryPlanList"
           v-bind:key="item.id"
-          @click="click_editPlanButton(item)"
+          v-longclick="() => click_editPlanButton(item)"
         >
           <h2>临时计划</h2>
           <div class="placeholder"></div>
@@ -40,8 +40,7 @@
           class="item-container"
           v-for="item in dailyPlanList"
           v-bind:key="item.id"
-          v-longpress="() => longClick(item)"
-          @click="click_editPlanButton(item)"
+          v-longclick="() => click_editPlanButton(item)"
         >
           <div class="plan-container">
             <h2>每日计划</h2>
@@ -94,7 +93,7 @@
           class="item-container"
           v-for="item in completedPlanList"
           v-bind:key="item.id"
-          @click="click_editPlanButton(item)"
+          v-longclick="() => click_editPlanButton(item)"
         >
           <h2>
             {{ item.attributes.type === "daily" ? "每日计划" : "临时计划" }}
@@ -500,10 +499,6 @@ export default defineComponent({
       );
     });
 
-    const longClick = (item: AV.Object) => {
-      console.log("long", item);
-    };
-
     return {
       input_plan,
       input_ability,
@@ -527,7 +522,6 @@ export default defineComponent({
       click_abilityItemSelector,
       click_saveAbility,
       click_startTomatoButton,
-      longClick,
       assets: {
         icon_finished,
         icon_logo,

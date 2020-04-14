@@ -12,6 +12,13 @@ const Target = AV.Object.extend("Target");
 const AbilityTarget = AV.Object.extend("AbilityTarget");
 
 export default {
+  init: () => {
+    AV.init({
+      appId: "1vrLSxhVS6DqUox0scqmyhCt-gzGzoHsz",
+      appKey: "ywrEEUSG5sE0OyMuXXvW7w8M",
+      serverURLs: "https://timebarrier.api.hearfresh.cn"
+    });
+  },
   /**
    * 获取当前的 LeanCloud User
    * @remark 通用函数
