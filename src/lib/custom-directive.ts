@@ -29,7 +29,7 @@ export function useDirective() {
           pressTimer = setTimeout(() => {
             // Run function
             handler(e);
-          }, 1000);
+          }, 500);
         }
       };
 
