@@ -8,8 +8,6 @@ import "element-ui/lib/theme-chalk/index.css";
 import Api from "./lib/api";
 import { useDirective } from "./lib/custom-directive";
 
-useDirective();
-
 Api.init();
 
 Vue.config.productionTip = false;
@@ -21,3 +19,5 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount("#app");
+
+useDirective();

@@ -1,5 +1,7 @@
 <template>
-  <div class="container">ability</div>
+  <div class="container" v-hello>
+    ability
+  </div>
 </template>
 
 <script lang="ts">
@@ -9,4 +11,10 @@ export default defineComponent({
 });
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.container {
+  height 100%
+  width 100%
+  background white
+}
+</style>

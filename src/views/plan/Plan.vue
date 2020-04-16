@@ -23,10 +23,11 @@
           v-for="item in temporaryPlanList"
           v-bind:key="item.id"
           v-longclick="() => click_editPlanButton(item)"
+          v-hello
         >
-          <h2>临时计划</h2>
-          <div class="placeholder"></div>
-          <h3>{{ item.attributes.name }}</h3>
+          <h2 style="pointer-events:none;">临时计划</h2>
+          <div class="placeholder" style="pointer-events:none;"></div>
+          <h3 style="pointer-events:none;">{{ item.attributes.name }}</h3>
           <div
             class="finished-button"
             @click.stop="click_completePlanButton(item)"
@@ -41,6 +42,7 @@
           v-for="item in dailyPlanList"
           v-bind:key="item.id"
           v-longclick="() => click_editPlanButton(item)"
+          v-hello
         >
           <div class="plan-container">
             <h2>每日计划</h2>
