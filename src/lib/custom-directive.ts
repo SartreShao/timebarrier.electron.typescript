@@ -62,9 +62,10 @@ export function useDirective() {
       el.addEventListener("touchstart", start);
       // Cancel timeouts if this events happen
       el.addEventListener("mouseup", cancel);
-      el.addEventListener("click", cancel);
       el.addEventListener("mouseout", cancel);
+      el.addEventListener("click", cancel);
       el.addEventListener("touchend", cancel);
+      el.addEventListener("touchmove", cancel);
       el.addEventListener("touchcancel", cancel);
     }
   });
@@ -133,7 +134,7 @@ export function useDirective() {
       // 第二步：创建子元素的样式
       const tl = new TimelineMax();
 
-      const handle = (event: MouseEvent) => {
+      const handle = (event: MouseEvent | TouchEvent) => {
         if (event.currentTarget === el) {
           console.log("event", event);
           console.log("currentTarget", event.currentTarget);
@@ -143,20 +144,29 @@ export function useDirective() {
           // const svg = el.firstElementChild;
 
           if (svg !== null) {
-            // 相对于带有定位的父盒子的 x, y 坐标
-            let x = event.offsetX;
-            let y = event.offsetY;
+            let x: number = 0;
+            let y: number = 0;
 
-            const offsetTarget = offset(event.target as HTMLElement);
-            const offsetCurrentTarget = offset(
-              event.currentTarget as HTMLElement
-            );
+            if (event instanceof MouseEvent) {
+              // 相对于带有定位的父盒子的 x, y 坐标
+              x = event.offsetX;
+              y = event.offsetY;
 
-            x = offsetTarget.l - offsetCurrentTarget.l + x;
-            y = offsetTarget.t - offsetCurrentTarget.t + y;
+              const offsetTarget = offset(event.target as HTMLElement);
+              const offsetCurrentTarget = offset(
+                event.currentTarget as HTMLElement
+              );
 
-            console.log("offsetTarget", offsetTarget);
-            console.log("offsetCurrentTarget", offsetCurrentTarget);
+              x = offsetTarget.l - offsetCurrentTarget.l + x;
+              y = offsetTarget.t - offsetCurrentTarget.t + y;
+            } else if (event instanceof TouchEvent) {
+              x =
+                event.targetTouches[0].clientX -
+                offset(event.currentTarget as HTMLElement).l;
+              y =
+                event.targetTouches[0].clientY -
+                offset(event.currentTarget as HTMLElement).t;
+            }
 
             const w = (event.currentTarget as HTMLElement).offsetWidth;
             const h = (event.currentTarget as HTMLElement).offsetHeight;
@@ -168,7 +178,7 @@ export function useDirective() {
             const deltaX = w / 2 + offsetX;
             const deltaY = h / 2 + offsetY;
             const scaleRatio =
-              2 * Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+              10 * Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
             tl.fromTo(
               svg,
               0.75,
@@ -190,16 +200,21 @@ export function useDirective() {
         }
       };
 
-      const cancel = (event: MouseEvent) => {
+      const cancel = (event: MouseEvent | TouchEvent) => {
         tl.restart();
         tl.clear();
       };
 
       // Add Event listeners
       el.addEventListener("mousedown", handle);
+      el.addEventListener("touchstart", handle);
       // Cancel timeouts if this events happen
       el.addEventListener("mouseup", cancel);
       el.addEventListener("mouseout", cancel);
+      el.addEventListener("click", cancel);
+      el.addEventListener("touchend", cancel);
+      el.addEventListener("touchmove", cancel);
+      el.addEventListener("touchcancel", cancel);
     }
   });
 }

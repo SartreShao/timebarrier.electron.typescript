@@ -72,14 +72,13 @@ strong {
   margin-bottom 2px
 }
 .container .sortable-drag {
-  // opacity 0
+  opacity 0
 }
 .flip-list-move {
   transition transform 0.5s
 }
 .ghost {
-  border-left 6px solid rgb(0, 183, 255)
-  box-shadow 10px 10px 5px -1px rgba(0, 0, 0, 0.14)
+  box-shadow 0.75vh 0.75vh 0.37vh -0.07vh rgba(0, 0, 0, 0.14)
   opacity 0.7
   &::before {
     content ' '

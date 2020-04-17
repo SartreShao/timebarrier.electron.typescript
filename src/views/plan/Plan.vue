@@ -18,21 +18,30 @@
       <div style="height:2.1vh;flex-shrink:0"></div>
       <!-- 临时计划列表 -->
       <section class="temporary" v-if="temporaryPlanList.length !== 0">
-        <div
-          class="item-container"
-          v-for="item in temporaryPlanList"
-          v-bind:key="item.id"
-          v-longclick="() => click_editPlanButton(item)"
-          v-hello
+        <draggable
+          v-model="temporaryPlanList"
+          ghost-class="ghost"
+          @end="onPlanListDragEnd"
         >
-          <h2 style="pointer-events:none;">临时计划</h2>
-          <div class="placeholder" style="pointer-events:none;"></div>
-          <h3 style="pointer-events:none;">{{ item.attributes.name }}</h3>
-          <div
-            class="finished-button"
-            @click.stop="click_completePlanButton(item)"
-          ></div>
-        </div>
+          <transition-group type="transition" name="flip-list">
+            <div
+              class="item-container"
+              :id="item.id"
+              v-for="item in temporaryPlanList"
+              :key="item.id"
+              v-longclick="() => click_editPlanButton(item)"
+              v-hello
+            >
+              <h2 style="pointer-events:none;">临时计划</h2>
+              <div class="placeholder" style="pointer-events:none;"></div>
+              <h3 style="pointer-events:none;">{{ item.attributes.name }}</h3>
+              <div
+                class="finished-button"
+                @click.stop="click_completePlanButton(item)"
+              ></div>
+            </div>
+          </transition-group>
+        </draggable>
       </section>
 
       <!-- 每日计划 -->
@@ -295,8 +304,10 @@ import {
   InputPlanType,
   TomatoCloudStatus
 } from "@/lib/types/vue-viewmodels";
+import Draggable from "vuedraggable";
+
 export default defineComponent({
-  components: { BottomBar, TopBar },
+  components: { BottomBar, TopBar, Draggable },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_plan: Ref<string> = ref("");
@@ -491,6 +502,11 @@ export default defineComponent({
       );
     };
 
+    // 当用户拖动列表完毕时，执行
+    const onPlanListDragEnd = (event: any) => {
+      console.log(event);
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       PlanPage.init(
@@ -524,6 +540,7 @@ export default defineComponent({
       click_abilityItemSelector,
       click_saveAbility,
       click_startTomatoButton,
+      onPlanListDragEnd,
       assets: {
         icon_finished,
         icon_logo,
@@ -773,6 +790,16 @@ export default defineComponent({
     }
   }
 }
+.container .item-container-drag {
+  opacity 0
+}
+.flip-list-move {
+  transition transform 0.5s
+}
+.ghost {
+  box-shadow 10px 10px 5px -1px rgba(0, 0, 0, 0.14)
+  opacity 0.7
+}
 .finished-plan-container >>> .el-drawer__body {
   display flex
   flex-direction column
@@ -784,7 +811,7 @@ export default defineComponent({
     width 95.73vw
     display flex
     flex-direction column
-    div.item-container {
+    .item-container {
       width 95.73vw
       height 7.2vh
       background #f0f1f3
