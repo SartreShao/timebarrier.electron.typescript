@@ -82,6 +82,20 @@ export default {
       }
     }),
   /**
+   * 保存所有的 PlanList
+   */
+  savePlanList: (objectList: AV.Object[]) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.Object.saveAll(objectList);
+        Log.success("savePlanList", objectList);
+        resolve(objectList);
+      } catch (error) {
+        Log.error("savePlanList", error);
+        reject(error);
+      }
+    }),
+  /**
    * 获取计划（Plan）列表
    * @remark 「时间壁垒」专用函数
    * @param planType 需要获取的计划类型：临时计划 temporary | 每日计划 daily | 已完成的计划 completed
@@ -105,7 +119,8 @@ export default {
           )
           .limit(pageSize ? pageSize : 1000)
           .equalTo("user", user)
-          .descending("createdAt");
+          .ascending("order")
+          .addDescending("createdAt");
 
         switch (planType) {
           case "temporary": {
@@ -174,6 +189,7 @@ export default {
           .set("type", type)
           .set("isFinished", false)
           .set("user", user)
+          .set("order", 0)
           .save();
         Log.success("createPlan", plan);
         resolve(plan);

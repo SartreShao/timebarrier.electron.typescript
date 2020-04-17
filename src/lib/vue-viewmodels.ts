@@ -548,6 +548,23 @@ const PlanPage = {
     }
   },
   /**
+   * 当用户拖动列表时进行调用
+   * @param planList 用户拖动的列表
+   */
+  changePlanListOrder: async (planList: Ref<AV.Object[]>) => {
+    const list: AV.Object[] = [];
+    planList.value.forEach((plan, index) => {
+      if (plan.attributes.order !== index && plan.id !== undefined) {
+        const object = AV.Object.createWithoutData("Plan", plan.id).set(
+          "order",
+          index
+        );
+        list.push(object);
+      }
+    });
+    await Api.savePlanList(list);
+  },
+  /**
    * 用户点击「关联相关能力」
    */
   relatedAbility: async (

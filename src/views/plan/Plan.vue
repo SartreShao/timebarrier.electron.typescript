@@ -21,7 +21,7 @@
         <draggable
           v-model="temporaryPlanList"
           ghost-class="ghost"
-          @end="onPlanListDragEnd"
+          @end="onTemporaryPlanListDragEnd"
         >
           <transition-group type="transition" name="flip-list">
             <div
@@ -46,42 +46,51 @@
 
       <!-- 每日计划 -->
       <section class="daily">
-        <div
-          class="item-container"
-          v-for="item in dailyPlanList"
-          v-bind:key="item.id"
-          v-longclick="() => click_editPlanButton(item)"
-          v-hello
+        <draggable
+          v-model="dailyPlanList"
+          ghost-class="ghost"
+          @end="onDailyPlanListDragEnd"
         >
-          <div class="plan-container">
-            <h2>每日计划</h2>
-            <div class="placeholder"></div>
-            <h3>{{ item.attributes.name }}</h3>
-            <img
-              @click.stop="click_startTomatoButton(item)"
-              class="start-button"
-              :src="assets.icon_start"
-              alt="icon_start"
-            />
-          </div>
-          <div class="plan-detail-container">
-            <span v-if="item.attributes.abilityListOfPlan.length !== 0">{{
-              "提升" +
-                item.attributes.abilityListOfPlan[0].attributes.name +
-                " · 已累计 " +
-                item.attributes.tomatoNumber / 2 +
-                " 个小时"
-            }}</span>
-            <span v-else>{{
-              "已累计 " + item.attributes.tomatoNumber / 2 + " 个小时"
-            }}</span>
-            <div>
-              {{
-                `${item.attributes.todayTomatoNumber} / ${item.attributes.target} 个番茄`
-              }}
+          <transition-group type="transition" name="flip-list">
+            <div
+              :id="item.id"
+              class="item-container"
+              v-for="item in dailyPlanList"
+              v-bind:key="item.id"
+              v-longclick="() => click_editPlanButton(item)"
+              v-hello
+            >
+              <div class="plan-container">
+                <h2>每日计划</h2>
+                <div class="placeholder"></div>
+                <h3>{{ item.attributes.name }}</h3>
+                <img
+                  @click.stop="click_startTomatoButton(item)"
+                  class="start-button"
+                  :src="assets.icon_start"
+                  alt="icon_start"
+                />
+              </div>
+              <div class="plan-detail-container">
+                <span v-if="item.attributes.abilityListOfPlan.length !== 0">{{
+                  "提升" +
+                    item.attributes.abilityListOfPlan[0].attributes.name +
+                    " · 已累计 " +
+                    item.attributes.tomatoNumber / 2 +
+                    " 个小时"
+                }}</span>
+                <span v-else>{{
+                  "已累计 " + item.attributes.tomatoNumber / 2 + " 个小时"
+                }}</span>
+                <div>
+                  {{
+                    `${item.attributes.todayTomatoNumber} / ${item.attributes.target} 个番茄`
+                  }}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </transition-group>
+        </draggable>
       </section>
 
       <!-- 「已完成」按钮 -->
@@ -503,8 +512,12 @@ export default defineComponent({
     };
 
     // 当用户拖动列表完毕时，执行
-    const onPlanListDragEnd = (event: any) => {
-      console.log(event);
+    const onTemporaryPlanListDragEnd = (event: any) => {
+      PlanPage.changePlanListOrder(temporaryPlanList);
+    };
+
+    const onDailyPlanListDragEnd = (event: any) => {
+      PlanPage.changePlanListOrder(dailyPlanList);
     };
 
     // 生命周期：初始化
@@ -540,7 +553,8 @@ export default defineComponent({
       click_abilityItemSelector,
       click_saveAbility,
       click_startTomatoButton,
-      onPlanListDragEnd,
+      onTemporaryPlanListDragEnd,
+      onDailyPlanListDragEnd,
       assets: {
         icon_finished,
         icon_logo,
