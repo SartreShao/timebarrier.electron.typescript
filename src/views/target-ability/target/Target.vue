@@ -61,14 +61,18 @@
           v-for="targetSubject in targetSubjectList"
           :key="targetSubject.id"
           :id="targetSubject.id"
-          @click="
-            targetSubject.attributes.showSubjectList = !targetSubject.attributes
-              .showSubjectList
-          "
         >
           <!-- 目标目录 -->
-          <div class="target-subject-container">
-            {{ targetSubject.attributes.name }}
+          <div
+            class="target-subject-container"
+            @click="
+              targetSubject.attributes.showSubjectList = !targetSubject
+                .attributes.showSubjectList
+            "
+          >
+            {{ targetSubject.attributes.name }}({{
+              targetSubject.attributes.targetListOfTargetSubject.length
+            }})
             <img
               class="icon-downward"
               :src="assets.icon_downward"
@@ -87,40 +91,49 @@
             style="width:100%"
             v-if="targetSubject.attributes.showSubjectList === true"
           >
-            <!-- 目标 -->
-            <div
-              class="target-item-container"
-              v-for="target in targetSubject.attributes
-                .targetListOfTargetSubject"
-              v-bind:key="target.id"
+            <draggable
+              v-model="targetSubject.attributes.targetListOfTargetSubject"
+              ghost-class="ghost"
+              @end="targetListOfTargetSubjectDragOnEnd"
             >
-              <!-- 完成目标 -->
-              <div class="finished-button-container">
-                <img
-                  class="finished-button"
-                  :src="assets.icon_red_finished_button"
-                  alt="icon_red_finished_button"
-                />
-              </div>
+              <transition-group type="transition" name="flip-list">
+                <!-- 目标 -->
+                <div
+                  class="target-item-container"
+                  v-for="target in targetSubject.attributes
+                    .targetListOfTargetSubject"
+                  :key="target.id"
+                  :id="target.id"
+                >
+                  <!-- 完成目标 -->
+                  <div class="finished-button-container">
+                    <img
+                      class="finished-button"
+                      :src="assets.icon_red_finished_button"
+                      alt="icon_red_finished_button"
+                    />
+                  </div>
 
-              <!-- 占位符 -->
-              <div class="placeholder"></div>
+                  <!-- 占位符 -->
+                  <div class="placeholder"></div>
 
-              <!-- 目标主体 -->
-              <div class="target-body-container">
-                <div class="target-type">
-                  {{
-                    target.attributes.validityType === "time-bound"
-                      ? "时限目标"
-                      : "长期目标"
-                  }}
+                  <!-- 目标主体 -->
+                  <div class="target-body-container">
+                    <div class="target-type">
+                      {{
+                        target.attributes.validityType === "time-bound"
+                          ? "时限目标"
+                          : "长期目标"
+                      }}
+                    </div>
+                    <div class="target-name">{{ target.attributes.name }}</div>
+                    <div class="target-description">
+                      {{ target.attributes.description }}
+                    </div>
+                  </div>
                 </div>
-                <div class="target-name">{{ target.attributes.name }}</div>
-                <div class="target-description">
-                  {{ target.attributes.description }}
-                </div>
-              </div>
-            </div>
+              </transition-group>
+            </draggable>
           </div>
         </div>
       </transition-group>
