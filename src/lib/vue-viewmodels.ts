@@ -1328,7 +1328,6 @@ const TargetPage = {
   ) => {
     // 打开抽屉菜单
     isEditTargetDrawerDisplayed.value = true;
-    console.log("target", target);
 
     // 初始化用户的输入
     input_editingTargetOrTargetSubject.inputType = "target";
@@ -1350,6 +1349,22 @@ const TargetPage = {
       target.attributes.isActived;
     input_editingTargetOrTargetSubject.target.isFinished =
       target.attributes.isFinished;
+  },
+  /**
+   * 打开「目标目录」编辑抽屉
+   */
+  openTargetSubjectEditDrawer: async (
+    isEditTargetDrawerDisplayed: Ref<boolean>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    targetSubject: AV.Object
+  ) => {
+    // 打开抽屉菜单
+    isEditTargetDrawerDisplayed.value = true;
+
+    // 初始化用户的输入
+    input_editingTargetOrTargetSubject.inputType = "targetSubject";
+    input_editingTargetOrTargetSubject.targetSubject.name =
+      targetSubject.attributes.name;
   }
 };
 

@@ -67,6 +67,8 @@
           <!-- 目标目录 -->
           <div
             class="target-subject-container"
+            v-longclick="() => click_editTargetSubjectButton(targetSubject)"
+            v-hello
             @click="
               targetSubject.attributes.showSubjectList = !targetSubject
                 .attributes.showSubjectList
@@ -295,6 +297,16 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：编辑目标目录
+    const click_editTargetSubjectButton = (targetSubject: AV.Object) => {
+      console.log("targetSubject", targetSubject);
+      TargetPage.openTargetSubjectEditDrawer(
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        targetSubject
+      );
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       TargetPage.init(
@@ -307,6 +319,7 @@ export default defineComponent({
 
     return {
       click_editTargetButton,
+      click_editTargetSubjectButton,
       isCreateTargetDrawerDisplayed,
       unSubjectiveTargetList,
       targetSubjectList,
