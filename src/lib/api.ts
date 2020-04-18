@@ -542,7 +542,38 @@ export default {
           targetListQuery.equalTo("targetSubject", null);
         }
 
+        // 获取 targetList
         const targetList = await targetListQuery.find();
+
+        // 获取 targetIdList
+        const targetIdList: string[] = [];
+        targetList.forEach(target => {
+          if (target.id === undefined) {
+            throw "target.id is undefined";
+          } else {
+            targetIdList.push(target.id);
+          }
+        });
+
+        // 获取 abilityTargetLIst
+        const abilityTargetList = await new AV.Query(AbilityTarget)
+          .include("target")
+          .include("ability")
+          .containedIn("target", targetIdList)
+          .find();
+
+        // 将 abilityTargetList 存入 targetList 中
+        targetList.forEach(target => {
+          target.attributes.abilityListOfTarget = [];
+          abilityTargetList.forEach(abilityTarget => {
+            if (target.id === abilityTarget.attributes.target.id) {
+              target.attributes.abilityListOfTarget.push(
+                abilityTarget.attributes.ability
+              );
+            }
+          });
+        });
+
         Log.success("fetchTargetList", targetList);
         resolve(targetList);
       } catch (error) {
