@@ -106,6 +106,8 @@
                     .targetListOfTargetSubject"
                   :key="target.id"
                   :id="target.id"
+                  v-longclick="() => click_editTargetButton(target)"
+                  v-hello
                 >
                   <!-- 完成目标 -->
                   <div class="finished-button-container">
@@ -167,6 +169,8 @@
         class="target-item-container"
         v-for="target in completedTargetList"
         v-bind:key="target.id"
+        v-longclick="() => click_editTargetButton(target)"
+        v-hello
       >
         <!-- 完成目标 -->
         <div class="finished-button-container">

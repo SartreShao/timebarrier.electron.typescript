@@ -255,7 +255,7 @@
         </div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button" @click="click_saveTargetOrTargetSubject">
+        <div class="save-button" @click="click_createTargetOrTargetSubject">
           创建
         </div>
       </div>
@@ -468,7 +468,7 @@
 
       <div class="button-container">
         <!-- 按钮：删除计划 -->
-        <div class="delete-button" @click="isEditTargetDrawerDisplayed = false">
+        <div class="delete-button" @click="click_deleteTargetOrTargetSubject">
           删除
         </div>
 
@@ -583,8 +583,8 @@ export default defineComponent({
       ref([])
     );
 
-    // 点击事件
-    const click_saveTargetOrTargetSubject = () => {
+    // 点击事件：创建目标或目标目录
+    const click_createTargetOrTargetSubject = () => {
       TargetPage.createTargetOrTargetSubject(
         context.root,
         input_creatingTargetOrTargetSubject,
@@ -595,8 +595,20 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：删除目标或目标目录
+    const click_deleteTargetOrTargetSubject = () => {
+      console.log("delete");
+    };
+
+    // 点击事件：保存目标或目标目录
+    const click_saveTargetOrTargetSubject = () => {
+      console.log("save");
+    };
+
     return {
       currentTab,
+      click_createTargetOrTargetSubject,
+      click_deleteTargetOrTargetSubject,
       click_saveTargetOrTargetSubject,
       isCreateTargetDrawerDisplayed,
       isEditTargetDrawerDisplayed,
