@@ -1331,6 +1331,7 @@ const TargetPage = {
 
     // 初始化用户的输入
     input_editingTargetOrTargetSubject.inputType = "target";
+    input_editingTargetOrTargetSubject.target.id = target.id;
     input_editingTargetOrTargetSubject.target.targetSubjectId =
       target.attributes.targetSubject === undefined
         ? null
@@ -1363,8 +1364,154 @@ const TargetPage = {
 
     // 初始化用户的输入
     input_editingTargetOrTargetSubject.inputType = "targetSubject";
+    input_editingTargetOrTargetSubject.targetSubject.id = targetSubject.id;
     input_editingTargetOrTargetSubject.targetSubject.name =
       targetSubject.attributes.name;
+  },
+  /**
+   * 删除「目标」或「目标目录」
+   */
+  deleteTargetOrTargetSubject: async (
+    vue: ElementVue,
+    isEditTargetDrawerDisplayed: Ref<boolean>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_editingTargetOrTargetSubject.inputType === "target") {
+      deleteTarget(
+        vue,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
+      );
+    } else if (
+      input_editingTargetOrTargetSubject.inputType === "targetSubject"
+    ) {
+      deleteTargetSubject(
+        vue,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
+      );
+    }
+
+    async function deleteTarget(
+      vue: ElementVue,
+      isEditTargetDrawerDisplayed: Ref<boolean>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+      unSubjectiveTargetList: Ref<AV.Object[]>,
+      targetSubjectList: Ref<AV.Object[]>,
+      completedTargetList: Ref<AV.Object[]>
+    ) {
+      if (input_editingTargetOrTargetSubject.target.id !== undefined) {
+        // 弹窗询问用户是否确定删除
+        try {
+          await UI.showConfirm(
+            vue.$confirm,
+            "这将导致该目标及其背后的记录永久丢失",
+            "是否确定删掉该目标"
+          );
+
+          // 确认删除
+          // 显示进度条
+          const loadingInstance = UI.showLoading(
+            vue.$loading,
+            "正在删除您的目标..."
+          );
+
+          // 尝试删除目标，并刷新列表
+          try {
+            await Api.deleteTarget(
+              input_editingTargetOrTargetSubject.target.id
+            );
+
+            // 请求刷新对应的列表
+            if (input_editingTargetOrTargetSubject.target.isFinished === true) {
+              // 尝试获取已完成的目标列表
+              completedTargetList.value = await Api.fetchTargetList(
+                user,
+                "completed"
+              );
+            } else {
+              if (
+                input_editingTargetOrTargetSubject.target.targetSubjectId ===
+                null
+              ) {
+                // 尝试获取未分类的目标列表
+                unSubjectiveTargetList.value = await Api.fetchTargetList(
+                  user,
+                  "unsubjective"
+                );
+              } else {
+                // 尝试获取目标类别列表
+                targetSubjectList.value = await Api.fetchTargetSubjectList(
+                  user
+                );
+              }
+            }
+
+            // 保存成功
+            UI.hideLoading(loadingInstance);
+            UI.showNotification(vue.$notify, "目标删除成功", "", "success");
+
+            // 关闭窗口
+            isEditTargetDrawerDisplayed.value = false;
+          } catch (error) {
+            UI.hideLoading(loadingInstance);
+            UI.showNotification(
+              vue.$notify,
+              "目标删除失败",
+              `错误原因：${error.message},`,
+              "error"
+            );
+          }
+        } catch (error) {
+          // 取消删除
+          // doing nothing
+        }
+      } else {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "input_editingTargetOrTargetSubject.target.id is undefined",
+          "error"
+        );
+      }
+    }
+
+    async function deleteTargetSubject(
+      vue: ElementVue,
+      isEditTargetDrawerDisplayed: Ref<boolean>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+      unSubjectiveTargetList: Ref<AV.Object[]>,
+      targetSubjectList: Ref<AV.Object[]>,
+      completedTargetList: Ref<AV.Object[]>
+    ) {
+      if (input_editingTargetOrTargetSubject.targetSubject.id !== undefined) {
+      } else {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "input_editingTargetOrTargetSubject.targetSubject.id is undefined",
+          "error"
+        );
+      }
+    }
   }
 };
 

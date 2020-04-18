@@ -699,5 +699,21 @@ export default {
         Log.error("createTargetSubject", error);
         reject(error);
       }
+    }),
+
+  /**
+   * 删除目标类别
+   */
+  deleteTarget: (targetId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target = await new AV.Query(Target).get(targetId);
+        await target.destroy();
+        Log.success("deleteTarget");
+        resolve();
+      } catch (error) {
+        Log.error("deleteTarget", error);
+        reject(error);
+      }
     })
 };

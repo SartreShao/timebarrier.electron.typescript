@@ -529,6 +529,7 @@ export default defineComponent({
       {
         inputType: "target", // 默认选择：目标
         target: {
+          id: "",
           targetSubjectId: "", //默认：不选择
           name: "",
           description: "",
@@ -539,6 +540,7 @@ export default defineComponent({
           isFinished: false
         },
         targetSubject: {
+          id: "",
           name: ""
         }
       }
@@ -550,6 +552,7 @@ export default defineComponent({
       reactive({
         inputType: "target", // 默认选择：目标
         target: {
+          id: "",
           targetSubjectId: "", //默认：不选择
           name: "",
           description: "",
@@ -560,6 +563,7 @@ export default defineComponent({
           isFinished: false
         },
         targetSubject: {
+          id: "",
           name: ""
         }
       })
@@ -597,7 +601,14 @@ export default defineComponent({
 
     // 点击事件：删除目标或目标目录
     const click_deleteTargetOrTargetSubject = () => {
-      console.log("delete");
+      TargetPage.deleteTargetOrTargetSubject(
+        context.root,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
+      );
     };
 
     // 点击事件：保存目标或目标目录

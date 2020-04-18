@@ -30,6 +30,7 @@ export type InputPlanType = {
 export type InputTargetOrTargetSubjectType = {
   inputType: "target" | "targetSubject";
   target: {
+    id: string | undefined;
     // 当选择为 `target` 时，单选框「目标类别」的值
     targetSubjectId: string | null;
     // 目标名称
@@ -48,6 +49,7 @@ export type InputTargetOrTargetSubjectType = {
     isFinished: boolean;
   };
   targetSubject: {
+    id: string | undefined;
     // 目标名称
     name: string;
   };

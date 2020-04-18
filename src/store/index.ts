@@ -53,6 +53,7 @@ function useProvider() {
     reactive({
       inputType: "target", // 默认选择：目标
       target: {
+        id: "",
         targetSubjectId: "", //默认：不选择
         name: "",
         description: "",
@@ -63,6 +64,7 @@ function useProvider() {
         isFinished: false
       },
       targetSubject: {
+        id: "",
         name: ""
       }
     })

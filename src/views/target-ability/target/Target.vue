@@ -266,6 +266,7 @@ export default defineComponent({
       reactive({
         inputType: "target", // 默认选择：目标
         target: {
+          id: "",
           targetSubjectId: "", //默认：不选择
           name: "",
           description: "",
@@ -276,6 +277,7 @@ export default defineComponent({
           isFinished: false
         },
         targetSubject: {
+          id: "",
           name: ""
         }
       })
