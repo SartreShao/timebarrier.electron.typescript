@@ -22,8 +22,8 @@ export function useDirective() {
       // Define funtion handlers
       // Create timeout ( run function after 1s )
       let start = (e: MouseEvent | TouchEvent) => {
-        console.log("start", e);
-        console.log("start type", e.type);
+        // console.log("start", e);
+        // console.log("start type", e.type);
 
         // 如果不是鼠标左键点击，就直接返回
         if (e instanceof MouseEvent && e.type === "click" && e.button !== 0) {
@@ -40,8 +40,8 @@ export function useDirective() {
 
       // Cancel Timeout
       let cancel = (e: MouseEvent | TouchEvent) => {
-        console.log("cancel", e);
-        console.log("cancel type", e.type);
+        // console.log("cancel", e);
+        // console.log("cancel type", e.type);
 
         // Check if timer has a value or not
         if (pressTimer !== null) {
@@ -51,8 +51,8 @@ export function useDirective() {
       };
       // Run Function
       const handler = (e: MouseEvent | TouchEvent) => {
-        console.log("handler", e);
-        console.log("handler type", e.type);
+        // console.log("handler", e);
+        // console.log("handler type", e.type);
 
         binding.value(e);
       };
@@ -72,8 +72,8 @@ export function useDirective() {
 
   Vue.directive("hello", {
     bind: function(el, binding, vnode, oldVnode) {
-      console.log("el`", el);
-      console.log("vnode", vnode.children);
+      // console.log("el`", el);
+      // console.log("vnode", vnode.children);
       // 1. 本元素应该有属性 overflow hidden
       el.style.overflow = "hidden";
       el.style.position = "relative";
@@ -136,10 +136,10 @@ export function useDirective() {
 
       const handle = (event: MouseEvent | TouchEvent) => {
         if (event.currentTarget === el) {
-          console.log("event", event);
-          console.log("currentTarget", event.currentTarget);
-          console.log("target", event.target);
-          console.log("el", el);
+          // console.log("event", event);
+          // console.log("currentTarget", event.currentTarget);
+          // console.log("target", event.target);
+          // console.log("el", el);
           // 获取子元素
           // const svg = el.firstElementChild;
 
@@ -171,8 +171,8 @@ export function useDirective() {
             const w = (event.currentTarget as HTMLElement).offsetWidth;
             const h = (event.currentTarget as HTMLElement).offsetHeight;
 
-            console.log("offsetWidth", w);
-            console.log("offsetHeight", h);
+            // console.log("offsetWidth", w);
+            // console.log("offsetHeight", h);
             const offsetX = Math.abs(w / 2 - x);
             const offsetY = Math.abs(h / 2 - y);
             const deltaX = w / 2 + offsetX;
