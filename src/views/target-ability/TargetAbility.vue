@@ -261,6 +261,237 @@
       </div>
     </el-drawer>
 
+    <!-- 抽屉菜单：编辑目标或目录 -->
+    <el-drawer
+      class="create-target-drawer"
+      :title="
+        input_editingTargetOrTargetSubject.inputType === `target`
+          ? `编辑目标`
+          : `编辑目标类别`
+      "
+      direction="btt"
+      size="86.64%"
+      :visible.sync="isEditTargetDrawerDisplayed"
+    >
+      <!-- 单选框：编辑目标 or 目标类别 -->
+      <el-select
+        class="select-target"
+        placeholder="编辑目标 or 目标类别"
+        v-model="input_editingTargetOrTargetSubject.inputType"
+      >
+        <el-option label="目标" value="target"></el-option>
+        <el-option label="目标类别" value="targetSubject"></el-option>
+      </el-select>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <!-- 下面是创建目标类别 -->
+      <!-- 输入框：输入目标类别名称 -->
+      <input
+        v-if="input_editingTargetOrTargetSubject.inputType === `targetSubject`"
+        type="text"
+        class="input-target"
+        placeholder="输入目标类别名称"
+        v-model="input_editingTargetOrTargetSubject.targetSubject.name"
+      />
+
+      <!-- 下面是创建目标 -->
+
+      <!-- 单选框：目标的类别 -->
+      <el-select
+        class="select-target"
+        placeholder="请选择目标所属类别"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        v-model="input_editingTargetOrTargetSubject.target.targetSubjectId"
+      >
+        <el-option label="无" :value="null"></el-option>
+
+        <el-option
+          v-for="targetSubject in targetSubjectList"
+          v-bind:key="targetSubject.id"
+          :label="targetSubject.attributes.name"
+          :value="targetSubject.id"
+        ></el-option>
+      </el-select>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 输入框：输入目标名称 -->
+      <input
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        type="text"
+        class="input-target"
+        placeholder="输入目标名称"
+        v-model="input_editingTargetOrTargetSubject.target.name"
+      />
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 输入框：输入目标名称 -->
+      <input
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        type="text"
+        class="input-target"
+        placeholder="输入目标达成条件 or 目标详情"
+        v-model="input_editingTargetOrTargetSubject.target.description"
+      />
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 单选框：创建目标 or 目标类别 -->
+      <el-select
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        class="select-target"
+        placeholder="选择目标有效期"
+        v-model="input_editingTargetOrTargetSubject.target.validityType"
+      >
+        <el-option label="长期目标" value="indefinite"></el-option>
+        <el-option label="时限目标" value="time-bound"></el-option>
+      </el-select>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 日期选择器：目标时限 -->
+      <div
+        class="date-select-target"
+        v-if="
+          input_editingTargetOrTargetSubject.inputType === `target` &&
+            input_editingTargetOrTargetSubject.target.validityType ===
+              `time-bound`
+        "
+      >
+        <el-date-picker
+          class="data-select-picker-item"
+          v-model="input_editingTargetOrTargetSubject.target.validity"
+          type="date"
+          placeholder="预计达成目标的日期"
+        >
+        </el-date-picker>
+      </div>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="
+          input_editingTargetOrTargetSubject.inputType === `target` &&
+            input_editingTargetOrTargetSubject.target.validityType ===
+              `time-bound`
+        "
+      ></div>
+
+      <!-- 按钮：关联相关能力 -->
+      <div
+        class="related-ability"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="
+            input_editingTargetOrTargetSubject.target.abilityList.length === 0
+          "
+        />
+        <span
+          v-if="
+            input_editingTargetOrTargetSubject.target.abilityList.length === 0
+          "
+          >关联相关能力</span
+        >
+        <span v-else>{{
+          "相关能力：" +
+            input_editingTargetOrTargetSubject.target.abilityList
+              .map(ability => ability.name)
+              .join("、")
+        }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 按钮：激活与完成 -->
+      <div
+        class="radio-container"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      >
+        <!-- 选择器：激活计划 -->
+        <div
+          @click="
+            input_editingTargetOrTargetSubject.target.isActived = !input_editingTargetOrTargetSubject
+              .target.isActived
+          "
+        >
+          <span>激活该目标</span
+          ><img
+            :src="
+              input_editingTargetOrTargetSubject.target.isActived
+                ? assets.icon_selected
+                : assets.icon_unselected
+            "
+            alt="icon_selected"
+          />
+        </div>
+
+        <!-- 选择器：完成计划 -->
+        <div
+          @click="
+            input_editingTargetOrTargetSubject.target.isFinished = !input_editingTargetOrTargetSubject
+              .target.isFinished
+          "
+        >
+          <span>完成该目标</span
+          ><img
+            :src="
+              input_editingTargetOrTargetSubject.target.isFinished
+                ? assets.icon_selected
+                : assets.icon_unselected
+            "
+            alt="icon_unselected"
+          />
+        </div>
+      </div>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
+      <!-- 占位框 -->
+      <div style="height: 9.25vh"></div>
+
+      <div class="button-container">
+        <!-- 按钮：删除计划 -->
+        <div class="delete-button" @click="isEditTargetDrawerDisplayed = false">
+          取消
+        </div>
+
+        <!-- 按钮：保存计划 -->
+        <div class="save-button" @click="click_saveTargetOrTargetSubject">
+          创建
+        </div>
+      </div>
+    </el-drawer>
+
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
   </div>
@@ -300,6 +531,12 @@ export default defineComponent({
       ref(false)
     );
 
+    // 控制变量：「编辑目标」的抽屉菜单是否打开
+    const isEditTargetDrawerDisplayed: Ref<boolean> = inject(
+      Store.isEditTargetDrawerDisplayed,
+      ref(false)
+    );
+
     // 用户输入：创建「目标」或「目标类别」
     const input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType = reactive(
       {
@@ -318,6 +555,27 @@ export default defineComponent({
           name: ""
         }
       }
+    );
+
+    // 用户输入：编辑「目标」或「目标类别」
+    const input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType = inject(
+      Store.input_editingTargetOrTargetSubject,
+      reactive({
+        inputType: "target", // 默认选择：目标
+        target: {
+          targetSubjectId: "", //默认：不选择
+          name: "",
+          description: "",
+          validityType: "",
+          validity: null,
+          abilityList: [],
+          isActived: true,
+          isFinished: false
+        },
+        targetSubject: {
+          name: ""
+        }
+      })
     );
 
     //「目标」的列表
@@ -354,7 +612,9 @@ export default defineComponent({
       currentTab,
       click_saveTargetOrTargetSubject,
       isCreateTargetDrawerDisplayed,
+      isEditTargetDrawerDisplayed,
       input_creatingTargetOrTargetSubject,
+      input_editingTargetOrTargetSubject,
       targetSubjectList,
       assets: {
         icon_add,
