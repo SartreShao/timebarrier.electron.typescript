@@ -17,6 +17,8 @@
           class="target-item-container"
           v-for="target in unSubjectiveTargetList"
           :key="target.id"
+          v-longclick="() => click_editTargetButton(target)"
+          v-hello
         >
           <!-- 完成目标 -->
           <div class="finished-button-container">
@@ -94,7 +96,7 @@
             <draggable
               v-model="targetSubject.attributes.targetListOfTargetSubject"
               ghost-class="ghost"
-              @end="targetListOfTargetSubjectDragOnEnd"
+              @end="onTargetListOfTargetSubjectDragOnEnd"
             >
               <transition-group type="transition" name="flip-list">
                 <!-- 目标 -->
@@ -204,7 +206,8 @@ import {
   ref,
   inject,
   onMounted,
-  computed
+  computed,
+  reactive
 } from "@vue/composition-api";
 import icon_create_target from "../../../assets/icon_create_target.svg";
 import icon_downward from "../../../assets/icon_downward.svg";
@@ -214,6 +217,7 @@ import Store from "../../../store";
 import AV from "leancloud-storage";
 import { TargetPage } from "../../../lib/vue-viewmodels";
 import draggable from "vuedraggable";
+import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
 
 export default defineComponent({
   components: { draggable },
@@ -245,9 +249,47 @@ export default defineComponent({
     // 已完成的目标是否打开
     const isCompletedTargetShown: Ref<boolean> = ref(false);
 
+    const isEditTargetDrawerDisplayed: Ref<boolean> = inject(
+      Store.isEditTargetDrawerDisplayed,
+      ref(false)
+    );
+
+    // 用户输入：编辑「目标」或「目标类别」
+    const input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType = inject(
+      Store.input_editingTargetOrTargetSubject,
+      reactive({
+        inputType: "target", // 默认选择：目标
+        target: {
+          targetSubjectId: "", //默认：不选择
+          name: "",
+          description: "",
+          validityType: "",
+          validity: null,
+          abilityList: [],
+          isActived: true,
+          isFinished: false
+        },
+        targetSubject: {
+          name: ""
+        }
+      })
+    );
+
+    //
     const onUnSubjectiveTargetListDragEnd = () => {};
 
     const onTargetSubjectListDragEnd = () => {};
+
+    const onTargetListOfTargetSubjectDragOnEnd = () => {};
+
+    // 点击事件：编辑目标
+    const click_editTargetButton = (target: AV.Object) => {
+      TargetPage.openTargetEditDrawer(
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        target
+      );
+    };
 
     // 生命周期：初始化
     onMounted(() => {
@@ -260,12 +302,14 @@ export default defineComponent({
     });
 
     return {
+      click_editTargetButton,
       isCreateTargetDrawerDisplayed,
       unSubjectiveTargetList,
       targetSubjectList,
       completedTargetList,
       isCompletedTargetShown,
       onUnSubjectiveTargetListDragEnd,
+      onTargetListOfTargetSubjectDragOnEnd,
       onTargetSubjectListDragEnd,
       assets: {
         icon_create_target,
