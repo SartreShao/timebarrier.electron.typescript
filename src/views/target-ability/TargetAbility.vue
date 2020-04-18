@@ -273,19 +273,6 @@
       size="86.64%"
       :visible.sync="isEditTargetDrawerDisplayed"
     >
-      <!-- 单选框：编辑目标 or 目标类别 -->
-      <el-select
-        class="select-target"
-        placeholder="编辑目标 or 目标类别"
-        v-model="input_editingTargetOrTargetSubject.inputType"
-      >
-        <el-option label="目标" value="target"></el-option>
-        <el-option label="目标类别" value="targetSubject"></el-option>
-      </el-select>
-
-      <!-- 占位框 -->
-      <div style="height:2.4vh"></div>
-
       <!-- 下面是创建目标类别 -->
       <!-- 输入框：输入目标类别名称 -->
       <input
@@ -482,12 +469,12 @@
       <div class="button-container">
         <!-- 按钮：删除计划 -->
         <div class="delete-button" @click="isEditTargetDrawerDisplayed = false">
-          取消
+          删除
         </div>
 
         <!-- 按钮：保存计划 -->
         <div class="save-button" @click="click_saveTargetOrTargetSubject">
-          创建
+          保存
         </div>
       </div>
     </el-drawer>
