@@ -494,16 +494,21 @@ export default {
   fetchTargetSubjectList: (user: AV.User): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
+        // 获取 TargetSubject 列表：目标目录列表
         const targetSubjectList = await new AV.Query(TargetSubject)
           .equalTo("user", user)
           .find();
 
+        // 获取 TargetList 列表：目标列表
         const targetList = await new AV.Query(Target)
           .equalTo("user", user)
           .equalTo("isFinished", false)
           .include("targetSubject")
           .find();
 
+        // 向 TargetSubjectList 中添加两个属性：
+        // 1. targetListOfTargetSubject - 每个 targetSubject 关联的 TargetList
+        // 2. showSubjectList - 是否要展示这些 TargetList
         targetSubjectList.forEach(targetSubject => {
           targetSubject.attributes.targetListOfTargetSubject = [];
           targetSubject.attributes.showSubjectList = true;
@@ -515,6 +520,48 @@ export default {
               targetSubject.attributes.targetListOfTargetSubject.push(target);
             }
           });
+        });
+
+        // 下面要玩一个很牛逼的操作.....查询 TargetSubjectList 上的 TargetList 的关联的 AbilityList 都有什么
+
+        // 首先获取 targetIdList
+        const targetIdList: string[] = [];
+        targetSubjectList.forEach(targetSubject => {
+          targetSubject.attributes.targetListOfTargetSubject.forEach(
+            (target: AV.Object) => {
+              if (target.id !== undefined) {
+                targetIdList.push(target.id);
+              }
+            }
+          );
+        });
+
+        // 接下来请求关联的 abilityTargetList
+        const abilityTargetList = await new AV.Query(AbilityTarget)
+          .include("ability")
+          .include("target")
+          .containedIn(
+            "target",
+            targetIdList.map(targetId =>
+              AV.Object.createWithoutData("Target", targetId)
+            )
+          )
+          .find();
+
+        // 接下来将它们组合到一起
+        targetSubjectList.forEach(targetSubject => {
+          targetSubject.attributes.targetListOfTargetSubject.forEach(
+            (target: AV.Object) => {
+              target.attributes.abilityListOfTarget = [];
+              abilityTargetList.forEach(abilityTarget => {
+                if (abilityTarget.attributes.target.id === target.id) {
+                  target.attributes.abilityListOfTarget.push(
+                    abilityTarget.attributes.ability
+                  );
+                }
+              });
+            }
+          );
         });
         Log.success("fetchTargetSubjectList", targetSubjectList);
         resolve(targetSubjectList);
