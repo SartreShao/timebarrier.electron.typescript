@@ -1,5 +1,5 @@
 // Plan
-import { provide, ref } from "@vue/composition-api";
+import { provide, ref, reactive } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { TomatoCloudStatus } from "@/lib/types/vue-viewmodels";
 
@@ -25,6 +25,10 @@ const countDown = Symbol();
 const tomatoStartTime = Symbol();
 // 控制变量：「创建目标」的抽屉菜单是否打开
 const isCreateTargetDrawerDisplayed = Symbol();
+// 控制变量：「编辑目标」的抽屉菜单是否打开
+const isEditTargetDrawerDisplayed = Symbol();
+// 用户输入：编辑「目标 Target」
+const input_editingTargetOrTargetSubject = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -43,6 +47,26 @@ function useProvider() {
   provide(countDown, ref<number>(1500));
   provide(tomatoStartTime, ref<Date>(Date()));
   provide(isCreateTargetDrawerDisplayed, ref<boolean>(false));
+  provide(isEditTargetDrawerDisplayed, ref<boolean>(false));
+  provide(
+    input_editingTargetOrTargetSubject,
+    reactive({
+      inputType: "target", // 默认选择：目标
+      target: {
+        targetSubjectId: "", //默认：不选择
+        name: "",
+        description: "",
+        validityType: "",
+        validity: null,
+        abilityList: [],
+        isActived: true,
+        isFinished: false
+      },
+      targetSubject: {
+        name: ""
+      }
+    })
+  );
 }
 
 export default {
@@ -57,5 +81,7 @@ export default {
   interval,
   countDown,
   tomatoStartTime,
-  isCreateTargetDrawerDisplayed
+  isCreateTargetDrawerDisplayed,
+  isEditTargetDrawerDisplayed,
+  input_editingTargetOrTargetSubject
 };
