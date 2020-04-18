@@ -1317,6 +1317,39 @@ const TargetPage = {
         );
       }
     }
+  },
+  /**
+   * 打开「目标」编辑抽屉
+   */
+  openTargetEditDrawer: async (
+    isEditTargetDrawerDisplayed: Ref<boolean>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    target: AV.Object
+  ) => {
+    // 打开抽屉菜单
+    isEditTargetDrawerDisplayed.value = true;
+    console.log("target", target);
+
+    // 初始化用户的输入
+    input_editingTargetOrTargetSubject.inputType = "target";
+    input_editingTargetOrTargetSubject.target.targetSubjectId =
+      target.attributes.targetSubject === undefined
+        ? null
+        : target.attributes.targetSubject.id;
+    input_editingTargetOrTargetSubject.target.name = target.attributes.name;
+    input_editingTargetOrTargetSubject.target.description =
+      target.attributes.description;
+    input_editingTargetOrTargetSubject.target.validityType =
+      target.attributes.validityType;
+    input_editingTargetOrTargetSubject.target.abilityList = target.attributes.abilityListOfTarget.map(
+      (ability: AV.Object) => {
+        return { id: ability.id, name: ability.attributes.name };
+      }
+    );
+    input_editingTargetOrTargetSubject.target.isActived =
+      target.attributes.isActived;
+    input_editingTargetOrTargetSubject.target.isFinished =
+      target.attributes.isFinished;
   }
 };
 
