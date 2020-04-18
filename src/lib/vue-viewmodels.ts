@@ -1503,6 +1503,56 @@ const TargetPage = {
       completedTargetList: Ref<AV.Object[]>
     ) {
       if (input_editingTargetOrTargetSubject.targetSubject.id !== undefined) {
+        // 弹窗询问用户是否确定删除
+        try {
+          await UI.showConfirm(
+            vue.$confirm,
+            "这将导致该目标目录下的目标变为无目录目标",
+            "是否确定删掉该目标目录"
+          );
+
+          // 确认删除
+          // 显示进度条
+          const loadingInstance = UI.showLoading(
+            vue.$loading,
+            "正在删除您的目标目录..."
+          );
+
+          // 尝试删除目标目录，并刷新列表
+          try {
+            await Api.deleteTargetSubject(
+              input_editingTargetOrTargetSubject.targetSubject.id
+            );
+
+            // 请求刷新对应的列表
+
+            // 尝试获取未分类的目标列表
+            unSubjectiveTargetList.value = await Api.fetchTargetList(
+              user,
+              "unsubjective"
+            );
+            // 尝试获取目标类别列表
+            targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+            // 保存成功
+            UI.hideLoading(loadingInstance);
+            UI.showNotification(vue.$notify, "目标目录删除成功", "", "success");
+
+            // 关闭窗口
+            isEditTargetDrawerDisplayed.value = false;
+          } catch (error) {
+            UI.hideLoading(loadingInstance);
+            UI.showNotification(
+              vue.$notify,
+              "目标目录删除失败",
+              `错误原因：${error.message},`,
+              "error"
+            );
+          }
+        } catch (error) {
+          // 取消删除
+          // doing nothing
+        }
       } else {
         UI.showNotification(
           vue.$notify,

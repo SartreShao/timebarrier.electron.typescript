@@ -702,7 +702,7 @@ export default {
     }),
 
   /**
-   * 删除目标类别
+   * 删除目标
    */
   deleteTarget: (targetId: string) =>
     new Promise(async (resolve, reject) => {
@@ -713,6 +713,24 @@ export default {
         resolve();
       } catch (error) {
         Log.error("deleteTarget", error);
+        reject(error);
+      }
+    }),
+
+  /**
+   * 删除目标目录
+   */
+  deleteTargetSubject: (targetSubjectId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetSubject = await new AV.Query(TargetSubject).get(
+          targetSubjectId
+        );
+        await targetSubject.destroy();
+        Log.success("deleteTargetSubject");
+        resolve();
+      } catch (error) {
+        Log.error("deleteTargetSubject", error);
         reject(error);
       }
     })
