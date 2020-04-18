@@ -511,11 +511,12 @@ export default defineComponent({
       );
     };
 
-    // 当用户拖动列表完毕时，执行
+    // 当用户拖动「临时计划」列表完毕时，执行
     const onTemporaryPlanListDragEnd = (event: any) => {
       PlanPage.changePlanListOrder(temporaryPlanList);
     };
 
+    // 当用户拖动「每日计划」列表完毕
     const onDailyPlanListDragEnd = (event: any) => {
       PlanPage.changePlanListOrder(dailyPlanList);
     };
