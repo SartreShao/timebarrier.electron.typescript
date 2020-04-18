@@ -6,75 +6,17 @@
     </div>
 
     <!-- 无目录的目标 -->
-    <div
-      class="target-item-container"
-      v-for="target in unSubjectiveTargetList"
-      v-bind:key="target.id"
+    <draggable
+      v-model="unSubjectiveTargetList"
+      ghost-class="ghost"
+      @end="onUnSubjectiveTargetListDragEnd"
     >
-      <!-- 完成目标 -->
-      <div class="finished-button-container">
-        <img
-          class="finished-button"
-          :src="assets.icon_red_finished_button"
-          alt="icon_red_finished_button"
-        />
-      </div>
-
-      <!-- 占位符 -->
-      <div class="placeholder"></div>
-
-      <!-- 目标主体 -->
-      <div class="target-body-container">
-        <div class="target-type">
-          {{
-            target.attributes.validityType === "time-bound"
-              ? "时限目标"
-              : "长期目标"
-          }}
-        </div>
-        <div class="target-name">{{ target.attributes.name }}</div>
-        <div class="target-description">
-          {{ target.attributes.description }}
-        </div>
-      </div>
-    </div>
-
-    <!-- 有目录的目标 -->
-    <div
-      style="width:100%"
-      v-for="targetSubject in targetSubjectList"
-      v-bind:key="targetSubject.id"
-      @click="
-        targetSubject.attributes.showSubjectList = !targetSubject.attributes
-          .showSubjectList
-      "
-    >
-      <!-- 目标目录 -->
-      <div class="target-subject-container">
-        {{ targetSubject.attributes.name }}
-        <img
-          class="icon-downward"
-          :src="assets.icon_downward"
-          alt="icon_downward"
-          v-if="targetSubject.attributes.showSubjectList === true"
-        />
-        <img
-          class="icon-leftward"
-          :src="assets.icon_leftward"
-          alt="icon_leftward"
-          v-else
-        />
-      </div>
-
-      <div
-        style="width:100%"
-        v-if="targetSubject.attributes.showSubjectList === true"
-      >
-        <!-- 目标 -->
+      <transition-group type="transition" name="flip-list">
         <div
+          :id="target.id"
           class="target-item-container"
-          v-for="target in targetSubject.attributes.targetListOfTargetSubject"
-          v-bind:key="target.id"
+          v-for="target in unSubjectiveTargetList"
+          :key="target.id"
         >
           <!-- 完成目标 -->
           <div class="finished-button-container">
@@ -103,8 +45,86 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </transition-group>
+    </draggable>
+
+    <!-- 有目录的目标 -->
+    <draggable
+      v-model="targetSubjectList"
+      ghost-class="ghost"
+      @end="onTargetSubjectListDragEnd"
+      style="width:100%"
+    >
+      <transition-group type="transition" name="flip-list">
+        <div
+          style="width:100%"
+          v-for="targetSubject in targetSubjectList"
+          :key="targetSubject.id"
+          :id="targetSubject.id"
+          @click="
+            targetSubject.attributes.showSubjectList = !targetSubject.attributes
+              .showSubjectList
+          "
+        >
+          <!-- 目标目录 -->
+          <div class="target-subject-container">
+            {{ targetSubject.attributes.name }}
+            <img
+              class="icon-downward"
+              :src="assets.icon_downward"
+              alt="icon_downward"
+              v-if="targetSubject.attributes.showSubjectList === true"
+            />
+            <img
+              class="icon-leftward"
+              :src="assets.icon_leftward"
+              alt="icon_leftward"
+              v-else
+            />
+          </div>
+
+          <div
+            style="width:100%"
+            v-if="targetSubject.attributes.showSubjectList === true"
+          >
+            <!-- 目标 -->
+            <div
+              class="target-item-container"
+              v-for="target in targetSubject.attributes
+                .targetListOfTargetSubject"
+              v-bind:key="target.id"
+            >
+              <!-- 完成目标 -->
+              <div class="finished-button-container">
+                <img
+                  class="finished-button"
+                  :src="assets.icon_red_finished_button"
+                  alt="icon_red_finished_button"
+                />
+              </div>
+
+              <!-- 占位符 -->
+              <div class="placeholder"></div>
+
+              <!-- 目标主体 -->
+              <div class="target-body-container">
+                <div class="target-type">
+                  {{
+                    target.attributes.validityType === "time-bound"
+                      ? "时限目标"
+                      : "长期目标"
+                  }}
+                </div>
+                <div class="target-name">{{ target.attributes.name }}</div>
+                <div class="target-description">
+                  {{ target.attributes.description }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition-group>
+    </draggable>
 
     <!-- 已完成的目标目录 -->
     <div
@@ -180,7 +200,10 @@ import icon_red_finished_button from "../../../assets/icon_red_finished_button.s
 import Store from "../../../store";
 import AV from "leancloud-storage";
 import { TargetPage } from "../../../lib/vue-viewmodels";
+import draggable from "vuedraggable";
+
 export default defineComponent({
+  components: { draggable },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
@@ -209,6 +232,10 @@ export default defineComponent({
     // 已完成的目标是否打开
     const isCompletedTargetShown: Ref<boolean> = ref(false);
 
+    const onUnSubjectiveTargetListDragEnd = () => {};
+
+    const onTargetSubjectListDragEnd = () => {};
+
     // 生命周期：初始化
     onMounted(() => {
       TargetPage.init(
@@ -225,6 +252,8 @@ export default defineComponent({
       targetSubjectList,
       completedTargetList,
       isCompletedTargetShown,
+      onUnSubjectiveTargetListDragEnd,
+      onTargetSubjectListDragEnd,
       assets: {
         icon_create_target,
         icon_downward,
@@ -237,6 +266,13 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
+.ghost {
+  box-shadow 10px 10px 5px -1px rgba(0, 0, 0, 0.14)
+  opacity 0.7
+}
 .container {
   height 73.66vh
   overflow scroll
