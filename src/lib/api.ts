@@ -515,6 +515,7 @@ export default {
           targetList.forEach(target => {
             if (
               target.attributes.targetSubject !== undefined &&
+              target.attributes.targetSubject !== null &&
               target.attributes.targetSubject.id === targetSubject.id
             ) {
               targetSubject.attributes.targetListOfTargetSubject.push(target);
@@ -566,6 +567,7 @@ export default {
         Log.success("fetchTargetSubjectList", targetSubjectList);
         resolve(targetSubjectList);
       } catch (error) {
+        console.log(error);
         Log.error("fetchTargetSubjectList", error);
         reject(error);
       }
@@ -716,7 +718,6 @@ export default {
         reject(error);
       }
     }),
-
   /**
    * 删除目标目录
    */
@@ -731,6 +732,90 @@ export default {
         resolve();
       } catch (error) {
         Log.error("deleteTargetSubject", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 保存目标
+   */
+  saveTarget: (
+    targetId: string,
+    user: AV.User,
+    targetSubjectId: string | null,
+    name: string,
+    description: string,
+    validityType: "time-bound" | "indefinite",
+    validity: Date | null,
+    abilityList: { id: string; name: string }[],
+    isActived: boolean,
+    isFinished: boolean
+  ) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target = await new AV.Query(Target).get(targetId);
+        target
+          .set("user", user)
+          .set("name", name)
+          .set("description", description)
+          .set("validityType", validityType)
+          .set("validity", validity)
+          .set("isActived", isActived)
+          .set("isFinished", isFinished);
+
+        if (targetSubjectId !== null) {
+          target.set(
+            "targetSubject",
+            AV.Object.createWithoutData("TargetSubject", targetSubjectId)
+          );
+        } else {
+          target.set("targetSubject", null);
+        }
+
+        await target.save();
+
+        // 删除所有的相关的中间表
+        const abilityTargetListToDelete = await new AV.Query(AbilityTarget)
+          .equalTo("target", AV.Object.createWithoutData("Target", targetId))
+          .find();
+
+        AV.Object.destroyAll(abilityTargetListToDelete);
+
+        // 保存新的中间表
+        const abilityTargetList: AV.Object[] = [];
+
+        abilityList.forEach(ability => {
+          const abilityTarget = new AbilityTarget()
+            .set("ability", AV.Object.createWithoutData("Ability", ability.id))
+            .set("target", target);
+          abilityTargetList.push(abilityTarget);
+        });
+
+        if (abilityTargetList.length !== 0) {
+          await AV.Object.saveAll(abilityTargetList);
+        }
+
+        Log.success("saveTarget", target);
+        resolve(target);
+      } catch (error) {
+        Log.error("saveTarget", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 保存目标目录
+   */
+  saveTargetSubject: (targetSubjectId: string, user: AV.User, name: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetSubject = await new AV.Query(TargetSubject).get(
+          targetSubjectId
+        );
+        targetSubject.set("name", name).set("user", user);
+        await targetSubject.save();
+        Log.success("saveTargetSubject", targetSubject);
+        resolve(targetSubject);
+      } catch (error) {
+        Log.error("saveTargetSubject", error);
         reject(error);
       }
     })

@@ -283,11 +283,13 @@ export default defineComponent({
       })
     );
 
-    //
+    // 拖动结束：未分类的目标
     const onUnSubjectiveTargetListDragEnd = () => {};
 
+    // 拖动结束：目标目录
     const onTargetSubjectListDragEnd = () => {};
 
+    // 拖动结束：有目录的目标
     const onTargetListOfTargetSubjectDragOnEnd = () => {};
 
     // 点击事件：编辑目标
@@ -301,7 +303,6 @@ export default defineComponent({
 
     // 点击事件：编辑目标目录
     const click_editTargetSubjectButton = (targetSubject: AV.Object) => {
-      console.log("targetSubject", targetSubject);
       TargetPage.openTargetSubjectEditDrawer(
         isEditTargetDrawerDisplayed,
         input_editingTargetOrTargetSubject,

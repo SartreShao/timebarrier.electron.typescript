@@ -613,7 +613,14 @@ export default defineComponent({
 
     // 点击事件：保存目标或目标目录
     const click_saveTargetOrTargetSubject = () => {
-      console.log("save");
+      TargetPage.saveTargetOrTargetSubject(
+        context.root,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
+      );
     };
 
     return {

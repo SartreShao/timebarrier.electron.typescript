@@ -229,7 +229,7 @@ function offset(ele: HTMLElement) {
     ele = ele.offsetParent as HTMLElement; //初始值
     obj.l += ele.offsetLeft;
     obj.t += ele.offsetTop;
-    console.log("object", obj);
+    // console.log("object", obj);
   }
 
   return obj;

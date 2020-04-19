@@ -1333,7 +1333,8 @@ const TargetPage = {
     input_editingTargetOrTargetSubject.inputType = "target";
     input_editingTargetOrTargetSubject.target.id = target.id;
     input_editingTargetOrTargetSubject.target.targetSubjectId =
-      target.attributes.targetSubject === undefined
+      target.attributes.targetSubject === undefined ||
+      target.attributes.targetSubject === null
         ? null
         : target.attributes.targetSubject.id;
     input_editingTargetOrTargetSubject.target.name = target.attributes.name;
@@ -1558,6 +1559,221 @@ const TargetPage = {
           vue.$notify,
           "数据出错",
           "input_editingTargetOrTargetSubject.targetSubject.id is undefined",
+          "error"
+        );
+      }
+    }
+  },
+  /**
+   * 保存「目标」或「目标目录」
+   */
+  saveTargetOrTargetSubject: async (
+    vue: ElementVue,
+    isEditTargetDrawerDisplayed: Ref<boolean>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_editingTargetOrTargetSubject.inputType === "target") {
+      saveTarget(
+        vue,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
+      );
+    } else if (
+      input_editingTargetOrTargetSubject.inputType === "targetSubject"
+    ) {
+      saveTargetSubject(
+        vue,
+        isEditTargetDrawerDisplayed,
+        input_editingTargetOrTargetSubject,
+        targetSubjectList
+      );
+    }
+
+    async function saveTarget(
+      vue: ElementVue,
+      isEditTargetDrawerDisplayed: Ref<boolean>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+      unSubjectiveTargetList: Ref<AV.Object[]>,
+      targetSubjectList: Ref<AV.Object[]>,
+      completedTargetList: Ref<AV.Object[]>
+    ) {
+      if (input_editingTargetOrTargetSubject.target.id !== undefined) {
+        // 判断依赖条件：目标所属类别
+        if (input_editingTargetOrTargetSubject.target.targetSubjectId === "") {
+          UI.showNotification(
+            vue.$notify,
+            "请选择一个目标所属类别",
+            "",
+            "warning"
+          );
+          return;
+        }
+
+        // 判断依赖条件：目标名称
+        if (input_editingTargetOrTargetSubject.target.name === "") {
+          UI.showNotification(vue.$notify, "请输入目标名称", "", "warning");
+          return;
+        }
+
+        // 判断依赖条件：达成目标所需条件
+        if (input_editingTargetOrTargetSubject.target.description === "") {
+          UI.showNotification(
+            vue.$notify,
+            "请输入达成目标所需条件",
+            "",
+            "warning"
+          );
+          return;
+        }
+
+        // 判断依赖条件：目标有效期
+        if (input_editingTargetOrTargetSubject.target.validityType === "") {
+          UI.showNotification(vue.$notify, "请选择目标有效期", "", "warning");
+          return;
+        }
+
+        // 判断依赖条件：目标名称
+        if (
+          input_editingTargetOrTargetSubject.target.validityType ===
+            "time-bound" &&
+          input_editingTargetOrTargetSubject.target.validity === null
+        ) {
+          UI.showNotification(
+            vue.$notify,
+            "请输入预计达成目标的日期",
+            "",
+            "warning"
+          );
+          return;
+        }
+
+        // 显示进度条
+        const loadingInstance = UI.showLoading(
+          vue.$loading,
+          "正在保存您的目标..."
+        );
+
+        // 尝试保存 Target
+        try {
+          await Api.saveTarget(
+            input_editingTargetOrTargetSubject.target.id,
+            user,
+            input_editingTargetOrTargetSubject.target.targetSubjectId,
+            input_editingTargetOrTargetSubject.target.name,
+            input_editingTargetOrTargetSubject.target.description,
+            input_editingTargetOrTargetSubject.target.validityType,
+            input_editingTargetOrTargetSubject.target.validity,
+            input_editingTargetOrTargetSubject.target.abilityList,
+            input_editingTargetOrTargetSubject.target.isActived,
+            input_editingTargetOrTargetSubject.target.isFinished
+          );
+
+          // 尝试获取已完成的目标列表
+          completedTargetList.value = await Api.fetchTargetList(
+            user,
+            "completed"
+          );
+
+          // 尝试获取未分类的目标列表
+          unSubjectiveTargetList.value = await Api.fetchTargetList(
+            user,
+            "unsubjective"
+          );
+
+          // 尝试获取目标类别列表
+          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+          // 保存成功
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(vue.$notify, "目标保存成功", "", "success");
+
+          // 关闭窗口
+          isEditTargetDrawerDisplayed.value = false;
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "目标保存失败",
+            `错误原因：${error.message},`,
+            "error"
+          );
+        }
+      } else {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingTargetOrTargetSubject.target.id is undefined",
+          "error"
+        );
+      }
+    }
+
+    async function saveTargetSubject(
+      vue: ElementVue,
+      isEditTargetDrawerDisplayed: Ref<boolean>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+      targetSubjectList: Ref<AV.Object[]>
+    ) {
+      if (input_editingTargetOrTargetSubject.targetSubject.id !== undefined) {
+        // 如果是目标类别
+        // 判断依赖条件：目标名称
+        if (input_editingTargetOrTargetSubject.targetSubject.name === "") {
+          UI.showNotification(vue.$notify, "请输入目标类别名称", "", "warning");
+          return;
+        }
+
+        // 显示进度条
+        const loadingInstance = UI.showLoading(
+          vue.$loading,
+          "正在保存您的目标类别..."
+        );
+
+        // 尝试保存 TargetSubject
+        try {
+          await Api.saveTargetSubject(
+            input_editingTargetOrTargetSubject.targetSubject.id,
+            user,
+            input_editingTargetOrTargetSubject.targetSubject.name
+          );
+
+          // 刷新列表
+          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+          // 保存成功
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(vue.$notify, "目标目录保存成功", "", "success");
+
+          // 关闭窗口
+          isEditTargetDrawerDisplayed.value = false;
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "目标保存失败",
+            `错误原因：${error.message},`,
+            "error"
+          );
+        }
+      } else {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingTargetOrTargetSubject.targetSubject.id is undefined",
           "error"
         );
       }
