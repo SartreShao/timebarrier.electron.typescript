@@ -110,6 +110,20 @@ export default {
       }
     }),
   /**
+   * 保存所有的 TargetSubjectList
+   */
+  saveTargetSubjectList: (objectList: AV.Object[]) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.Object.saveAll(objectList);
+        Log.success("saveTargetSubjectList", objectList);
+        resolve(objectList);
+      } catch (error) {
+        Log.error("saveTargetSubjectList", error);
+        reject(error);
+      }
+    }),
+  /**
    * 获取计划（Plan）列表
    * @remark 「时间壁垒」专用函数
    * @param planType 需要获取的计划类型：临时计划 temporary | 每日计划 daily | 已完成的计划 completed
@@ -511,6 +525,8 @@ export default {
         // 获取 TargetSubject 列表：目标目录列表
         const targetSubjectList = await new AV.Query(TargetSubject)
           .equalTo("user", user)
+          .ascending("order")
+          .addDescending("createdAt")
           .find();
 
         // 获取 TargetList 列表：目标列表
@@ -518,6 +534,8 @@ export default {
           .equalTo("user", user)
           .equalTo("isFinished", false)
           .include("targetSubject")
+          .ascending("order")
+          .addDescending("createdAt")
           .find();
 
         // 向 TargetSubjectList 中添加两个属性：
@@ -597,6 +615,8 @@ export default {
       try {
         const targetListQuery = new AV.Query(Target)
           .equalTo("user", user)
+          .ascending("order")
+          .addDescending("createdAt")
           .include("targetSubject");
 
         if (targetType === "completed") {

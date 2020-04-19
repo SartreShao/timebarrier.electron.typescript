@@ -1778,6 +1778,41 @@ const TargetPage = {
         );
       }
     }
+  },
+  /**
+   * 保存 TargetList 的优先级
+   */
+  changeTargetListOrder: async (targetList: AV.Object[]) => {
+    const list: AV.Object[] = [];
+    targetList.forEach((target, index) => {
+      if (target.attributes.order !== index && target.id !== undefined) {
+        const object = AV.Object.createWithoutData("Target", target.id).set(
+          "order",
+          index
+        );
+        list.push(object);
+      }
+    });
+    await Api.saveTargetList(list);
+  },
+  /**
+   * 保存 TargetSubjectList 的优先级
+   */
+  changeTargetSubjectListOrder: async (targetSubjectList: AV.Object[]) => {
+    const list: AV.Object[] = [];
+    targetSubjectList.forEach((targetSubject, index) => {
+      if (
+        targetSubject.attributes.order !== index &&
+        targetSubject.id !== undefined
+      ) {
+        const object = AV.Object.createWithoutData(
+          "TargetSubject",
+          targetSubject.id
+        ).set("order", index);
+        list.push(object);
+      }
+    });
+    await Api.saveTargetSubjectList(list);
   }
 };
 

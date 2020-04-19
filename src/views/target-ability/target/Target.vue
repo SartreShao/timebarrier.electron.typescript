@@ -9,7 +9,7 @@
     <draggable
       v-model="unSubjectiveTargetList"
       ghost-class="ghost"
-      @end="onUnSubjectiveTargetListDragEnd"
+      @end="dragend_unSubjectiveTarget"
     >
       <transition-group type="transition" name="flip-list">
         <div
@@ -54,7 +54,7 @@
     <draggable
       v-model="targetSubjectList"
       ghost-class="ghost"
-      @end="onTargetSubjectListDragEnd"
+      @end="dragend_targetSubject"
       style="width:100%"
     >
       <transition-group type="transition" name="flip-list">
@@ -98,7 +98,7 @@
             <draggable
               v-model="targetSubject.attributes.targetListOfTargetSubject"
               ghost-class="ghost"
-              @end="onTargetListOfTargetSubjectDragOnEnd"
+              @end="dragend_subjectiveTarget(targetSubject)"
             >
               <transition-group type="transition" name="flip-list">
                 <!-- 目标 -->
@@ -284,13 +284,25 @@ export default defineComponent({
     );
 
     // 拖动结束：未分类的目标
-    const onUnSubjectiveTargetListDragEnd = () => {};
+    const dragend_unSubjectiveTarget = () => {
+      TargetPage.changeTargetListOrder(unSubjectiveTargetList.value);
+    };
 
     // 拖动结束：目标目录
-    const onTargetSubjectListDragEnd = () => {};
+    const dragend_targetSubject = () => {
+      TargetPage.changeTargetSubjectListOrder(targetSubjectList.value);
+    };
 
     // 拖动结束：有目录的目标
-    const onTargetListOfTargetSubjectDragOnEnd = () => {};
+    const dragend_subjectiveTarget = (targetSubject: AV.Object) => {
+      console.log(
+        "targetSubject",
+        targetSubject.attributes.targetListOfTargetSubject
+      );
+      TargetPage.changeTargetListOrder(
+        targetSubject.attributes.targetListOfTargetSubject
+      );
+    };
 
     // 点击事件：编辑目标
     const click_editTargetButton = (target: AV.Object) => {
@@ -328,9 +340,9 @@ export default defineComponent({
       targetSubjectList,
       completedTargetList,
       isCompletedTargetShown,
-      onUnSubjectiveTargetListDragEnd,
-      onTargetListOfTargetSubjectDragOnEnd,
-      onTargetSubjectListDragEnd,
+      dragend_unSubjectiveTarget,
+      dragend_subjectiveTarget,
+      dragend_targetSubject,
       assets: {
         icon_create_target,
         icon_downward,
