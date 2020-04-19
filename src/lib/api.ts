@@ -96,6 +96,20 @@ export default {
       }
     }),
   /**
+   * 保存所有的 TargetList
+   */
+  saveTargetList: (objectList: AV.Object[]) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.Object.saveAll(objectList);
+        Log.success("saveTargetList", objectList);
+        resolve(objectList);
+      } catch (error) {
+        Log.error("savePlanList", error);
+        reject(error);
+      }
+    }),
+  /**
    * 获取计划（Plan）列表
    * @remark 「时间壁垒」专用函数
    * @param planType 需要获取的计划类型：临时计划 temporary | 每日计划 daily | 已完成的计划 completed
