@@ -21,7 +21,7 @@
         <draggable
           v-model="temporaryPlanList"
           ghost-class="ghost"
-          @end="onTemporaryPlanListDragEnd"
+          @end="dragend_templayPlanItem"
         >
           <transition-group type="transition" name="flip-list">
             <div
@@ -49,7 +49,7 @@
         <draggable
           v-model="dailyPlanList"
           ghost-class="ghost"
-          @end="onDailyPlanListDragEnd"
+          @end="dragend_dailyPlanItem"
         >
           <transition-group type="transition" name="flip-list">
             <div
@@ -512,12 +512,12 @@ export default defineComponent({
     };
 
     // 当用户拖动「临时计划」列表完毕时，执行
-    const onTemporaryPlanListDragEnd = (event: any) => {
+    const dragend_templayPlanItem = (event: any) => {
       PlanPage.changePlanListOrder(temporaryPlanList);
     };
 
     // 当用户拖动「每日计划」列表完毕
-    const onDailyPlanListDragEnd = (event: any) => {
+    const dragend_dailyPlanItem = (event: any) => {
       PlanPage.changePlanListOrder(dailyPlanList);
     };
 
@@ -554,8 +554,8 @@ export default defineComponent({
       click_abilityItemSelector,
       click_saveAbility,
       click_startTomatoButton,
-      onTemporaryPlanListDragEnd,
-      onDailyPlanListDragEnd,
+      dragend_templayPlanItem,
+      dragend_dailyPlanItem,
       assets: {
         icon_finished,
         icon_logo,
