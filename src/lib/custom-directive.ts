@@ -35,7 +35,7 @@ export function useDirective() {
           pressTimer = setTimeout(() => {
             // Run function
             handler(e);
-          }, 750);
+          }, 1000);
         }
       };
 
@@ -54,7 +54,7 @@ export function useDirective() {
       const handler = (e: MouseEvent | TouchEvent) => {
         // console.log("handler", e);
         // console.log("handler type", e.type);
-        el.$value(e);
+        (el as any).$value(e);
       };
 
       // Add Event listeners
@@ -69,7 +69,7 @@ export function useDirective() {
       el.addEventListener("touchcancel", cancel);
     },
     update: function(el, binding) {
-      el.$value = binding.value;
+      (el as any).$value = binding.value;
     }
   });
 
@@ -181,7 +181,7 @@ export function useDirective() {
             const deltaX = w / 2 + offsetX;
             const deltaY = h / 2 + offsetY;
             const scaleRatio =
-              10 * Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+              2 * Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
             tl.fromTo(
               svg,
               0.75,
