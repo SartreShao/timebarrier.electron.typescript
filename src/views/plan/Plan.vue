@@ -27,9 +27,9 @@
             <div
               class="item-container"
               :id="item.id"
-              v-for="item in temporaryPlanList"
+              v-for="(item, index) in temporaryPlanList"
               :key="item.id"
-              v-longclick="() => click_editPlanButton(item)"
+              v-longclick="() => longclick_editPlanButton(item, index)"
               v-hello
             >
               <h2 style="pointer-events:none;">临时计划</h2>
@@ -55,9 +55,9 @@
             <div
               :id="item.id"
               class="item-container"
-              v-for="item in dailyPlanList"
+              v-for="(item, index) in dailyPlanList"
               v-bind:key="item.id"
-              v-longclick="() => click_editPlanButton(item)"
+              v-longclick="() => longclick_editPlanButton(item, index)"
               v-hello
             >
               <div class="plan-container">
@@ -111,9 +111,9 @@
       <section class="finished">
         <div
           class="item-container"
-          v-for="item in completedPlanList"
+          v-for="(item, index) in completedPlanList"
           v-bind:key="item.id"
-          v-longclick="() => click_editPlanButton(item)"
+          v-longclick="() => longclick_editPlanButton(item, index)"
         >
           <h2>
             {{ item.attributes.type === "daily" ? "每日计划" : "临时计划" }}
@@ -442,7 +442,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击「编辑计划」按钮
-    const click_editPlanButton = (plan: AV.Object) => {
+    const longclick_editPlanButton = (plan: AV.Object, index: number) => {
       PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
     };
 
@@ -547,7 +547,7 @@ export default defineComponent({
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
-      click_editPlanButton,
+      longclick_editPlanButton,
       click_savePlanButton,
       click_deletePlanButton,
       click_relatedAbilityButton,

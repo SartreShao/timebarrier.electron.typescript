@@ -8,6 +8,7 @@ export function useDirective() {
    */
   Vue.directive("longclick", {
     bind: function(el, binding) {
+      Vue.set(el, "$value", binding.value);
       // Make sure expression provided is a function
       if (typeof binding.value !== "function") {
         // pass warning to console
@@ -53,8 +54,7 @@ export function useDirective() {
       const handler = (e: MouseEvent | TouchEvent) => {
         // console.log("handler", e);
         // console.log("handler type", e.type);
-
-        binding.value(e);
+        el.$value(e);
       };
 
       // Add Event listeners
@@ -67,6 +67,9 @@ export function useDirective() {
       el.addEventListener("touchend", cancel);
       el.addEventListener("touchmove", cancel);
       el.addEventListener("touchcancel", cancel);
+    },
+    update: function(el, binding) {
+      el.$value = binding.value;
     }
   });
 
