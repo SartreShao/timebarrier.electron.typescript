@@ -1441,30 +1441,18 @@ const TargetPage = {
               input_editingTargetOrTargetSubject.target.id
             );
 
-            // 请求刷新对应的列表
-            if (input_editingTargetOrTargetSubject.target.isFinished === true) {
-              // 尝试获取已完成的目标列表
-              completedTargetList.value = await Api.fetchTargetList(
-                user,
-                "completed"
-              );
-            } else {
-              if (
-                input_editingTargetOrTargetSubject.target.targetSubjectId ===
-                null
-              ) {
-                // 尝试获取未分类的目标列表
-                unSubjectiveTargetList.value = await Api.fetchTargetList(
-                  user,
-                  "unsubjective"
-                );
-              } else {
-                // 尝试获取目标类别列表
-                targetSubjectList.value = await Api.fetchTargetSubjectList(
-                  user
-                );
-              }
-            }
+            // 尝试获取已完成的目标列表
+            completedTargetList.value = await Api.fetchTargetList(
+              user,
+              "completed"
+            );
+            // 尝试获取未分类的目标列表
+            unSubjectiveTargetList.value = await Api.fetchTargetList(
+              user,
+              "unsubjective"
+            );
+            // 尝试获取目标类别列表
+            targetSubjectList.value = await Api.fetchTargetSubjectList(user);
 
             // 保存成功
             UI.hideLoading(loadingInstance);
