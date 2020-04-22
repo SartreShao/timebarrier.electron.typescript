@@ -421,6 +421,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 footer {
+  background white
   width 100%
   height 6.82vh
   position fixed
