@@ -533,6 +533,7 @@ export default {
         const targetList = await new AV.Query(Target)
           .equalTo("user", user)
           .equalTo("isFinished", false)
+          .containedIn("targetSubject", targetSubjectList)
           .include("targetSubject")
           .ascending("order")
           .addDescending("createdAt")
@@ -623,6 +624,7 @@ export default {
           targetListQuery.equalTo("isFinished", true);
         } else if (targetType === "unsubjective") {
           targetListQuery.equalTo("targetSubject", null);
+          targetListQuery.equalTo("isFinished", false);
         }
 
         // 获取 targetList
