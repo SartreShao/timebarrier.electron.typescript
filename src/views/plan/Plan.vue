@@ -19,6 +19,7 @@
       <!-- 临时计划列表 -->
       <section class="temporary" v-if="temporaryPlanList.length !== 0">
         <draggable
+          :options="draggableOptions"
           v-model="temporaryPlanList"
           ghost-class="ghost"
           @end="dragend_templayPlanItem"
@@ -47,6 +48,7 @@
       <!-- 每日计划 -->
       <section class="daily">
         <draggable
+          :options="draggableOptions"
           v-model="dailyPlanList"
           ghost-class="ghost"
           @end="dragend_dailyPlanItem"
@@ -634,6 +636,7 @@ export default defineComponent({
       display flex
       flex-direction column
       div.item-container {
+        user-select none
         cursor pointer
         width 95.73vw
         height 7.2vh
@@ -692,6 +695,7 @@ export default defineComponent({
       display flex
       flex-direction column
       .item-container {
+        user-select none
         width 95.73vw
         height 11.47vh
         flex-shrink 0
@@ -834,6 +838,7 @@ export default defineComponent({
     display flex
     flex-direction column
     .item-container {
+      user-select none
       width 95.73vw
       height 7.2vh
       background #f0f1f3
