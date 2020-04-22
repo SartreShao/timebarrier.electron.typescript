@@ -722,7 +722,6 @@ export default defineComponent({
     position fixed
     top 12.77vh
     height 80.41vh
-    overflow scroll
     width 100%
     background #F5F5F5
     display flex
@@ -735,6 +734,18 @@ export default defineComponent({
     flex-direction column
     overflow scroll
     align-items center
+  }
+  .create-target-drawer >>> .el-drawer__header {
+    span {
+      &:focus {
+        outline 0
+      }
+    }
+    i {
+      &:focus {
+        outline 0
+      }
+    }
   }
   // 抽屉菜单 item：选择框
   .select-target >>> .el-input__inner {
@@ -769,6 +780,8 @@ export default defineComponent({
     flex-shrink 0
     width 89.6vw
     height 6.9vh
+    outline none
+    -webkit-appearance none /* 去除系统默认的样式 */
     border-radius 0.67vh
     border solid 0.15vh #ebebf3
     padding-left 4.8vw
