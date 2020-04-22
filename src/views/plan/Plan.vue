@@ -25,12 +25,12 @@
         >
           <transition-group type="transition" name="flip-list">
             <div
+              v-splash-when-click
               class="item-container"
               :id="item.id"
               v-for="(item, index) in temporaryPlanList"
               :key="item.id"
               v-longclick="() => longclick_editPlanButton(item, index)"
-              v-hello
             >
               <h2 style="pointer-events:none;">临时计划</h2>
               <div class="placeholder" style="pointer-events:none;"></div>
@@ -58,7 +58,7 @@
               v-for="(item, index) in dailyPlanList"
               v-bind:key="item.id"
               v-longclick="() => longclick_editPlanButton(item, index)"
-              v-hello
+              v-splash-when-click
             >
               <div class="plan-container">
                 <h2>每日计划</h2>
@@ -531,6 +531,9 @@ export default defineComponent({
       );
     });
 
+    // 配置信息
+    const draggableOptions = inject(Store.draggableOptions, {});
+
     return {
       input_plan,
       input_ability,
@@ -556,6 +559,7 @@ export default defineComponent({
       click_startTomatoButton,
       dragend_templayPlanItem,
       dragend_dailyPlanItem,
+      draggableOptions,
       assets: {
         icon_finished,
         icon_logo,
@@ -591,12 +595,15 @@ export default defineComponent({
     input {
       opacity 0.54
       margin-top 0.3vh
+      padding 0px
       width 92.67vw
       height 3.9vh
       background-color #e9e9e9
       border-radius 1.95vh
       border none
       text-align center
+      font-size 2.02vh
+      color #222a36
       // 输入框 placeholder
       &::-webkit-input-placeholder {
         opacity 0.6

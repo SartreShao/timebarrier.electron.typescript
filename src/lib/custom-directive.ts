@@ -35,7 +35,7 @@ export function useDirective() {
           pressTimer = setTimeout(() => {
             // Run function
             handler(e);
-          }, 1000);
+          }, 750);
         }
       };
 
@@ -63,6 +63,7 @@ export function useDirective() {
       // Cancel timeouts if this events happen
       el.addEventListener("mouseup", cancel);
       el.addEventListener("mouseout", cancel);
+      el.addEventListener("mousemove", cancel);
       el.addEventListener("click", cancel);
       el.addEventListener("touchend", cancel);
       el.addEventListener("touchmove", cancel);
@@ -73,7 +74,42 @@ export function useDirective() {
     }
   });
 
-  Vue.directive("hello", {
+  Vue.directive("darked-when-click", {
+    bind: function(el, binding) {
+      el.style.position = "relative";
+      el.style.overflow = "hidden";
+      const mask = document.createElement("div");
+      mask.style.background = "black";
+      mask.style.width = "100%";
+      mask.style.height = "100%";
+      mask.style.opacity = "0";
+      mask.style.position = "absolute";
+      mask.style.top = "0";
+      mask.style.left = "0";
+      el.appendChild(mask);
+
+      const handle = (event: MouseEvent | TouchEvent) => {
+        mask.style.opacity = "0.1";
+      };
+
+      const cancel = (event: MouseEvent | TouchEvent) => {
+        mask.style.opacity = "0";
+      };
+
+      // Add Event listeners
+      el.addEventListener("mousedown", handle);
+      el.addEventListener("touchstart", handle);
+      // Cancel timeouts if this events happen
+      el.addEventListener("mouseup", cancel);
+      el.addEventListener("mouseout", cancel);
+      el.addEventListener("click", cancel);
+      el.addEventListener("touchend", cancel);
+      el.addEventListener("touchmove", cancel);
+      el.addEventListener("touchcancel", cancel);
+    }
+  });
+
+  Vue.directive("splash-when-click", {
     bind: function(el, binding, vnode, oldVnode) {
       // console.log("el`", el);
       // console.log("vnode", vnode.children);
@@ -214,6 +250,7 @@ export function useDirective() {
       // Cancel timeouts if this events happen
       el.addEventListener("mouseup", cancel);
       el.addEventListener("mouseout", cancel);
+      el.addEventListener("mousemove", cancel);
       el.addEventListener("click", cancel);
       el.addEventListener("touchend", cancel);
       el.addEventListener("touchmove", cancel);

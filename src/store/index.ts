@@ -29,6 +29,8 @@ const isCreateTargetDrawerDisplayed = Symbol();
 const isEditTargetDrawerDisplayed = Symbol();
 // 用户输入：编辑「目标 Target」
 const input_editingTargetOrTargetSubject = Symbol();
+// 配置信息：Vue Dragger
+const draggableOptions = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -69,6 +71,15 @@ function useProvider() {
       }
     })
   );
+  provide(draggableOptions, {
+    chosenClass: "draggable-chosen",
+    ghostClass: "draggable-ghost",
+    dragClass: "draggable-drag",
+    delayOnTouchOnly: true, //开启触摸延时
+    direction: "vertical", //拖动方向
+    delay: 200, //延时时长
+    touchStartThreshold: 3 //防止某些手机过于敏感(3~5 效果最好)
+  });
 }
 
 export default {
@@ -85,5 +96,6 @@ export default {
   tomatoStartTime,
   isCreateTargetDrawerDisplayed,
   isEditTargetDrawerDisplayed,
-  input_editingTargetOrTargetSubject
+  input_editingTargetOrTargetSubject,
+  draggableOptions
 };

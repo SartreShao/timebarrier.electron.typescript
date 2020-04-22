@@ -2,7 +2,9 @@
   <div class="container">
     <!-- 添加「目标」按钮 -->
     <div class="add-button" @click="isCreateTargetDrawerDisplayed = true">
-      <img :src="assets.icon_create_target" alt="icon_create_target" />
+      <div v-darked-when-click>
+        <img :src="assets.icon_create_target" alt="icon_create_target" />
+      </div>
     </div>
 
     <!-- 无目录的目标 -->
@@ -19,6 +21,7 @@
           v-for="target in unSubjectiveTargetList"
           :key="target.id"
           v-longclick="() => click_editTargetButton(target)"
+          v-splash-when-click
         >
           <!-- 完成目标 -->
           <div class="finished-button-container">
@@ -68,6 +71,7 @@
           <!-- 目标目录 -->
           <div
             class="target-subject-container"
+            v-splash-when-click
             v-longclick="() => click_editTargetSubjectButton(targetSubject)"
             @click="
               targetSubject.attributes.showSubjectList = !targetSubject
@@ -110,6 +114,7 @@
                   :key="target.id"
                   :id="target.id"
                   v-longclick="() => click_editTargetButton(target)"
+                  v-splash-when-click
                 >
                   <!-- 完成目标 -->
                   <div class="finished-button-container">
@@ -172,6 +177,7 @@
         v-for="target in completedTargetList"
         v-bind:key="target.id"
         v-longclick="() => click_editTargetButton(target)"
+        v-splash-when-click
       >
         <!-- 完成目标 -->
         <div class="finished-button-container">
@@ -323,15 +329,8 @@ export default defineComponent({
       );
     };
 
-    const draggableOptions = {
-      chosenClass: "draggable-chosen",
-      ghostClass: "draggable-ghost",
-      dragClass: "draggable-drag",
-      delayOnTouchOnly: true, //开启触摸延时
-      direction: "vertical", //拖动方向
-      delay: 200, //延时时长
-      touchStartThreshold: 3 //防止某些手机过于敏感(3~5 效果最好)
-    };
+    // 配置信息
+    const draggableOptions = inject(Store.draggableOptions, {});
 
     // 生命周期：初始化
     onMounted(() => {
@@ -367,14 +366,6 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
-.draggable-drag {
-}
-.draggable-ghost {
-  opacity 0
-}
-.draggable-chosen {
-  box-shadow 0.75vh 0.75vh 0.37vh -0.07vh rgba(0, 0, 0, 0.14)
-}
 .flip-list-move {
   transition transform 0.5s
 }
@@ -400,12 +391,16 @@ export default defineComponent({
     height 6.45vh
     background white
     margin-top 0.15vh
-    display flex
-    justify-content center
-    align-items center
-    img {
-      width 2.1vh
-      height 2.1vh
+    div {
+      height 100%
+      width 100%
+      display flex
+      justify-content center
+      align-items center
+      img {
+        width 2.1vh
+        height 2.1vh
+      }
     }
   }
   .target-subject-container {
