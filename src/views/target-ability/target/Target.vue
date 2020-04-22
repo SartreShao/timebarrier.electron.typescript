@@ -7,6 +7,7 @@
 
     <!-- 无目录的目标 -->
     <draggable
+      :options="draggableOptions"
       v-model="unSubjectiveTargetList"
       ghost-class="ghost"
       @end="dragend_unSubjectiveTarget"
@@ -18,7 +19,6 @@
           v-for="target in unSubjectiveTargetList"
           :key="target.id"
           v-longclick="() => click_editTargetButton(target)"
-          v-hello
         >
           <!-- 完成目标 -->
           <div class="finished-button-container">
@@ -52,6 +52,7 @@
 
     <!-- 有目录的目标 -->
     <draggable
+      :options="draggableOptions"
       v-model="targetSubjectList"
       ghost-class="ghost"
       @end="dragend_targetSubject"
@@ -68,7 +69,6 @@
           <div
             class="target-subject-container"
             v-longclick="() => click_editTargetSubjectButton(targetSubject)"
-            v-hello
             @click="
               targetSubject.attributes.showSubjectList = !targetSubject
                 .attributes.showSubjectList
@@ -96,6 +96,7 @@
             v-if="targetSubject.attributes.showSubjectList === true"
           >
             <draggable
+              :options="draggableOptions"
               v-model="targetSubject.attributes.targetListOfTargetSubject"
               ghost-class="ghost"
               @end="dragend_subjectiveTarget(targetSubject)"
@@ -109,7 +110,6 @@
                   :key="target.id"
                   :id="target.id"
                   v-longclick="() => click_editTargetButton(target)"
-                  v-hello
                 >
                   <!-- 完成目标 -->
                   <div class="finished-button-container">
@@ -172,7 +172,6 @@
         v-for="target in completedTargetList"
         v-bind:key="target.id"
         v-longclick="() => click_editTargetButton(target)"
-        v-hello
       >
         <!-- 完成目标 -->
         <div class="finished-button-container">
@@ -202,6 +201,8 @@
         </div>
       </div>
     </div>
+
+    <div style="height:15vh"></div>
   </div>
 </template>
 
@@ -322,6 +323,16 @@ export default defineComponent({
       );
     };
 
+    const draggableOptions = {
+      chosenClass: "draggable-chosen",
+      ghostClass: "draggable-ghost",
+      dragClass: "draggable-drag",
+      delayOnTouchOnly: true, //开启触摸延时
+      direction: "vertical", //拖动方向
+      delay: 200, //延时时长
+      touchStartThreshold: 3 //防止某些手机过于敏感(3~5 效果最好)
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       TargetPage.init(
@@ -343,6 +354,7 @@ export default defineComponent({
       dragend_unSubjectiveTarget,
       dragend_subjectiveTarget,
       dragend_targetSubject,
+      draggableOptions,
       assets: {
         icon_create_target,
         icon_downward,
@@ -355,15 +367,23 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.draggable-drag {
+}
+.draggable-ghost {
+  opacity 0
+}
+.draggable-chosen {
+  box-shadow 0.75vh 0.75vh 0.37vh -0.07vh rgba(0, 0, 0, 0.14)
+}
 .flip-list-move {
   transition transform 0.5s
 }
 .ghost {
-  box-shadow 10px 10px 5px -1px rgba(0, 0, 0, 0.14)
   opacity 0.7
 }
 .container {
   height 73.66vh
+  overscroll-behavior none
   overflow scroll
   width 100%
   background #F5F5F5
@@ -430,6 +450,7 @@ export default defineComponent({
     }
   }
   .target-item-container {
+    user-select none
     height 16.94vh
     width 100%
     display flex
@@ -452,6 +473,7 @@ export default defineComponent({
       width 0.15vh
     }
     .target-body-container {
+      user-select none
       width 80.13vw
       height 16.94vh
       background-color #ffffff
