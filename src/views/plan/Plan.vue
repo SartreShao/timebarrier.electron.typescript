@@ -886,13 +886,39 @@ export default defineComponent({
     }
   }
 }
+.finished-plan-container >>> .el-drawer__header {
+  span {
+    &:focus {
+      outline 0
+    }
+  }
+  i {
+    &:focus {
+      outline 0
+    }
+  }
+}
 .edit-plan-container >>> .el-drawer__body {
   display flex
   flex-direction column
   overflow scroll
   align-items center
 }
+.edit-plan-container >>> .el-drawer__header {
+  span {
+    &:focus {
+      outline 0
+    }
+  }
+  i {
+    &:focus {
+      outline 0
+    }
+  }
+}
 .input-plan-name {
+  outline none
+  -webkit-appearance none /* 去除系统默认的样式 */
   width 89.6vw
   height 6.9vh
   border-radius 0.67vh
@@ -907,18 +933,20 @@ export default defineComponent({
   letter-spacing 0.21px
   text-align left
   color #363636
-}
-.input-plan-name::-webkit-input-placeholder {
-  font-size 1.95vh
-  font-weight normal
-  font-stretch normal
-  font-style normal
-  line-height 1.42
-  letter-spacing 0.21px
-  text-align left
-  color #969294
+  &::-webkit-input-placeholder {
+    font-size 1.95vh
+    font-weight normal
+    font-stretch normal
+    font-style normal
+    line-height 1.42
+    letter-spacing 0.21px
+    text-align left
+    color #969294
+  }
 }
 .input-plan-target {
+  outline none
+  -webkit-appearance none /* 去除系统默认的样式 */
   width 89.6vw
   height 6.9vh
   border-radius 0.67vh
@@ -1119,6 +1147,18 @@ export default defineComponent({
   flex-direction column
   overflow scroll
   align-items center
+}
+.related-ability-container >>> .el-drawer__header {
+  span {
+    &:focus {
+      outline 0
+    }
+  }
+  i {
+    &:focus {
+      outline 0
+    }
+  }
 }
 .input-ability-name {
   position absolute

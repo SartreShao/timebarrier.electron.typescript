@@ -253,7 +253,7 @@ export function useDirective() {
       el.addEventListener("mousemove", cancel);
       el.addEventListener("click", cancel);
       el.addEventListener("touchend", cancel);
-      el.addEventListener("touchmove", cancel);
+      // el.addEventListener("touchmove", cancel);
       el.addEventListener("touchcancel", cancel);
     }
   });
