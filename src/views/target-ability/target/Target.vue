@@ -404,6 +404,7 @@ export default defineComponent({
     }
   }
   .target-subject-container {
+    user-select none
     margin-bottom 0.15vh
     position relative
     height 6.52vh
