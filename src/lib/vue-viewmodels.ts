@@ -569,12 +569,12 @@ const PlanPage = {
    */
   relatedAbility: async (
     vue: ElementVue,
-    isRelatedAbilityDrawerDisplayed: Ref<boolean>,
-    input_abilityList: Ref<AV.Object[]>,
+    isPlanRelateAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType
   ) => {
     // 打开抽屉菜单
-    isRelatedAbilityDrawerDisplayed.value = true;
+    isPlanRelateAbilityDrawerDisplayed.value = true;
 
     if (input_editingPlan.id !== undefined) {
       // 尝试请求带有 selected 属性的 Ability
@@ -584,7 +584,7 @@ const PlanPage = {
       );
 
       try {
-        input_abilityList.value = await Api.fetchAbilityListWithPlanSelect(
+        input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
           input_editingPlan.id
         );
         UI.hideLoading(loadingInstance);
@@ -612,8 +612,8 @@ const PlanPage = {
    */
   createAbility: async (
     vue: ElementVue,
-    input_ability: Ref<string>,
-    input_abilityList: Ref<AV.Object[]>,
+    input_abilityName: Ref<string>,
+    input_abilityListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType
   ) => {
     // 获取传入参数
@@ -626,14 +626,14 @@ const PlanPage = {
     }
 
     // 检测传入数据
-    if (input_ability.value.length === 0) {
+    if (input_abilityName.value.length === 0) {
       // doing nothing
       return;
     }
 
     try {
       // 创建计划
-      await Api.createAbility(input_ability.value, user, "", false, true);
+      await Api.createAbility(input_abilityName.value, user, "", false, true);
 
       // 刷新能力列表
       if (input_editingPlan.id !== undefined) {
@@ -644,7 +644,7 @@ const PlanPage = {
         );
 
         try {
-          input_abilityList.value = await Api.fetchAbilityListWithPlanSelect(
+          input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
             input_editingPlan.id
           );
           UI.hideLoading(loadingInstance);
@@ -666,7 +666,7 @@ const PlanPage = {
         );
       }
 
-      input_ability.value = "";
+      input_abilityName.value = "";
     } catch (error) {
       UI.showNotification(
         vue.$notify,
@@ -690,16 +690,16 @@ const PlanPage = {
     ability.attributes.name = temp;
   },
   /**
-   * 将选择好的 Ability(input_abilityList) 保存到 input_editingPlan 的 ablityList 中
+   * 将选择好的 Ability(input_abilityListOfPlan) 保存到 input_editingPlan 的 ablityList 中
    */
   saveSelectedAblityToEditingPlan: (
-    isRelatedAbilityDrawerDisplayed: Ref<boolean>,
-    input_abilityList: Ref<AV.Object[]>,
+    isPlanRelateAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType
   ) => {
-    isRelatedAbilityDrawerDisplayed.value = false;
+    isPlanRelateAbilityDrawerDisplayed.value = false;
     const list: { id: string; name: string }[] = [];
-    input_abilityList.value.forEach(ability => {
+    input_abilityListOfPlan.value.forEach(ability => {
       if (ability.attributes.selected === true) {
         if (ability.id !== undefined) {
           list.push({
@@ -724,19 +724,19 @@ const TomatoTimerPage = {
    * 1. 点击「每日计划」上的「开始按钮」：
    * - 传入 plan
    * - 不传 isCommitPlanDrawerDisplayed
-   * - 不传 input_plan
+   * - 不传 input_tomatoName
    *
    * 2. 点击「底边栏」上的「开始按钮」：
    * - 不传入 plan
    * - 传入 isCommitPlanDrawerDisplayed
-   * - 传入 input_plan
+   * - 传入 input_tomatoName
    *
    * @param vue 还是绑定了 Element 后的 context.root
    * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
    * @param tomatoClockInterval 计时器实例，由外部引入
    * @param countDown 计时器表盘值，由外部引入
    * @param isCommitPlanDrawerDisplayed 控制「提交番茄」抽屉是否打开的变量
-   * @param input_plan 提交番茄用的番茄名称
+   * @param input_tomatoName 提交番茄用的番茄名称
    * @param plan 点击「每日计划」时，需传入的「被点击的计划」
    */
   clickTomatoClock: async (
@@ -745,7 +745,7 @@ const TomatoTimerPage = {
     tomatoClockInterval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean> | null,
-    input_plan: Ref<string> | null,
+    input_tomatoName: Ref<string> | null,
     plan: AV.Object | null,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
@@ -793,19 +793,19 @@ const TomatoTimerPage = {
           UI.showNotification(vue.$notify, "请先提交番茄", "", "warning");
           return;
         }
-        if (isCommitPlanDrawerDisplayed !== null && input_plan !== null) {
+        if (isCommitPlanDrawerDisplayed !== null && input_tomatoName !== null) {
           isCommitPlanDrawerDisplayed.value = true;
-          // 清空 input_plan 的值
-          input_plan.value = "";
+          // 清空 input_tomatoName 的值
+          input_tomatoName.value = "";
 
           // 遍历 temporaryPlanList
           temporaryPlanList.value.forEach(plan => {
             if (plan.attributes.selected === true) {
-              if (input_plan.value.length === 0) {
-                input_plan.value = plan.attributes.name;
+              if (input_tomatoName.value.length === 0) {
+                input_tomatoName.value = plan.attributes.name;
               } else {
-                input_plan.value =
-                  input_plan.value + " + " + plan.attributes.name;
+                input_tomatoName.value =
+                  input_tomatoName.value + " + " + plan.attributes.name;
               }
             }
           });
@@ -813,11 +813,11 @@ const TomatoTimerPage = {
           // 遍历 dailyPlanList
           dailyPlanList.value.forEach(plan => {
             if (plan.attributes.selected === true) {
-              if (input_plan.value.length === 0) {
-                input_plan.value = plan.attributes.name;
+              if (input_tomatoName.value.length === 0) {
+                input_tomatoName.value = plan.attributes.name;
               } else {
-                input_plan.value =
-                  input_plan.value + " + " + plan.attributes.name;
+                input_tomatoName.value =
+                  input_tomatoName.value + " + " + plan.attributes.name;
               }
             }
           });
@@ -825,11 +825,11 @@ const TomatoTimerPage = {
           // 遍历 completedPlanList
           completedPlanList.value.forEach(plan => {
             if (plan.attributes.selected === true) {
-              if (input_plan.value.length === 0) {
-                input_plan.value = plan.attributes.name;
+              if (input_tomatoName.value.length === 0) {
+                input_tomatoName.value = plan.attributes.name;
               } else {
-                input_plan.value =
-                  input_plan.value + " + " + plan.attributes.name;
+                input_tomatoName.value =
+                  input_tomatoName.value + " + " + plan.attributes.name;
               }
             }
           });
@@ -917,7 +917,7 @@ const TomatoTimerPage = {
         selected: boolean;
       };
     },
-    input_plan: Ref<string>,
+    input_tomatoName: Ref<string>,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
@@ -925,16 +925,17 @@ const TomatoTimerPage = {
     // 修改 selected 的选择状态
     plan.attributes.selected = !plan.attributes.selected;
 
-    // 清空 input_plan 的值
-    input_plan.value = "";
+    // 清空 input_tomatoName 的值
+    input_tomatoName.value = "";
 
     // 遍历 temporaryPlanList
     temporaryPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
-        if (input_plan.value.length === 0) {
-          input_plan.value = plan.attributes.name;
+        if (input_tomatoName.value.length === 0) {
+          input_tomatoName.value = plan.attributes.name;
         } else {
-          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+          input_tomatoName.value =
+            input_tomatoName.value + " + " + plan.attributes.name;
         }
       }
     });
@@ -942,10 +943,11 @@ const TomatoTimerPage = {
     // 遍历 dailyPlanList
     dailyPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
-        if (input_plan.value.length === 0) {
-          input_plan.value = plan.attributes.name;
+        if (input_tomatoName.value.length === 0) {
+          input_tomatoName.value = plan.attributes.name;
         } else {
-          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+          input_tomatoName.value =
+            input_tomatoName.value + " + " + plan.attributes.name;
         }
       }
     });
@@ -953,10 +955,11 @@ const TomatoTimerPage = {
     // 遍历 completedPlanList
     completedPlanList.value.forEach(plan => {
       if (plan.attributes.selected === true) {
-        if (input_plan.value.length === 0) {
-          input_plan.value = plan.attributes.name;
+        if (input_tomatoName.value.length === 0) {
+          input_tomatoName.value = plan.attributes.name;
         } else {
-          input_plan.value = input_plan.value + " + " + plan.attributes.name;
+          input_tomatoName.value =
+            input_tomatoName.value + " + " + plan.attributes.name;
         }
       }
     });
@@ -970,7 +973,7 @@ const TomatoTimerPage = {
     tomatoClockInterval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean>,
-    input_plan: Ref<string>,
+    input_tomatoName: Ref<string>,
     input_description: Ref<string>,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
@@ -987,7 +990,7 @@ const TomatoTimerPage = {
     }
 
     // 检查传入参数
-    if (input_plan.value.length === 0) {
+    if (input_tomatoName.value.length === 0) {
       UI.showNotification(
         vue.$notify,
         "提交番茄失败",
@@ -1002,7 +1005,7 @@ const TomatoTimerPage = {
     try {
       // 尝试提交番茄
       const tomato: AV.Object = await Api.createTomato(
-        input_plan.value,
+        input_tomatoName.value,
         input_description.value,
         user,
         tomatoStartTime.value
@@ -1368,6 +1371,104 @@ const TargetPage = {
     input_editingTargetOrTargetSubject.targetSubject.id = targetSubject.id;
     input_editingTargetOrTargetSubject.targetSubject.name =
       targetSubject.attributes.name;
+  },
+  /**
+   * 打开「关联相关能力」编辑抽屉
+   */
+  openRelateAbilityDrawer: async (
+    vue: ElementVue,
+    isTargetRelateAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityListOfTarget: Ref<AV.Object[]>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 打开抽屉菜单
+    isTargetRelateAbilityDrawerDisplayed.value = true;
+
+    // 初始化 input_abilityListOfTarget
+    if (
+      input_editingTargetOrTargetSubject === null &&
+      input_creatingTargetOrTargetSubject === null
+    ) {
+      isTargetRelateAbilityDrawerDisplayed.value = false;
+      UI.showNotification(
+        vue.$notify,
+        "出现错误",
+        "input_editingTargetOrTargetSubject and input_creatingTargetOrTargetSubject both is null",
+        "error"
+      );
+      return;
+    }
+
+    // 编辑目标
+    if (input_editingTargetOrTargetSubject !== null) {
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的能力"
+      );
+
+      try {
+        if (input_editingTargetOrTargetSubject.target.id !== undefined) {
+          input_abilityListOfTarget.value = await Api.fetchAbilityListWithTargetSelect(
+            input_editingTargetOrTargetSubject.target.id
+          );
+          UI.hideLoading(loadingInstance);
+        } else {
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingTargetOrTargetSubject.target.id is undefined",
+            "error"
+          );
+          UI.hideLoading(loadingInstance);
+        }
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+
+    // 创建目标
+    else if (input_creatingTargetOrTargetSubject !== null) {
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的能力"
+      );
+
+      try {
+        const tempList = await Api.fetchAbilityList(user, false);
+        input_abilityListOfTarget.value = tempList.map(item => {
+          item.attributes.selected = false;
+          return item;
+        });
+
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
   },
   /**
    * 删除「目标」或「目标目录」

@@ -9,7 +9,7 @@
         type="text"
         placeholder="点击添加一个临时计划"
         @keyup.enter="keyUpEnter_planInputBox"
-        v-model="input_plan"
+        v-model="input_planName"
       />
     </section>
 
@@ -240,7 +240,7 @@
       title="关联相关能力"
       direction="btt"
       size="86.64%"
-      :visible.sync="isRelatedAbilityDrawerDisplayed"
+      :visible.sync="isPlanRelateAbilityDrawerDisplayed"
     >
       <!-- 输入框：创建新能力 -->
       <div class="input-ability-name-container">
@@ -249,7 +249,7 @@
           placeholder="创建一个新能力"
           class="input-ability-name"
           @keyup.enter="keyUpEnter_abilityInputBox"
-          v-model="input_ability"
+          v-model="input_abilityName"
         />
 
         <img :src="assets.icon_enter" alt="icon_enter" />
@@ -259,7 +259,7 @@
       <section class="ability-container">
         <div
           class="ability-item"
-          v-for="item in input_abilityList"
+          v-for="item in input_abilityListOfPlan"
           v-bind:key="item.id"
           @click="click_abilityItemSelector(item)"
         >
@@ -277,7 +277,7 @@
         <!-- 按钮：取消计划 -->
         <div
           class="delete-button"
-          @click="isRelatedAbilityDrawerDisplayed = false"
+          @click="isPlanRelateAbilityDrawerDisplayed = false"
         >
           取消
         </div>
@@ -321,10 +321,10 @@ export default defineComponent({
   components: { BottomBar, TopBar, Draggable },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
-    const input_plan: Ref<string> = ref("");
+    const input_planName: Ref<string> = ref("");
 
     // 用户输入：创建的「能力」的名称
-    const input_ability: Ref<string> = ref("");
+    const input_abilityName: Ref<string> = ref("");
 
     // 用户输入：当前编辑的「计划」
     const input_editingPlan: InputPlanType = reactive({
@@ -339,7 +339,7 @@ export default defineComponent({
     });
 
     // 用户输入：需要关联到计划的能力列表
-    const input_abilityList: Ref<AV.Object[]> = ref([]);
+    const input_abilityListOfPlan: Ref<AV.Object[]> = ref([]);
 
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object[]> = inject(
@@ -387,13 +387,13 @@ export default defineComponent({
     const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(false);
 
     // 「展示 `关联相关能力` 的抽屉」是否已经打开
-    const isRelatedAbilityDrawerDisplayed: Ref<boolean> = ref(false);
+    const isPlanRelateAbilityDrawerDisplayed: Ref<boolean> = ref(false);
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
         context.root,
-        input_plan,
+        input_planName,
         "temporary",
         temporaryPlanList,
         dailyPlanList
@@ -404,8 +404,8 @@ export default defineComponent({
     const keyUpEnter_abilityInputBox = () => {
       PlanPage.createAbility(
         context.root,
-        input_ability,
-        input_abilityList,
+        input_abilityName,
+        input_abilityListOfPlan,
         input_editingPlan
       );
     };
@@ -476,8 +476,8 @@ export default defineComponent({
     const click_relatedAbilityButton = () => {
       PlanPage.relatedAbility(
         context.root,
-        isRelatedAbilityDrawerDisplayed,
-        input_abilityList,
+        isPlanRelateAbilityDrawerDisplayed,
+        input_abilityListOfPlan,
         input_editingPlan
       );
     };
@@ -490,8 +490,8 @@ export default defineComponent({
     // 点击事件：保存选择后的 Ability 结果
     const click_saveAbility = () => {
       PlanPage.saveSelectedAblityToEditingPlan(
-        isRelatedAbilityDrawerDisplayed,
-        input_abilityList,
+        isPlanRelateAbilityDrawerDisplayed,
+        input_abilityListOfPlan,
         input_editingPlan
       );
     };
@@ -537,16 +537,16 @@ export default defineComponent({
     const draggableOptions = inject(Store.draggableOptions, {});
 
     return {
-      input_plan,
-      input_ability,
+      input_planName,
+      input_abilityName,
       input_editingPlan,
-      input_abilityList,
+      input_abilityListOfPlan,
       temporaryPlanList,
       dailyPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
       isPlanEditorDrawerDisplayed,
-      isRelatedAbilityDrawerDisplayed,
+      isPlanRelateAbilityDrawerDisplayed,
       keyUpEnter_planInputBox,
       keyUpEnter_abilityInputBox,
       click_completePlanButton,

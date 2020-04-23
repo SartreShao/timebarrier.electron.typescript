@@ -433,7 +433,11 @@ export default {
    * @param isFinished 计划是否已经被完成
    * @param isActived 计划是否被激活
    */
-  fetchAbilityList: (user: AV.User, isFinished: boolean, isActived?: boolean) =>
+  fetchAbilityList: (
+    user: AV.User,
+    isFinished: boolean,
+    isActived?: boolean
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         const query = await new AV.Query(Ability)
@@ -488,13 +492,14 @@ export default {
     new Promise(async (resolve, reject) => {
       try {
         const plan: AV.Object = await new AV.Query(Plan).get(planId);
-        const userId: string = plan.attributes.user.id;
+        const user: string = plan.attributes.user;
         const abilityList = await new AV.Query(Ability)
-          .equalTo("user", AV.Object.createWithoutData("_User", userId))
+          .equalTo("user", user)
           .equalTo("isFinished", false)
           .find();
         const abilityPlanList = await new AV.Query(AbilityPlan)
           .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
+          .containedIn("ability", abilityList)
           .find();
         abilityList.forEach(ability => {
           ability.attributes.selected = false;
@@ -512,6 +517,39 @@ export default {
       } catch (error) {
         console.log(error);
         Log.error("fetchAbilityListWithPlanSelect", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 请求 Ability 列表并且其中加入 selected 属性，表明该 Ability 是否被传入的 Target 关联
+   */
+  fetchAbilityListWithTargetSelect: (targetId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target: AV.Object = await new AV.Query(Target).get(targetId);
+        const user: AV.User = target.attributes.user;
+        const abilityList = await new AV.Query(Ability)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .find();
+        const abilityTargetList = await new AV.Query(AbilityTarget)
+          .equalTo("target", AV.Object.createWithoutData(Target, targetId))
+          .containedIn("ability", abilityList)
+          .find();
+        abilityList.forEach(ability => {
+          ability.attributes.selected = false;
+        });
+        abilityTargetList.forEach(abilityTarget => {
+          abilityList.forEach(ability => {
+            if (abilityTarget.attributes.ability.id === ability.id) {
+              ability.attributes.selected = true;
+            }
+          });
+        });
+        Log.success("fetchAbilityListWithTargetSelect", abilityList);
+        resolve(abilityList);
+      } catch (error) {
+        Log.error("fetchAbilityListWithTargetSelect", error);
         reject(error);
       }
     }),

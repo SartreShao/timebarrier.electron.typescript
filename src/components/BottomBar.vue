@@ -140,7 +140,7 @@
               type="text"
               placeholder="25 分钟做的事情"
               @keyup.enter="keyUpEnter_planInputBox"
-              v-model="input_plan"
+              v-model="input_tomatoName"
             />
             <img :src="assets.icon_enter" alt="icon_enter" class="icon-enter" />
           </div>
@@ -149,7 +149,7 @@
           class="input-description"
           type="text"
           placeholder="详细描述[可省略]"
-          v-model="input_description"
+          v-model="input_tomatoDescription"
         />
         <section class="button-container">
           <div class="give-up" @click="click_giveUpTomatoButton">放弃</div>
@@ -245,10 +245,10 @@ export default defineComponent({
     });
 
     // 用户输入：提交的番茄名称
-    const input_plan: Ref<string> = ref("");
+    const input_tomatoName: Ref<string> = ref("");
 
     // 用户输入：提交的番茄描述
-    const input_description: Ref<string> = ref("");
+    const input_tomatoDescription: Ref<string> = ref("");
 
     // 提交番茄的窗口的显示控制
     const isCommitPlanDrawerDisplayed = ref(false);
@@ -270,7 +270,7 @@ export default defineComponent({
         tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
-        input_plan,
+        input_tomatoName,
         null,
         temporaryPlanList,
         dailyPlanList,
@@ -294,7 +294,7 @@ export default defineComponent({
     const click_planItemSelector = (plan: AV.Object) => {
       TomatoTimerPage.selectPlanToCommit(
         plan,
-        input_plan,
+        input_tomatoName,
         temporaryPlanList,
         dailyPlanList,
         completedPlanList
@@ -309,8 +309,8 @@ export default defineComponent({
         tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
-        input_plan,
-        input_description,
+        input_tomatoName,
+        input_tomatoDescription,
         temporaryPlanList,
         dailyPlanList,
         completedPlanList,
@@ -346,8 +346,8 @@ export default defineComponent({
         tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
-        input_plan,
-        input_description,
+        input_tomatoName,
+        input_tomatoDescription,
         temporaryPlanList,
         dailyPlanList,
         completedPlanList,
@@ -380,8 +380,8 @@ export default defineComponent({
     );
 
     return {
-      input_plan,
-      input_description,
+      input_tomatoName,
+      input_tomatoDescription,
       keyUpEnter_planInputBox,
       click_tomatoClockButton,
       isCommitPlanDrawerDisplayed,

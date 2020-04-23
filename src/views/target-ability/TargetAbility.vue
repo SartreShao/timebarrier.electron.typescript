@@ -166,6 +166,7 @@
       <div
         class="related-ability"
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
+        @click="click_relatedAbilityCreateTargetButton"
       >
         <img
           :src="assets.icon_add"
@@ -387,6 +388,7 @@
       <div
         class="related-ability"
         v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        @click="click_relatedAbilityEditTargetButton"
       >
         <img
           :src="assets.icon_add"
@@ -479,6 +481,61 @@
       </div>
     </el-drawer>
 
+    <!-- 抽屉菜单：关联相关能力 -->
+    <el-drawer
+      class="related-ability-container"
+      title="关联相关能力"
+      direction="btt"
+      size="86.64%"
+      :visible.sync="isTargetRelateAbilityDrawerDisplayed"
+    >
+      <!-- 输入框：创建新能力 -->
+      <div class="input-ability-name-container">
+        <input
+          type="text"
+          placeholder="创建一个新能力"
+          class="input-ability-name"
+          @keyup.enter="keyUpEnter_abilityInputBox"
+          v-model="input_abilityName"
+        />
+
+        <img :src="assets.icon_enter" alt="icon_enter" />
+      </div>
+
+      <!-- 包含框 -->
+      <section class="ability-container">
+        <div
+          class="ability-item"
+          v-for="item in input_abilityListOfTarget"
+          v-bind:key="item.id"
+          @click="click_abilityItemSelector(item)"
+        >
+          <span>{{ item.attributes.name }}</span>
+          <img
+            v-if="item.attributes.selected"
+            :src="assets.icon_finished"
+            alt="icon_finished"
+          />
+          <img v-else src="" alt="" />
+        </div>
+      </section>
+
+      <div class="button-container">
+        <!-- 按钮：取消计划 -->
+        <div
+          class="delete-button"
+          @click="isTargetRelateAbilityDrawerDisplayed = false"
+        >
+          取消
+        </div>
+
+        <!-- 按钮：选择计划 -->
+        <div class="save-button" @click="click_saveAbilityOfTargetButton">
+          选择
+        </div>
+      </div>
+    </el-drawer>
+
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
   </div>
@@ -504,6 +561,9 @@ import AV from "leancloud-storage";
 import icon_add from "../../assets/icon_add.svg";
 import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
+import icon_enter from "../../assets/icon_enter.svg";
+import icon_finished from "../../assets/icon_finished.svg";
+
 import { TargetPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
@@ -587,6 +647,18 @@ export default defineComponent({
       ref([])
     );
 
+    // 抽屉菜单控制器：关联能力
+    const isTargetRelateAbilityDrawerDisplayed: Ref<boolean> = ref(false);
+
+    // 用户输入：创建的「能力」的名称
+    const input_abilityName: Ref<string> = ref("");
+
+    // 用户输入：需要关联到目标的能力列表
+    const input_abilityListOfTarget: Ref<AV.Object[]> = ref([]);
+
+    // 回车事件：能力输入框
+    const keyUpEnter_abilityInputBox = () => {};
+
     // 点击事件：创建目标或目标目录
     const click_createTargetOrTargetSubject = () => {
       TargetPage.createTargetOrTargetSubject(
@@ -623,6 +695,36 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：关联相关能力按钮（创建目标）
+    const click_relatedAbilityCreateTargetButton = () => {
+      console.log("create");
+      TargetPage.openRelateAbilityDrawer(
+        context.root,
+        isTargetRelateAbilityDrawerDisplayed,
+        input_abilityListOfTarget,
+        null,
+        input_creatingTargetOrTargetSubject
+      );
+    };
+
+    // 点击事件：关联相关能力按钮（编辑目标）
+    const click_relatedAbilityEditTargetButton = () => {
+      console.log("edit");
+      TargetPage.openRelateAbilityDrawer(
+        context.root,
+        isTargetRelateAbilityDrawerDisplayed,
+        input_abilityListOfTarget,
+        input_editingTargetOrTargetSubject,
+        null
+      );
+    };
+
+    // 点击事件：选择能力的单项
+    const click_abilityItemSelector = () => {};
+
+    // 点击事件：保存
+    const click_saveAbilityOfTargetButton = () => {};
+
     return {
       currentTab,
       click_createTargetOrTargetSubject,
@@ -633,10 +735,20 @@ export default defineComponent({
       input_creatingTargetOrTargetSubject,
       input_editingTargetOrTargetSubject,
       targetSubjectList,
+      isTargetRelateAbilityDrawerDisplayed,
+      keyUpEnter_abilityInputBox,
+      input_abilityName,
+      input_abilityListOfTarget,
+      click_abilityItemSelector,
+      click_saveAbilityOfTargetButton,
+      click_relatedAbilityCreateTargetButton,
+      click_relatedAbilityEditTargetButton,
       assets: {
         icon_add,
         icon_selected,
-        icon_unselected
+        icon_unselected,
+        icon_enter,
+        icon_finished
       }
     };
   }
@@ -956,6 +1068,105 @@ export default defineComponent({
         height 2.1vh
         margin-left 12.27vw
       }
+    }
+  }
+}
+.related-ability-container >>> .el-drawer__body {
+  display flex
+  flex-direction column
+  overflow scroll
+  align-items center
+}
+.related-ability-container >>> .el-drawer__header {
+  span {
+    &:focus {
+      outline 0
+    }
+  }
+  i {
+    &:focus {
+      outline 0
+    }
+  }
+}
+.input-ability-name-container {
+  position relative
+  width 89.6vw
+  height 6.9vh
+  img {
+    position absolute
+    right 5.93vw
+    top 0
+    bottom 0
+    margin-top auto
+    margin-bottom auto
+    width 3.27vw
+    height 1.3vh
+  }
+  .input-ability-name {
+    position absolute
+    width 89.6vw
+    height 6.9vh
+    border-radius 0.67vh
+    border solid 0.15vh #ebebf3
+    padding-left 4.8vw
+    padding-right 4.8vw
+    box-sizing border-box
+    font-size 1.95vh
+    font-weight normal
+    font-stretch normal
+    font-style normal
+    line-height 1.42
+    letter-spacing 0.21px
+    text-align left
+    color #363636
+    &::-webkit-input-placeholder {
+      font-size 1.95vh
+      font-weight normal
+      font-stretch normal
+      font-style normal
+      line-height 1.42
+      letter-spacing 0.02vh
+      text-align left
+      color #969294
+    }
+  }
+}
+.ability-container {
+  margin-top 2.4vh
+  width 100%
+  display flex
+  flex-direction column
+  align-items center
+  .ability-item {
+    cursor pointer
+    width 89.6vw
+    height 6.9vh
+    border-radius 0.67vh
+    background-color #f4f4f8
+    display flex
+    flex-direction row
+    justify-content space-between
+    align-items center
+    margin-bottom 1.5vh
+    span {
+      font-size 1.95vh
+      font-weight normal
+      font-stretch normal
+      font-style normal
+      line-height 1.42
+      letter-spacing 0.02vh
+      text-align left
+      color #969294
+      margin-left 4.8vw
+    }
+    img {
+      height 2.7vh
+      width 2.7vh
+      background white
+      border-radius 50%
+      border solid 0.07vh #d5d5d5
+      margin-right 5.87vw
     }
   }
 }
