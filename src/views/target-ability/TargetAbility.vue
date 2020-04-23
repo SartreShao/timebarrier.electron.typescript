@@ -585,8 +585,9 @@ export default defineComponent({
     );
 
     // 用户输入：创建「目标」或「目标类别」
-    const input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType = reactive(
-      {
+    const input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType = inject(
+      Store.input_creatingTargetOrTargetSubject,
+      reactive({
         inputType: "target", // 默认选择：目标
         target: {
           id: "",
@@ -603,7 +604,7 @@ export default defineComponent({
           id: "",
           name: ""
         }
-      }
+      })
     );
 
     // 用户输入：编辑「目标」或「目标类别」
@@ -697,7 +698,6 @@ export default defineComponent({
 
     // 点击事件：关联相关能力按钮（创建目标）
     const click_relatedAbilityCreateTargetButton = () => {
-      console.log("create");
       TargetPage.openRelateAbilityDrawer(
         context.root,
         isTargetRelateAbilityDrawerDisplayed,
@@ -709,7 +709,6 @@ export default defineComponent({
 
     // 点击事件：关联相关能力按钮（编辑目标）
     const click_relatedAbilityEditTargetButton = () => {
-      console.log("edit");
       TargetPage.openRelateAbilityDrawer(
         context.root,
         isTargetRelateAbilityDrawerDisplayed,
@@ -720,10 +719,19 @@ export default defineComponent({
     };
 
     // 点击事件：选择能力的单项
-    const click_abilityItemSelector = () => {};
+    const click_abilityItemSelector = (ability: AV.Object) => {
+      TargetPage.selectAbilityToCommit(ability);
+    };
 
-    // 点击事件：保存
-    const click_saveAbilityOfTargetButton = () => {};
+    // 点击事件：保存选择好的 Ability
+    const click_saveAbilityOfTargetButton = () => {
+      TargetPage.saveSelectedAbilityToCreatingOrEditingTarget(
+        isTargetRelateAbilityDrawerDisplayed,
+        input_abilityListOfTarget,
+        input_creatingTargetOrTargetSubject,
+        input_editingTargetOrTargetSubject
+      );
+    };
 
     return {
       currentTab,

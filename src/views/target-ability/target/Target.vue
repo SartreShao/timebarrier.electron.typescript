@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 添加「目标」按钮 -->
-    <div class="add-button" @click="isCreateTargetDrawerDisplayed = true">
+    <div class="add-button" @click="click_createTargetButton">
       <div v-darked-when-click>
         <img :src="assets.icon_create_target" alt="icon_create_target" />
       </div>
@@ -290,6 +290,29 @@ export default defineComponent({
       })
     );
 
+    // 用户输入：创建「目标」或「目标类别」
+    const input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType = inject(
+      Store.input_creatingTargetOrTargetSubject,
+      reactive({
+        inputType: "target", // 默认选择：目标
+        target: {
+          id: "",
+          targetSubjectId: "", //默认：不选择
+          name: "",
+          description: "",
+          validityType: "",
+          validity: null,
+          abilityList: [],
+          isActived: true,
+          isFinished: false
+        },
+        targetSubject: {
+          id: "",
+          name: ""
+        }
+      })
+    );
+
     // 拖动结束：未分类的目标
     const dragend_unSubjectiveTarget = () => {
       TargetPage.changeTargetListOrder(unSubjectiveTargetList.value);
@@ -320,6 +343,14 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：创建目标
+    const click_createTargetButton = () => {
+      TargetPage.openTargetSubjectCreateDrawer(
+        isCreateTargetDrawerDisplayed,
+        input_creatingTargetOrTargetSubject
+      );
+    };
+
     // 点击事件：编辑目标目录
     const click_editTargetSubjectButton = (targetSubject: AV.Object) => {
       TargetPage.openTargetSubjectEditDrawer(
@@ -344,6 +375,7 @@ export default defineComponent({
 
     return {
       click_editTargetButton,
+      click_createTargetButton,
       click_editTargetSubjectButton,
       isCreateTargetDrawerDisplayed,
       unSubjectiveTargetList,

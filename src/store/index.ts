@@ -29,6 +29,8 @@ const isCreateTargetDrawerDisplayed = Symbol();
 const isEditTargetDrawerDisplayed = Symbol();
 // 用户输入：编辑「目标 Target」
 const input_editingTargetOrTargetSubject = Symbol();
+// 用户输入：创建「目标 Target」
+const input_creatingTargetOrTargetSubject = Symbol();
 // 配置信息：Vue Dragger
 const draggableOptions = Symbol();
 
@@ -52,6 +54,27 @@ function useProvider() {
   provide(isEditTargetDrawerDisplayed, ref<boolean>(false));
   provide(
     input_editingTargetOrTargetSubject,
+    reactive({
+      inputType: "target", // 默认选择：目标
+      target: {
+        id: "",
+        targetSubjectId: "", //默认：不选择
+        name: "",
+        description: "",
+        validityType: "",
+        validity: null,
+        abilityList: [],
+        isActived: true,
+        isFinished: false
+      },
+      targetSubject: {
+        id: "",
+        name: ""
+      }
+    })
+  );
+  provide(
+    input_creatingTargetOrTargetSubject,
     reactive({
       inputType: "target", // 默认选择：目标
       target: {
@@ -97,5 +120,6 @@ export default {
   isCreateTargetDrawerDisplayed,
   isEditTargetDrawerDisplayed,
   input_editingTargetOrTargetSubject,
+  input_creatingTargetOrTargetSubject,
   draggableOptions
 };

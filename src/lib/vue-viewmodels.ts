@@ -1372,6 +1372,27 @@ const TargetPage = {
     input_editingTargetOrTargetSubject.targetSubject.name =
       targetSubject.attributes.name;
   },
+  openTargetSubjectCreateDrawer: async (
+    isCreateTargetDrawerDisplayed: Ref<boolean>,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+  ) => {
+    // 打开抽屉菜单
+    isCreateTargetDrawerDisplayed.value = true;
+
+    // 初始化用户的输入
+    input_creatingTargetOrTargetSubject.inputType = "target";
+    input_creatingTargetOrTargetSubject.target.id = "";
+    input_creatingTargetOrTargetSubject.target.targetSubjectId = "";
+    input_creatingTargetOrTargetSubject.target.name = "";
+    input_creatingTargetOrTargetSubject.target.description = "";
+    input_creatingTargetOrTargetSubject.target.validityType = "";
+    input_creatingTargetOrTargetSubject.target.validity = null;
+    input_creatingTargetOrTargetSubject.target.abilityList = [];
+    input_creatingTargetOrTargetSubject.target.isActived = true;
+    input_creatingTargetOrTargetSubject.target.isFinished = false;
+    input_creatingTargetOrTargetSubject.targetSubject.id = "";
+    input_creatingTargetOrTargetSubject.targetSubject.name = "";
+  },
   /**
    * 打开「关联相关能力」编辑抽屉
    */
@@ -1902,6 +1923,39 @@ const TargetPage = {
       }
     });
     await Api.saveTargetSubjectList(list);
+  },
+  /**
+   * 选择 Ability Item
+   */
+  selectAbilityToCommit: (ability: { attributes: { selected: boolean } }) => {
+    ability.attributes.selected = !ability.attributes.selected;
+  },
+  /**
+   * 保存 Ability 的选择结果到创建 Target 的用户输入中
+   */
+  saveSelectedAbilityToCreatingOrEditingTarget: (
+    isTargetRelateAbilityDrawerDisplayed: Ref<boolean>,
+    input_abilityListOfTarget: Ref<AV.Object[]>,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+  ) => {
+    // 关闭抽屉菜单
+    isTargetRelateAbilityDrawerDisplayed.value = false;
+
+    // 给 input_creatingTarget.target.abilityList 赋值
+    const list: { id: string; name: string }[] = [];
+    input_abilityListOfTarget.value.forEach(ability => {
+      if (ability.attributes.selected === true) {
+        if (ability.id !== undefined) {
+          list.push({
+            id: ability.id,
+            name: ability.attributes.name
+          });
+        }
+      }
+    });
+    input_creatingTargetOrTargetSubject.target.abilityList = list;
+    input_editingTargetOrTargetSubject.target.abilityList = list;
   }
 };
 
