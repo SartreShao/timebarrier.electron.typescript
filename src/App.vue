@@ -24,6 +24,10 @@ export default defineComponent({
   width 100%
   height 100%
 }
+input {
+  outline none
+  -webkit-appearance none /* 去除系统默认的样式 */
+}
 body, h1, h2, h3, h4, h5, h6 {
   margin 0
   margin-block-start 0

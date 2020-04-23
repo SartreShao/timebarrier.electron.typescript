@@ -1058,6 +1058,8 @@ export default defineComponent({
   }
 }
 .input-plan-description {
+  outline none
+  -webkit-appearance none /* 去除系统默认的样式 */
   width 89.6vw
   height 16.79vh
   border-radius 0.67vh
@@ -1187,6 +1189,8 @@ export default defineComponent({
   }
 }
 .input-ability-name {
+  outline none
+  -webkit-appearance none /* 去除系统默认的样式 */
   position absolute
   width 89.6vw
   height 6.9vh

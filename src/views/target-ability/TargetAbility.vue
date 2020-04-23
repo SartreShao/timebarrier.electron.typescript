@@ -1136,6 +1136,8 @@ export default defineComponent({
     height 1.3vh
   }
   .input-ability-name {
+    outline none
+    -webkit-appearance none /* 去除系统默认的样式 */
     position absolute
     width 89.6vw
     height 6.9vh
