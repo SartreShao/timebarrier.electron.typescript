@@ -96,7 +96,11 @@
       </section>
 
       <!-- 「已完成」按钮 -->
-      <div class="completed-container" @click="click_completedPlanListButton">
+      <div
+        class="completed-container"
+        v-darked-when-click
+        @click="click_completedPlanListButton"
+      >
         已完成 · {{ completedPlanList.length }}
       </div>
     </main>
@@ -112,6 +116,7 @@
       <!-- 临时计划 -->
       <section class="finished">
         <div
+          v-splash-when-click
           class="item-container"
           v-for="(item, index) in completedPlanList"
           v-bind:key="item.id"
@@ -169,7 +174,11 @@
       />
 
       <!-- 按钮：关联相关能力 -->
-      <div class="add-plan-related" @click="click_relatedAbilityButton">
+      <div
+        class="add-plan-related"
+        v-darked-when-click
+        @click="click_relatedAbilityButton"
+      >
         <img
           :src="assets.icon_add"
           alt="icon_add"
@@ -196,6 +205,7 @@
       <div class="radio-container">
         <!-- 选择器：激活计划 -->
         <div
+          v-darked-when-click
           @click="input_editingPlan.isActived = !input_editingPlan.isActived"
         >
           <span>激活该计划</span
@@ -211,6 +221,7 @@
 
         <!-- 选择器：完成计划 -->
         <div
+          v-darked-when-click
           @click="input_editingPlan.isFinished = !input_editingPlan.isFinished"
         >
           <span>完成该计划</span
@@ -227,10 +238,22 @@
 
       <div class="button-container">
         <!-- 按钮：删除计划 -->
-        <div class="delete-button" @click="click_deletePlanButton">删除</div>
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="click_deletePlanButton"
+        >
+          删除
+        </div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button" @click="click_savePlanButton">保存</div>
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_savePlanButton"
+        >
+          保存
+        </div>
       </div>
     </el-drawer>
 
@@ -277,13 +300,16 @@
         <!-- 按钮：取消计划 -->
         <div
           class="delete-button"
+          v-darked-when-click
           @click="isPlanRelateAbilityDrawerDisplayed = false"
         >
           取消
         </div>
 
         <!-- 按钮：选择计划 -->
-        <div class="save-button" @click="click_saveAbility">选择</div>
+        <div class="save-button" v-darked-when-click @click="click_saveAbility">
+          选择
+        </div>
       </div>
     </el-drawer>
     <bottom-bar></bottom-bar>

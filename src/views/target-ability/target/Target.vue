@@ -42,6 +42,10 @@
                 target.attributes.validityType === "time-bound"
                   ? "时限目标"
                   : "长期目标"
+              }}{{
+                target.attributes.abilityListOfTarget.length === 0
+                  ? ""
+                  : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
               }}
             </div>
             <div class="target-name">{{ target.attributes.name }}</div>
@@ -135,6 +139,10 @@
                         target.attributes.validityType === "time-bound"
                           ? "时限目标"
                           : "长期目标"
+                      }}{{
+                        target.attributes.abilityListOfTarget.length === 0
+                          ? ""
+                          : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
                       }}
                     </div>
                     <div class="target-name">{{ target.attributes.name }}</div>
@@ -152,6 +160,7 @@
 
     <!-- 已完成的目标目录 -->
     <div
+      v-darked-when-click
       class="target-subject-container"
       @click="isCompletedTargetShown = !isCompletedTargetShown"
     >
@@ -198,6 +207,10 @@
               target.attributes.validityType === "time-bound"
                 ? "时限目标"
                 : "长期目标"
+            }}{{
+              target.attributes.abilityListOfTarget.length === 0
+                ? ""
+                : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
             }}
           </div>
           <div class="target-name">{{ target.attributes.name }}</div>

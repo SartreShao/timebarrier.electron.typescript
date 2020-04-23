@@ -167,6 +167,7 @@
         class="related-ability"
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
         @click="click_relatedAbilityCreateTargetButton"
+        v-darked-when-click
       >
         <img
           :src="assets.icon_add"
@@ -202,6 +203,7 @@
       >
         <!-- 选择器：激活计划 -->
         <div
+          v-darked-when-click
           @click="
             input_creatingTargetOrTargetSubject.target.isActived = !input_creatingTargetOrTargetSubject
               .target.isActived
@@ -220,6 +222,7 @@
 
         <!-- 选择器：完成计划 -->
         <div
+          v-darked-when-click
           @click="
             input_creatingTargetOrTargetSubject.target.isFinished = !input_creatingTargetOrTargetSubject
               .target.isFinished
@@ -249,6 +252,7 @@
       <div class="button-container">
         <!-- 按钮：删除计划 -->
         <div
+          v-darked-when-click
           class="delete-button"
           @click="isCreateTargetDrawerDisplayed = false"
         >
@@ -256,7 +260,11 @@
         </div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button" @click="click_createTargetOrTargetSubject">
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_createTargetOrTargetSubject"
+        >
           创建
         </div>
       </div>
@@ -387,6 +395,7 @@
       <!-- 按钮：关联相关能力 -->
       <div
         class="related-ability"
+        v-darked-when-click
         v-if="input_editingTargetOrTargetSubject.inputType === `target`"
         @click="click_relatedAbilityEditTargetButton"
       >
@@ -424,6 +433,7 @@
       >
         <!-- 选择器：激活计划 -->
         <div
+          v-darked-when-click
           @click="
             input_editingTargetOrTargetSubject.target.isActived = !input_editingTargetOrTargetSubject
               .target.isActived
@@ -442,6 +452,7 @@
 
         <!-- 选择器：完成计划 -->
         <div
+          v-darked-when-click
           @click="
             input_editingTargetOrTargetSubject.target.isFinished = !input_editingTargetOrTargetSubject
               .target.isFinished
@@ -470,12 +481,20 @@
 
       <div class="button-container">
         <!-- 按钮：删除计划 -->
-        <div class="delete-button" @click="click_deleteTargetOrTargetSubject">
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="click_deleteTargetOrTargetSubject"
+        >
           删除
         </div>
 
         <!-- 按钮：保存计划 -->
-        <div class="save-button" @click="click_saveTargetOrTargetSubject">
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_saveTargetOrTargetSubject"
+        >
           保存
         </div>
       </div>
@@ -524,13 +543,18 @@
         <!-- 按钮：取消计划 -->
         <div
           class="delete-button"
+          v-darked-when-click
           @click="isTargetRelateAbilityDrawerDisplayed = false"
         >
           取消
         </div>
 
         <!-- 按钮：选择计划 -->
-        <div class="save-button" @click="click_saveAbilityOfTargetButton">
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_saveAbilityOfTargetButton"
+        >
           选择
         </div>
       </div>
