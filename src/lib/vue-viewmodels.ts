@@ -733,7 +733,7 @@ const TomatoTimerPage = {
    *
    * @param vue 还是绑定了 Element 后的 context.root
    * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
-   * @param interval 计时器实例，由外部引入
+   * @param tomatoClockInterval 计时器实例，由外部引入
    * @param countDown 计时器表盘值，由外部引入
    * @param isCommitPlanDrawerDisplayed 控制「提交番茄」抽屉是否打开的变量
    * @param input_plan 提交番茄用的番茄名称
@@ -742,7 +742,7 @@ const TomatoTimerPage = {
   clickTomatoClock: async (
     vue: ElementVue,
     tomatoCloudStatus: Ref<TomatoCloudStatus>,
-    interval: Ref<NodeJS.Timeout | null>,
+    tomatoClockInterval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean> | null,
     input_plan: Ref<string> | null,
@@ -755,11 +755,11 @@ const TomatoTimerPage = {
     switch (tomatoCloudStatus.value) {
       case "prepared": {
         // 传入数据检测
-        if (interval.value !== null) {
+        if (tomatoClockInterval.value !== null) {
           UI.showNotification(
             vue.$notify,
             "开始计时失败",
-            "失败原因：计时器 (interval) 不为 null",
+            "失败原因：计时器 (tomatoClockInterval) 不为 null",
             "error"
           );
           return;
@@ -778,10 +778,10 @@ const TomatoTimerPage = {
         // 重设表盘值为 1500s（25 分钟）
         countDown.value = 1500;
         // 开始计时
-        interval.value = setInterval(() => {
+        tomatoClockInterval.value = setInterval(() => {
           countDown.value--;
-          if (countDown.value === 0 && interval.value !== null) {
-            clearInterval(interval.value);
+          if (countDown.value === 0 && tomatoClockInterval.value !== null) {
+            clearInterval(tomatoClockInterval.value);
             tomatoCloudStatus.value = "finished";
             new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
@@ -837,11 +837,11 @@ const TomatoTimerPage = {
         break;
       }
       case "processive": {
-        if (interval.value === null) {
+        if (tomatoClockInterval.value === null) {
           UI.showNotification(
             vue.$notify,
             "终止计时失败",
-            "失败原因：计时器 (interval) 为 null",
+            "失败原因：计时器 (tomatoClockInterval) 为 null",
             "error"
           );
           return;
@@ -867,8 +867,8 @@ const TomatoTimerPage = {
           // 确认放弃番茄
           tomatoCloudStatus.value = "prepared";
           countDown.value = 1500;
-          clearInterval(interval.value);
-          interval.value = null;
+          clearInterval(tomatoClockInterval.value);
+          tomatoClockInterval.value = null;
         } catch (error) {
           // doing nothing
         }
@@ -881,13 +881,13 @@ const TomatoTimerPage = {
    *
    * @param vue 绑定 Element 后的 vue 根实例
    * @param tomatoCloudStatus 这是番茄钟的状态，由外部引入
-   * @param interval 计时器实例，由外部引入
+   * @param tomatoClockInterval 计时器实例，由外部引入
    * @param countDown 计时器表盘值，由外部引入
    */
   abandonTomato: async (
     vue: ElementVue,
     tomatoCloudStatus: Ref<TomatoCloudStatus>,
-    interval: Ref<NodeJS.Timeout | null>,
+    tomatoClockInterval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean>
   ) => {
@@ -900,7 +900,7 @@ const TomatoTimerPage = {
       );
       // 放弃番茄
       tomatoCloudStatus.value = "prepared";
-      interval.value = null;
+      tomatoClockInterval.value = null;
       countDown.value = 1500;
       isCommitPlanDrawerDisplayed.value = false;
     } catch (error) {
@@ -967,7 +967,7 @@ const TomatoTimerPage = {
   commitTomato: async (
     vue: ElementVue,
     tomatoCloudStatus: Ref<TomatoCloudStatus>,
-    interval: Ref<NodeJS.Timeout | null>,
+    tomatoClockInterval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
     isCommitPlanDrawerDisplayed: Ref<boolean>,
     input_plan: Ref<string>,
@@ -1043,7 +1043,7 @@ const TomatoTimerPage = {
 
       // 更新番茄钟状态
       tomatoCloudStatus.value = "prepared";
-      interval.value = null;
+      tomatoClockInterval.value = null;
       countDown.value = 1500;
       isCommitPlanDrawerDisplayed.value = false;
 

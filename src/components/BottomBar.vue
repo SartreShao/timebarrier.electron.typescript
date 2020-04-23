@@ -192,8 +192,8 @@ import { TomatoTimerPage } from "../lib/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     // 倒计时器 instance
-    const interval: Ref<NodeJS.Timeout | null> = inject(
-      Store.interval,
+    const tomatoClockInterval: Ref<NodeJS.Timeout | null> = inject(
+      Store.tomatoClockInterval,
       ref(null)
     );
 
@@ -267,7 +267,7 @@ export default defineComponent({
       TomatoTimerPage.clickTomatoClock(
         context.root,
         tomatoCloudStatus,
-        interval,
+        tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
         input_plan,
@@ -284,7 +284,7 @@ export default defineComponent({
       TomatoTimerPage.abandonTomato(
         context.root,
         tomatoCloudStatus,
-        interval,
+        tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed
       );
@@ -306,7 +306,7 @@ export default defineComponent({
       TomatoTimerPage.commitTomato(
         context.root,
         tomatoCloudStatus,
-        interval,
+        tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
         input_plan,
@@ -343,7 +343,7 @@ export default defineComponent({
       TomatoTimerPage.commitTomato(
         context.root,
         tomatoCloudStatus,
-        interval,
+        tomatoClockInterval,
         countDown,
         isCommitPlanDrawerDisplayed,
         input_plan,

@@ -360,8 +360,8 @@ export default defineComponent({
     );
 
     // 倒计时器 instance
-    const interval: Ref<NodeJS.Timeout | null> = inject(
-      Store.interval,
+    const tomatoClockInterval: Ref<NodeJS.Timeout | null> = inject(
+      Store.tomatoClockInterval,
       ref(null)
     );
 
@@ -501,7 +501,7 @@ export default defineComponent({
       TomatoTimerPage.clickTomatoClock(
         context.root,
         tomatoCloudStatus,
-        interval,
+        tomatoClockInterval,
         countDown,
         null,
         null,

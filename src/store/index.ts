@@ -18,7 +18,7 @@ const completedTargetList = Symbol();
 // 番茄钟的状态
 const tomatoCloudStatus = Symbol();
 // 番茄中的计时器
-const interval = Symbol();
+const tomatoClockInterval = Symbol();
 // 番茄钟的表盘值
 const countDown = Symbol();
 // 番茄开始的时间
@@ -45,7 +45,7 @@ function useProvider() {
   provide(completedTargetList, ref<AV.Object[]>([]));
   const preparedTomatoCloudStatus: TomatoCloudStatus = "prepared";
   provide(tomatoCloudStatus, ref<TomatoCloudStatus>(preparedTomatoCloudStatus));
-  provide(interval, ref<NodeJS.Timeout | null>(null));
+  provide(tomatoClockInterval, ref<NodeJS.Timeout | null>(null));
   provide(countDown, ref<number>(1500));
   provide(tomatoStartTime, ref<Date>(Date()));
   provide(isCreateTargetDrawerDisplayed, ref<boolean>(false));
@@ -91,7 +91,7 @@ export default {
   unSubjectiveTargetList,
   completedTargetList,
   tomatoCloudStatus,
-  interval,
+  tomatoClockInterval,
   countDown,
   tomatoStartTime,
   isCreateTargetDrawerDisplayed,
