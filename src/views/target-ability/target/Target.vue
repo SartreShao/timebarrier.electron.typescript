@@ -110,7 +110,7 @@
                 .attributes.showSubjectList
             "
           >
-            {{ targetSubject.attributes.name }}({{
+            {{ targetSubject.attributes.name }} ({{
               targetSubject.attributes.targetListOfTargetSubject.length
             }})
             <img

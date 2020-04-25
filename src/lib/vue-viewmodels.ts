@@ -420,6 +420,12 @@ const PlanPage = {
         UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
         return;
       }
+
+      if (parseInt(input_editingPlan.target) < 0) {
+        UI.showNotification(vue.$notify, "每日目标数不可为负数", "", "warning");
+        input_editingPlan.target = "0";
+        return;
+      }
     }
 
     if (input_editingPlan.id !== undefined) {
