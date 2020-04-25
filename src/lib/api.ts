@@ -447,6 +447,9 @@ export default {
           query.equalTo("isActived", isActived);
         }
         const abilityList = await query.find();
+        abilityList.forEach(ability => {
+          ability.attributes.selected = false;
+        });
         Log.success("fetchAbilityList", abilityList);
         resolve(abilityList);
       } catch (error) {

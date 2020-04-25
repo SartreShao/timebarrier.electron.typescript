@@ -593,6 +593,9 @@ import { TargetPage } from "../../lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar, BottomBar, Target, Ability },
   setup(props, context) {
+    // 一个临时变量，用于标明当前是在创建 Target 还是在编辑 Target
+    const isCreateTarget: Ref<boolean> = ref(false);
+
     // 当前的 TAB：Ability｜Target
     const currentTab: Ref<TargetAbilityTabType> = ref("target");
 
@@ -682,7 +685,23 @@ export default defineComponent({
     const input_abilityListOfTarget: Ref<AV.Object[]> = ref([]);
 
     // 回车事件：能力输入框
-    const keyUpEnter_abilityInputBox = () => {};
+    const keyUpEnter_abilityInputBox = () => {
+      if (isCreateTarget.value) {
+        TargetPage.createAbility(
+          context.root,
+          input_abilityName,
+          input_abilityListOfTarget,
+          null
+        );
+      } else {
+        TargetPage.createAbility(
+          context.root,
+          input_abilityName,
+          input_abilityListOfTarget,
+          input_editingTargetOrTargetSubject
+        );
+      }
+    };
 
     const colormap: string[] = inject(Store.colormap, []);
 
@@ -725,6 +744,8 @@ export default defineComponent({
 
     // 点击事件：关联相关能力按钮（创建目标）
     const click_relatedAbilityCreateTargetButton = () => {
+      isCreateTarget.value = true;
+
       TargetPage.openRelateAbilityDrawer(
         context.root,
         isTargetRelateAbilityDrawerDisplayed,
@@ -736,6 +757,8 @@ export default defineComponent({
 
     // 点击事件：关联相关能力按钮（编辑目标）
     const click_relatedAbilityEditTargetButton = () => {
+      isCreateTarget.value = false;
+
       TargetPage.openRelateAbilityDrawer(
         context.root,
         isTargetRelateAbilityDrawerDisplayed,

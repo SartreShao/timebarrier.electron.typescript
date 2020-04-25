@@ -631,18 +631,14 @@ const PlanPage = {
       return;
     }
 
+    // 尝试请求带有 selected 属性的 Ability
+    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的能力");
     try {
       // 创建计划
       await Api.createAbility(input_abilityName.value, user, "", false, true);
 
       // 刷新能力列表
       if (input_editingPlan.id !== undefined) {
-        // 尝试请求带有 selected 属性的 Ability
-        const loadingInstance = UI.showLoading(
-          vue.$loading,
-          "正在请求相关的能力"
-        );
-
         try {
           input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
             input_editingPlan.id
@@ -1958,6 +1954,149 @@ const TargetPage = {
     });
     input_creatingTargetOrTargetSubject.target.abilityList = list;
     input_editingTargetOrTargetSubject.target.abilityList = list;
+  },
+  /**
+   * 创建能力（在关联能力的框里）
+   * @param input_abilityName 需要创建的能力的名称
+   * @param input_abilityListOfTarget 需要让用户选择的能力列表（可多选）
+   * @param input_editingTargetOrTargetSubject 如果传入数据，则是编辑目标；不传入数据就是创建目标
+   */
+  createAbility: async (
+    vue: ElementVue,
+    input_abilityName: Ref<string>,
+    input_abilityListOfTarget: Ref<AV.Object[]>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null
+  ) => {
+    if (input_editingTargetOrTargetSubject !== null) {
+      createAbilityInEditTarget(
+        vue,
+        input_abilityName,
+        input_abilityListOfTarget,
+        input_editingTargetOrTargetSubject
+      );
+    } else {
+      createAbilityInCreateTarget(
+        vue,
+        input_abilityName,
+        input_abilityListOfTarget
+      );
+    }
+
+    async function createAbilityInEditTarget(
+      vue: ElementVue,
+      input_abilityName: Ref<string>,
+      input_abilityListOfTarget: Ref<AV.Object[]>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_abilityName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的能力"
+      );
+
+      try {
+        // 创建计划
+        await Api.createAbility(input_abilityName.value, user, "", false, true);
+
+        // 刷新能力列表
+        if (input_editingTargetOrTargetSubject.target.id !== undefined) {
+          try {
+            input_abilityListOfTarget.value = await Api.fetchAbilityListWithTargetSelect(
+              input_editingTargetOrTargetSubject.target.id
+            );
+            UI.hideLoading(loadingInstance);
+            input_abilityName.value = "";
+          } catch (error) {
+            UI.hideLoading(loadingInstance);
+            UI.showNotification(
+              vue.$notify,
+              "网络出错",
+              `错误原因：${error.message}`,
+              "error"
+            );
+          }
+        } else {
+          UI.showNotification(
+            vue.$notify,
+            "数据出错",
+            "错误原因：input_editingTargetOrTargetSubject.target.id is undefined",
+            "error"
+          );
+        }
+      } catch (error) {
+        UI.showNotification(
+          vue.$notify,
+          "创建计划失败",
+          `失败原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+
+    async function createAbilityInCreateTarget(
+      vue: ElementVue,
+      input_abilityName: Ref<string>,
+      input_abilityListOfTarget: Ref<AV.Object[]>
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_abilityName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的能力"
+      );
+
+      try {
+        // 创建计划
+        await Api.createAbility(input_abilityName.value, user, "", false, true);
+
+        // 刷新能力列表
+        input_abilityListOfTarget.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true
+        );
+
+        UI.hideLoading(loadingInstance);
+        input_abilityName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
   }
 };
 
