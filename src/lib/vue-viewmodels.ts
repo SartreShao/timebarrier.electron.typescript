@@ -1343,6 +1343,8 @@ const TargetPage = {
       target.attributes.description;
     input_editingTargetOrTargetSubject.target.validityType =
       target.attributes.validityType;
+    input_editingTargetOrTargetSubject.target.validity =
+      target.attributes.validity;
     input_editingTargetOrTargetSubject.target.abilityList = target.attributes.abilityListOfTarget.map(
       (ability: AV.Object) => {
         return { id: ability.id, name: ability.attributes.name };
@@ -2096,6 +2098,142 @@ const TargetPage = {
           "error"
         );
       }
+    }
+  },
+  /**
+   * 完成一个 目标
+   */
+  finishTarget: async (
+    vue: ElementVue,
+    target: AV.Object,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 确认
+    try {
+      await UI.showConfirm(
+        vue.$confirm,
+        `您是否已经达成：${target.attributes.description}`,
+        `完成目标：${target.attributes.name}`
+      );
+
+      const loadingInstance = UI.showLoading(vue.$loading, "正在完成该目标");
+
+      try {
+        // 已完成该目标
+        if (target.id !== undefined) {
+          await Api.finishTarget(target.id, true);
+
+          // 刷新列表
+          // 尝试获取已完成的目标列表
+          completedTargetList.value = await Api.fetchTargetList(
+            user,
+            "completed"
+          );
+
+          // 尝试获取未分类的目标列表
+          unSubjectiveTargetList.value = await Api.fetchTargetList(
+            user,
+            "unsubjective"
+          );
+
+          // 尝试获取目标类别列表
+          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            `完成目标：${target.attributes.name}`,
+            "继续向下一个目标进发吧！",
+            "success"
+          );
+        } else {
+          UI.showNotification(
+            vue.$notify,
+            "数据出错",
+            `target.id is undefined`,
+            "error"
+          );
+        }
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    } catch (error) {
+      // 未完成该目标
+    }
+  },
+  /**
+   * 取消完成一个目标
+   */
+  unFinishedTarget: async (
+    vue: ElementVue,
+    target: AV.Object,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (target.id !== undefined) {
+      const loadingInstance = UI.showLoading(vue.$loading, "正在刷新...");
+      try {
+        await Api.finishTarget(target.id, false);
+
+        // 刷新列表
+        // 尝试获取已完成的目标列表
+        completedTargetList.value = await Api.fetchTargetList(
+          user,
+          "completed"
+        );
+
+        // 尝试获取未分类的目标列表
+        unSubjectiveTargetList.value = await Api.fetchTargetList(
+          user,
+          "unsubjective"
+        );
+
+        // 尝试获取目标类别列表
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        `target.id is undefined`,
+        "error"
+      );
     }
   }
 };

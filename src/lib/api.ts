@@ -671,21 +671,11 @@ export default {
         // 获取 targetList
         const targetList = await targetListQuery.find();
 
-        // 获取 targetIdList
-        const targetIdList: string[] = [];
-        targetList.forEach(target => {
-          if (target.id === undefined) {
-            throw "target.id is undefined";
-          } else {
-            targetIdList.push(target.id);
-          }
-        });
-
         // 获取 abilityTargetLIst
         const abilityTargetList = await new AV.Query(AbilityTarget)
           .include("target")
           .include("ability")
-          .containedIn("target", targetIdList)
+          .containedIn("target", targetList)
           .find();
 
         // 将 abilityTargetList 存入 targetList 中
@@ -918,6 +908,22 @@ export default {
         resolve(targetSubject);
       } catch (error) {
         Log.error("saveTargetSubject", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 完成目标
+   */
+  finishTarget: (targetId: string, isFinished: boolean) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target = await new AV.Query(Target).get(targetId);
+        target.set("isFinished", isFinished);
+        await target.save();
+        Log.success("finishTarget", target);
+        resolve(target);
+      } catch (error) {
+        Log.error("finishTarget", error);
         reject(error);
       }
     })

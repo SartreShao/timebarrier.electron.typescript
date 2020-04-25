@@ -26,6 +26,8 @@
           <!-- 完成目标 -->
           <div class="finished-button-container">
             <svg
+              v-darked-when-click
+              @click="click_finishedTargetButton(target)"
               class="finished-button"
               xmlns="http://www.w3.org/2000/svg"
               width="28"
@@ -55,6 +57,17 @@
                 target.attributes.validityType === "time-bound"
                   ? "时限目标"
                   : "长期目标"
+              }}{{
+                target.attributes.validityType === "time-bound"
+                  ? "｜剩余 " +
+                    parseInt(
+                      (target.attributes.validity.getTime() -
+                        new Date().getTime()) /
+                        (1000 * 60 * 60 * 24) +
+                        1
+                    ) +
+                    " 天"
+                  : ""
               }}
             </div>
             <div class="target-name">{{ target.attributes.name }}</div>
@@ -138,6 +151,8 @@
                   <!-- 完成目标 -->
                   <div class="finished-button-container">
                     <svg
+                      v-darked-when-click
+                      @click="click_finishedTargetButton(target)"
                       class="finished-button"
                       xmlns="http://www.w3.org/2000/svg"
                       width="28"
@@ -167,6 +182,17 @@
                         target.attributes.validityType === "time-bound"
                           ? "时限目标"
                           : "长期目标"
+                      }}{{
+                        target.attributes.validityType === "time-bound"
+                          ? "｜剩余 " +
+                            parseInt(
+                              (target.attributes.validity.getTime() -
+                                new Date().getTime()) /
+                                (1000 * 60 * 60 * 24) +
+                                1
+                            ) +
+                            " 天"
+                          : ""
                       }}
                     </div>
                     <div class="target-name">{{ target.attributes.name }}</div>
@@ -221,21 +247,29 @@
         <!-- 完成目标 -->
         <div class="finished-button-container">
           <svg
-            class="finished-button"
+            v-darked-when-click
+            class="unfinished-button"
+            @click="click_unfinishedTargetButton(target)"
             xmlns="http://www.w3.org/2000/svg"
             width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            height="21.484"
+            viewBox="0 0 28 21.484"
           >
-            <g
-              id="椭圆_53"
-              data-name="椭圆 53"
-              fill="none"
-              :stroke="target.attributes.color"
-              stroke-width="3"
-            >
-              <circle cx="14" cy="14" r="14" stroke="none" />
-              <circle cx="14" cy="14" r="12.5" fill="none" />
+            <g id="组_1370" data-name="组 1370" transform="translate(-0.385)">
+              <path
+                id="路径_418"
+                data-name="路径 418"
+                d="M15.126,319.693l-3.4,3.436a.8.8,0,0,1-1.1,0L.6,313.08a.8.8,0,0,1,0-1.1l3.4-3.4a.8.8,0,0,1,1.1,0L15.126,318.59A.8.8,0,0,1,15.126,319.693Z"
+                transform="translate(0 -301.863)"
+                :fill="target.attributes.color"
+              />
+              <path
+                id="路径_419"
+                data-name="路径 419"
+                d="M336.708.292l3.047,3.047a1.058,1.058,0,0,1,0,1.459L323.547,21.006a1.058,1.058,0,0,1-1.459,0l-3.047-3.047a1.058,1.058,0,0,1,0-1.459L335.249.292a1.057,1.057,0,0,1,1.459,0Z"
+                transform="translate(-311.662)"
+                :fill="target.attributes.color"
+              />
             </g>
           </svg>
         </div>
@@ -250,6 +284,17 @@
               target.attributes.validityType === "time-bound"
                 ? "时限目标"
                 : "长期目标"
+            }}{{
+              target.attributes.validityType === "time-bound"
+                ? "｜剩余 " +
+                  parseInt(
+                    (target.attributes.validity.getTime() -
+                      new Date().getTime()) /
+                      (1000 * 60 * 60 * 24) +
+                      1
+                  ) +
+                  " 天"
+                : ""
             }}
           </div>
           <div class="target-name">{{ target.attributes.name }}</div>
@@ -418,6 +463,29 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：完成 Target
+    const click_finishedTargetButton = (target: AV.Object) => {
+      TargetPage.finishTarget(
+        context.root,
+        target,
+        unSubjectiveTargetList,
+        completedTargetList,
+        targetSubjectList
+      );
+    };
+
+    // 点击事件：将已完成的 Target 拉回来
+    const click_unfinishedTargetButton = (target: AV.Object) => {
+      console.log("un");
+      TargetPage.unFinishedTarget(
+        context.root,
+        target,
+        unSubjectiveTargetList,
+        completedTargetList,
+        targetSubjectList
+      );
+    };
+
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
 
@@ -434,6 +502,7 @@ export default defineComponent({
     return {
       click_editTargetButton,
       click_createTargetButton,
+      click_finishedTargetButton,
       click_editTargetSubjectButton,
       isCreateTargetDrawerDisplayed,
       unSubjectiveTargetList,
@@ -444,6 +513,7 @@ export default defineComponent({
       dragend_subjectiveTarget,
       dragend_targetSubject,
       draggableOptions,
+      click_unfinishedTargetButton,
       assets: {
         icon_create_target,
         icon_downward,
@@ -552,6 +622,10 @@ export default defineComponent({
       .finished-button {
         width 2.1vh
         height 2.1vh
+      }
+      .unfinished-button {
+        width 2.1vh
+        height 1.61vh
       }
     }
     .placeholder {
