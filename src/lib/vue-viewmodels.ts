@@ -1145,7 +1145,8 @@ const TargetPage = {
     isCreateTargetDrawerDisplayed: Ref<boolean>,
     unSubjectiveTargetList: Ref<AV.Object[]>,
     completedTargetList: Ref<AV.Object[]>,
-    targetSubjectList: Ref<AV.Object[]>
+    targetSubjectList: Ref<AV.Object[]>,
+    colormap: string[]
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -1225,7 +1226,8 @@ const TargetPage = {
           input_creatingTargetOrTargetSubject.target.validity,
           input_creatingTargetOrTargetSubject.target.abilityList,
           input_creatingTargetOrTargetSubject.target.isActived,
-          input_creatingTargetOrTargetSubject.target.isFinished
+          input_creatingTargetOrTargetSubject.target.isFinished,
+          colormap
         );
 
         // 保存完成后，刷新 TargetList

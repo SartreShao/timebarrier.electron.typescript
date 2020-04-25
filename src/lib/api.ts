@@ -716,10 +716,34 @@ export default {
     validity: Date | null,
     abilityList: { id: string; name: string }[],
     isActived: boolean,
-    isFinished: boolean
+    isFinished: boolean,
+    colormap: string[]
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
+        // 查询上一个的颜色
+        let color: string = colormap[0];
+
+        try {
+          const lastTarget = await new AV.Query(Target)
+            .equalTo("user", user)
+            .descending("createdAt")
+            .first();
+          if (lastTarget === undefined) {
+            throw "lastTarget is undefined";
+          }
+          colormap.forEach((item, index) => {
+            if (item === lastTarget.attributes.color) {
+              console.log("color", color);
+              color = colormap[(index + 1) % colormap.length];
+              console.log("color new", color);
+            }
+          });
+        } catch (error) {
+          // 没查到
+        }
+
+        console.log("color finnal", color);
         const target = new Target()
           .set("user", user)
           .set("name", name)
@@ -727,6 +751,7 @@ export default {
           .set("validityType", validityType)
           .set("validity", validity)
           .set("isActived", isActived)
+          .set("color", color)
           .set("isFinished", isFinished);
 
         if (targetSubjectId !== null) {

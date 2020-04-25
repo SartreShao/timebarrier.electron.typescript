@@ -25,11 +25,24 @@
         >
           <!-- 完成目标 -->
           <div class="finished-button-container">
-            <img
+            <svg
               class="finished-button"
-              :src="assets.icon_red_finished_button"
-              alt="icon_red_finished_button"
-            />
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 28 28"
+            >
+              <g
+                id="椭圆_53"
+                data-name="椭圆 53"
+                fill="none"
+                :stroke="target.attributes.color"
+                stroke-width="3"
+              >
+                <circle cx="14" cy="14" r="14" stroke="none" />
+                <circle cx="14" cy="14" r="12.5" fill="none" />
+              </g>
+            </svg>
           </div>
 
           <!-- 占位符 -->
@@ -122,11 +135,24 @@
                 >
                   <!-- 完成目标 -->
                   <div class="finished-button-container">
-                    <img
+                    <svg
                       class="finished-button"
-                      :src="assets.icon_red_finished_button"
-                      alt="icon_red_finished_button"
-                    />
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="28"
+                      height="28"
+                      viewBox="0 0 28 28"
+                    >
+                      <g
+                        id="椭圆_53"
+                        data-name="椭圆 53"
+                        fill="none"
+                        :stroke="target.attributes.color"
+                        stroke-width="3"
+                      >
+                        <circle cx="14" cy="14" r="14" stroke="none" />
+                        <circle cx="14" cy="14" r="12.5" fill="none" />
+                      </g>
+                    </svg>
                   </div>
 
                   <!-- 占位符 -->
@@ -190,11 +216,24 @@
       >
         <!-- 完成目标 -->
         <div class="finished-button-container">
-          <img
+          <svg
             class="finished-button"
-            :src="assets.icon_red_finished_button"
-            alt="icon_red_finished_button"
-          />
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
+          >
+            <g
+              id="椭圆_53"
+              data-name="椭圆 53"
+              fill="none"
+              :stroke="target.attributes.color"
+              stroke-width="3"
+            >
+              <circle cx="14" cy="14" r="14" stroke="none" />
+              <circle cx="14" cy="14" r="12.5" fill="none" />
+            </g>
+          </svg>
         </div>
 
         <!-- 占位符 -->
@@ -492,7 +531,6 @@ export default defineComponent({
   }
   .target-item-container {
     user-select none
-    height 16.94vh
     width 100%
     display flex
     flex-direction row
@@ -500,12 +538,18 @@ export default defineComponent({
     flex-shrink 0
     .finished-button-container {
       width 19.6vw
-      height 16.94vh
+      height 100%
       background-color #fcfbfc
       display flex
       justify-content center
       align-items center
+      position relative
       .finished-button {
+        position absolute
+        top 0
+        bottom 0
+        margin-top auto
+        margin-bottom auto
         width 2.1vh
         height 2.1vh
       }

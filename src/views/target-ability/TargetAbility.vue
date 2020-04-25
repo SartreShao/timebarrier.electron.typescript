@@ -684,6 +684,8 @@ export default defineComponent({
     // 回车事件：能力输入框
     const keyUpEnter_abilityInputBox = () => {};
 
+    const colormap: string[] = inject(Store.colormap, []);
+
     // 点击事件：创建目标或目标目录
     const click_createTargetOrTargetSubject = () => {
       TargetPage.createTargetOrTargetSubject(
@@ -692,7 +694,8 @@ export default defineComponent({
         isCreateTargetDrawerDisplayed,
         unSubjectiveTargetList,
         completedTargetList,
-        targetSubjectList
+        targetSubjectList,
+        colormap
       );
     };
 

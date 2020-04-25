@@ -33,6 +33,8 @@ const input_editingTargetOrTargetSubject = Symbol();
 const input_creatingTargetOrTargetSubject = Symbol();
 // 配置信息：Vue Dragger
 const draggableOptions = Symbol();
+// 色彩表
+const colormap = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -103,6 +105,18 @@ function useProvider() {
     delay: 200, //延时时长
     touchStartThreshold: 3 //防止某些手机过于敏感(3~5 效果最好)
   });
+  provide(colormap, [
+    "#3846CF",
+    "#FF5050",
+    "#FF9300",
+    "#007644",
+    "#520076",
+    "#536761",
+    "#0A5CA7",
+    "#009D97",
+    "#59596F",
+    "#CE0057"
+  ]);
 }
 
 export default {
@@ -121,5 +135,6 @@ export default {
   isEditTargetDrawerDisplayed,
   input_editingTargetOrTargetSubject,
   input_creatingTargetOrTargetSubject,
-  draggableOptions
+  draggableOptions,
+  colormap
 };
