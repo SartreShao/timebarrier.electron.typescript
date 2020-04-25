@@ -55,15 +55,17 @@
                 target.attributes.validityType === "time-bound"
                   ? "时限目标"
                   : "长期目标"
-              }}{{
-                target.attributes.abilityListOfTarget.length === 0
-                  ? ""
-                  : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
               }}
             </div>
             <div class="target-name">{{ target.attributes.name }}</div>
-            <div class="target-description">
-              {{ target.attributes.description }}
+            <div class="target-ability-container">
+              <div
+                class="target-ability"
+                v-for="ability in target.attributes.abilityListOfTarget"
+                v-bind:key="ability.id"
+              >
+                · {{ ability.attributes.name }}
+              </div>
             </div>
           </div>
         </div>
@@ -165,15 +167,17 @@
                         target.attributes.validityType === "time-bound"
                           ? "时限目标"
                           : "长期目标"
-                      }}{{
-                        target.attributes.abilityListOfTarget.length === 0
-                          ? ""
-                          : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
                       }}
                     </div>
                     <div class="target-name">{{ target.attributes.name }}</div>
-                    <div class="target-description">
-                      {{ target.attributes.description }}
+                    <div class="target-ability-container">
+                      <div
+                        class="target-ability"
+                        v-for="ability in target.attributes.abilityListOfTarget"
+                        v-bind:key="ability.id"
+                      >
+                        · {{ ability.attributes.name }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -246,15 +250,17 @@
               target.attributes.validityType === "time-bound"
                 ? "时限目标"
                 : "长期目标"
-            }}{{
-              target.attributes.abilityListOfTarget.length === 0
-                ? ""
-                : `｜已关联 ${target.attributes.abilityListOfTarget.length} 个能力`
             }}
           </div>
           <div class="target-name">{{ target.attributes.name }}</div>
-          <div class="target-description">
-            {{ target.attributes.description }}
+          <div class="target-ability-container">
+            <div
+              class="target-ability"
+              v-for="ability in target.attributes.abilityListOfTarget"
+              v-bind:key="ability.id"
+            >
+              · {{ ability.attributes.name }}
+            </div>
           </div>
         </div>
       </div>
@@ -535,21 +541,15 @@ export default defineComponent({
     display flex
     flex-direction row
     margin-bottom 0.15vh
+    align-items stretch
     flex-shrink 0
     .finished-button-container {
       width 19.6vw
-      height 100%
       background-color #fcfbfc
       display flex
       justify-content center
       align-items center
-      position relative
       .finished-button {
-        position absolute
-        top 0
-        bottom 0
-        margin-top auto
-        margin-bottom auto
         width 2.1vh
         height 2.1vh
       }
@@ -560,14 +560,11 @@ export default defineComponent({
     .target-body-container {
       user-select none
       width 80.13vw
-      height 16.94vh
       background-color #ffffff
-      box-sizing border-box
-      padding-left 8.53vw
-      padding-right 8.53vw
-      padding-top 2.32vh
-      padding-bottom 2.4vh
       .target-type {
+        margin-top 2.4vh
+        margin-left 8.53vw
+        margin-right 8.53vw
         height 2.4vh
         opacity 0.4
         font-size 1.65vh
@@ -580,30 +577,34 @@ export default defineComponent({
         color #222a36
       }
       .target-name {
-        margin-top 0.52vh
-        height 3.15vh
+        margin-top 0.75vh
+        margin-left 8.53vw
+        margin-right 8.53vw
         font-size 2.17vh
         font-weight 500
         font-stretch normal
         font-style normal
-        line-height 1.45
         letter-spacing 0.02vh
         text-align left
         color #222a36
       }
-      .target-description {
+      .target-ability-container {
         margin-top 0.75vh
-        height 5.4vh
-        width 63.07vw
-        opacity 0.4
-        font-size 1.87vh
-        font-weight normal
-        font-stretch normal
-        font-style normal
-        line-height 1.44
-        letter-spacing 0.01vh
-        text-align left
-        color #222a36
+        margin-bottom 2.4vh
+        margin-left 8.53vw
+        margin-right 8.53vw
+        .target-ability {
+          height 2.7vh
+          opacity 0.4
+          font-size 1.87vh
+          font-weight normal
+          font-stretch normal
+          font-style normal
+          line-height 1.44
+          letter-spacing 0.01vh
+          text-align left
+          color #222a36
+        }
       }
     }
   }
