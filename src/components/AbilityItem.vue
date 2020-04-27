@@ -1,37 +1,80 @@
 <template>
   <div class="container">
     <!-- 升级进度条 -->
-    <aside></aside>
+    <aside bind:style="{ width: widthPercent }"></aside>
 
     <!-- 主体容器 -->
     <div class="body-container">
       <!-- tomatoNumber 系列 -->
       <div class="tomato-container">
-        50% · 青铜 I · 累计 300 个番茄
+        {{ ability.attributes.levelPercent }} ·
+        {{ ability.attributes.levelName }} · 累计
+        {{ ability.attributes.tomatoNumber }} 个番茄
       </div>
 
       <!-- Ability 名称 -->
-      <div class="ability-name">提高英语能力</div>
+      <div class="ability-name">{{ ability.attributes.name }}</div>
 
       <!-- 训练计划 -->
-      <div class="plan-title">训练计划</div>
+      <div
+        class="plan-title"
+        v-if="ability.attributes.planListOfAbility.length !== 0"
+      >
+        训练计划
+      </div>
 
-      <div class="plan-item">· 打卡扇贝单词</div>
-      <div class="plan-item">· 打卡扇贝单词</div>
+      <div
+        class="plan-item"
+        v-for="plan in ability.attributes.planListOfAbility"
+        v-bind:key="plan.id"
+      >
+        · {{ plan.attributes.name }}
+      </div>
 
-      <div style="height:1.5vh"></div>
+      <div
+        style="height:1.5vh"
+        v-if="ability.attributes.targetListOfAbility.length !== 0"
+      ></div>
 
       <!-- 相关目标 -->
-      <div class="target-title">相关目标</div>
+      <div
+        class="target-title"
+        v-if="ability.attributes.targetListOfAbility.length !== 0"
+      >
+        相关目标
+      </div>
 
-      <div class="target-item">· 打卡扇贝单词</div>
-      <div class="target-item">· 打卡扇贝单词</div>
+      <div
+        class="target-item"
+        v-for="target in ability.attributes.targetListOfAbility"
+        v-bind:key="target.id"
+      >
+        · {{ target.attributes.name }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-export default {};
+import { defineComponent, ref, Ref, computed } from "@vue/composition-api";
+import AV from "leancloud-storage";
+export default defineComponent({
+  props: {
+    ability: AV.Object
+  },
+  setup(props, context) {
+    const widthPercent = computed(() => {
+      if (props.ability !== undefined) {
+        return String(props.ability.attributes.levelPercent * 100 + 2) + "%";
+      } else {
+        return "2%";
+      }
+    });
+    return {
+      widthPercent
+    };
+  }
+});
 </script>
 
 <style lang="stylus" scoped>

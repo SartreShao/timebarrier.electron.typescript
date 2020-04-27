@@ -463,7 +463,9 @@ export default {
     user: AV.User,
     isFinished: boolean,
     isActived?: boolean,
-    levelRuleList?: AV.Object[]
+    levelRuleList?: AV.Object[],
+    fetchTargetList?: boolean,
+    fetchPlanList?: boolean
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -513,6 +515,44 @@ export default {
                 ability.attributes.levelName = levelRule.attributes.name;
 
                 ability.attributes.levelNumber = levelRule.attributes.level;
+              }
+            });
+          });
+        }
+
+        if (fetchTargetList !== undefined && fetchTargetList === true) {
+          // 获取相关 Target: targetListOfAbility
+          const abilityTargetList = await new AV.Query(AbilityTarget)
+            .include("target")
+            .containedIn("ability", abilityList)
+            .find();
+
+          abilityList.forEach(ability => {
+            ability.attributes.targetListOfAbility = [];
+            abilityTargetList.forEach(abilityTarget => {
+              if (ability.id === abilityTarget.attributes.ability.id) {
+                ability.attributes.targetListOfAbility.push(
+                  abilityTarget.attributes.target
+                );
+              }
+            });
+          });
+        }
+
+        if (fetchPlanList !== undefined && fetchPlanList === true) {
+          // 获取相关 Plan: planListOfAbility
+          const abilityPlanList = await new AV.Query(AbilityPlan)
+            .include("plan")
+            .containedIn("ability", abilityList)
+            .find();
+
+          abilityList.forEach(ability => {
+            ability.attributes.planListOfAbility = [];
+            abilityPlanList.forEach(abilityPlan => {
+              if (ability.id === abilityPlan.attributes.ability.id) {
+                ability.attributes.planListOfAbility.push(
+                  abilityPlan.attributes.plan
+                );
               }
             });
           });
