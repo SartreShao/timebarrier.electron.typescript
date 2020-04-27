@@ -486,37 +486,41 @@ export default {
 
         if (levelRuleList !== undefined) {
           abilityList.forEach(ability => {
-            levelRuleList.forEach((levelRule, index) => {
-              // 初始条件
-              if (
-                index === 0 &&
-                ability.attributes.tomatoNumber <=
-                  levelRule.attributes.tomatoNumber
-              ) {
-                ability.attributes.levelPercent =
-                  ability.attributes.tomatoNumber /
-                  levelRule.attributes.tomatoNumber;
+            try {
+              levelRuleList.forEach((levelRule, index) => {
+                // 初始条件
+                if (
+                  index === 0 &&
+                  ability.attributes.tomatoNumber <=
+                    levelRule.attributes.tomatoNumber
+                ) {
+                  ability.attributes.levelPercent =
+                    ability.attributes.tomatoNumber /
+                    levelRule.attributes.tomatoNumber;
 
-                ability.attributes.levelName = levelRule.attributes.name;
+                  ability.attributes.levelName = levelRule.attributes.name;
 
-                ability.attributes.levelNumber = levelRule.attributes.level;
-              }
-              // 正常情况
-              else if (
-                index !== 0 &&
-                ability.attributes.tomatoNumber <=
-                  levelRule.attributes.tomatoNumber
-              ) {
-                ability.attributes.levelPercent =
-                  ability.attributes.tomatoNumber /
-                  (levelRule.attributes.tomatoNumber -
-                    levelRuleList[index - 1].attributes.tomatoNumber);
+                  ability.attributes.levelNumber = levelRule.attributes.level;
+                  throw "level forEach break!";
+                }
+                // 正常情况
+                else if (
+                  index !== 0 &&
+                  ability.attributes.tomatoNumber <=
+                    levelRule.attributes.tomatoNumber
+                ) {
+                  ability.attributes.levelPercent =
+                    ability.attributes.tomatoNumber /
+                    (levelRule.attributes.tomatoNumber -
+                      levelRuleList[index - 1].attributes.tomatoNumber);
 
-                ability.attributes.levelName = levelRule.attributes.name;
+                  ability.attributes.levelName = levelRule.attributes.name;
 
-                ability.attributes.levelNumber = levelRule.attributes.level;
-              }
-            });
+                  ability.attributes.levelNumber = levelRule.attributes.level;
+                  throw "level forEach break!";
+                }
+              });
+            } catch (error) {}
           });
         }
 

@@ -1091,7 +1091,7 @@ const TomatoTimerPage = {
 };
 
 /**
- * 能力页
+ * 目标页
  */
 const TargetPage = {
   /**
@@ -2275,4 +2275,68 @@ const TargetPage = {
   }
 };
 
-export { SplashPage, LoginPage, PlanPage, TomatoTimerPage, TargetPage };
+/**
+ * 能力页
+ */
+const AbilityPage = {
+  /**
+   * 初始化 AbilityList
+   *
+   * @param vue ElementVue
+   * @param abilityList 能力列表
+   * @param levelRuleList 等级列表
+   */
+  init: async (
+    vue: ElementVue,
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 显示 loading
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取能力列表");
+
+    try {
+      if (levelRuleList.value.length === 0) {
+        levelRuleList.value = await Api.fetchLevelRuleList();
+      }
+
+      // 尝试获取能力列表
+      abilityList.value = await Api.fetchAbilityList(
+        user,
+        false,
+        true,
+        levelRuleList.value,
+        true,
+        true
+      );
+
+      // 获取列表成功
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取能力列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  }
+};
+
+export {
+  SplashPage,
+  LoginPage,
+  PlanPage,
+  TomatoTimerPage,
+  TargetPage,
+  AbilityPage
+};

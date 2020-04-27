@@ -1,57 +1,50 @@
 <template>
   <div class="container">
-    <h1>Skills</h1>
-    <draggable v-model="myArray" ghost-class="ghost" @end="onEnd">
-      <transition-group type="transition" name="flip-list">
-        <div
-          class="sortable"
-          :id="element.id"
-          v-for="element in myArray"
-          :key="element.id"
-        >
-          <strong>{{ element.name }}</strong>
-          <span>{{ element.id }}</span>
-        </div>
-      </transition-group>
-    </draggable>
+    <div style="height:2.62vh"></div>
+    <ability-item
+      class="ability-item"
+      v-for="ability in abilityList"
+      v-bind:key="ability.id"
+      v-bind:ability="ability"
+    ></ability-item>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  reactive,
+  watch,
+  inject,
+  Ref,
+  onMounted
+} from "@vue/composition-api";
 import draggable from "vuedraggable";
+import Store from "../../../store";
+import AV from "leancloud-storage";
+import { AbilityPage } from "@/lib/vue-viewmodels";
+import AbilityItem from "../../../components/AbilityItem.vue";
 export default defineComponent({
-  setup() {
-    const myArray = ref([
-      { name: "Angular", id: 0 },
-      { name: "React", id: 1 },
-      { name: "Vue", id: 2 },
-      { name: "HTML", id: 3 },
-      { name: "CSS", id: 4 },
-      { name: "SASS", id: 5 }
-    ]);
+  setup(props, context) {
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
 
-    watch(myArray, (newValue, oldValue) => {
-      console.log("list", newValue);
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
+    // 生命周期：初始化
+    onMounted(() => {
+      console.log("levelRuleList", levelRuleList);
+      AbilityPage.init(context.root, abilityList, levelRuleList);
     });
 
-    const oldIndex = ref("");
-    const newIndex = ref("");
-
-    const onEnd = function(event: any) {
-      console.log(event);
-      oldIndex.value = event.oldIndex;
-      newIndex.value = event.newIndex;
-    };
-
-    return {
-      myArray,
-      oldIndex,
-      newIndex,
-      onEnd
-    };
+    return { abilityList };
   },
-  components: { draggable }
+  components: { draggable, AbilityItem }
 });
 </script>
 
@@ -59,34 +52,14 @@ export default defineComponent({
 .container {
   height 100%
   width 100%
-  background white
+  background #F5F5F5
+  overscroll-behavior none
+  overflow scroll
+  display flex
+  flex-direction column
+  align-items center
 }
-strong {
-  display inline-block
-}
-.sortable {
-  width 100%
-  background white
-  padding 1em
-  cursor move
-  margin-bottom 2px
-}
-.container .sortable-drag {
-  opacity 0
-}
-.flip-list-move {
-  transition transform 0.5s
-}
-.ghost {
-  box-shadow 0.75vh 0.75vh 0.37vh -0.07vh rgba(0, 0, 0, 0.14)
-  opacity 0.7
-  &::before {
-    content ' '
-    position absolute
-    widows 20px
-    height 20px
-    margin-left -50px
-    background-image url('../../../assets/icon_add.svg')
-  }
+.ability-item {
+  margin-bottom 1.57vh
 }
 </style>

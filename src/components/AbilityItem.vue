@@ -1,19 +1,27 @@
 <template>
-  <div class="container">
+  <div class="ability-item-container">
     <!-- 升级进度条 -->
-    <aside bind:style="{ width: widthPercent }"></aside>
+    <aside
+      v-bind:style="{ width: widthPercent, background: backgroundColor }"
+    ></aside>
 
     <!-- 主体容器 -->
     <div class="body-container">
       <!-- tomatoNumber 系列 -->
       <div class="tomato-container">
-        {{ ability.attributes.levelPercent }} ·
         {{ ability.attributes.levelName }} · 累计
-        {{ ability.attributes.tomatoNumber }} 个番茄
+        {{ ability.attributes.tomatoNumber }} 个番茄 ·
+        {{ ability.attributes.levelPercent * 100 }}%
       </div>
 
       <!-- Ability 名称 -->
       <div class="ability-name">{{ ability.attributes.name }}</div>
+
+      <!-- 占位符 -->
+      <div
+        style="height:2.1vh"
+        v-if="ability.attributes.planListOfAbility.length !== 0"
+      ></div>
 
       <!-- 训练计划 -->
       <div
@@ -65,20 +73,25 @@ export default defineComponent({
   setup(props, context) {
     const widthPercent = computed(() => {
       if (props.ability !== undefined) {
-        return String(props.ability.attributes.levelPercent * 100 + 2) + "%";
+        return String(props.ability.attributes.levelPercent * 100 + 2.5) + "%";
       } else {
-        return "2%";
+        return "2.5%";
       }
     });
+
+    const backgroundColor = computed(() =>
+      props.ability !== undefined ? props.ability.attributes.color : "#222A36"
+    );
     return {
-      widthPercent
+      widthPercent,
+      backgroundColor
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.container {
+.ability-item-container {
   width 91.2vw
   border-radius 1.57vh
   box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
@@ -101,6 +114,7 @@ export default defineComponent({
     display flex
     flex-direction column
     .tomato-container {
+      font-weight bold
       z-index 1
       display flex
       flex-direction row
@@ -114,9 +128,9 @@ export default defineComponent({
       color #ffffff
     }
     .ability-name {
+      font-weight bold
       z-index 1
       margin-top 1.35vh
-      margin-bottom 2.1vh
       height 5.33vw
       font-size 2.1vh
       font-stretch normal
@@ -127,6 +141,7 @@ export default defineComponent({
       color #ffffff
     }
     .plan-title {
+      font-weight bold
       z-index 1
       height 2.55vh
       font-size 1.72vh
@@ -139,10 +154,11 @@ export default defineComponent({
       margin-bottom 0.82vh
     }
     .plan-item {
+      font-weight bold
       z-index 1
       height 2.55vh
       font-size 1.72vh
-      font-weight 300
+      font-weight normal
       font-stretch normal
       font-style normal
       line-height 1.48
@@ -150,9 +166,9 @@ export default defineComponent({
       text-align left
       color #f4f4f8
       margin-bottom 0.6vh
-      opacity 0.9
     }
     .target-title {
+      font-weight bold
       z-index 1
       height 2.55vh
       font-size 1.72vh
@@ -165,10 +181,10 @@ export default defineComponent({
       margin-bottom 0.82vh
     }
     .target-item {
+      font-weight normal
       z-index 1
       height 2.55vh
       font-size 1.72vh
-      font-weight 300
       font-stretch normal
       font-style normal
       line-height 1.48
@@ -176,7 +192,6 @@ export default defineComponent({
       text-align left
       color #f4f4f8
       margin-bottom 0.6vh
-      opacity 0.9
     }
   }
 }
