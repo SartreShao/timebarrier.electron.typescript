@@ -26,11 +26,15 @@ const SplashPage = {
     residenceTime: number,
     routerInstance: VueRouter,
     indexLocation: RawLocation,
-    loginLocation: RawLocation
+    loginLocation: RawLocation,
+    doingSomething: () => Promise<any> | null
   ) => {
-    // 开始动画保留 2000ms 或 residenceTime
-    await Time.sleep(residenceTime);
-
+    if (doingSomething === null) {
+      // 开始动画保留 2000ms 或 residenceTime
+      await Time.sleep(residenceTime);
+    } else {
+      await doingSomething();
+    }
     // 依据登录情况跳转不同页面
     Api.isLoggedIn()
       ? Router.replace(routerInstance, indexLocation)
@@ -620,7 +624,8 @@ const PlanPage = {
     vue: ElementVue,
     input_abilityName: Ref<string>,
     input_abilityListOfPlan: Ref<AV.Object[]>,
-    input_editingPlan: InputPlanType
+    input_editingPlan: InputPlanType,
+    colormap: string[]
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -641,7 +646,14 @@ const PlanPage = {
     const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的能力");
     try {
       // 创建计划
-      await Api.createAbility(input_abilityName.value, user, "", false, true);
+      await Api.createAbility(
+        input_abilityName.value,
+        user,
+        "",
+        false,
+        true,
+        colormap
+      );
 
       // 刷新能力列表
       if (input_editingPlan.id !== undefined) {
@@ -1973,20 +1985,23 @@ const TargetPage = {
     vue: ElementVue,
     input_abilityName: Ref<string>,
     input_abilityListOfTarget: Ref<AV.Object[]>,
-    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null,
+    colormap: string[]
   ) => {
     if (input_editingTargetOrTargetSubject !== null) {
       createAbilityInEditTarget(
         vue,
         input_abilityName,
         input_abilityListOfTarget,
-        input_editingTargetOrTargetSubject
+        input_editingTargetOrTargetSubject,
+        colormap
       );
     } else {
       createAbilityInCreateTarget(
         vue,
         input_abilityName,
-        input_abilityListOfTarget
+        input_abilityListOfTarget,
+        colormap
       );
     }
 
@@ -1994,7 +2009,8 @@ const TargetPage = {
       vue: ElementVue,
       input_abilityName: Ref<string>,
       input_abilityListOfTarget: Ref<AV.Object[]>,
-      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+      colormap: string[]
     ) {
       // 获取传入参数
       const user = Api.getCurrentUser();
@@ -2019,7 +2035,14 @@ const TargetPage = {
 
       try {
         // 创建计划
-        await Api.createAbility(input_abilityName.value, user, "", false, true);
+        await Api.createAbility(
+          input_abilityName.value,
+          user,
+          "",
+          false,
+          true,
+          colormap
+        );
 
         // 刷新能力列表
         if (input_editingTargetOrTargetSubject.target.id !== undefined) {
@@ -2059,7 +2082,8 @@ const TargetPage = {
     async function createAbilityInCreateTarget(
       vue: ElementVue,
       input_abilityName: Ref<string>,
-      input_abilityListOfTarget: Ref<AV.Object[]>
+      input_abilityListOfTarget: Ref<AV.Object[]>,
+      colormap: string[]
     ) {
       // 获取传入参数
       const user = Api.getCurrentUser();
@@ -2084,7 +2108,14 @@ const TargetPage = {
 
       try {
         // 创建计划
-        await Api.createAbility(input_abilityName.value, user, "", false, true);
+        await Api.createAbility(
+          input_abilityName.value,
+          user,
+          "",
+          false,
+          true,
+          colormap
+        );
 
         // 刷新能力列表
         input_abilityListOfTarget.value = await Api.fetchAbilityList(

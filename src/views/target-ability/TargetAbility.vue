@@ -691,14 +691,16 @@ export default defineComponent({
           context.root,
           input_abilityName,
           input_abilityListOfTarget,
-          null
+          null,
+          colormap
         );
       } else {
         TargetPage.createAbility(
           context.root,
           input_abilityName,
           input_abilityListOfTarget,
-          input_editingTargetOrTargetSubject
+          input_editingTargetOrTargetSubject,
+          colormap
         );
       }
     };

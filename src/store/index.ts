@@ -35,6 +35,10 @@ const input_creatingTargetOrTargetSubject = Symbol();
 const draggableOptions = Symbol();
 // 色彩表
 const colormap = Symbol();
+// 等级规则
+const levelRuleList = Symbol();
+// 能力列表
+const abilityList = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -117,6 +121,8 @@ function useProvider() {
     "#59596F",
     "#CE0057"
   ]);
+  provide(levelRuleList, ref<AV.Object[]>([]));
+  provide(abilityList, ref<AV.Object[]>([]));
 }
 
 export default {
@@ -136,5 +142,7 @@ export default {
   input_editingTargetOrTargetSubject,
   input_creatingTargetOrTargetSubject,
   draggableOptions,
-  colormap
+  colormap,
+  levelRuleList,
+  abilityList
 };

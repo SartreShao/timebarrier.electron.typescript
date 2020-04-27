@@ -10,6 +10,7 @@ const AbilityPlan = AV.Object.extend("AbilityPlan");
 const TargetSubject = AV.Object.extend("TargetSubject");
 const Target = AV.Object.extend("Target");
 const AbilityTarget = AV.Object.extend("AbilityTarget");
+const LevelRule = AV.Object.extend("LevelRule");
 
 export default {
   init: () => {
@@ -409,16 +410,41 @@ export default {
     user: AV.User,
     description: string,
     isFinished: boolean,
-    isActived: boolean
+    isActived: boolean,
+    colormap: string[]
   ) =>
     new Promise(async (resolve, reject) => {
       try {
+        // 本次的颜色
+        let color: string = colormap[0];
+
+        // 查询上一个颜色
+        try {
+          const lastAbility = await new AV.Query(Ability)
+            .equalTo("user", user)
+            .descending("createdAt")
+            .first();
+
+          if (lastAbility === undefined) {
+            throw "lastAbility is undefined";
+          }
+
+          colormap.forEach((item, index) => {
+            if (item === lastAbility.attributes.color) {
+              color = colormap[(index + 1) % colormap.length];
+            }
+          });
+        } catch (error) {
+          // 没查到
+        }
+
         const ability = await new Ability()
           .set("name", name)
           .set("user", user)
           .set("description", description)
           .set("isFinished", isFinished)
           .set("isActived", isActived)
+          .set("color", color)
           .save();
         Log.success("createAbility", ability);
         resolve(ability);
@@ -436,20 +462,62 @@ export default {
   fetchAbilityList: (
     user: AV.User,
     isFinished: boolean,
-    isActived?: boolean
+    isActived?: boolean,
+    levelRuleList?: AV.Object[]
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         const query = await new AV.Query(Ability)
           .equalTo("user", user)
-          .equalTo("isFinished", isFinished);
+          .equalTo("isFinished", isFinished)
+          .ascending("order")
+          .addDescending("createdAt");
+
         if (isActived !== undefined) {
           query.equalTo("isActived", isActived);
         }
+
         const abilityList = await query.find();
         abilityList.forEach(ability => {
           ability.attributes.selected = false;
         });
+
+        if (levelRuleList !== undefined) {
+          abilityList.forEach(ability => {
+            levelRuleList.forEach((levelRule, index) => {
+              // 初始条件
+              if (
+                index === 0 &&
+                ability.attributes.tomatoNumber <=
+                  levelRule.attributes.tomatoNumber
+              ) {
+                ability.attributes.levelPercent =
+                  ability.attributes.tomatoNumber /
+                  levelRule.attributes.tomatoNumber;
+
+                ability.attributes.levelName = levelRule.attributes.name;
+
+                ability.attributes.levelNumber = levelRule.attributes.level;
+              }
+              // 正常情况
+              else if (
+                index !== 0 &&
+                ability.attributes.tomatoNumber <=
+                  levelRule.attributes.tomatoNumber
+              ) {
+                ability.attributes.levelPercent =
+                  ability.attributes.tomatoNumber /
+                  (levelRule.attributes.tomatoNumber -
+                    levelRuleList[index - 1].attributes.tomatoNumber);
+
+                ability.attributes.levelName = levelRule.attributes.name;
+
+                ability.attributes.levelNumber = levelRule.attributes.level;
+              }
+            });
+          });
+        }
+
         Log.success("fetchAbilityList", abilityList);
         resolve(abilityList);
       } catch (error) {
@@ -727,16 +795,13 @@ export default {
           }
           colormap.forEach((item, index) => {
             if (item === lastTarget.attributes.color) {
-              console.log("color", color);
               color = colormap[(index + 1) % colormap.length];
-              console.log("color new", color);
             }
           });
         } catch (error) {
           // 没查到
         }
 
-        console.log("color finnal", color);
         const target = new Target()
           .set("user", user)
           .set("name", name)
@@ -924,6 +989,22 @@ export default {
         resolve(target);
       } catch (error) {
         Log.error("finishTarget", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 获取 LevelRuleList
+   */
+  fetchLevelRuleList: (): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const levelRuleList = await new AV.Query(LevelRule)
+          .ascending("level")
+          .find();
+        Log.success("fetchLevelRuleList", levelRuleList);
+        resolve(levelRuleList);
+      } catch (error) {
+        Log.error("fetchLevelRuleList", error);
         reject(error);
       }
     })

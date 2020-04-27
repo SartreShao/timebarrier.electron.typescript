@@ -14,13 +14,29 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-
+import { defineComponent, inject, ref, Ref } from "@vue/composition-api";
+import Store from "../../store";
+import Api from "../../lib/api";
+import AV from "leancloud-storage";
 import { SplashPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
   setup(props, context) {
-    SplashPage.init(2000, context.root.$router, "plan", "login");
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
+    SplashPage.init(
+      2000,
+      context.root.$router,
+      "plan",
+      "login",
+      () =>
+        new Promise(async (resolve, reject) => {
+          levelRuleList.value = await Api.fetchLevelRuleList();
+        })
+    );
   }
 });
 </script>

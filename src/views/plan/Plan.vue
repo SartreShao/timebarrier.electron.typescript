@@ -415,6 +415,9 @@ export default defineComponent({
     // 「展示 `关联相关能力` 的抽屉」是否已经打开
     const isPlanRelateAbilityDrawerDisplayed: Ref<boolean> = ref(false);
 
+    // 颜色表
+    const colormap = inject(Store.colormap, []);
+
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
@@ -432,7 +435,8 @@ export default defineComponent({
         context.root,
         input_abilityName,
         input_abilityListOfPlan,
-        input_editingPlan
+        input_editingPlan,
+        colormap
       );
     };
 
