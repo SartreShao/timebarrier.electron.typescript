@@ -34,7 +34,12 @@ export default defineComponent({
       "login",
       () =>
         new Promise(async (resolve, reject) => {
-          levelRuleList.value = await Api.fetchLevelRuleList();
+          try {
+            levelRuleList.value = await Api.fetchLevelRuleList();
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
         })
     );
   }
