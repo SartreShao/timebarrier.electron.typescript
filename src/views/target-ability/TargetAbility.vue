@@ -672,6 +672,12 @@ export default defineComponent({
       ref(false)
     );
 
+    // 控制变量：「编辑能力」的抽屉菜单是否打开
+    const isEditAbilityDrawerDisplayed: Ref<boolean> = inject(
+      Store.isEditAbilityDrawerDisplayed,
+      ref(false)
+    );
+
     // 用户输入：创建「目标」或「目标类别」
     const input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType = inject(
       Store.input_creatingTargetOrTargetSubject,

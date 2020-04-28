@@ -43,6 +43,8 @@ const abilityList = Symbol();
 const input_editingAbility = Symbol();
 // 用户输入：创建「能力 Ability」
 const input_creatingAbility = Symbol();
+// 控制变量：「编辑能力」的抽屉菜单是否打开
+const isEditAbilityDrawerDisplayed = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -149,6 +151,7 @@ function useProvider() {
       isFinished: false
     })
   );
+  provide(isEditAbilityDrawerDisplayed, ref(false));
 }
 
 export default {
@@ -172,5 +175,6 @@ export default {
   levelRuleList,
   abilityList,
   input_editingAbility,
-  input_creatingAbility
+  input_creatingAbility,
+  isEditAbilityDrawerDisplayed
 };
