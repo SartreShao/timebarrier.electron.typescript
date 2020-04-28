@@ -539,6 +539,12 @@
       </div>
     </tb-drawer>
 
+    <!-- 抽屉菜单：编辑能力 -->
+    <tb-drawer title="编辑能力" :isShow="isEditAbilityDrawerDisplayed">
+      <!-- 输入框：输入能力名称 -->
+      <tb-input placeholder="输入能力名称" v-model=""></tb-input>
+    </tb-drawer>
+
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
   </div>
@@ -557,7 +563,8 @@ import Target from "./target/Target.vue";
 import Ability from "./ability/Ability.vue";
 import {
   TargetAbilityTabType,
-  InputTargetOrTargetSubjectType
+  InputTargetOrTargetSubjectType,
+  InputAbilityType
 } from "@/lib/types/vue-viewmodels";
 import Store from "../../store";
 import AV from "leancloud-storage";
@@ -634,6 +641,32 @@ export default defineComponent({
           id: "",
           name: ""
         }
+      })
+    );
+
+    // 用户输入：编辑「能力」
+    const input_editingAbility: InputAbilityType = inject(
+      Store.input_editingAbility,
+      reactive({
+        id: "",
+        name: "",
+        targetList: [],
+        planList: [],
+        isActived: true,
+        isFinished: false
+      })
+    );
+
+    // 用户输入：创建「能力」
+    const input_creatingAbility: InputAbilityType = inject(
+      Store.input_creatingAbility,
+      reactive({
+        id: "",
+        name: "",
+        targetList: [],
+        planList: [],
+        isActived: true,
+        isFinished: false
       })
     );
 
@@ -774,6 +807,8 @@ export default defineComponent({
       isEditTargetDrawerDisplayed,
       input_creatingTargetOrTargetSubject,
       input_editingTargetOrTargetSubject,
+      input_creatingAbility,
+      input_editingAbility,
       targetSubjectList,
       isTargetRelateAbilityDrawerDisplayed,
       keyUpEnter_abilityInputBox,
