@@ -41,6 +41,8 @@ const levelRuleList = Symbol();
 const abilityList = Symbol();
 // 用户输入：编辑「能力 Ability」
 const input_editingAbility = Symbol();
+// 用户输入：创建「能力 Ability」
+const input_creatingAbility = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -136,6 +138,17 @@ function useProvider() {
       isFinished: false
     })
   );
+  provide(
+    input_creatingAbility,
+    reactive({
+      id: "",
+      name: "",
+      targetList: [],
+      planList: [],
+      isActived: true,
+      isFinished: false
+    })
+  );
 }
 
 export default {
@@ -158,5 +171,6 @@ export default {
   colormap,
   levelRuleList,
   abilityList,
-  input_editingAbility
+  input_editingAbility,
+  input_creatingAbility
 };
