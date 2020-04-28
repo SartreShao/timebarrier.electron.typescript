@@ -559,22 +559,63 @@
         <img
           :src="assets.icon_add"
           alt="icon_add"
-          v-if="
-            input_editingTargetOrTargetSubject.target.abilityList.length === 0
-          "
+          v-if="input_editingAbility.targetList.length === 0"
         />
-        <span
-          v-if="
-            input_editingTargetOrTargetSubject.target.abilityList.length === 0
-          "
+        <span v-if="input_editingAbility.targetList.length === 0"
           >关联相关能力</span
         >
         <span v-else>{{
           "相关能力：" +
-            input_editingTargetOrTargetSubject.target.abilityList
-              .map(ability => ability.name)
+            input_editingAbility.targetList
+              .map(target => target.name)
               .join("、")
         }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <!-- 关联 Plan 按钮 -->
+      <div
+        class="related-ability"
+        v-darked-when-click
+        @click="click_relatedPlanEditButton"
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="input_editingAbility.planList.length === 0"
+        />
+        <span v-if="input_editingAbility.planList.length === 0"
+          >关联相关能力</span
+        >
+        <span v-else>{{
+          "相关能力：" +
+            input_editingAbility.planList.map(plan => plan.name).join("、")
+        }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <div class="button-container">
+        <!-- 按钮：删除计划 -->
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="click_deleteAbilityButton"
+        >
+          删除
+        </div>
+
+        <!-- 按钮：保存计划 -->
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_saveAbilityButton"
+        >
+          保存
+        </div>
       </div>
     </tb-drawer>
 
@@ -843,6 +884,12 @@ export default defineComponent({
     // 点击事件：创建 Ability 时，关联 Plan
     const click_relatedPlanCreateButton = () => {};
 
+    // 点击事件：删除 Ability 按钮
+    const click_deleteAbilityButton = () => {};
+
+    // 点击事件：保存 Ability 按钮
+    const click_saveAbilityButton = () => {};
+
     return {
       currentTab,
       click_createTargetOrTargetSubject,
@@ -867,6 +914,8 @@ export default defineComponent({
       click_relatedPlanEditButton,
       click_relatedTargetCreateButton,
       click_relatedPlanCreateButton,
+      click_deleteAbilityButton,
+      click_saveAbilityButton,
       assets: {
         icon_add,
         icon_selected,
