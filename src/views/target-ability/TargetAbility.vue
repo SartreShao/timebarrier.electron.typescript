@@ -542,7 +542,40 @@
     <!-- 抽屉菜单：编辑能力 -->
     <tb-drawer title="编辑能力" :isShow="isEditAbilityDrawerDisplayed">
       <!-- 输入框：输入能力名称 -->
-      <tb-input placeholder="输入能力名称" v-model=""></tb-input>
+      <tb-input
+        placeholder="输入能力名称"
+        v-model="input_editingAbility.name"
+      ></tb-input>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <!-- 关联 Target 按钮 -->
+      <div
+        class="related-ability"
+        v-darked-when-click
+        @click="click_relatedTargetEditButton"
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="
+            input_editingTargetOrTargetSubject.target.abilityList.length === 0
+          "
+        />
+        <span
+          v-if="
+            input_editingTargetOrTargetSubject.target.abilityList.length === 0
+          "
+          >关联相关能力</span
+        >
+        <span v-else>{{
+          "相关能力：" +
+            input_editingTargetOrTargetSubject.target.abilityList
+              .map(ability => ability.name)
+              .join("、")
+        }}</span>
+      </div>
     </tb-drawer>
 
     <!-- 底边栏 -->
@@ -798,6 +831,18 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：编辑 Ability 时，关联 Target
+    const click_relatedTargetEditButton = () => {};
+
+    // 点击事件：编辑 Ability 时，关联 Plan
+    const click_relatedPlanEditButton = () => {};
+
+    // 点击事件：创建 Ability 时，关联 Target
+    const click_relatedTargetCreateButton = () => {};
+
+    // 点击事件：创建 Ability 时，关联 Plan
+    const click_relatedPlanCreateButton = () => {};
+
     return {
       currentTab,
       click_createTargetOrTargetSubject,
@@ -818,6 +863,10 @@ export default defineComponent({
       click_saveAbilityOfTargetButton,
       click_relatedAbilityCreateTargetButton,
       click_relatedAbilityEditTargetButton,
+      click_relatedTargetEditButton,
+      click_relatedPlanEditButton,
+      click_relatedTargetCreateButton,
+      click_relatedPlanCreateButton,
       assets: {
         icon_add,
         icon_selected,
