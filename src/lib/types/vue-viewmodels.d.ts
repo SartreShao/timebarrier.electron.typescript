@@ -56,7 +56,7 @@ export type InputTargetOrTargetSubjectType = {
 };
 
 // 输入能力的类别
-export type InputAbility = {
+export type InputAbilityType = {
   id: string | undefined;
   name: string;
   targetList: { id: string; name: string }[];
