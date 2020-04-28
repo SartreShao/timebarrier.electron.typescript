@@ -51,10 +51,8 @@
 
       <!-- 下面是创建目标类别 -->
       <!-- 输入框：输入目标类别名称 -->
-      <input
+      <tb-input
         v-if="input_creatingTargetOrTargetSubject.inputType === `targetSubject`"
-        type="text"
-        class="input-target"
         placeholder="输入目标类别名称"
         v-model="input_creatingTargetOrTargetSubject.targetSubject.name"
       />
@@ -85,10 +83,8 @@
       ></div>
 
       <!-- 输入框：输入目标名称 -->
-      <input
+      <tb-input
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
-        type="text"
-        class="input-target"
         placeholder="输入目标名称"
         v-model="input_creatingTargetOrTargetSubject.target.name"
       />
@@ -100,10 +96,8 @@
       ></div>
 
       <!-- 输入框：输入目标名称 -->
-      <input
+      <tb-input
         v-if="input_creatingTargetOrTargetSubject.inputType === `target`"
-        type="text"
-        class="input-target"
         placeholder="输入目标达成条件 or 目标详情"
         v-model="input_creatingTargetOrTargetSubject.target.description"
       />
@@ -278,10 +272,8 @@
     >
       <!-- 下面是创建目标类别 -->
       <!-- 输入框：输入目标类别名称 -->
-      <input
+      <tb-input
         v-if="input_editingTargetOrTargetSubject.inputType === `targetSubject`"
-        type="text"
-        class="input-target"
         placeholder="输入目标类别名称"
         v-model="input_editingTargetOrTargetSubject.targetSubject.name"
       />
@@ -312,10 +304,8 @@
       ></div>
 
       <!-- 输入框：输入目标名称 -->
-      <input
+      <tb-input
         v-if="input_editingTargetOrTargetSubject.inputType === `target`"
-        type="text"
-        class="input-target"
         placeholder="输入目标名称"
         v-model="input_editingTargetOrTargetSubject.target.name"
       />
@@ -327,10 +317,8 @@
       ></div>
 
       <!-- 输入框：输入目标名称 -->
-      <input
+      <tb-input
         v-if="input_editingTargetOrTargetSubject.inputType === `target`"
-        type="text"
-        class="input-target"
         placeholder="输入目标达成条件 or 目标详情"
         v-model="input_editingTargetOrTargetSubject.target.description"
       />
@@ -579,11 +567,11 @@ import icon_unselected from "../../assets/unselected_icon.svg";
 import icon_enter from "../../assets/icon_enter.svg";
 import icon_finished from "../../assets/icon_finished.svg";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
-
+import TbInput from "@/lib/components/TbInput.vue";
 import { TargetPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { TopBar, BottomBar, Target, Ability, TbDrawer },
+  components: { TopBar, BottomBar, Target, Ability, TbDrawer, TbInput },
   setup(props, context) {
     // 一个临时变量，用于标明当前是在创建 Target 还是在编辑 Target
     const isCreateTarget: Ref<boolean> = ref(false);
@@ -897,36 +885,6 @@ export default defineComponent({
     flex-shrink 0
     width 89.6vw
     height 6.9vh
-    border-radius 0.67vh
-    border solid 0.15vh #ebebf3
-    padding-left 4.8vw
-    padding-right 4.8vw
-    font-size 1.95vh
-    font-weight normal
-    font-stretch normal
-    font-style normal
-    line-height 1.42
-    letter-spacing 0.21px
-    text-align left
-    color #363636
-    &::-webkit-input-placeholder {
-      font-size 1.95vh
-      font-weight normal
-      font-stretch normal
-      font-style normal
-      line-height 1.42
-      letter-spacing 0.21px
-      text-align left
-      color #969294
-    }
-  }
-  // 抽屉菜单 item：输入框
-  .input-target {
-    flex-shrink 0
-    width 89.6vw
-    height 6.9vh
-    outline none
-    -webkit-appearance none /* 去除系统默认的样式 */
     border-radius 0.67vh
     border solid 0.15vh #ebebf3
     padding-left 4.8vw
