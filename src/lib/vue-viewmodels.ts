@@ -7,7 +7,8 @@ import {
   TomatoCloudStatus,
   PlanType,
   InputPlanType,
-  InputTargetOrTargetSubjectType
+  InputTargetOrTargetSubjectType,
+  InputAbilityType
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -2329,6 +2330,34 @@ const AbilityPage = {
         "error"
       );
     }
+  },
+
+  /**
+   * 打开编辑能力的抽屉菜单
+   */
+  openAbilityEditDrawer: async (
+    isEditAbilityDrawerDisplayed: Ref<boolean>,
+    input_editingAbility: InputAbilityType,
+    ability: AV.Object
+  ) => {
+    // 打开抽屉菜单
+    isEditAbilityDrawerDisplayed.value = true;
+
+    // 初始化用户的输入
+    input_editingAbility.id = ability.id;
+    input_editingAbility.name = ability.attributes.name;
+    input_editingAbility.isActived = ability.attributes.isActived;
+    input_editingAbility.isFinished = ability.attributes.isFinished;
+    input_editingAbility.planList = ability.attributes.planListOfAbility.map(
+      (plan: AV.Object) => {
+        return { id: plan.id, name: plan.attributes.name };
+      }
+    );
+    input_editingAbility.targetList = ability.attributes.targetListOfAbility.map(
+      (target: AV.Object) => {
+        return { id: target.id, name: target.attributes.name };
+      }
+    );
   }
 };
 

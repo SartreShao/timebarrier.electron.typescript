@@ -65,7 +65,13 @@ export default defineComponent({
     );
 
     // 点击事件：点击能力单项
-    const click_abilityItem = (ability: AV.Object) => {};
+    const click_abilityItem = (ability: AV.Object) => {
+      AbilityPage.openAbilityEditDrawer(
+        isEditAbilityDrawerDisplayed,
+        input_editingAbility,
+        ability
+      );
+    };
 
     // 生命周期：初始化
     onMounted(() => {
