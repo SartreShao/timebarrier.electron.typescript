@@ -4,9 +4,12 @@
     <ability-item
       class="ability-item"
       v-for="ability in abilityList"
-      v-bind:key="ability.id"
-      v-bind:ability="ability"
+      :key="ability.id"
+      :ability="ability"
     ></ability-item>
+    <tb-drawer isShow="ture">
+      <tb-input></tb-input>
+    </tb-drawer>
   </div>
 </template>
 
@@ -24,7 +27,9 @@ import draggable from "vuedraggable";
 import Store from "../../../store";
 import AV from "leancloud-storage";
 import { AbilityPage } from "@/lib/vue-viewmodels";
-import AbilityItem from "../../../components/AbilityItem.vue";
+import AbilityItem from "@/components/AbilityItem.vue";
+import TbInput from "@/lib/components/TbInput.vue";
+import TbDrawer from "@/lib/components/TbDrawer.vue";
 export default defineComponent({
   setup(props, context) {
     // 能力列表
@@ -44,7 +49,7 @@ export default defineComponent({
 
     return { abilityList };
   },
-  components: { draggable, AbilityItem }
+  components: { draggable, AbilityItem, TbInput, TbDrawer }
 });
 </script>
 

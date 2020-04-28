@@ -28,16 +28,13 @@
     </main>
 
     <!-- 抽屉菜单：创建目标或目录 -->
-    <el-drawer
-      class="create-target-drawer"
+    <tb-drawer
       :title="
         input_creatingTargetOrTargetSubject.inputType === `target`
           ? `创建目标`
           : `创建目标类别`
       "
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isCreateTargetDrawerDisplayed"
+      :isShow="isCreateTargetDrawerDisplayed"
     >
       <!-- 单选框：创建目标 or 目标类别 -->
       <el-select
@@ -268,19 +265,16 @@
           创建
         </div>
       </div>
-    </el-drawer>
+    </tb-drawer>
 
     <!-- 抽屉菜单：编辑目标或目录 -->
-    <el-drawer
-      class="create-target-drawer"
+    <tb-drawer
       :title="
         input_editingTargetOrTargetSubject.inputType === `target`
           ? `编辑目标`
           : `编辑目标类别`
       "
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isEditTargetDrawerDisplayed"
+      :isShow="isEditTargetDrawerDisplayed"
     >
       <!-- 下面是创建目标类别 -->
       <!-- 输入框：输入目标类别名称 -->
@@ -498,15 +492,12 @@
           保存
         </div>
       </div>
-    </el-drawer>
+    </tb-drawer>
 
     <!-- 抽屉菜单：关联相关能力 -->
-    <el-drawer
-      class="related-ability-container"
+    <tb-drawer
       title="关联相关能力"
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isTargetRelateAbilityDrawerDisplayed"
+      :isShow="isTargetRelateAbilityDrawerDisplayed"
     >
       <!-- 输入框：创建新能力 -->
       <div class="input-ability-name-container">
@@ -558,7 +549,7 @@
           选择
         </div>
       </div>
-    </el-drawer>
+    </tb-drawer>
 
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
@@ -587,11 +578,12 @@ import icon_selected from "../../assets/selected_icon.svg";
 import icon_unselected from "../../assets/unselected_icon.svg";
 import icon_enter from "../../assets/icon_enter.svg";
 import icon_finished from "../../assets/icon_finished.svg";
+import TbDrawer from "@/lib/components/TbDrawer.vue";
 
 import { TargetPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { TopBar, BottomBar, Target, Ability },
+  components: { TopBar, BottomBar, Target, Ability, TbDrawer },
   setup(props, context) {
     // 一个临时变量，用于标明当前是在创建 Target 还是在编辑 Target
     const isCreateTarget: Ref<boolean> = ref(false);
@@ -900,25 +892,6 @@ export default defineComponent({
     flex-direction column
     align-items center
   }
-  // 抽屉菜单：创建目标或目录
-  .create-target-drawer >>> .el-drawer__body {
-    display flex
-    flex-direction column
-    overflow scroll
-    align-items center
-  }
-  .create-target-drawer >>> .el-drawer__header {
-    span {
-      &:focus {
-        outline 0
-      }
-    }
-    i {
-      &:focus {
-        outline 0
-      }
-    }
-  }
   // 抽屉菜单 item：选择框
   .select-target >>> .el-input__inner {
     flex-shrink 0
@@ -1128,24 +1101,6 @@ export default defineComponent({
         height 2.1vh
         margin-left 12.27vw
       }
-    }
-  }
-}
-.related-ability-container >>> .el-drawer__body {
-  display flex
-  flex-direction column
-  overflow scroll
-  align-items center
-}
-.related-ability-container >>> .el-drawer__header {
-  span {
-    &:focus {
-      outline 0
-    }
-  }
-  i {
-    &:focus {
-      outline 0
     }
   }
 }
