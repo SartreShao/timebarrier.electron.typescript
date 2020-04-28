@@ -55,6 +55,16 @@ export type InputTargetOrTargetSubjectType = {
   };
 };
 
+// 输入能力的类别
+export type InputAbility = {
+  id: string | undefined;
+  name: string;
+  targetList: { id: string; name: string }[];
+  planList: { id: string; name: string }[];
+  isActived: boolean;
+  isFinished: boolean;
+};
+
 // 底边栏 TAB 的类别
 export type TabType = "plan" | "target-ability" | "statistic" | "me";
 
