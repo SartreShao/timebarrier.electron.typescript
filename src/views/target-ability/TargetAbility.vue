@@ -482,7 +482,7 @@
       </div>
     </tb-drawer>
 
-    <!-- 抽屉菜单：关联相关能力 -->
+    <!-- 抽屉菜单：Target 关联相关 Ability -->
     <tb-drawer
       title="关联相关能力"
       :visible.sync="isTargetRelateAbilityDrawerDisplayed"
@@ -619,9 +619,119 @@
       </div>
     </tb-drawer>
 
-    <!-- 抽屉菜单：关联相关目标 -->
+    <!-- 抽屉菜单：Ability 关联相关 Target -->
+    <tb-drawer
+      title="关联相关能力"
+      :visible.sync="isAbilityRelatedTargetDrawerDisplayed"
+    >
+      <!-- 输入框：创建新 Target -->
+      <div class="input-ability-name-container">
+        <input
+          type="text"
+          placeholder="创建一个新能力"
+          class="input-ability-name"
+          @keyup.enter="keyUpEnter_targetInputBox"
+          v-model="input_targetName"
+        />
 
-    <!-- 抽屉菜单：关联相关计划 -->
+        <img :src="assets.icon_enter" alt="icon_enter" />
+      </div>
+
+      <!-- 包含框 -->
+      <section class="ability-container">
+        <div
+          class="ability-item"
+          v-for="item in input_targetListOfAbility"
+          v-bind:key="item.id"
+          @click="click_targetItemSelector(item)"
+        >
+          <span>{{ item.attributes.name }}</span>
+          <img
+            v-if="item.attributes.selected"
+            :src="assets.icon_finished"
+            alt="icon_finished"
+          />
+          <img v-else src="" alt="" />
+        </div>
+      </section>
+
+      <div class="button-container">
+        <!-- 按钮：取消计划 -->
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="isAbilityRelatedTargetDrawerDisplayed = false"
+        >
+          取消
+        </div>
+
+        <!-- 按钮：选择计划 -->
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_saveTargetOfAbilityButton"
+        >
+          选择
+        </div>
+      </div>
+    </tb-drawer>
+
+    <!-- 抽屉菜单：Ability 关联相关 Plan -->
+    <tb-drawer
+      title="关联相关能力"
+      :visible.sync="isAbilityRelatedPlanDrawerDisplayed"
+    >
+      <!-- 输入框：创建新 Target -->
+      <div class="input-ability-name-container">
+        <input
+          type="text"
+          placeholder="创建一个新能力"
+          class="input-ability-name"
+          @keyup.enter="keyUpEnter_planInputBox"
+          v-model="input_planName"
+        />
+
+        <img :src="assets.icon_enter" alt="icon_enter" />
+      </div>
+
+      <!-- 包含框 -->
+      <section class="ability-container">
+        <div
+          class="ability-item"
+          v-for="item in input_planListOfAbility"
+          v-bind:key="item.id"
+          @click="click_planItemSelector(item)"
+        >
+          <span>{{ item.attributes.name }}</span>
+          <img
+            v-if="item.attributes.selected"
+            :src="assets.icon_finished"
+            alt="icon_finished"
+          />
+          <img v-else src="" alt="" />
+        </div>
+      </section>
+
+      <div class="button-container">
+        <!-- 按钮：取消计划 -->
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="isAbilityRelatedPlanDrawerDisplayed = false"
+        >
+          取消
+        </div>
+
+        <!-- 按钮：选择计划 -->
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_savePlanOfAbilityButton"
+        >
+          选择
+        </div>
+      </div>
+    </tb-drawer>
 
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
@@ -781,14 +891,32 @@ export default defineComponent({
       ref([])
     );
 
-    // 抽屉菜单控制器：关联能力
+    // 抽屉菜单控制器：Target 关联 Ability
     const isTargetRelateAbilityDrawerDisplayed: Ref<boolean> = ref(false);
+
+    // 抽屉菜单控制器：Ability 关联 Target
+    const isAbilityRelatedTargetDrawerDisplayed: Ref<boolean> = ref(false);
+
+    // 抽屉菜单控制器：Ability 关联 Plan
+    const isAbilityRelatedPlanDrawerDisplayed: Ref<boolean> = ref(false);
 
     // 用户输入：创建的「能力」的名称
     const input_abilityName: Ref<string> = ref("");
 
+    // 用户输入：创建的「目标」的名称
+    const input_targetName: Ref<string> = ref("");
+
+    // 用户输入：创建的「计划」的名称
+    const input_planName: Ref<string> = ref("");
+
     // 用户输入：需要关联到目标的能力列表
     const input_abilityListOfTarget: Ref<AV.Object[]> = ref([]);
+
+    // 用户输入：需要关联到能力的目标列表
+    const input_targetListOfAbility: Ref<AV.Object[]> = ref([]);
+
+    // 用户输入：需要关联到能力的计划列表
+    const input_planListOfAbility: Ref<AV.Object[]> = ref([]);
 
     // 回车事件：能力输入框
     const keyUpEnter_abilityInputBox = () => {
@@ -810,6 +938,12 @@ export default defineComponent({
         );
       }
     };
+
+    // 回车事件：Target 输入框
+    const keyUpEnter_targetInputBox = () => {};
+
+    // 回车事件：Plan 输入框
+    const keyUpEnter_planInputBox = () => {};
 
     const colormap: string[] = inject(Store.colormap, []);
 
@@ -876,10 +1010,16 @@ export default defineComponent({
       );
     };
 
-    // 点击事件：选择能力的单项
+    // 点击事件：选择能力的单项（Target 关联相关能力）
     const click_abilityItemSelector = (ability: AV.Object) => {
       TargetPage.selectAbilityToCommit(ability);
     };
+
+    // 点击事件：选择目标的单项（Ability 关联相关目标）
+    const click_targetItemSelector = (target: AV.Object) => {};
+
+    // 点击事件：选择计划的单项（Ability 关联相关计划）
+    const click_planItemSelector = (plan: AV.Object) => {};
 
     // 点击事件：保存选择好的 Ability
     const click_saveAbilityOfTargetButton = () => {
@@ -890,6 +1030,12 @@ export default defineComponent({
         input_editingTargetOrTargetSubject
       );
     };
+
+    // 点击事件：保存选择好的 Target
+    const click_saveTargetOfAbilityButton = () => {};
+
+    // 点击事件：保存选择好的 Plan
+    const click_savePlanOfAbilityButton = () => {};
 
     // 点击事件：编辑 Ability 时，关联 Target
     const click_relatedTargetEditButton = () => {};
@@ -939,11 +1085,23 @@ export default defineComponent({
       targetSubjectList,
       isTargetRelateAbilityDrawerDisplayed,
       isEditAbilityDrawerDisplayed,
+      isAbilityRelatedTargetDrawerDisplayed,
+      isAbilityRelatedPlanDrawerDisplayed,
       keyUpEnter_abilityInputBox,
+      keyUpEnter_targetInputBox,
+      keyUpEnter_planInputBox,
       input_abilityName,
+      input_targetName,
+      input_planName,
       input_abilityListOfTarget,
+      input_targetListOfAbility,
+      input_planListOfAbility,
       click_abilityItemSelector,
+      click_targetItemSelector,
+      click_planItemSelector,
       click_saveAbilityOfTargetButton,
+      click_saveTargetOfAbilityButton,
+      click_savePlanOfAbilityButton,
       click_relatedAbilityCreateTargetButton,
       click_relatedAbilityEditTargetButton,
       click_relatedTargetEditButton,
