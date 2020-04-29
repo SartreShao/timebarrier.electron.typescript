@@ -4,17 +4,47 @@
     :title="title"
     direction="btt"
     size="86.64%"
-    :visible.sync="isShow"
+    :visible.sync="_visible"
   >
     <slot></slot>
   </el-drawer>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  watchEffect,
+  watch,
+  Ref
+} from "@vue/composition-api";
 
 export default defineComponent({
-  props: { title: String, isShow: Boolean }
+  props: { title: String, visible: Boolean },
+  setup(props, context) {
+    const _visible: Ref<boolean> = ref(false);
+
+    if (props.visible !== undefined) {
+      _visible.value = props.visible;
+    }
+
+    watch(
+      () => props.visible,
+      (newVal, oldVal) => {
+        if (newVal !== undefined) {
+          _visible.value = newVal;
+        }
+      }
+    );
+
+    watch(_visible, (newVal, oldVal) => {
+      context.emit("update:visible", newVal);
+    });
+
+    return {
+      _visible
+    };
+  }
 });
 </script>
 
