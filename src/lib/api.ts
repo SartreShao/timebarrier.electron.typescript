@@ -1134,38 +1134,59 @@ export default {
   /**
    * 请求 TargetList 列表带着 Ability 的 selected
    */
-  fetchTargetListWithAbilitySelect: (abilityId: string): Promise<AV.Object[]> =>
+  fetchTargetListWithAbilitySelect: (
+    abilityId: string | null,
+    user?: AV.User
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
-        const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
+        if (abilityId !== null) {
+          const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
 
-        const user: AV.User = ability.attributes.user;
+          const user: AV.User = ability.attributes.user;
 
-        const targetList = await new AV.Query(Target)
-          .equalTo("user", user)
-          .equalTo("isFinished", false)
-          .equalTo("isActived", true)
-          .find();
+          const targetList = await new AV.Query(Target)
+            .equalTo("user", user)
+            .equalTo("isFinished", false)
+            .equalTo("isActived", true)
+            .find();
 
-        const abilityTargetList = await new AV.Query(AbilityTarget)
-          .containedIn("target", targetList)
-          .equalTo("ability", ability)
-          .find();
+          const abilityTargetList = await new AV.Query(AbilityTarget)
+            .containedIn("target", targetList)
+            .equalTo("ability", ability)
+            .find();
 
-        targetList.forEach(target => {
-          target.attributes.selected = false;
-        });
-
-        abilityTargetList.forEach(abilityTarget => {
           targetList.forEach(target => {
-            if (abilityTarget.attributes.target.id === target.id) {
-              target.attributes.selected = true;
-            }
+            target.attributes.selected = false;
           });
-        });
 
-        Log.success("fetchTargetListWithAbilitySelect", targetList);
-        resolve(targetList);
+          abilityTargetList.forEach(abilityTarget => {
+            targetList.forEach(target => {
+              if (abilityTarget.attributes.target.id === target.id) {
+                target.attributes.selected = true;
+              }
+            });
+          });
+
+          Log.success("fetchTargetListWithAbilitySelect", targetList);
+          resolve(targetList);
+        } else {
+          if (user === undefined) {
+            throw "user is undefined";
+          }
+          const targetList = await new AV.Query(Target)
+            .equalTo("user", user)
+            .equalTo("isFinished", false)
+            .equalTo("isActived", true)
+            .find();
+
+          targetList.forEach(target => {
+            target.attributes.selected = false;
+          });
+
+          Log.success("fetchTargetListWithAbilitySelect", targetList);
+          resolve(targetList);
+        }
       } catch (error) {
         Log.error("fetchTargetListWithAbilitySelect", error);
         reject(error);
