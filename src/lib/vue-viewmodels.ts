@@ -2757,6 +2757,20 @@ const AbilityPage = {
         );
       }
     }
+  },
+
+  /**
+   * 选择 Plan Item
+   */
+  selectPlanItem: (plan: { attributes: { selected: boolean } }) => {
+    plan.attributes.selected = !plan.attributes.selected;
+  },
+
+  /**
+   * 选择 Target Item
+   */
+  selectTargetItem: (target: { attributes: { selected: boolean } }) => {
+    target.attributes.selected = !target.attributes.selected;
   }
 };
 
