@@ -915,7 +915,15 @@ export default defineComponent({
     };
 
     // 点击事件：保存 Ability 按钮
-    const click_saveAbilityButton = () => {};
+    const click_saveAbilityButton = () => {
+      AbilityPage.saveAbility(
+        context.root,
+        isEditAbilityDrawerDisplayed,
+        input_editingAbility,
+        abilityList,
+        levelRuleList
+      );
+    };
 
     return {
       currentTab,
