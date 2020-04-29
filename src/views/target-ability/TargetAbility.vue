@@ -621,7 +621,7 @@
 
     <!-- 抽屉菜单：Ability 关联相关 Target -->
     <tb-drawer
-      title="关联相关能力"
+      title="关联相关目标"
       :visible.sync="isAbilityRelatedTargetDrawerDisplayed"
     >
       <!-- 输入框：创建新 Target -->
@@ -678,7 +678,7 @@
 
     <!-- 抽屉菜单：Ability 关联相关 Plan -->
     <tb-drawer
-      title="关联相关能力"
+      title="关联相关计划"
       :visible.sync="isAbilityRelatedPlanDrawerDisplayed"
     >
       <!-- 输入框：创建新 Target -->
