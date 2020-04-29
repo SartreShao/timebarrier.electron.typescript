@@ -2676,6 +2676,88 @@ const AbilityPage = {
         );
       }
     }
+  },
+
+  /**
+   * 打开「关联相关目标」编辑抽屉
+   */
+  openRelateTargetDrawer: async (
+    vue: ElementVue,
+    isAbilityRelatedTargetDrawerDisplayed: Ref<boolean>,
+    input_targetListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType | null,
+    colormap: string[]
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 打开抽屉菜单
+    isAbilityRelatedTargetDrawerDisplayed.value = true;
+
+    // 编辑能力
+    if (input_editingAbility !== null) {
+      // 尝试请求带有 selected 属性的 Target
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的目标..."
+      );
+
+      if (input_editingAbility.id === undefined) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "input_editingAbility.id===undefined",
+          "error"
+        );
+        return;
+      }
+
+      try {
+        input_targetListOfAbility.value = await Api.fetchTargetListWithAbilitySelect(
+          input_editingAbility.id
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+    // 创建能力
+    else {
+      // 尝试请求带有 selected 属性的 Target
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的目标..."
+      );
+
+      try {
+        input_targetListOfAbility.value = await Api.fetchTargetListWithAbilitySelect(
+          null,
+          user
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
   }
 };
 
