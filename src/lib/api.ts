@@ -1051,5 +1051,20 @@ export default {
         Log.error("fetchLevelRuleList", error);
         reject(error);
       }
+    }),
+  /**
+   * 删除 Ability
+   */
+  deleteAbility: (abilityId: string) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const ability = await new AV.Query(Ability).get(abilityId);
+        await ability.destroy();
+        Log.success("deleteAbility");
+        resolve();
+      } catch (error) {
+        Log.error("deleteAbility", error);
+        reject(error);
+      }
     })
 };

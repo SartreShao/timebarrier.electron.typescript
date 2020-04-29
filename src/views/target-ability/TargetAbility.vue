@@ -599,7 +599,7 @@
       <div style="height:2.4vh"></div>
 
       <div class="button-container">
-        <!-- 按钮：删除计划 -->
+        <!-- 按钮：删除能力 -->
         <div
           class="delete-button"
           v-darked-when-click
@@ -608,7 +608,7 @@
           删除
         </div>
 
-        <!-- 按钮：保存计划 -->
+        <!-- 按钮：保存能力 -->
         <div
           class="save-button"
           v-darked-when-click
@@ -618,6 +618,10 @@
         </div>
       </div>
     </tb-drawer>
+
+    <!-- 抽屉菜单：关联相关目标 -->
+
+    <!-- 抽屉菜单：关联相关计划 -->
 
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
@@ -649,7 +653,7 @@ import icon_enter from "../../assets/icon_enter.svg";
 import icon_finished from "../../assets/icon_finished.svg";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import TbInput from "@/lib/components/TbInput.vue";
-import { TargetPage } from "../../lib/vue-viewmodels";
+import { TargetPage, AbilityPage } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopBar, BottomBar, Target, Ability, TbDrawer, TbInput },
@@ -765,6 +769,15 @@ export default defineComponent({
     //「目标类别」的列表
     const targetSubjectList: Ref<AV.Object[]> = inject(
       Store.targetSubjectList,
+      ref([])
+    );
+
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
       ref([])
     );
 
@@ -891,7 +904,15 @@ export default defineComponent({
     const click_relatedPlanCreateButton = () => {};
 
     // 点击事件：删除 Ability 按钮
-    const click_deleteAbilityButton = () => {};
+    const click_deleteAbilityButton = () => {
+      AbilityPage.deleteAbility(
+        context.root,
+        isEditAbilityDrawerDisplayed,
+        input_editingAbility,
+        abilityList,
+        levelRuleList
+      );
+    };
 
     // 点击事件：保存 Ability 按钮
     const click_saveAbilityButton = () => {};

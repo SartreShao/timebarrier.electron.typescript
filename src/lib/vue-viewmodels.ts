@@ -2358,6 +2358,88 @@ const AbilityPage = {
         return { id: target.id, name: target.attributes.name };
       }
     );
+  },
+
+  /**
+   * 删除正在编辑的能力
+   */
+  deleteAbility: async (
+    vue: ElementVue,
+    isEditAbilityDrawerDisplayed: Ref<boolean>,
+    input_editingAbility: InputAbilityType,
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_editingAbility.id !== undefined) {
+      // 弹窗询问用户是否确定删除
+      try {
+        await UI.showConfirm(
+          vue.$confirm,
+          "这将导致该能力及其背后的记录永久丢失",
+          "是否确定删掉该能力"
+        );
+
+        // 确定删除
+        // 显示进度条
+        const loadingInstance = UI.showLoading(
+          vue.$loading,
+          "正在删除您的能力..."
+        );
+
+        // 尝试删除计划，并刷新列表
+        try {
+          await Api.deleteAbility(input_editingAbility.id);
+
+          if (levelRuleList.value.length === 0) {
+            levelRuleList.value = await Api.fetchLevelRuleList();
+          }
+
+          // 尝试获取能力列表
+          abilityList.value = await Api.fetchAbilityList(
+            user,
+            false,
+            true,
+            levelRuleList.value,
+            true,
+            true
+          );
+
+          // 保存成功
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(vue.$notify, "能力删除成功", "", "success");
+
+          // 关闭窗口
+          isEditAbilityDrawerDisplayed.value = false;
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "能力删除失败",
+            `错误原因：${error.message},`,
+            "error"
+          );
+        }
+      } catch (error) {
+        // 取消删除
+        // doing nothing
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "错误原因：input_editingAbility.id is undefined",
+        "error"
+      );
+    }
   }
 };
 
