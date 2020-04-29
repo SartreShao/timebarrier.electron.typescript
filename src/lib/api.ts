@@ -1129,5 +1129,46 @@ export default {
         Log.error("saveAbility", error);
         reject(error);
       }
+    }),
+
+  /**
+   * 请求 TargetList 列表带着 Ability 的 selected
+   */
+  fetchTargetListWithAbilitySelect: (abilityId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
+
+        const user: AV.User = ability.attributes.user;
+
+        const targetList = await new AV.Query(Target)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .equalTo("isActived", true)
+          .find();
+
+        const abilityTargetList = await new AV.Query(AbilityTarget)
+          .containedIn("target", targetList)
+          .equalTo("ability", ability)
+          .find();
+
+        targetList.forEach(target => {
+          target.attributes.selected = false;
+        });
+
+        abilityTargetList.forEach(abilityTarget => {
+          targetList.forEach(target => {
+            if (abilityTarget.attributes.target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
+
+        Log.success("fetchTargetListWithAbilitySelect", targetList);
+        resolve(targetList);
+      } catch (error) {
+        Log.error("fetchTargetListWithAbilitySelect", error);
+        reject(error);
+      }
     })
 };
