@@ -8,9 +8,6 @@
       :ability="ability"
       v-longclick="() => click_abilityItem(ability)"
     ></ability-item>
-    <tb-drawer isShow="ture">
-      <tb-input></tb-input>
-    </tb-drawer>
   </div>
 </template>
 
@@ -79,7 +76,7 @@ export default defineComponent({
       AbilityPage.init(context.root, abilityList, levelRuleList);
     });
 
-    return { abilityList };
+    return { abilityList, isEditAbilityDrawerDisplayed, click_abilityItem };
   },
   components: { draggable, AbilityItem, TbInput, TbDrawer }
 });
