@@ -2029,10 +2029,7 @@ const TargetPage = {
       }
 
       // 尝试请求带有 selected 属性的 Ability
-      const loadingInstance = UI.showLoading(
-        vue.$loading,
-        "正在请求相关的能力"
-      );
+      const loadingInstance = UI.showLoading(vue.$loading, "正在创建能力...");
 
       try {
         // 创建计划
@@ -2108,7 +2105,7 @@ const TargetPage = {
       );
 
       try {
-        // 创建计划
+        // 创建能力
         await Api.createAbility(
           input_abilityName.value,
           user,
@@ -2519,6 +2516,165 @@ const AbilityPage = {
         `错误原因：${error.message},`,
         "error"
       );
+    }
+  },
+
+  /**
+   * 创建 Target
+   */
+  createTarget: async (
+    vue: ElementVue,
+    input_targetName: Ref<string>,
+    input_targetListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType | null,
+    colormap: string[]
+  ) => {
+    if (input_editingAbility !== null) {
+      createTargetInEditAbility(
+        vue,
+        input_targetName,
+        input_targetListOfAbility,
+        input_editingAbility,
+        colormap
+      );
+    } else {
+      createTargetInCreateAbility(
+        vue,
+        input_targetName,
+        input_targetListOfAbility,
+        colormap
+      );
+    }
+
+    async function createTargetInEditAbility(
+      vue: ElementVue,
+      input_targetName: Ref<string>,
+      input_targetListOfAbility: Ref<AV.Object[]>,
+      input_editingAbility: InputAbilityType,
+      colormap: string[]
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_targetName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      if (input_editingAbility.id === undefined) {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingAbility.id === undefined",
+          "error"
+        );
+        return;
+      }
+
+      // 尝试创建新 Target
+      const loadingInstance = UI.showLoading(vue.$loading, "正在创建目标...");
+
+      try {
+        // 创建目标
+        await Api.createTarget(
+          user,
+          null,
+          input_targetName.value,
+          "",
+          "indefinite",
+          null,
+          [],
+          true,
+          false,
+          colormap
+        );
+
+        // 刷新目标列表
+        input_targetListOfAbility.value = await Api.fetchTargetListWithAbilitySelect(
+          input_editingAbility.id
+        );
+
+        UI.hideLoading(loadingInstance);
+
+        // 清空输入框
+        input_targetName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+
+    async function createTargetInCreateAbility(
+      vue: ElementVue,
+      input_targetName: Ref<string>,
+      input_targetListOfAbility: Ref<AV.Object[]>,
+      colormap: string[]
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_targetName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在创建您的目标..."
+      );
+
+      try {
+        // 创建目标
+        await Api.createTarget(
+          user,
+          null,
+          input_targetName.value,
+          "",
+          "indefinite",
+          null,
+          [],
+          true,
+          false,
+          colormap
+        );
+
+        // 刷新目标列表
+        input_targetListOfAbility.value = await Api.fetchTargetListWithAbilitySelect(
+          null,
+          user
+        );
+
+        UI.hideLoading(loadingInstance);
+
+        input_targetName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
     }
   }
 };
