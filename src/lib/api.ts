@@ -1066,5 +1066,68 @@ export default {
         Log.error("deleteAbility", error);
         reject(error);
       }
+    }),
+  /**
+   * 保存 Ability
+   */
+  saveAbility: (
+    abilityId: string,
+    name: string,
+    planIdList: string[],
+    targetIdList: [],
+    isActived?: boolean,
+    isFinished?: boolean
+  ) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        // 保存基础信息
+        const ability = await new AV.Query(Ability).get(abilityId);
+
+        if (isActived !== undefined) {
+          ability.set("isActived", isActived);
+        }
+
+        if (isFinished !== undefined) {
+          ability.set("isFinished", isFinished);
+        }
+
+        await ability.set("name", name).save();
+
+        // 删除所有的相关的中间表
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .equalTo("ability", ability)
+          .find();
+
+        await AV.Object.destroyAll(abilityPlanList);
+
+        const abilityTargetList = await new AV.Query(AbilityTarget)
+          .equalTo("ability", ability)
+          .find();
+
+        await AV.Object.destroyAll(abilityTargetList);
+
+        // 添加所有的中间表
+        const creatingAbilityPlanList = planIdList.map(planId =>
+          new AbilityPlan()
+            .set("ability", ability)
+            .set("plan", AV.Object.createWithoutData(Plan, planId))
+        );
+
+        await AV.Object.saveAll(creatingAbilityPlanList);
+
+        const creatingAbilityTargetList = targetIdList.map(targetId =>
+          new AbilityTarget()
+            .set("ability", ability)
+            .set("target", AV.Object.createWithoutData(Target, targetId))
+        );
+
+        await AV.Object.saveAll(creatingAbilityTargetList);
+
+        Log.success("saveAbility", ability);
+        resolve(ability);
+      } catch (error) {
+        Log.error("saveAbility", error);
+        reject(error);
+      }
     })
 };
