@@ -1038,10 +1038,14 @@ export default defineComponent({
     };
 
     // 点击事件：选择目标的单项（Ability 关联相关目标）
-    const click_targetItemSelector = (target: AV.Object) => {};
+    const click_targetItemSelector = (target: AV.Object) => {
+      AbilityPage.selectTargetItem(target);
+    };
 
     // 点击事件：选择计划的单项（Ability 关联相关计划）
-    const click_planItemSelector = (plan: AV.Object) => {};
+    const click_planItemSelector = (plan: AV.Object) => {
+      AbilityPage.selectPlanItem(plan);
+    };
 
     // 点击事件：保存选择好的 Ability
     const click_saveAbilityOfTargetButton = () => {
