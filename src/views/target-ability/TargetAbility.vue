@@ -34,7 +34,7 @@
           ? `创建目标`
           : `创建目标类别`
       "
-      :isShow="isCreateTargetDrawerDisplayed"
+      :visible.sync="isCreateTargetDrawerDisplayed"
     >
       <!-- 单选框：创建目标 or 目标类别 -->
       <el-select
@@ -268,7 +268,7 @@
           ? `编辑目标`
           : `编辑目标类别`
       "
-      :isShow="isEditTargetDrawerDisplayed"
+      :visible.sync="isEditTargetDrawerDisplayed"
     >
       <!-- 下面是创建目标类别 -->
       <!-- 输入框：输入目标类别名称 -->
@@ -485,7 +485,7 @@
     <!-- 抽屉菜单：关联相关能力 -->
     <tb-drawer
       title="关联相关能力"
-      :isShow="isTargetRelateAbilityDrawerDisplayed"
+      :visible.sync="isTargetRelateAbilityDrawerDisplayed"
     >
       <!-- 输入框：创建新能力 -->
       <div class="input-ability-name-container">
@@ -540,7 +540,7 @@
     </tb-drawer>
 
     <!-- 抽屉菜单：编辑能力 -->
-    <tb-drawer title="编辑能力" :isShow="isEditAbilityDrawerDisplayed">
+    <tb-drawer title="编辑能力" :visible.sync="isEditAbilityDrawerDisplayed">
       <!-- 输入框：输入能力名称 -->
       <tb-input
         placeholder="输入能力名称"
@@ -909,6 +909,7 @@ export default defineComponent({
       input_editingAbility,
       targetSubjectList,
       isTargetRelateAbilityDrawerDisplayed,
+      isEditAbilityDrawerDisplayed,
       keyUpEnter_abilityInputBox,
       input_abilityName,
       input_abilityListOfTarget,
