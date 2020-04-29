@@ -1074,7 +1074,7 @@ export default {
     abilityId: string,
     name: string,
     planIdList: string[],
-    targetIdList: [],
+    targetIdList: string[],
     isActived?: boolean,
     isFinished?: boolean
   ) =>
