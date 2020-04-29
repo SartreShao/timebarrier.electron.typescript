@@ -2440,6 +2440,86 @@ const AbilityPage = {
         "error"
       );
     }
+  },
+
+  /**
+   * 保存正在编辑的能力
+   */
+  saveAbility: async (
+    vue: ElementVue,
+    isEditAbilityDrawerDisplayed: Ref<boolean>,
+    input_editingAbility: InputAbilityType,
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 输入检测
+    if (input_editingAbility.id === undefined) {
+      UI.showNotification(
+        vue.$notify,
+        "能力保存失败",
+        "错误原因：input_editingAbility.id === undefined",
+        "error"
+      );
+      return;
+    }
+
+    // 输入检测
+    if (input_editingAbility.name.length === 0) {
+      UI.showNotification(vue.$notify, "请输入能力名称", "", "warning");
+      return;
+    }
+
+    // 尝试保存 AbilityPage
+    const loadingInstance = UI.showLoading(vue.$loading, "正在保存您的能力...");
+
+    try {
+      await Api.saveAbility(
+        input_editingAbility.id,
+        input_editingAbility.name,
+        input_editingAbility.planList.map(plan => plan.id),
+        input_editingAbility.targetList.map(target => target.id),
+        input_editingAbility.isActived,
+        input_editingAbility.isFinished
+      );
+
+      if (levelRuleList.value.length === 0) {
+        levelRuleList.value = await Api.fetchLevelRuleList();
+      }
+
+      // 尝试获取能力列表
+      abilityList.value = await Api.fetchAbilityList(
+        user,
+        false,
+        true,
+        levelRuleList.value,
+        true,
+        true
+      );
+
+      // 保存成功
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, "能力保存成功", "", "success");
+
+      // 关闭窗口
+      isEditAbilityDrawerDisplayed.value = false;
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "能力保存失败",
+        `错误原因：${error.message},`,
+        "error"
+      );
+    }
   }
 };
 
