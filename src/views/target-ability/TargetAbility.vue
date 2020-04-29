@@ -768,8 +768,14 @@ import { TargetPage, AbilityPage } from "../../lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar, BottomBar, Target, Ability, TbDrawer, TbInput },
   setup(props, context) {
+    // 色彩表
+    const colormap: string[] = inject(Store.colormap, []);
+
     // 一个临时变量，用于标明当前是在创建 Target 还是在编辑 Target
     const isCreateTarget: Ref<boolean> = ref(false);
+
+    // 一个临时变量，用于标明当前是在创建 Ablity 还是在编辑 Ability
+    const isCreateAbility: Ref<boolean> = ref(false);
 
     // 当前的 TAB：Ability｜Target
     const currentTab: Ref<TargetAbilityTabType> = ref("target");
@@ -940,12 +946,28 @@ export default defineComponent({
     };
 
     // 回车事件：Target 输入框
-    const keyUpEnter_targetInputBox = () => {};
+    const keyUpEnter_targetInputBox = () => {
+      if (isCreateAbility.value) {
+        AbilityPage.createTarget(
+          context.root,
+          input_targetName,
+          input_targetListOfAbility,
+          null,
+          colormap
+        );
+      } else {
+        AbilityPage.createTarget(
+          context.root,
+          input_targetName,
+          input_targetListOfAbility,
+          input_editingAbility,
+          colormap
+        );
+      }
+    };
 
     // 回车事件：Plan 输入框
     const keyUpEnter_planInputBox = () => {};
-
-    const colormap: string[] = inject(Store.colormap, []);
 
     // 点击事件：创建目标或目标目录
     const click_createTargetOrTargetSubject = () => {
@@ -1038,16 +1060,24 @@ export default defineComponent({
     const click_savePlanOfAbilityButton = () => {};
 
     // 点击事件：编辑 Ability 时，关联 Target
-    const click_relatedTargetEditButton = () => {};
+    const click_relatedTargetEditButton = () => {
+      isCreateAbility.value = false;
+    };
 
     // 点击事件：编辑 Ability 时，关联 Plan
-    const click_relatedPlanEditButton = () => {};
+    const click_relatedPlanEditButton = () => {
+      isCreateAbility.value = false;
+    };
 
     // 点击事件：创建 Ability 时，关联 Target
-    const click_relatedTargetCreateButton = () => {};
+    const click_relatedTargetCreateButton = () => {
+      isCreateAbility.value = true;
+    };
 
     // 点击事件：创建 Ability 时，关联 Plan
-    const click_relatedPlanCreateButton = () => {};
+    const click_relatedPlanCreateButton = () => {
+      isCreateAbility.value = true;
+    };
 
     // 点击事件：删除 Ability 按钮
     const click_deleteAbilityButton = () => {
