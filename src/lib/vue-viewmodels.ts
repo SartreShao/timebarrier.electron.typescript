@@ -2685,8 +2685,7 @@ const AbilityPage = {
     vue: ElementVue,
     isAbilityRelatedTargetDrawerDisplayed: Ref<boolean>,
     input_targetListOfAbility: Ref<AV.Object[]>,
-    input_editingAbility: InputAbilityType | null,
-    colormap: string[]
+    input_editingAbility: InputAbilityType | null
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
