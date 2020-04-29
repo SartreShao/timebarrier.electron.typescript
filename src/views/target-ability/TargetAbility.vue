@@ -562,10 +562,10 @@
           v-if="input_editingAbility.targetList.length === 0"
         />
         <span v-if="input_editingAbility.targetList.length === 0"
-          >关联相关能力</span
+          >关联相关目标</span
         >
         <span v-else>{{
-          "相关能力：" +
+          "相关目标：" +
             input_editingAbility.targetList
               .map(target => target.name)
               .join("、")
@@ -587,10 +587,10 @@
           v-if="input_editingAbility.planList.length === 0"
         />
         <span v-if="input_editingAbility.planList.length === 0"
-          >关联相关能力</span
+          >关联相关计划</span
         >
         <span v-else>{{
-          "相关能力：" +
+          "相关计划：" +
             input_editingAbility.planList.map(plan => plan.name).join("、")
         }}</span>
       </div>
