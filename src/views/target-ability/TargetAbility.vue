@@ -1062,6 +1062,12 @@ export default defineComponent({
     // 点击事件：编辑 Ability 时，关联 Target
     const click_relatedTargetEditButton = () => {
       isCreateAbility.value = false;
+      AbilityPage.openRelateTargetDrawer(
+        context.root,
+        isAbilityRelatedTargetDrawerDisplayed,
+        input_targetListOfAbility,
+        input_editingAbility
+      );
     };
 
     // 点击事件：编辑 Ability 时，关联 Plan
@@ -1072,6 +1078,12 @@ export default defineComponent({
     // 点击事件：创建 Ability 时，关联 Target
     const click_relatedTargetCreateButton = () => {
       isCreateAbility.value = true;
+      AbilityPage.openRelateTargetDrawer(
+        context.root,
+        isAbilityRelatedTargetDrawerDisplayed,
+        input_targetListOfAbility,
+        null
+      );
     };
 
     // 点击事件：创建 Ability 时，关联 Plan
