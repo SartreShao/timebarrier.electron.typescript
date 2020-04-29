@@ -2,6 +2,7 @@
   <div class="container">
     <div style="height:2.62vh"></div>
     <ability-item
+      v-splash-when-click
       class="ability-item"
       v-for="ability in abilityList"
       :key="ability.id"
