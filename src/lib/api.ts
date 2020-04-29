@@ -1170,5 +1170,46 @@ export default {
         Log.error("fetchTargetListWithAbilitySelect", error);
         reject(error);
       }
+    }),
+
+  /**
+   * 请求 PlanList with Ability .selected
+   */
+  fetchPlanListWithAbilitySelect: (abilityId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
+
+        const user: AV.User = ability.attributes.user;
+
+        const planList = await new AV.Query(Plan)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .equalTo("isActived", true)
+          .find();
+
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .containedIn("plan", planList)
+          .equalTo("ability", ability)
+          .find();
+
+        planList.forEach(plan => {
+          plan.attributes.selected = false;
+        });
+
+        abilityPlanList.forEach(abilityPlan => {
+          planList.forEach(plan => {
+            if (abilityPlan.attributes.plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+
+        Log.success("fetchPlanListWithAbilitySelect", planList);
+        resolve(planList);
+      } catch (error) {
+        Log.error("fetchPlanListWithAbilitySelect", error);
+        reject(error);
+      }
     })
 };
