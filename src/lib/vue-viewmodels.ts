@@ -2771,6 +2771,36 @@ const AbilityPage = {
    */
   selectTargetItem: (target: { attributes: { selected: boolean } }) => {
     target.attributes.selected = !target.attributes.selected;
+  },
+
+  /**
+   * 保存选择好的 Target 到 input_abilityListOfTarget
+   */
+  saveSelectedTargetToInputAbility: (
+    isAbilityRelatedTargetDrawerDisplayed: Ref<boolean>,
+    input_targetListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType,
+    input_creatingAbility: InputAbilityType
+  ) => {
+    // 关闭抽屉菜单
+    isAbilityRelatedTargetDrawerDisplayed.value = false;
+
+    const targetList: { id: string; name: string }[] = [];
+
+    input_targetListOfAbility.value.forEach(target => {
+      if (target.attributes.selected === true) {
+        if (target.id !== undefined) {
+          targetList.push({
+            id: target.id,
+            name: target.attributes.name
+          });
+        }
+      }
+    });
+
+    input_editingAbility.targetList = targetList;
+
+    input_creatingAbility.targetList = targetList;
   }
 };
 

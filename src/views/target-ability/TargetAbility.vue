@@ -1058,7 +1058,14 @@ export default defineComponent({
     };
 
     // 点击事件：保存选择好的 Target
-    const click_saveTargetOfAbilityButton = () => {};
+    const click_saveTargetOfAbilityButton = () => {
+      AbilityPage.saveSelectedTargetToInputAbility(
+        isAbilityRelatedTargetDrawerDisplayed,
+        input_targetListOfAbility,
+        input_editingAbility,
+        input_creatingAbility
+      );
+    };
 
     // 点击事件：保存选择好的 Plan
     const click_savePlanOfAbilityButton = () => {};
