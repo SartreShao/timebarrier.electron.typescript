@@ -11,7 +11,7 @@
     ></ability-item>
 
     <!-- 创建 Ability 的按钮 -->
-    <div class="create-ability-container">
+    <div class="create-ability-container" @click="click_createAbilityButton">
       <img :src="assets.icon_plus" alt="icon_plus" />
     </div>
   </div>
@@ -77,6 +77,9 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击创建能力
+    const click_createAbilityButton = () => {};
+
     // 生命周期：初始化
     onMounted(() => {
       console.log("levelRuleList", levelRuleList);
@@ -87,6 +90,7 @@ export default defineComponent({
       abilityList,
       isEditAbilityDrawerDisplayed,
       click_abilityItem,
+      click_createAbilityButton,
       assets: { icon_plus }
     };
   },

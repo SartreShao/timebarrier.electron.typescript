@@ -2358,6 +2358,25 @@ const AbilityPage = {
   },
 
   /**
+   * 打开创建能力的抽屉菜单
+   */
+  openAbilityCreateDrawer: async (
+    isCreateAbilityDrawerDisplayed: Ref<boolean>,
+    input_creatingAbility: InputAbilityType
+  ) => {
+    // 打开抽屉菜单
+    isCreateAbilityDrawerDisplayed.value = true;
+
+    // 初始化用户的输入
+    input_creatingAbility.id = undefined;
+    input_creatingAbility.name = "";
+    input_creatingAbility.isActived = true;
+    input_creatingAbility.isFinished = false;
+    input_creatingAbility.planList = [];
+    input_creatingAbility.targetList = [];
+  },
+
+  /**
    * 删除正在编辑的能力
    */
   deleteAbility: async (
