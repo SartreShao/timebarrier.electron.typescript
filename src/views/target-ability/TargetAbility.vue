@@ -1324,6 +1324,7 @@ export default defineComponent({
     display flex
     flex-direction row
     .tab-target {
+      cursor pointer
       width 50vw
       height 5.17vh
       display flex
@@ -1338,6 +1339,7 @@ export default defineComponent({
       text-align center
       color #434343
       &-unselected {
+        cursor pointer
         width 50vw
         height 5.17vh
         display flex
@@ -1354,6 +1356,7 @@ export default defineComponent({
       }
     }
     .tab-ability {
+      cursor pointer
       width 50vw
       height 5.17vh
       display flex
@@ -1368,6 +1371,7 @@ export default defineComponent({
       text-align center
       color #434343
       &-unselected {
+        cursor pointer
         width 50vw
         height 5.17vh
         display flex
