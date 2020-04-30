@@ -3008,6 +3008,36 @@ const AbilityPage = {
     input_editingAbility.targetList = targetList;
 
     input_creatingAbility.targetList = targetList;
+  },
+
+  /**
+   * 保存选择好的 Plan 到 input_editingAbility \ input_creatingAbility
+   */
+  saveSelectedPlanToInputAbility: (
+    isAbilityRelatedPlanDrawerDisplayed: Ref<boolean>,
+    input_planListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType,
+    input_creatingAbility: InputAbilityType
+  ) => {
+    // 关闭抽屉菜单
+    isAbilityRelatedPlanDrawerDisplayed.value = false;
+
+    const planList: { id: string; name: string }[] = [];
+
+    input_planListOfAbility.value.forEach(plan => {
+      if (plan.attributes.selected === true) {
+        if (plan.id !== undefined) {
+          planList.push({
+            id: plan.id,
+            name: plan.attributes.name
+          });
+        }
+      }
+    });
+
+    input_editingAbility.planList = planList;
+
+    input_creatingAbility.planList = planList;
   }
 };
 
