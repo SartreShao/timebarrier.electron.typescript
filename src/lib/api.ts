@@ -1168,7 +1168,6 @@ export default {
     new Promise(async (resolve, reject) => {
       try {
         if (abilityId !== null) {
-
           const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
 
           const user: AV.User = ability.attributes.user;
