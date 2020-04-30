@@ -111,6 +111,20 @@ export default {
       }
     }),
   /**
+   * 保存所有的 AbilityList
+   */
+  saveAbilityList: (objectList: AV.Object[]) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.Object.saveAll(objectList);
+        Log.success("saveAbilityList", objectList);
+        resolve(objectList);
+      } catch (error) {
+        Log.error("saveAbilityList", error);
+        reject(error);
+      }
+    }),
+  /**
    * 保存所有的 TargetSubjectList
    */
   saveTargetSubjectList: (objectList: AV.Object[]) =>
@@ -638,6 +652,8 @@ export default {
         const abilityList = await new AV.Query(Ability)
           .equalTo("user", user)
           .equalTo("isFinished", false)
+          .ascending("order")
+          .addDescending("createdAt")
           .find();
         const abilityPlanList = await new AV.Query(AbilityPlan)
           .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
@@ -673,6 +689,8 @@ export default {
         const abilityList = await new AV.Query(Ability)
           .equalTo("user", user)
           .equalTo("isFinished", false)
+          .ascending("order")
+          .addDescending("createdAt")
           .find();
         const abilityTargetList = await new AV.Query(AbilityTarget)
           .equalTo("target", AV.Object.createWithoutData(Target, targetId))
@@ -1176,6 +1194,8 @@ export default {
             .equalTo("user", user)
             .equalTo("isFinished", false)
             .equalTo("isActived", true)
+            .ascending("order")
+            .addDescending("createdAt")
             .find();
 
           const abilityTargetList = await new AV.Query(AbilityTarget)
@@ -1239,6 +1259,8 @@ export default {
             .equalTo("user", user)
             .equalTo("isFinished", false)
             .equalTo("isActived", true)
+            .ascending("order")
+            .addDescending("createdAt")
             .find();
 
           const abilityPlanList = await new AV.Query(AbilityPlan)

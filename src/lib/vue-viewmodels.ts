@@ -3137,6 +3137,23 @@ const AbilityPage = {
         "error"
       );
     }
+  },
+
+  /**
+   * 保存 AbilityList 的优先级
+   */
+  changeAbilityListOrder: async (abilityList: AV.Object[]) => {
+    const list: AV.Object[] = [];
+    abilityList.forEach((ability, index) => {
+      if (ability.attributes.order !== index && ability.id !== undefined) {
+        const object = AV.Object.createWithoutData("Ability", ability.id).set(
+          "order",
+          index
+        );
+        list.push(object);
+      }
+    });
+    await Api.saveAbilityList(list);
   }
 };
 

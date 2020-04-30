@@ -1,14 +1,23 @@
 <template>
   <div class="container">
     <div style="height:2.62vh"></div>
-    <ability-item
-      v-splash-when-click
-      class="ability-item"
-      v-for="ability in abilityList"
-      :key="ability.id"
-      :ability="ability"
-      v-longclick="() => click_abilityItem(ability)"
-    ></ability-item>
+    <draggable
+      :options="draggableOptions"
+      v-model="abilityList"
+      ghost-class="ghost"
+      @end="dragend_abilityList"
+    >
+      <transition-group type="transition" name="flip-list">
+        <ability-item
+          v-splash-when-click
+          class="ability-item"
+          v-for="ability in abilityList"
+          :key="ability.id"
+          :ability="ability"
+          v-longclick="() => click_abilityItem(ability)"
+        ></ability-item>
+      </transition-group>
+    </draggable>
 
     <!-- 创建 Ability 的按钮 -->
     <div class="create-ability-container" @click="click_createAbilityButton">
@@ -40,6 +49,9 @@ export default defineComponent({
   setup(props, context) {
     // 能力列表
     const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 配置信息
+    const draggableOptions = inject(Store.draggableOptions, {});
 
     // 能力等级列表
     const levelRuleList: Ref<AV.Object[]> = inject(
@@ -102,6 +114,11 @@ export default defineComponent({
       );
     };
 
+    // 拖动结束：能力列表
+    const dragend_abilityList = () => {
+      AbilityPage.changeAbilityListOrder(abilityList.value);
+    };
+
     // 生命周期：初始化
     onMounted(() => {
       console.log("levelRuleList", levelRuleList);
@@ -110,9 +127,11 @@ export default defineComponent({
 
     return {
       abilityList,
+      draggableOptions,
       isEditAbilityDrawerDisplayed,
       click_abilityItem,
       click_createAbilityButton,
+      dragend_abilityList,
       assets: { icon_plus }
     };
   },
@@ -121,6 +140,9 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
 .container {
   height 100%
   width 100%
@@ -135,6 +157,7 @@ export default defineComponent({
   margin-bottom 1.57vh
 }
 .create-ability-container {
+  user-select none
   cursor pointer
   width 7.5vh
   height 7.5vh
