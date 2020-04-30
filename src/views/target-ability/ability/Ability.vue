@@ -9,6 +9,11 @@
       :ability="ability"
       v-longclick="() => click_abilityItem(ability)"
     ></ability-item>
+
+    <!-- 创建 Ability 的按钮 -->
+    <div class="create-ability-container">
+      <img :src="assets.icon_plus" alt="icon_plus" />
+    </div>
   </div>
 </template>
 
@@ -30,6 +35,7 @@ import AbilityItem from "@/components/AbilityItem.vue";
 import TbInput from "@/lib/components/TbInput.vue";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import { InputAbilityType } from "@/lib/types/vue-viewmodels";
+import icon_plus from "@/assets/icon_plus.svg";
 export default defineComponent({
   setup(props, context) {
     // 能力列表
@@ -77,7 +83,12 @@ export default defineComponent({
       AbilityPage.init(context.root, abilityList, levelRuleList);
     });
 
-    return { abilityList, isEditAbilityDrawerDisplayed, click_abilityItem };
+    return {
+      abilityList,
+      isEditAbilityDrawerDisplayed,
+      click_abilityItem,
+      assets: { icon_plus }
+    };
   },
   components: { draggable, AbilityItem, TbInput, TbDrawer }
 });
@@ -96,5 +107,22 @@ export default defineComponent({
 }
 .ability-item {
   margin-bottom 1.57vh
+}
+.create-ability-container {
+  width 7.5vh
+  height 7.5vh
+  box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+  background-color #f4f4f8
+  display flex
+  align-items center
+  justify-content center
+  position fixed
+  border-radius 50%
+  right 5.07vw
+  bottom 3vh + 6.82vh
+  img {
+    width 2.05vh
+    height 2.05vh
+  }
 }
 </style>
