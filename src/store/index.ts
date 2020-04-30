@@ -45,6 +45,8 @@ const input_editingAbility = Symbol();
 const input_creatingAbility = Symbol();
 // 控制变量：「编辑能力」的抽屉菜单是否打开
 const isEditAbilityDrawerDisplayed = Symbol();
+// 控制变量：「创建能力」的抽屉菜单是否打开
+const isCreateAbilityDrawerDisplayed = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -153,6 +155,7 @@ function useProvider() {
     })
   );
   provide(isEditAbilityDrawerDisplayed, ref(false));
+  provide(isCreateAbilityDrawerDisplayed, ref(false));
 }
 
 export default {
@@ -177,5 +180,6 @@ export default {
   abilityList,
   input_editingAbility,
   input_creatingAbility,
-  isEditAbilityDrawerDisplayed
+  isEditAbilityDrawerDisplayed,
+  isCreateAbilityDrawerDisplayed
 };

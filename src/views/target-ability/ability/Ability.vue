@@ -53,19 +53,36 @@ export default defineComponent({
       ref(false)
     );
 
+    // 控制变量：创建能力抽屉
+    const isCreateAbilityDrawerDisplayed: Ref<boolean> = inject(
+      Store.isCreateAbilityDrawerDisplayed,
+      ref(false)
+    );
+
     // 用户输入：编辑能力
     const input_editingAbility: InputAbilityType = inject(
       Store.input_editingAbility,
-      reactive(
-        reactive({
-          id: "",
-          name: "",
-          targetList: [],
-          planList: [],
-          isActived: true,
-          isFinished: false
-        })
-      )
+      reactive({
+        id: "",
+        name: "",
+        targetList: [],
+        planList: [],
+        isActived: true,
+        isFinished: false
+      })
+    );
+
+    // 用户输入：创建能力
+    const input_creatingAbility: InputAbilityType = inject(
+      Store.input_creatingAbility,
+      reactive({
+        id: undefined,
+        name: "",
+        targetList: [],
+        planList: [],
+        isActived: true,
+        isFinished: false
+      })
     );
 
     // 点击事件：点击能力单项
@@ -78,7 +95,12 @@ export default defineComponent({
     };
 
     // 点击事件：点击创建能力
-    const click_createAbilityButton = () => {};
+    const click_createAbilityButton = () => {
+      AbilityPage.openAbilityCreateDrawer(
+        isCreateAbilityDrawerDisplayed,
+        input_creatingAbility
+      );
+    };
 
     // 生命周期：初始化
     onMounted(() => {

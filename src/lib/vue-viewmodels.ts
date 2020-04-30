@@ -3057,6 +3057,86 @@ const AbilityPage = {
     input_editingAbility.planList = planList;
 
     input_creatingAbility.planList = planList;
+  },
+
+  /**
+   * 创建 Ability
+   */
+  createAbility: async (
+    vue: ElementVue,
+    isCreateAbilityDrawerDisplayed: Ref<boolean>,
+    input_creatingAbility: InputAbilityType,
+    abilityList: Ref<AV.Object[]>,
+    colormap: string[],
+    levelRuleList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    if (input_creatingAbility.name.length === 0) {
+      UI.showNotification(vue.$notify, "请输入能力名称", "", "warning");
+      return;
+    }
+
+    // 显示进度条
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建您的能力...");
+
+    // 尝试保存 Ability
+    try {
+      await Api.createAbility(
+        input_creatingAbility.name,
+        user,
+        "",
+        false,
+        true,
+        colormap,
+        input_creatingAbility.planList,
+        input_creatingAbility.targetList
+      );
+
+      // 保存完成后，尝试获取能力列表
+      if (levelRuleList.value.length === 0) {
+        levelRuleList.value = await Api.fetchLevelRuleList();
+      }
+
+      // 尝试获取能力列表
+      abilityList.value = await Api.fetchAbilityList(
+        user,
+        false,
+        true,
+        levelRuleList.value,
+        true,
+        true
+      );
+
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, "能力创建成功", "", "success");
+
+      // 清空输入框
+      input_creatingAbility.id = undefined;
+      input_creatingAbility.name = "";
+      input_creatingAbility.isActived = true;
+      input_creatingAbility.isFinished = false;
+      input_creatingAbility.planList = [];
+      input_creatingAbility.targetList = [];
+
+      // 关闭窗口
+      isCreateAbilityDrawerDisplayed.value = false;
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "能力创建失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
   }
 };
 

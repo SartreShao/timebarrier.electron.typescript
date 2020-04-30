@@ -411,7 +411,9 @@ export default {
     description: string,
     isFinished: boolean,
     isActived: boolean,
-    colormap: string[]
+    colormap: string[],
+    planList?: { id: string; name: string }[],
+    targetList?: { id: string; name: string }[]
   ) =>
     new Promise(async (resolve, reject) => {
       try {
@@ -446,6 +448,31 @@ export default {
           .set("isActived", isActived)
           .set("color", color)
           .save();
+
+        // 保存中间表：AbilityPlan
+        if (planList !== undefined) {
+          const abilityPlanList: AV.Object[] = [];
+          planList.forEach(plan => {
+            const abilityPlan = new AbilityPlan()
+              .set("ability", ability)
+              .set("plan", AV.Object.createWithoutData(Plan, plan.id));
+            abilityPlanList.push(abilityPlan);
+          });
+          await AV.Object.saveAll(abilityPlanList);
+        }
+
+        // 保存中间表：AbilityTarget
+        if (targetList !== undefined) {
+          const abilityTargetList: AV.Object[] = [];
+          targetList.forEach(target => {
+            const abilityTarget = new AbilityTarget()
+              .set("ability", ability)
+              .set("target", AV.Object.createWithoutData(Target, target.id));
+            abilityTargetList.push(abilityTarget);
+          });
+          await AV.Object.saveAll(abilityTargetList);
+        }
+
         Log.success("createAbility", ability);
         resolve(ability);
       } catch (error) {
@@ -1141,6 +1168,7 @@ export default {
     new Promise(async (resolve, reject) => {
       try {
         if (abilityId !== null) {
+
           const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
 
           const user: AV.User = ability.attributes.user;
@@ -1174,11 +1202,13 @@ export default {
           if (user === undefined) {
             throw "user is undefined";
           }
+
           const targetList = await new AV.Query(Target)
             .equalTo("user", user)
             .equalTo("isFinished", false)
             .equalTo("isActived", true)
             .find();
+          console.log("FUCK", targetList);
 
           targetList.forEach(target => {
             target.attributes.selected = false;

@@ -619,6 +619,86 @@
       </div>
     </tb-drawer>
 
+    <!-- 抽屉菜单：创建能力 -->
+    <tb-drawer title="编辑能力" :visible.sync="isCreateAbilityDrawerDisplayed">
+      <!-- 输入框：输入能力名称 -->
+      <tb-input
+        placeholder="输入能力名称"
+        v-model="input_creatingAbility.name"
+      ></tb-input>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <!-- 关联 Target 按钮 -->
+      <div
+        class="related-ability"
+        v-darked-when-click
+        @click="click_relatedTargetCreateButton"
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="input_creatingAbility.targetList.length === 0"
+        />
+        <span v-if="input_creatingAbility.targetList.length === 0"
+          >关联相关目标</span
+        >
+        <span v-else>{{
+          "相关目标：" +
+            input_creatingAbility.targetList
+              .map(target => target.name)
+              .join("、")
+        }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <!-- 关联 Plan 按钮 -->
+      <div
+        class="related-ability"
+        v-darked-when-click
+        @click="click_relatedPlanCreateButton"
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="input_creatingAbility.planList.length === 0"
+        />
+        <span v-if="input_creatingAbility.planList.length === 0"
+          >关联相关计划</span
+        >
+        <span v-else>{{
+          "相关计划：" +
+            input_creatingAbility.planList.map(plan => plan.name).join("、")
+        }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div style="height:2.4vh"></div>
+
+      <div class="button-container">
+        <!-- 按钮：删除能力 -->
+        <div
+          class="delete-button"
+          v-darked-when-click
+          @click="isCreateAbilityDrawerDisplayed = false"
+        >
+          取消
+        </div>
+
+        <!-- 按钮：保存能力 -->
+        <div
+          class="save-button"
+          v-darked-when-click
+          @click="click_createAbilityButton"
+        >
+          保存
+        </div>
+      </div>
+    </tb-drawer>
+
     <!-- 抽屉菜单：Ability 关联相关 Target -->
     <tb-drawer
       title="关联相关目标"
@@ -795,6 +875,12 @@ export default defineComponent({
     // 控制变量：「编辑能力」的抽屉菜单是否打开
     const isEditAbilityDrawerDisplayed: Ref<boolean> = inject(
       Store.isEditAbilityDrawerDisplayed,
+      ref(false)
+    );
+
+    // 控制变量：创建能力抽屉
+    const isCreateAbilityDrawerDisplayed: Ref<boolean> = inject(
+      Store.isCreateAbilityDrawerDisplayed,
       ref(false)
     );
 
@@ -1159,6 +1245,18 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：创建 Ability 按钮
+    const click_createAbilityButton = () => {
+      AbilityPage.createAbility(
+        context.root,
+        isCreateAbilityDrawerDisplayed,
+        input_creatingAbility,
+        abilityList,
+        colormap,
+        levelRuleList
+      );
+    };
+
     return {
       currentTab,
       click_createTargetOrTargetSubject,
@@ -1173,6 +1271,7 @@ export default defineComponent({
       targetSubjectList,
       isTargetRelateAbilityDrawerDisplayed,
       isEditAbilityDrawerDisplayed,
+      isCreateAbilityDrawerDisplayed,
       isAbilityRelatedTargetDrawerDisplayed,
       isAbilityRelatedPlanDrawerDisplayed,
       keyUpEnter_abilityInputBox,
@@ -1198,6 +1297,7 @@ export default defineComponent({
       click_relatedPlanCreateButton,
       click_deleteAbilityButton,
       click_saveAbilityButton,
+      click_createAbilityButton,
       assets: {
         icon_add,
         icon_selected,
