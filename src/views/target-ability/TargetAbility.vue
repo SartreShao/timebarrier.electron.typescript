@@ -1084,6 +1084,12 @@ export default defineComponent({
     // 点击事件：编辑 Ability 时，关联 Plan
     const click_relatedPlanEditButton = () => {
       isCreateAbility.value = false;
+      AbilityPage.openRelatePlanDrawer(
+        context.root,
+        isAbilityRelatedPlanDrawerDisplayed,
+        input_planListOfAbility,
+        input_editingAbility
+      );
     };
 
     // 点击事件：创建 Ability 时，关联 Target
@@ -1100,6 +1106,12 @@ export default defineComponent({
     // 点击事件：创建 Ability 时，关联 Plan
     const click_relatedPlanCreateButton = () => {
       isCreateAbility.value = true;
+      AbilityPage.openRelatePlanDrawer(
+        context.root,
+        isAbilityRelatedPlanDrawerDisplayed,
+        input_planListOfAbility,
+        null
+      );
     };
 
     // 点击事件：删除 Ability 按钮
