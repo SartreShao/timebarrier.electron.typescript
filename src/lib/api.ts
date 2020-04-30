@@ -1192,42 +1192,63 @@ export default {
         reject(error);
       }
     }),
-
   /**
    * 请求 PlanList with Ability .selected
    */
-  fetchPlanListWithAbilitySelect: (abilityId: string): Promise<AV.Object[]> =>
+  fetchPlanListWithAbilitySelect: (
+    abilityId: string | null,
+    user?: AV.User
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
-        const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
+        if (abilityId !== null) {
+          const ability: AV.Object = await new AV.Query(Ability).get(abilityId);
 
-        const user: AV.User = ability.attributes.user;
+          const user: AV.User = ability.attributes.user;
 
-        const planList = await new AV.Query(Plan)
-          .equalTo("user", user)
-          .equalTo("isFinished", false)
-          .equalTo("isActived", true)
-          .find();
+          const planList = await new AV.Query(Plan)
+            .equalTo("user", user)
+            .equalTo("isFinished", false)
+            .equalTo("isActived", true)
+            .find();
 
-        const abilityPlanList = await new AV.Query(AbilityPlan)
-          .containedIn("plan", planList)
-          .equalTo("ability", ability)
-          .find();
+          const abilityPlanList = await new AV.Query(AbilityPlan)
+            .containedIn("plan", planList)
+            .equalTo("ability", ability)
+            .find();
 
-        planList.forEach(plan => {
-          plan.attributes.selected = false;
-        });
-
-        abilityPlanList.forEach(abilityPlan => {
           planList.forEach(plan => {
-            if (abilityPlan.attributes.plan.id === plan.id) {
-              plan.attributes.selected = true;
-            }
+            plan.attributes.selected = false;
           });
-        });
 
-        Log.success("fetchPlanListWithAbilitySelect", planList);
-        resolve(planList);
+          abilityPlanList.forEach(abilityPlan => {
+            planList.forEach(plan => {
+              if (abilityPlan.attributes.plan.id === plan.id) {
+                plan.attributes.selected = true;
+              }
+            });
+          });
+
+          Log.success("fetchPlanListWithAbilitySelect", planList);
+          resolve(planList);
+        } else {
+          if (user === undefined) {
+            throw "user is undefined";
+          }
+
+          const planList = await new AV.Query(Plan)
+            .equalTo("user", user)
+            .equalTo("isFinished", false)
+            .equalTo("isActived", true)
+            .find();
+
+          planList.forEach(plan => {
+            plan.attributes.selected = false;
+          });
+
+          Log.success("fetchPlanListWithAbilitySelect", planList);
+          resolve(planList);
+        }
       } catch (error) {
         Log.error("fetchPlanListWithAbilitySelect", error);
         reject(error);
