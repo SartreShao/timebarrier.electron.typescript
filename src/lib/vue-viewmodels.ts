@@ -2760,6 +2760,86 @@ const AbilityPage = {
   },
 
   /**
+   * 打开「关联相关计划」编辑抽屉
+   */
+  openRelatePlanDrawer: async (
+    vue: ElementVue,
+    isAbilityRelatedPlanDrawerDisplayed: Ref<boolean>,
+    input_planListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 打开抽屉菜单
+    isAbilityRelatedPlanDrawerDisplayed.value = true;
+
+    // 编辑能力
+    if (input_editingAbility !== null) {
+      // 尝试请求带有 selected 属性的 Target
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的计划..."
+      );
+
+      if (input_editingAbility.id === undefined) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "input_planListOfAbility.id===undefined",
+          "error"
+        );
+        return;
+      }
+
+      try {
+        input_planListOfAbility.value = await Api.fetchPlanListWithAbilitySelect(
+          input_editingAbility.id
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+    // 创建能力
+    else {
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的计划..."
+      );
+
+      try {
+        input_planListOfAbility.value = await Api.fetchPlanListWithAbilitySelect(
+          null,
+          user
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+  },
+
+  /**
    * 选择 Plan Item
    */
   selectPlanItem: (plan: { attributes: { selected: boolean } }) => {
