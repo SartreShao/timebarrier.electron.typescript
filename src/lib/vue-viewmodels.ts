@@ -2679,6 +2679,133 @@ const AbilityPage = {
   },
 
   /**
+   * 创建 Plan
+   */
+  createPlan: async (
+    vue: ElementVue,
+    input_planName: Ref<string>,
+    input_planListOfAbility: Ref<AV.Object[]>,
+    input_editingAbility: InputAbilityType | null
+  ) => {
+    if (input_editingAbility !== null) {
+      createPlanInEditAbility(
+        vue,
+        input_planName,
+        input_planListOfAbility,
+        input_editingAbility
+      );
+    } else {
+      createPlanInCreateAbility(vue, input_planName, input_planListOfAbility);
+    }
+
+    async function createPlanInEditAbility(
+      vue: ElementVue,
+      input_planName: Ref<string>,
+      input_planListOfAbility: Ref<AV.Object[]>,
+      input_editingAbility: InputAbilityType
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_planName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      if (input_editingAbility.id === undefined) {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingAbility.id === undefined",
+          "error"
+        );
+        return;
+      }
+
+      // 尝试创建新 Plan
+      const loadingInstance = UI.showLoading(vue.$loading, "正在创建计划...");
+
+      try {
+        await Api.createPlan(input_planName.value, "temporary", user);
+
+        // 刷新能力列表
+        input_planListOfAbility.value = await Api.fetchPlanListWithAbilitySelect(
+          input_editingAbility.id
+        );
+
+        UI.hideLoading(loadingInstance);
+
+        // 清空输入框
+        input_planName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+
+    async function createPlanInCreateAbility(
+      vue: ElementVue,
+      input_planName: Ref<string>,
+      input_planListOfAbility: Ref<AV.Object[]>
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_planName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在创建您的计划..."
+      );
+
+      try {
+        // 创建计划
+        await Api.createPlan(input_planName.value, "temporary", user);
+
+        // 刷新计划列表
+        input_planListOfAbility.value = await Api.fetchPlanListWithAbilitySelect(
+          null,
+          user
+        );
+
+        UI.hideLoading(loadingInstance);
+
+        input_planName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+  },
+
+  /**
    * 打开「关联相关目标」编辑抽屉
    */
   openRelateTargetDrawer: async (

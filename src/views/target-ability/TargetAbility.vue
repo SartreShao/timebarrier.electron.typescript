@@ -967,7 +967,23 @@ export default defineComponent({
     };
 
     // 回车事件：Plan 输入框
-    const keyUpEnter_planInputBox = () => {};
+    const keyUpEnter_planInputBox = () => {
+      if (isCreateAbility.value) {
+        AbilityPage.createPlan(
+          context.root,
+          input_planName,
+          input_planListOfAbility,
+          null
+        );
+      } else {
+        AbilityPage.createPlan(
+          context.root,
+          input_planName,
+          input_planListOfAbility,
+          input_editingAbility
+        );
+      }
+    };
 
     // 点击事件：创建目标或目标目录
     const click_createTargetOrTargetSubject = () => {
