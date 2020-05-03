@@ -294,6 +294,7 @@
           />
           <img v-else src="" alt="" />
         </div>
+        <div style="height:10vh"></div>
       </section>
 
       <div class="button-container">
