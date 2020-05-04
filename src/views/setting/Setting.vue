@@ -63,7 +63,14 @@
       <div class="setting-button" style="margin-top:4.35vh;">账户升级</div>
 
       <!-- 退出登录 -->
-      <div class="setting-button" style="margin-top:2.32vh;">退出登录</div>
+      <div
+        class="setting-button"
+        style="margin-top:2.32vh;"
+        v-darked-when-click
+        @click="click_logOutButton"
+      >
+        退出登录
+      </div>
     </main>
   </div>
 </template>
@@ -77,11 +84,17 @@ import icon_earth from "@/assets/icon_earth.svg";
 import icon_theme from "@/assets/icon_theme.svg";
 import icon_background_tomato from "@/assets/icon_background_tomato.svg";
 import icon_question from "@/assets/icon_question.svg";
-
+import { SettingPage } from "@/lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar, MeOption },
-  setup() {
+  setup(props, context) {
+    // 点击事件：登出
+    const click_logOutButton = () => {
+      SettingPage.logOut(context.root, "/");
+    };
+
     return {
+      click_logOutButton,
       assets: {
         icon_about,
         icon_earth,

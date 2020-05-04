@@ -82,6 +82,21 @@ export default {
         reject(error);
       }
     }),
+
+  /**
+   * 登出
+   */
+  logOut: () =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await AV.User.logOut();
+        Log.success("logOut");
+        resolve();
+      } catch (error) {
+        Log.error("logOut", error);
+        reject(error);
+      }
+    }),
   /**
    * 保存所有的 PlanList
    */
