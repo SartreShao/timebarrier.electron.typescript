@@ -1,5 +1,5 @@
 <template>
-  <div class="option-container">
+  <div class="option-container" @click="$emit(`click`)">
     <img class="icon" :src="icon" alt="option_icon" :style="imgStyle" />
     <div class="name">{{ name }}</div>
     <span class="description" v-if="notification === 0">{{ description }}</span>

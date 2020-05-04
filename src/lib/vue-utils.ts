@@ -25,6 +25,19 @@ const Router = {
     } catch (error) {
       console.log("relace router:", location, error);
     }
+  },
+  push: async (router: VueRouter, location: RawLocation) => {
+    try {
+      if (router.currentRoute.path === location) {
+        return;
+      }
+      await router.push(location);
+    } catch (error) {
+      console.log("push router:", location, error);
+    }
+  },
+  back: async (router: VueRouter) => {
+    router.back();
   }
 };
 

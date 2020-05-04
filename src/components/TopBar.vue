@@ -11,7 +11,7 @@
         v-if="isCurrentPageHome"
         class="icon-logo"
       />
-      <div class="back" v-if="!isCurrentPageHome">
+      <div class="back" v-if="!isCurrentPageHome" @click="click_backButton">
         <img :src="assets.icon_back" alt="icon_back" class="icon-back" />
       </div>
       <div class="home" v-if="!isCurrentPageHome">
@@ -28,12 +28,19 @@ import icon_home from "../assets/icon_home.svg";
 import icon_back from "../assets/icon_back.svg";
 import { defineComponent, watch, ref, inject } from "@vue/composition-api";
 import Store from "@/store";
+import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
     const isCurrentPageHome = inject(Store.isCurrentPageHome, ref(false));
 
+    // 点击事件：后退按钮
+    const click_backButton = () => {
+      Router.back(context.root.$router);
+    };
+
     return {
+      click_backButton,
       isCurrentPageHome,
       assets: { icon_logo, icon_home, icon_back }
     };

@@ -65,6 +65,8 @@
 
     <!-- 设置 -->
     <me-option
+      @click="click_settingOption"
+      v-darked-when-click
       class="icon-setting"
       :icon="assets.icon_me_setting"
       name="设置"
@@ -89,10 +91,16 @@ import icon_achievement from "../../assets/icon_achievement.svg";
 import icon_morning from "../../assets/icon_morning.svg";
 import icon_bar from "../../assets/icon_bar.svg";
 import icon_me_setting from "../../assets/icon_me_setting.svg";
+import { Router } from "@/lib/vue-utils";
 export default defineComponent({
   components: { TopBar, BottomBar, MeOption, MePersonalInfo },
   setup(props, context) {
+    const click_settingOption = () => {
+      Router.push(context.root.$router, "/setting");
+    };
+
     return {
+      click_settingOption,
       assets: {
         icon_sleep,
         icon_achievement,
@@ -128,6 +136,7 @@ export default defineComponent({
   margin-top 0.15vh
 }
 .icon-setting {
+  cursor pointer
   margin-top 2.02vh
 }
 .personal-info {
