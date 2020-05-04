@@ -5,7 +5,18 @@
     <div style="height:1vh"></div>
     <!-- 标题与刷新按钮 -->
     <section class="title">
-      <img :src="assets.icon_logo" alt="icon_logo" />
+      <img
+        :src="assets.icon_logo"
+        alt="icon_logo"
+        v-if="isCurrentPageHome"
+        class="icon-logo"
+      />
+      <div class="back" v-if="!isCurrentPageHome">
+        <img :src="assets.icon_back" alt="icon_back" class="icon-back" />
+      </div>
+      <div class="home" v-if="!isCurrentPageHome">
+        <img :src="assets.icon_home" alt="icon_home" class="icon-home" />
+      </div>
       <h1>时间壁垒</h1>
     </section>
   </header>
@@ -13,12 +24,18 @@
 
 <script lang="ts">
 import icon_logo from "../assets/icon_logo.svg";
-import { defineComponent } from "@vue/composition-api";
+import icon_home from "../assets/icon_home.svg";
+import icon_back from "../assets/icon_back.svg";
+import { defineComponent, watch, ref, inject } from "@vue/composition-api";
+import Store from "@/store";
 
 export default defineComponent({
-  setup() {
+  setup(props, context) {
+    const isCurrentPageHome = inject(Store.isCurrentPageHome, ref(false));
+
     return {
-      assets: { icon_logo }
+      isCurrentPageHome,
+      assets: { icon_logo, icon_home, icon_back }
     };
   }
 });
@@ -58,7 +75,7 @@ header {
       text-align center
       color $title-font-color
     }
-    img {
+    .icon-logo {
       top 0
       bottom 0
       margin-top auto
@@ -69,5 +86,39 @@ header {
       height 2.89vh
     }
   }
+}
+.back {
+  position absolute
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  width 10.53vw
+  height 4.27vh
+  left 1.73vw
+  display flex
+  align-items center
+  justify-content center
+}
+.icon-back {
+  width 1.92vw
+  height 1.82vh
+}
+.home {
+  position absolute
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  left 12.27vw
+  width 10.53vw
+  height 4.27vh
+  display flex
+  align-items center
+  justify-content center
+}
+.icon-home {
+  width 1.96vh
+  height 1.94vh
 }
 </style>

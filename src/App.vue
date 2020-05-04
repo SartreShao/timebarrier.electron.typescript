@@ -5,12 +5,39 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, inject, watch, Ref, ref } from "@vue/composition-api";
 import Store from "./store";
 export default defineComponent({
-  setup() {
+  setup(props, context) {
     // 提供依赖注入
     Store.useProvider();
+
+    // 监听全局路由
+    const homePagePathList: string[] = [
+      "/plan",
+      "/target-ability",
+      "/statistic",
+      "/me"
+    ];
+
+    const isCurrentPageHome: Ref<boolean> = inject(
+      Store.isCurrentPageHome,
+      ref(false)
+    );
+
+    watch(
+      () => context.root.$route,
+      (to, from) => {
+        for (let homePagePath of homePagePathList) {
+          if (homePagePath === to.fullPath) {
+            isCurrentPageHome.value = true;
+            break;
+          } else {
+            isCurrentPageHome.value = false;
+          }
+        }
+      }
+    );
   }
 });
 </script>
