@@ -12,6 +12,8 @@
         name="邵励治"
         description="shaolizhi@tipchou.com"
       ></me-personal-info>
+
+      <div class="button">编辑个人资料</div>
     </section>
 
     <!-- 睡眠、清醒与用时习惯 -->
@@ -117,6 +119,7 @@ export default defineComponent({
   width 100%
   display flex
   flex-direction column
+  align-items center
 }
 .icon-sleep {
   margin-top 3.45vh
@@ -129,5 +132,22 @@ export default defineComponent({
 }
 .personal-info {
   margin-top 3.45vh
+}
+.button {
+  width 60.53vw
+  height 5.55vh
+  border-radius 0.67vh
+  background-color #222a36
+  display flex
+  align-items center
+  justify-content center
+  font-size 2.1vh
+  font-weight bold
+  font-stretch normal
+  font-style normal
+  line-height 1.43
+  letter-spacing 0.02vh
+  color #ffffff
+  margin-top 2.47vh
 }
 </style>
