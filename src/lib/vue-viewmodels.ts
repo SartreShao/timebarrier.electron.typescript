@@ -821,6 +821,12 @@ const TomatoTimerPage = {
             new Notification("番茄已完成", { body: "请提交您的番茄" });
           }
         }, 1000);
+        UI.showNotification(
+          vue.$notify,
+          "开始番茄",
+          "请在接下来的 25 分钟保持专注",
+          "success"
+        );
         break;
       }
       case "finished": {
