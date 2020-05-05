@@ -307,6 +307,13 @@ const PlanPage = {
       }
 
       completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      UI.showNotification(
+        vue.$notify,
+        "计划完成",
+        "您可以在底部「已完成」中找到它",
+        "success"
+      );
     } catch (error) {
       UI.showNotification(
         vue.$notify,
