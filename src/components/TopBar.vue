@@ -83,6 +83,7 @@ header {
       color $title-font-color
     }
     .icon-logo {
+      cursor pointer
       top 0
       bottom 0
       margin-top auto
@@ -95,6 +96,7 @@ header {
   }
 }
 .back {
+  cursor pointer
   position absolute
   top 0
   bottom 0
@@ -112,6 +114,7 @@ header {
   height 1.82vh
 }
 .home {
+  cursor pointer
   position absolute
   top 0
   bottom 0

@@ -15,7 +15,8 @@ export default defineComponent({
     // 监听全局路由
     const homePagePathList: string[] = [
       "/plan",
-      "/target-ability",
+      "/target-ability/target",
+      "/target-ability/ability",
       "/statistic",
       "/me"
     ];

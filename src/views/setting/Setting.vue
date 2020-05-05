@@ -128,9 +128,11 @@ export default defineComponent({
   margin-top 2.32vh
 }
 .option-regular {
+  cursor pointer
   margin-top 0.15vh
 }
 .setting-button {
+  cursor pointer
   width 100%
   height 8.4vh
   background-color #ffffff

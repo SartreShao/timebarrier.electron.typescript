@@ -121,7 +121,7 @@ export default defineComponent({
   background #F5F5F5
 }
 .header-container {
-  margin-top 7.52vh
+  margin-top 7.51vh
   height 32.83vh
   background white
   width 100%
