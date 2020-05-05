@@ -525,6 +525,7 @@ export default {
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
+        // 构建请求 Ability 列表的 Query
         const query = await new AV.Query(Ability)
           .equalTo("user", user)
           .equalTo("isFinished", isFinished)
@@ -535,11 +536,17 @@ export default {
           query.equalTo("isActived", isActived);
         }
 
+        // 请求 Ability 列表
         const abilityList = await query.find();
+
+        // 将 AbilityList 设置为可选择的
         abilityList.forEach(ability => {
           ability.attributes.selected = false;
         });
 
+        // 计算能力等级：levelNumber
+        // 计算能力名称：levelName
+        // 计算能力距离下一段的百分比：levelPercent
         if (levelRuleList !== undefined) {
           abilityList.forEach(ability => {
             try {
@@ -567,8 +574,8 @@ export default {
                 ) {
                   ability.attributes.levelPercent =
                     ability.attributes.tomatoNumber /
-                    (levelRule.attributes.tomatoNumber -
-                      levelRuleList[index - 1].attributes.tomatoNumber);
+                    (levelRuleList[index + 1].attributes.tomatoNumber -
+                      levelRule.attributes.tomatoNumber);
 
                   ability.attributes.levelName = levelRule.attributes.name;
 
