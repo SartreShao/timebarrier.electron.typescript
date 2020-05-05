@@ -244,6 +244,7 @@ const PlanPage = {
       // doing nothing
       return;
     }
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建临时计划...");
 
     try {
       // 创建计划
@@ -259,7 +260,17 @@ const PlanPage = {
       }
 
       name.value = "";
+
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "临时计划创建成功",
+        "可长按编辑临时计划为每日计划",
+        "success"
+      );
     } catch (error) {
+      UI.hideLoading(loadingInstance);
+
       UI.showNotification(
         vue.$notify,
         "创建计划失败",
