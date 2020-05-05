@@ -176,23 +176,27 @@ export default {
             currentPage ? (currentPage - 1) * (pageSize ? pageSize : 1000) : 0
           )
           .limit(pageSize ? pageSize : 1000)
-          .equalTo("user", user)
-          .ascending("order")
-          .addDescending("createdAt");
+          .equalTo("user", user);
 
         switch (planType) {
           case "temporary": {
-            query.equalTo("type", "temporary");
-            query.equalTo("isFinished", false);
+            query
+              .equalTo("isFinished", false)
+              .ascending("order")
+              .addDescending("createdAt")
+              .equalTo("type", "temporary");
             break;
           }
           case "daily": {
-            query.equalTo("type", "daily");
-            query.equalTo("isFinished", false);
+            query
+              .equalTo("isFinished", false)
+              .ascending("order")
+              .addDescending("createdAt")
+              .equalTo("type", "daily");
             break;
           }
           case "completed": {
-            query.equalTo("isFinished", true);
+            query.equalTo("isFinished", true).descending("createdAt");
             break;
           }
         }
