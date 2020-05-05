@@ -874,6 +874,7 @@ export default defineComponent({
     display flex
     flex-direction column
     .item-container {
+      cursor pointer
       user-select none
       width 95.73vw
       height 7.2vh
