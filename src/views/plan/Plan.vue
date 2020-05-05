@@ -4,6 +4,7 @@
     <top-bar></top-bar>
 
     <!-- 创建新计划的输入框 -->
+
     <section class="new-plan-input-container">
       <input
         type="text"
@@ -32,6 +33,7 @@
               v-for="(item, index) in temporaryPlanList"
               :key="item.id"
               v-longclick="() => longclick_editPlanButton(item, index)"
+              :title="item.attributes.name"
             >
               <h2 style="pointer-events:none;">临时计划</h2>
               <div class="placeholder" style="pointer-events:none;"></div>
