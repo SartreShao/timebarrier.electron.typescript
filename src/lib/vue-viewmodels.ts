@@ -8,7 +8,8 @@ import {
   PlanType,
   InputPlanType,
   InputTargetOrTargetSubjectType,
-  InputAbilityType
+  InputAbilityType,
+  TargetAbilityTabType
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -1088,6 +1089,12 @@ const TomatoTimerPage = {
         "error"
       );
     }
+  }
+};
+
+const TargetAbilityPage = {
+  switchTab: (vue: ElementVue, target: TargetAbilityTabType) => {
+    Router.replace(vue.$router, "/target-ability/" + target);
   }
 };
 
@@ -3194,6 +3201,7 @@ export {
   LoginPage,
   PlanPage,
   TomatoTimerPage,
+  TargetAbilityPage,
   TargetPage,
   AbilityPage,
   SettingPage

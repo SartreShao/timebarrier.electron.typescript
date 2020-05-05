@@ -23,7 +23,20 @@ const routes = [
   {
     path: "/target-ability",
     name: "target-ability",
-    component: () => import("../views/target-ability/TargetAbility.vue")
+    component: () => import("../views/target-ability/TargetAbility.vue"),
+    children: [
+      {
+        path: "target",
+        name: "target",
+        component: () => import("../views/target-ability/target/Target.vue")
+      },
+      {
+        path: "ability",
+        name: "target",
+        component: () => import("../views/target-ability/ability/Ability.vue")
+      }
+    ],
+    redirect: { name: "target" }
   },
   {
     path: "/statistic",

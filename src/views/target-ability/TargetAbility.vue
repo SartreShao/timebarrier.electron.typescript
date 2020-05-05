@@ -8,7 +8,7 @@
         :class="
           currentTab === `target` ? `tab-target` : `tab-target-unselected`
         "
-        @click="currentTab = `target`"
+        @click="click_targetTab"
       >
         我的目标
       </div>
@@ -16,15 +16,14 @@
         :class="
           currentTab === `ability` ? `tab-ability` : `tab-ability-unselected`
         "
-        @click="currentTab = `ability`"
+        @click="click_abilityTab"
       >
         能力训练
       </div>
     </div>
     <!-- 主要界面 -->
     <main>
-      <target v-if="currentTab === `target`"></target>
-      <ability v-if="currentTab === `ability`"></ability>
+      <router-view />
     </main>
 
     <!-- 抽屉菜单：创建目标或目录 -->
@@ -829,7 +828,8 @@ import {
   ref,
   Ref,
   inject,
-  reactive
+  reactive,
+  watch
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
@@ -849,7 +849,11 @@ import icon_enter from "../../assets/icon_enter.svg";
 import icon_finished from "../../assets/icon_finished.svg";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import TbInput from "@/lib/components/TbInput.vue";
-import { TargetPage, AbilityPage } from "../../lib/vue-viewmodels";
+import {
+  TargetPage,
+  AbilityPage,
+  TargetAbilityPage
+} from "../../lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopBar, BottomBar, Target, Ability, TbDrawer, TbInput },
@@ -865,6 +869,17 @@ export default defineComponent({
 
     // 当前的 TAB：Ability｜Target
     const currentTab: Ref<TargetAbilityTabType> = ref("target");
+
+    watch(
+      () => context.root.$route,
+      (to, from) => {
+        if (to.fullPath === "/target-ability/target") {
+          currentTab.value = "target";
+        } else if (to.fullPath === "/target-ability/ability") {
+          currentTab.value = "ability";
+        }
+      }
+    );
 
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
@@ -1263,6 +1278,16 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击 Target Tab
+    const click_targetTab = () => {
+      TargetAbilityPage.switchTab(context.root, "target");
+    };
+
+    // 点击事件：点击 Ability Tab
+    const click_abilityTab = () => {
+      TargetAbilityPage.switchTab(context.root, "ability");
+    };
+
     return {
       currentTab,
       click_createTargetOrTargetSubject,
@@ -1304,6 +1329,8 @@ export default defineComponent({
       click_deleteAbilityButton,
       click_saveAbilityButton,
       click_createAbilityButton,
+      click_targetTab,
+      click_abilityTab,
       assets: {
         icon_add,
         icon_selected,
