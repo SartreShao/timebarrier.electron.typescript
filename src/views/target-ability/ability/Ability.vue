@@ -157,7 +157,7 @@ export default defineComponent({
   margin-bottom 1.57vh
 }
 .create-ability-container {
-  user-select none
+  z-index 999
   cursor pointer
   width 7.5vh
   height 7.5vh
@@ -171,6 +171,7 @@ export default defineComponent({
   right 5.07vw
   bottom 3vh + 6.82vh
   img {
+    cursor pointer
     width 2.05vh
     height 2.05vh
   }

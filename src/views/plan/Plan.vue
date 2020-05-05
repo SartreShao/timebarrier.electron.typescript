@@ -63,6 +63,7 @@
               v-bind:key="item.id"
               v-longclick="() => longclick_editPlanButton(item, index)"
               v-splash-when-click
+              :title="item.attributes.name"
             >
               <div class="plan-container">
                 <h2>每日计划</h2>
@@ -123,6 +124,7 @@
           v-for="(item, index) in completedPlanList"
           v-bind:key="item.id"
           v-longclick="() => longclick_editPlanButton(item, index)"
+          :title="item.attributes.name"
         >
           <h2>
             {{ item.attributes.type === "daily" ? "每日计划" : "临时计划" }}
@@ -729,6 +731,7 @@ export default defineComponent({
       flex-direction column
       .item-container {
         user-select none
+        cursor pointer
         width 95.73vw
         height 11.47vh
         flex-shrink 0
