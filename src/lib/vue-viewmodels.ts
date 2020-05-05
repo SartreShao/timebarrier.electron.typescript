@@ -766,7 +766,8 @@ const TomatoTimerPage = {
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>,
-    tomatoStartTime: Ref<Date>
+    tomatoStartTime: Ref<Date>,
+    input_tomatoDescription?: Ref<string>
   ) => {
     switch (tomatoCloudStatus.value) {
       case "prepared": {
@@ -813,6 +814,9 @@ const TomatoTimerPage = {
           isCommitPlanDrawerDisplayed.value = true;
           // 清空 input_tomatoName 的值
           input_tomatoName.value = "";
+          if (input_tomatoDescription !== undefined) {
+            input_tomatoDescription.value = "";
+          }
 
           // 遍历 temporaryPlanList
           temporaryPlanList.value.forEach(plan => {

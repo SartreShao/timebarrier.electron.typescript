@@ -275,7 +275,8 @@ export default defineComponent({
         temporaryPlanList,
         dailyPlanList,
         completedPlanList,
-        tomatoStartTime
+        tomatoStartTime,
+        input_tomatoDescription
       );
     };
 
