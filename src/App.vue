@@ -17,7 +17,8 @@ export default defineComponent({
       "/plan",
       "/target-ability/target",
       "/target-ability/ability",
-      "/statistic",
+      "/statistic/tomato",
+      "/statistic/chart",
       "/me"
     ];
 
