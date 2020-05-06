@@ -21,6 +21,7 @@
         能力训练
       </div>
     </div>
+
     <!-- 主要界面 -->
     <main>
       <router-view />
@@ -1351,8 +1352,8 @@ export default defineComponent({
   // 顶部的 TAB 栏
   .tab-container {
     position fixed
-    width 100%
     top 7.52vh
+    width 100%
     height 5.17vh
     display flex
     flex-direction row

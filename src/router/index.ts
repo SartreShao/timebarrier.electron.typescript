@@ -32,7 +32,7 @@ const routes = [
       },
       {
         path: "ability",
-        name: "target",
+        name: "ability",
         component: () => import("../views/target-ability/ability/Ability.vue")
       }
     ],
@@ -41,7 +41,20 @@ const routes = [
   {
     path: "/statistic",
     name: "statistic",
-    component: () => import("../views/statistic/Statistic.vue")
+    component: () => import("../views/statistic/Statistic.vue"),
+    children: [
+      {
+        path: "tomato",
+        name: "tomato",
+        component: () => import("../views/statistic/tomato/Tomato.vue")
+      },
+      {
+        path: "chart",
+        name: "chart",
+        component: () => import("../views/statistic/chart/Chart.vue")
+      }
+    ],
+    redirect: { name: "tomato" }
   },
   {
     path: "/me",
