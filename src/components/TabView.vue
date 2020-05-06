@@ -34,7 +34,9 @@ export default defineComponent({
     };
   },
   props: {
-    tabRouteList: Array
+    tabRouteList: {
+      type: Array
+    }
   }
 });
 </script>
