@@ -41,6 +41,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .option-container {
+  cursor pointer
   height 8.4vh
   width 100%
   background white

@@ -143,6 +143,7 @@ export default defineComponent({
   margin-top 3.45vh
 }
 .button {
+  cursor pointer
   width 60.53vw
   height 5.55vh
   border-radius 0.67vh

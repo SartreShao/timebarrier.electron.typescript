@@ -52,6 +52,7 @@ export default defineComponent({
       position relative
       height 8.55vh
       .avatar {
+        cursor pointer
         width 8.55vh
         height 8.55vh
         border-radius 0.82vh
@@ -66,6 +67,7 @@ export default defineComponent({
       }
     }
     .qrcode {
+      cursor pointer
       width 2.12vh
       height 2.12vh
       position absolute
