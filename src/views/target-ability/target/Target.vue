@@ -564,6 +564,7 @@ export default defineComponent({
     }
   }
   .target-subject-container {
+    cursor pointer
     user-select none
     margin-bottom 0.15vh
     position relative
@@ -606,6 +607,7 @@ export default defineComponent({
     }
   }
   .target-item-container {
+    cursor pointer
     user-select none
     width 100%
     display flex
