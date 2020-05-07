@@ -12,13 +12,14 @@ import {
   ElLoadingComponent,
   LoadingServiceOptions
 } from "element-ui/types/loading";
+import * as _ from "lodash";
 
 const isDev = true;
 
 const Router = {
   replace: async (router: VueRouter, location: RawLocation) => {
     try {
-      if (router.currentRoute.path === location) {
+      if (_.startsWith(router.currentRoute.path, location as string)) {
         return;
       }
       await router.replace(location);

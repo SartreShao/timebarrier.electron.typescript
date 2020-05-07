@@ -4,7 +4,9 @@
       v-for="(item, index) in tabRouteList"
       :key="index"
       @click="click_tabItem(item)"
-      :class="currentRoute === item.route ? `tab-item` : `tab-item-unselected`"
+      :class="
+        currentRoute.startsWith(item.route) ? `tab-item` : `tab-item-unselected`
+      "
     >
       {{ item.name }}
     </div>
@@ -18,6 +20,7 @@
  */
 import { defineComponent, ref, computed } from "@vue/composition-api";
 import { Router } from "@/lib/vue-utils";
+import * as _ from "lodash";
 export default defineComponent({
   setup(props, context) {
     const click_tabItem = (item: { route: string; name: string }) => {
