@@ -1,10 +1,62 @@
 <template>
-  <div></div>
+  <div class="container">
+    <tb-select :select-options="selectOptions"></tb-select>
+    <main>
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
+import { defineComponent, ref, Ref } from "@vue/composition-api";
+import TbSelect from "@/lib/components/TbSelect.vue";
+import icon_ability_tab from "@/assets/icon_ability_tab.svg";
+import icon_target_tab from "@/assets/icon_target_tab.svg";
+import icon_tomato_tab from "@/assets/icon_tomato_tab.svg";
+
+export default defineComponent({
+  components: { TbSelect },
+  setup(props, context) {
+    const selectOptions: Ref<{
+      name: string;
+      icon: string;
+      route: string;
+    }[]> = ref([
+      {
+        name: "番茄视图",
+        icon: icon_tomato_tab,
+        route: "/statistic/tomato/statistic-tomato"
+      },
+      {
+        name: "目标视图",
+        icon: icon_target_tab,
+        route: "/statistic/tomato/statistic-target"
+      },
+      {
+        name: "能力视图",
+        icon: icon_ability_tab,
+        route: "/statistic/tomato/statistic-ability"
+      }
+    ]);
+
+    return {
+      selectOptions
+    };
+  }
+});
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.container {
+  width 100%
+}
+main {
+  position fixed
+  top 19.79vh
+  width 100%
+  background #F5F5F5
+  display flex
+  flex-direction column
+  align-items center
+}
+</style>

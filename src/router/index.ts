@@ -46,7 +46,34 @@ const routes = [
       {
         path: "tomato",
         name: "tomato",
-        component: () => import("../views/statistic/tomato/Tomato.vue")
+        component: () => import("../views/statistic/tomato/Tomato.vue"),
+        redirect: { name: "statistic-tomato" },
+        children: [
+          {
+            path: "statistic-tomato",
+            name: "statistic-tomato",
+            component: () =>
+              import(
+                "../views/statistic/tomato/statistic-tomato/StatisticTomato.vue"
+              )
+          },
+          {
+            path: "statistic-target",
+            name: "statistic-target",
+            component: () =>
+              import(
+                "../views/statistic/tomato/statistic-target/StatisticTarget.vue"
+              )
+          },
+          {
+            path: "statistic-ability",
+            name: "statistic-ability",
+            component: () =>
+              import(
+                "../views/statistic/tomato/statistic-ability/StatisticAbility.vue"
+              )
+          }
+        ]
       },
       {
         path: "chart",
