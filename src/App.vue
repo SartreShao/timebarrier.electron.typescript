@@ -7,6 +7,7 @@
 import Vue from "vue";
 import { defineComponent, inject, watch, Ref, ref } from "@vue/composition-api";
 import Store from "./store";
+import * as _ from "lodash";
 export default defineComponent({
   setup(props, context) {
     // 提供依赖注入
@@ -15,10 +16,8 @@ export default defineComponent({
     // 监听全局路由
     const homePagePathList: string[] = [
       "/plan",
-      "/target-ability/target",
-      "/target-ability/ability",
-      "/statistic/tomato",
-      "/statistic/chart",
+      "/target-ability",
+      "/statistic/",
       "/me"
     ];
 
@@ -31,7 +30,7 @@ export default defineComponent({
       () => context.root.$route,
       (to, from) => {
         for (let homePagePath of homePagePathList) {
-          if (homePagePath === to.fullPath) {
+          if (_.startsWith(to.fullPath, homePagePath)) {
             isCurrentPageHome.value = true;
             break;
           } else {

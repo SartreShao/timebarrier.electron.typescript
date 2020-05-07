@@ -188,6 +188,7 @@ import {
 import Store from "../store";
 import { TomatoCloudStatus, TabType } from "../lib/types/vue-viewmodels";
 import { TomatoTimerPage } from "../lib/vue-viewmodels";
+import * as _ from "lodash";
 
 export default defineComponent({
   setup(props, context) {
@@ -363,25 +364,14 @@ export default defineComponent({
     watch(
       () => context.root.$route,
       (to, from) => {
-        switch (to.path) {
-          case "/plan":
-            currentTab.value = "plan";
-            break;
-          case "/target-ability/target":
-            currentTab.value = "target-ability";
-            break;
-          case "/target-ability/ability":
-            currentTab.value = "target-ability";
-            break;
-          case "/statistic/tomato":
-            currentTab.value = "statistic";
-            break;
-          case "/statistic/chart":
-            currentTab.value = "statistic";
-            break;
-          case "/me":
-            currentTab.value = "me";
-            break;
+        if (_.startsWith(to.path, "/plan")) {
+          currentTab.value = "plan";
+        } else if (_.startsWith(to.path, "/target-ability")) {
+          currentTab.value = "target-ability";
+        } else if (_.startsWith(to.path, "/statistic")) {
+          currentTab.value = "statistic";
+        } else if (_.startsWith(to.path, "/me")) {
+          currentTab.value = "me";
         }
       }
     );
