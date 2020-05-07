@@ -1,14 +1,29 @@
 <template>
   <div class="tb-selecte-container">
-    <select v-model="currentOption" @change="onChange_routeSelect">
-      <option
+    <img
+      v-for="(item, index) in selectOptions"
+      :key="index"
+      class="icon-image"
+      :src="item.icon"
+      alt="1"
+      :hidden="currentOption !== item.route"
+    />
+
+    <el-select
+      v-model="currentOption"
+      @change="onChange_routeSelect"
+      class="select"
+    >
+      <el-option
+        style="left:0"
+        class="option"
         v-for="(item, index) in selectOptions"
         :key="index"
+        :label="item.name"
         :value="item.route"
       >
-        {{ item.name }}
-      </option>
-    </select>
+      </el-option>
+    </el-select>
   </div>
 </template>
 
@@ -50,5 +65,35 @@ export default defineComponent({
   align-items center
   justify-content center
   position relative
+  background white
+}
+.icon-image {
+  position absolute
+  height 2.16vh
+  width 2.16vh
+  z-index 99999
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  right 61.33vw
+}
+.select >>> .el-input__inner {
+  width 95vw
+  border none
+  outline none
+  border-radius 0
+  height 5.55vh
+  padding 0
+  font-size 1.8vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.46
+  letter-spacing normal
+  text-align center
+  color #222a36
+}
+.option {
 }
 </style>
