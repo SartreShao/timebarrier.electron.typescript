@@ -27,8 +27,8 @@ export default defineComponent({
   setup(props, context) {
     // Tab 的名称
     const tabRouteList = [
-      { routePath: "/statistic/tomato", tabName: "番茄记录" },
-      { routePath: "/statistic/chart", tabName: "数据图表" }
+      { route: "/statistic/tomato", name: "番茄记录" },
+      { route: "/statistic/chart", name: "数据图表" }
     ];
 
     return {

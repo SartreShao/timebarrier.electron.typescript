@@ -373,7 +373,10 @@ export default defineComponent({
           case "/target-ability/ability":
             currentTab.value = "target-ability";
             break;
-          case "/statistic":
+          case "/statistic/tomato":
+            currentTab.value = "statistic";
+            break;
+          case "/statistic/chart":
             currentTab.value = "statistic";
             break;
           case "/me":

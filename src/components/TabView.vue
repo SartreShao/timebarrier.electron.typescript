@@ -4,11 +4,9 @@
       v-for="(item, index) in tabRouteList"
       :key="index"
       @click="click_tabItem(item)"
-      :class="
-        currentRoute === item.routePath ? `tab-item` : `tab-item-unselected`
-      "
+      :class="currentRoute === item.route ? `tab-item` : `tab-item-unselected`"
     >
-      {{ item.tabName }}
+      {{ item.name }}
     </div>
   </div>
 </template>
@@ -16,14 +14,14 @@
 <script lang="ts">
 /**
  * 传输数据：
- * @param tabRouteList 类型：{ routePath: string; tabName: string }[]
+ * @param tabRouteList 类型：{ route: string; name: string }[]
  */
 import { defineComponent, ref, computed } from "@vue/composition-api";
 import { Router } from "@/lib/vue-utils";
 export default defineComponent({
   setup(props, context) {
-    const click_tabItem = (item: { routePath: string; tabName: string }) => {
-      Router.replace(context.root.$router, item.routePath);
+    const click_tabItem = (item: { route: string; name: string }) => {
+      Router.replace(context.root.$router, item.route);
     };
 
     const currentRoute = computed(() => context.root.$route.fullPath);
