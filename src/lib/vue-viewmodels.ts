@@ -1022,7 +1022,8 @@ const TomatoTimerPage = {
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>,
-    tomatoStartTime: Ref<Date>
+    tomatoStartTime: Ref<Date>,
+    colormap: string[]
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -1052,7 +1053,8 @@ const TomatoTimerPage = {
         input_tomatoName.value,
         input_description.value,
         user,
-        tomatoStartTime.value
+        tomatoStartTime.value,
+        colormap
       );
 
       // 遍历 PlanList 寻找被选择的 Plan

@@ -386,10 +386,30 @@ export default {
     name: string,
     description: string,
     user: AV.User,
-    startTime: Date
+    startTime: Date,
+    colormap: string[]
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
+        // 查询上一个的颜色
+        let color: string = colormap[0];
+        try {
+          const lastTomato = await new AV.Query(Tomato)
+            .equalTo("user", user)
+            .descending("createdAt")
+            .first();
+          if (lastTomato === undefined) {
+            throw "lastTomato is undefined";
+          }
+          colormap.forEach((item, index) => {
+            if (item === lastTomato.attributes.color) {
+              color = colormap[(index + 1) % colormap.length];
+            }
+          });
+        } catch (error) {
+          // 没查到
+        }
+
         const now = new Date();
         const tomato = await new Tomato()
           .set("name", name)
@@ -397,6 +417,7 @@ export default {
           .set("description", description)
           .set("startTime", startTime)
           .set("duration", now.getTime() - startTime.getTime())
+          .set("color", color)
           .save();
         Log.success("createTomato", tomato);
         resolve(tomato);

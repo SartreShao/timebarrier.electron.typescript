@@ -192,6 +192,9 @@ import * as _ from "lodash";
 
 export default defineComponent({
   setup(props, context) {
+    // 色彩表
+    const colormap: string[] = inject(Store.colormap, []);
+
     // 倒计时器 instance
     const tomatoClockInterval: Ref<NodeJS.Timeout | null> = inject(
       Store.tomatoClockInterval,
@@ -316,7 +319,8 @@ export default defineComponent({
         temporaryPlanList,
         dailyPlanList,
         completedPlanList,
-        tomatoStartTime
+        tomatoStartTime,
+        colormap
       );
     };
 
@@ -353,7 +357,8 @@ export default defineComponent({
         temporaryPlanList,
         dailyPlanList,
         completedPlanList,
-        tomatoStartTime
+        tomatoStartTime,
+        colormap
       );
     };
 
