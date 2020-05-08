@@ -19,7 +19,7 @@ const isDev = true;
 const Router = {
   replace: async (router: VueRouter, location: RawLocation) => {
     try {
-      if (_.startsWith(router.currentRoute.path, location as string)) {
+      if (router.currentRoute.path === location) {
         return;
       }
       await router.replace(location);

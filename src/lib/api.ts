@@ -390,11 +390,13 @@ export default {
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
+        const now = new Date();
         const tomato = await new Tomato()
           .set("name", name)
           .set("user", user)
           .set("description", description)
           .set("startTime", startTime)
+          .set("duration", now.getTime() - startTime.getTime())
           .save();
         Log.success("createTomato", tomato);
         resolve(tomato);
