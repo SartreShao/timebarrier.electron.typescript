@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <tb-select :select-options="selectOptions"></tb-select>
+    <tb-select
+      :select-options="selectOptions"
+      style="margin-top:0.15vh;"
+    ></tb-select>
     <main>
       <router-view />
     </main>
@@ -52,7 +55,7 @@ export default defineComponent({
 }
 main {
   position fixed
-  top 19.79vh
+  top 18.66vh
   width 100%
   background #F5F5F5
   display flex

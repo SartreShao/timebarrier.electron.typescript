@@ -65,7 +65,7 @@ export default defineComponent({
   align-items center
   justify-content center
   position relative
-  background #F4F4F8
+  background white
 }
 .icon-image {
   position absolute
@@ -79,7 +79,7 @@ export default defineComponent({
   right 61.33vw
 }
 .select >>> .el-input__inner {
-  background #F4F4F8
+  background white
   width 95vw
   border none
   outline none
