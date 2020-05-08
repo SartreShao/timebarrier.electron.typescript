@@ -6,14 +6,16 @@
       :targetTomatoNumber="24"
       totalTime="5 小时 40 分钟"
     ></date-item>
+    <tomato-item style="margin-top:0.15vh"></tomato-item>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
 import DateItem from "./components/DateItem.vue";
+import TomatoItem from "./components/TomatoItem.vue";
 export default defineComponent({
-  components: { DateItem }
+  components: { DateItem, TomatoItem }
 });
 </script>
 
