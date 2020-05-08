@@ -9,7 +9,7 @@
     <div class="body-container">
       <!-- tomatoNumber 系列 -->
       <div class="tomato-container">
-        {{ ability.attributes.levelName }} · 累计
+        Level {{ ability.attributes.levelNumber }} · 累计
         {{ ability.attributes.tomatoNumber }} 个番茄 ·
         {{ ability.attributes.levelPercent * 100 }}%
       </div>

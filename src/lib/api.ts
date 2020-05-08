@@ -552,43 +552,28 @@ export default {
         // 计算能力名称：levelName
         // 计算能力距离下一段的百分比：levelPercent
         if (levelRuleList !== undefined) {
-          abilityList.forEach(ability => {
-            try {
-              levelRuleList.forEach((levelRule, index) => {
-                // 初始条件
-                if (
-                  index === 0 &&
-                  ability.attributes.tomatoNumber <=
-                    levelRule.attributes.tomatoNumber
-                ) {
-                  ability.attributes.levelPercent =
-                    ability.attributes.tomatoNumber /
-                    levelRule.attributes.tomatoNumber;
+          for (let i = 0; i <= abilityList.length - 1; i++) {
+            for (let j = levelRuleList.length - 1; j >= 0; j--) {
+              if (
+                abilityList[i].attributes.tomatoNumber >=
+                levelRuleList[j].attributes.tomatoNumber
+              ) {
+                abilityList[i].attributes.levelName =
+                  levelRuleList[j].attributes.name;
 
-                  ability.attributes.levelName = levelRule.attributes.name;
+                abilityList[i].attributes.levelNumber =
+                  levelRuleList[j].attributes.level;
 
-                  ability.attributes.levelNumber = levelRule.attributes.level;
-                  throw "level forEach break!";
-                }
-                // 正常情况
-                else if (
-                  index !== 0 &&
-                  ability.attributes.tomatoNumber <=
-                    levelRule.attributes.tomatoNumber
-                ) {
-                  ability.attributes.levelPercent =
-                    ability.attributes.tomatoNumber /
-                    (levelRuleList[index + 1].attributes.tomatoNumber -
-                      levelRule.attributes.tomatoNumber);
+                abilityList[i].attributes.levelPercent =
+                  (abilityList[i].attributes.tomatoNumber -
+                    levelRuleList[j].attributes.tomatoNumber) /
+                  (levelRuleList[j + 1].attributes.tomatoNumber -
+                    levelRuleList[j].attributes.tomatoNumber);
 
-                  ability.attributes.levelName = levelRule.attributes.name;
-
-                  ability.attributes.levelNumber = levelRule.attributes.level;
-                  throw "level forEach break!";
-                }
-              });
-            } catch (error) {}
-          });
+                break;
+              }
+            }
+          }
         }
 
         if (fetchTargetList !== undefined && fetchTargetList === true) {
