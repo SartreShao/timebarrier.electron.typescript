@@ -40,7 +40,7 @@ import draggable from "vuedraggable";
 import Store from "../../../store";
 import AV from "leancloud-storage";
 import { AbilityPage } from "@/lib/vue-viewmodels";
-import AbilityItem from "@/components/AbilityItem.vue";
+import AbilityItem from "./components/AbilityItem.vue";
 import TbInput from "@/lib/components/TbInput.vue";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import { InputAbilityType } from "@/lib/types/vue-viewmodels";
