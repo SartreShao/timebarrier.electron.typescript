@@ -1,19 +1,21 @@
 <template>
-  <div class="tomato-item-container">
+  <div class="tomato-item-container" v-if="mode !== `date`">
     <div class="tomato-name">{{ tomatoName }}</div>
     <div class="tomato-description" v-if="tomatoDescription">
       {{ tomatoDescription }}
     </div>
     <div
       class="related-target-list"
-      v-if="targetNameList && targetNameList.length !== 0 && false"
+      v-if="targetNameList && targetNameList.length !== 0 && mode === `detail`"
     >
       <span>相关目标：</span>
       {{ targetNameList.join("、") }}
     </div>
     <div
       class="related-ability-list"
-      v-if="abilityNameList && abilityNameList.length !== 0 && false"
+      v-if="
+        abilityNameList && abilityNameList.length !== 0 && mode === `detail`
+      "
     >
       <span>相关能力：</span>{{ abilityNameList.join("、") }}
     </div>
@@ -55,7 +57,8 @@ export default defineComponent({
     abilityNameList: Array,
     startTime: Date,
     endTime: Date,
-    color: String
+    color: String,
+    mode: String
   },
   setup(props, context) {
     const startTimeFormat = computed(() =>

@@ -1,5 +1,5 @@
 <template>
-  <div class="date-item-container">
+  <div class="date-item-container" @click="$emit('click')">
     <div class="date">{{ date }}</div>
     <div class="data">
       {{ todayTomatoNumber }} / {{ targetTomatoNumber }} 番茄｜{{ totalTime }}
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, watch } from "@vue/composition-api";
 export default defineComponent({
   props: {
     date: String,

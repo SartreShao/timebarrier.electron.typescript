@@ -3,6 +3,7 @@
     <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
       <date-item
         style="margin-top:0.15vh"
+        @click="click_dateItem"
         :date="statTomatoDate.date"
         :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
         :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
@@ -22,6 +23,7 @@
         :startTime="tomato.attributes.startTime"
         :endTime="tomato.createdAt"
         :color="tomato.attributes.color"
+        :mode="mode"
       ></tomato-item>
     </div>
 
@@ -41,27 +43,41 @@ import {
 import DateItem from "./components/DateItem.vue";
 import TomatoItem from "./components/TomatoItem.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
-import { StatTomatoDate } from "@/lib/types/vue-viewmodels";
+import { StatTomatoDate, TomatoStatStatus } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
   components: { DateItem, TomatoItem },
   setup(props, context) {
     const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
+
     const dailyPlanList: Ref<AV.Object[]> = inject(
       Store.dailyPlanList,
       ref([])
     );
 
-    watchEffect(() => {
-      console.log("statTomatoDateList", statTomatoDateList.value);
-    });
+    const mode: Ref<TomatoStatStatus> = ref("simple");
+
+    const click_dateItem = () => {
+      console.log("click");
+      switch (mode.value) {
+        case "detail":
+          mode.value = "date";
+          break;
+        case "simple":
+          mode.value = "detail";
+          break;
+        case "date":
+          mode.value = "simple";
+          break;
+      }
+    };
 
     onMounted(() => {
       StatTomatoPage.init(context.root, statTomatoDateList, dailyPlanList);
     });
 
-    return { statTomatoDateList };
+    return { statTomatoDateList, mode, click_dateItem };
   }
 });
 </script>

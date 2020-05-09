@@ -95,3 +95,5 @@ export interface StatTomatoDate {
   totalTime: number;
   tomatoList: AV.Object[];
 }
+
+export type TomatoStatStatus = "date" | "detail" | "simple";
