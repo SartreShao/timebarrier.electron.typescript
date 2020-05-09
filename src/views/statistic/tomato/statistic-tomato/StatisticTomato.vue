@@ -10,6 +10,7 @@
         :totalTime="
           statTomatoDate.totalTime ? statTomatoDate.totalTime : `暂无用时数据`
         "
+        :color="colormap[index]"
       ></date-item>
 
       <tomato-item
@@ -22,10 +23,10 @@
         :ability-name-list="tomato.attributes.abilityNameList"
         :startTime="tomato.attributes.startTime"
         :endTime="tomato.createdAt"
-        :color="tomato.attributes.color"
         :mode="mode"
         :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
         :target-tomato-number="statTomatoDate.targetTomatoNumber"
+        :color="colormap[index]"
       ></tomato-item>
     </div>
 
@@ -58,28 +59,30 @@ export default defineComponent({
       ref([])
     );
 
-    const mode: Ref<TomatoStatStatus> = ref("simple");
+    const mode: Ref<TomatoStatStatus> = ref("detail");
+
+    const colormap: string[] = inject(Store.colormap, []);
 
     const click_dateItem = () => {
       console.log("click");
-      switch (mode.value) {
-        case "detail":
-          mode.value = "date";
-          break;
-        case "simple":
-          mode.value = "detail";
-          break;
-        case "date":
-          mode.value = "simple";
-          break;
-      }
+      // switch (mode.value) {
+      //   case "detail":
+      //     mode.value = "date";
+      //     break;
+      //   case "simple":
+      //     mode.value = "detail";
+      //     break;
+      //   case "date":
+      //     mode.value = "simple";
+      //     break;
+      // }
     };
 
     onMounted(() => {
       StatTomatoPage.init(context.root, statTomatoDateList, dailyPlanList);
     });
 
-    return { statTomatoDateList, mode, click_dateItem };
+    return { statTomatoDateList, mode, click_dateItem, colormap };
   }
 });
 </script>

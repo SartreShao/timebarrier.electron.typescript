@@ -33,7 +33,7 @@
     <div style="height:2.32vh"></div>
 
     <div class="line-container">
-      <div class="line"></div>
+      <div class="line" :style="{ borderLeft: `0.4vw ${color} dashed` }"></div>
     </div>
   </div>
 </template>

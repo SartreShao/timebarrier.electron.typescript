@@ -1,5 +1,9 @@
 <template>
-  <div class="date-item-container" @click="$emit('click')">
+  <div
+    class="date-item-container"
+    @click="$emit('click')"
+    :style="{ background: color }"
+  >
     <div class="date">
       {{ date }}｜{{ todayTomatoNumber }} / {{ targetTomatoNumber }} 番茄｜{{
         totalTime
@@ -16,7 +20,7 @@
         id="椭圆_89"
         data-name="椭圆 89"
         fill="#fff"
-        stroke="#3846cf"
+        :stroke="color"
         stroke-width="3"
       >
         <circle cx="15" cy="15" r="15" stroke="none" />
