@@ -146,6 +146,24 @@ const UI = {
       min = "0" + min;
     }
     return min + ":" + sec;
+  },
+  /**
+   * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式
+   */
+  dateToString: (date: Date) => {
+    let year = String(date.getFullYear());
+    let month = String(date.getMonth() + 1);
+    let day = String(date.getDate());
+
+    if (month.length === 1) {
+      month = "0" + month;
+    }
+
+    if (day.length === 1) {
+      day = "0" + day;
+    }
+
+    return `${year} 年 ${month} 月 ${day} 日`;
   }
 };
 
