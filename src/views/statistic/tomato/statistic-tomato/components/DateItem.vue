@@ -23,7 +23,7 @@ export default defineComponent({
 .date-item-container {
   width 100vw
   height 8.02vh
-  background white
+  background #F4F4F8
   display flex
   align-items center
   justify-content center

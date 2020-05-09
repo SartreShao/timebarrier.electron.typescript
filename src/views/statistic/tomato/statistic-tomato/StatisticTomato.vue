@@ -1,22 +1,75 @@
 <template>
-  <div>
-    <date-item
-      date="2020 年 2 月 22 日"
-      :todayTomatoNumber="11"
-      :targetTomatoNumber="24"
-      totalTime="5 小时 40 分钟"
-    ></date-item>
-    <tomato-item style="margin-top:0.15vh"></tomato-item>
+  <div class="container">
+    <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
+      <date-item
+        style="margin-top:0.15vh"
+        :date="statTomatoDate.date"
+        :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
+        :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
+        :totalTime="
+          statTomatoDate.totalTime ? statTomatoDate.totalTime : `暂无用时数据`
+        "
+      ></date-item>
+
+      <tomato-item
+        v-for="tomato in statTomatoDate.tomatoList"
+        :key="tomato.id"
+        style="margin-top:0.15vh"
+        :tomato-name="tomato.attributes.name"
+        :tomato-description="tomato.attributes.description"
+        :target-name-list="tomato.attributes.targetNameList"
+        :ability-name-list="tomato.attributes.abilityNameList"
+        :startTime="tomato.attributes.startTime"
+        :endTime="tomato.createdAt"
+        :color="tomato.attributes.color"
+      ></tomato-item>
+    </div>
+
+    <div style="height:2.4vh"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import {
+  defineComponent,
+  onMounted,
+  Ref,
+  ref,
+  inject,
+  watchEffect
+} from "@vue/composition-api";
 import DateItem from "./components/DateItem.vue";
 import TomatoItem from "./components/TomatoItem.vue";
+import { StatTomatoPage } from "@/lib/vue-viewmodels";
+import { StatTomatoDate } from "@/lib/types/vue-viewmodels";
+import AV from "leancloud-storage";
+import Store from "@/store";
 export default defineComponent({
-  components: { DateItem, TomatoItem }
+  components: { DateItem, TomatoItem },
+  setup(props, context) {
+    const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref([])
+    );
+
+    watchEffect(() => {
+      console.log("statTomatoDateList", statTomatoDateList.value);
+    });
+
+    onMounted(() => {
+      StatTomatoPage.init(context.root, statTomatoDateList, dailyPlanList);
+    });
+
+    return { statTomatoDateList };
+  }
 });
 </script>
 
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+.container {
+  height 75.31vh
+  width 100%
+  overflow scroll
+}
+</style>

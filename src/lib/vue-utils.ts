@@ -150,7 +150,7 @@ const UI = {
   /**
    * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式
    */
-  dateToString: (date: Date) => {
+  dateToYearMonthDay: (date: Date) => {
     let year = String(date.getFullYear());
     let month = String(date.getMonth() + 1);
     let day = String(date.getDate());
@@ -164,6 +164,24 @@ const UI = {
     }
 
     return `${year} 年 ${month} 月 ${day} 日`;
+  },
+  dateToHourMinute12: (date: Date) => {
+    let hour: number | string = date.getHours();
+    let minute: number | string = date.getMinutes();
+    let type: string = "";
+
+    if (0 <= hour && hour <= 11) {
+      type = "am";
+    } else if (12 <= hour && hour <= 23) {
+      type = "pm";
+    }
+
+    minute = String(minute);
+    if (minute.length === 1) {
+      minute = "0" + minute;
+    }
+
+    return `${hour}:${minute} ${type}`;
   }
 };
 

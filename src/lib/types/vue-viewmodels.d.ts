@@ -8,6 +8,7 @@ import {
   ElMessageBoxOptions,
   MessageBoxData
 } from "element-ui/types/message-box";
+import AV from "leancloud-storage";
 
 /**
  * 计划的类别
@@ -86,3 +87,11 @@ export interface ElementVue {
  * 番茄时钟的状态
  */
 export type TomatoCloudStatus = "prepared" | "finished" | "processive";
+
+export interface StatTomatoDate {
+  date: string;
+  todayTomatoNumber: number;
+  targetTomatoNumber: number;
+  totalTime: number;
+  tomatoList: AV.Object[];
+}

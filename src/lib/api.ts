@@ -1338,5 +1338,23 @@ export default {
         Log.error("fetchPlanListWithAbilitySelect", error);
         reject(error);
       }
+    }),
+
+  /**
+   * 请求番茄列表
+   */
+  fetchTomatoList: (user: AV.User): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const tomatoList = await new AV.Query(Tomato)
+          .equalTo("user", user)
+          .descending("startTime")
+          .find();
+        Log.success("fetchTomatoList", tomatoList);
+        resolve(tomatoList);
+      } catch (error) {
+        Log.error("fetchTomatoList", error);
+        reject(error);
+      }
     })
 };

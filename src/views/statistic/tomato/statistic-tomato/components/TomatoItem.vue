@@ -1,17 +1,25 @@
 <template>
   <div class="tomato-item-container">
-    <div class="tomato-name">完成「时间壁垒」，并进行用户测试</div>
-    <div class="tomato-description">
-      制作「统计页面」的 UI 设计图，并完成了一些 BUG 的修复
+    <div class="tomato-name">{{ tomatoName }}</div>
+    <div class="tomato-description" v-if="tomatoDescription">
+      {{ tomatoDescription }}
     </div>
-    <div class="related-target-list">
+    <div
+      class="related-target-list"
+      v-if="targetNameList && targetNameList.length !== 0 && false"
+    >
       <span>相关目标：</span>
-      完成「时间壁垒」、成为优秀的产品经理、成为优秀的前端工程师
+      {{ targetNameList.join("、") }}
     </div>
-    <div class="related-ability-list">
-      <span>相关能力：</span>产品能力、前端能力、设计能力
+    <div
+      class="related-ability-list"
+      v-if="abilityNameList && abilityNameList.length !== 0 && false"
+    >
+      <span>相关能力：</span>{{ abilityNameList.join("、") }}
     </div>
-    <div class="time">8:00 am - 8:30 am</div>
+    <div style="height:2.32vh"></div>
+
+    <div class="time">{{ startTimeFormat }} - {{ endTimeFormat }}</div>
     <div class="line-container">
       <div class="line"></div>
       <svg
@@ -25,7 +33,7 @@
           id="椭圆_53"
           data-name="椭圆 53"
           fill="none"
-          stroke="#000000"
+          :stroke="color ? color : `#222A36`"
           stroke-width="3"
         >
           <circle cx="14" cy="14" r="14" stroke="none" />
@@ -37,8 +45,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
+import { defineComponent, computed } from "@vue/composition-api";
+import { UI } from "@/lib/vue-utils";
+export default defineComponent({
+  props: {
+    tomatoName: String,
+    tomatoDescription: String,
+    targetNameList: Array,
+    abilityNameList: Array,
+    startTime: Date,
+    endTime: Date,
+    color: String
+  },
+  setup(props, context) {
+    const startTimeFormat = computed(() =>
+      UI.dateToHourMinute12(props.startTime as any)
+    );
+
+    const endTimeFormat = computed(() =>
+      UI.dateToHourMinute12(props.endTime as any)
+    );
+
+    return {
+      startTimeFormat,
+      endTimeFormat
+    };
+  }
+});
 </script>
 
 <style lang="stylus" scoped>
@@ -139,7 +172,6 @@ export default defineComponent({});
   .related-ability-list {
     margin-top 1.5vh
     margin-left 18.13vw
-    margin-bottom 2.32vh
     width 76.8vw
     font-size 1.8vh
     font-weight normal

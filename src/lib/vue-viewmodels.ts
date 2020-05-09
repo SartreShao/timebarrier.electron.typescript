@@ -9,7 +9,8 @@ import {
   InputPlanType,
   InputTargetOrTargetSubjectType,
   InputAbilityType,
-  TargetAbilityTabType
+  TargetAbilityTabType,
+  StatTomatoDate
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -2336,7 +2337,7 @@ const AbilityPage = {
     }
 
     // 显示 loading
-    const loadingInstance = UI.showLoading(vue.$loading, "正在获取能力列表");
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取能力列表...");
 
     try {
       if (levelRuleList.value.length === 0) {
@@ -3226,6 +3227,91 @@ const SettingPage = {
   }
 };
 
+const StatTomatoPage = {
+  init: async (
+    vue: ElementVue,
+    statTomatoDateList: Ref<StatTomatoDate[]>,
+    dailyPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取番茄列表...");
+
+    try {
+      if (dailyPlanList.value.length === 0) {
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      }
+
+      const tomatoList = await Api.fetchTomatoList(user);
+
+      const targetTomatoNumber = getTargetTomatoNumber(dailyPlanList);
+
+      statTomatoDateList.value = getStatTomatoDateList(
+        tomatoList,
+        targetTomatoNumber
+      );
+
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取番茄列表失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+
+    function getStatTomatoDateList(
+      tomatoList: AV.Object[],
+      targetTomatoNumber: number
+    ): StatTomatoDate[] {
+      const statTomatoDateList: StatTomatoDate[] = [];
+      let tDate: string = "";
+      tomatoList.forEach(tomato => {
+        if (tDate !== UI.dateToYearMonthDay(tomato.attributes.startTime)) {
+          tDate = UI.dateToYearMonthDay(tomato.attributes.startTime);
+          statTomatoDateList.push({
+            date: tDate,
+            todayTomatoNumber: 1,
+            targetTomatoNumber: targetTomatoNumber,
+            totalTime: tomato.attributes.duration,
+            tomatoList: [tomato]
+          });
+        } else {
+          statTomatoDateList[statTomatoDateList.length - 1].todayTomatoNumber++;
+          statTomatoDateList[statTomatoDateList.length - 1].totalTime +=
+            tomato.attributes.duration;
+          statTomatoDateList[statTomatoDateList.length - 1].tomatoList.push(
+            tomato
+          );
+        }
+      });
+      return statTomatoDateList;
+    }
+
+    function getTargetTomatoNumber(dailyPlanList: Ref<AV.Object[]>): number {
+      let targetTomatoNumber = 0;
+      dailyPlanList.value.forEach(plan => {
+        if (
+          plan.attributes.target !== undefined &&
+          plan.attributes.target !== null
+        ) {
+          targetTomatoNumber += plan.attributes.target;
+        }
+      });
+      return targetTomatoNumber;
+    }
+  }
+};
+
 export {
   SplashPage,
   LoginPage,
@@ -3234,5 +3320,6 @@ export {
   TargetAbilityPage,
   TargetPage,
   AbilityPage,
-  SettingPage
+  SettingPage,
+  StatTomatoPage
 };
