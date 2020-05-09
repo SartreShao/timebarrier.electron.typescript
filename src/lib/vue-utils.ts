@@ -136,7 +136,7 @@ const UI = {
     loadingInstance.close();
   },
   // 格式化 1500s => 25:00
-  formatTime(second: number): string {
+  formatTime(second: number, words?: boolean): string {
     let sec = String(Math.trunc(second % 60));
     let min = String(Math.trunc(second / 60));
     if (sec.length < 2) {
@@ -145,7 +145,11 @@ const UI = {
     if (min.length < 2) {
       min = "0" + min;
     }
-    return min + ":" + sec;
+    if (words) {
+      return min + " 分 " + sec + " 秒";
+    } else {
+      return min + ":" + sec;
+    }
   },
   /**
    * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式

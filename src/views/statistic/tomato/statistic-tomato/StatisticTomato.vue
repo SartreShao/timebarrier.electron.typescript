@@ -13,7 +13,7 @@
       ></date-item>
 
       <tomato-item
-        v-for="tomato in statTomatoDate.tomatoList"
+        v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
         :key="tomato.id"
         style="margin-top:0.15vh"
         :tomato-name="tomato.attributes.name"
@@ -24,6 +24,8 @@
         :endTime="tomato.createdAt"
         :color="tomato.attributes.color"
         :mode="mode"
+        :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
+        :target-tomato-number="statTomatoDate.targetTomatoNumber"
       ></tomato-item>
     </div>
 

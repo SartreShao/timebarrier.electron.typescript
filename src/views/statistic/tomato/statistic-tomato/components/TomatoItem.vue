@@ -1,6 +1,12 @@
 <template>
   <div class="tomato-item-container" v-if="mode !== `date`">
-    <div class="tomato-name">{{ tomatoName }}</div>
+    <div class="time">
+      {{ startTimeFormat }} - {{ endTimeFormat }}｜{{ duration }}
+    </div>
+
+    <div class="tomato-name">
+      {{ tomatoName }}（{{ todayTomatoNumber }}/{{ targetTomatoNumber }}）
+    </div>
     <div class="tomato-description" v-if="tomatoDescription">
       {{ tomatoDescription }}
     </div>
@@ -9,7 +15,9 @@
       v-if="targetNameList && targetNameList.length !== 0 && mode === `detail`"
     >
       <span>相关目标：</span>
-      {{ targetNameList.join("、") }}
+      <div v-for="(targetName, index) in targetNameList" :key="index">
+        {{ index + 1 }}. {{ targetName }}
+      </div>
     </div>
     <div
       class="related-ability-list"
@@ -17,31 +25,15 @@
         abilityNameList && abilityNameList.length !== 0 && mode === `detail`
       "
     >
-      <span>相关能力：</span>{{ abilityNameList.join("、") }}
+      <span>相关能力：</span>
+      <div v-for="(abilityName, index) in abilityNameList" :key="index">
+        {{ index + 1 }}. {{ abilityName }}
+      </div>
     </div>
     <div style="height:2.32vh"></div>
 
-    <div class="time">{{ startTimeFormat }} - {{ endTimeFormat }}</div>
     <div class="line-container">
       <div class="line"></div>
-      <svg
-        class="svg"
-        xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="28"
-        viewBox="0 0 28 28"
-      >
-        <g
-          id="椭圆_53"
-          data-name="椭圆 53"
-          fill="none"
-          :stroke="color ? color : `#222A36`"
-          stroke-width="3"
-        >
-          <circle cx="14" cy="14" r="14" stroke="none" />
-          <circle cx="14" cy="14" r="12.5" fill="none" />
-        </g>
-      </svg>
     </div>
   </div>
 </template>
@@ -58,7 +50,9 @@ export default defineComponent({
     startTime: Date,
     endTime: Date,
     color: String,
-    mode: String
+    mode: String,
+    targetTomatoNumber: Number,
+    todayTomatoNumber: Number
   },
   setup(props, context) {
     const startTimeFormat = computed(() =>
@@ -69,9 +63,16 @@ export default defineComponent({
       UI.dateToHourMinute12(props.endTime as any)
     );
 
+    const duration = UI.formatTime(
+      ((props.endTime as any).getTime() - (props.startTime as any).getTime()) /
+        1000,
+      true
+    );
+
     return {
       startTimeFormat,
-      endTimeFormat
+      endTimeFormat,
+      duration
     };
   }
 });
@@ -86,65 +87,54 @@ export default defineComponent({
   position relative
   .line-container {
     position absolute
-    width 2.1vh
+    width 0.4vw
     height 100%
-    left 9.93vw
+    left 5.22vw
     display flex
     flex-direction column
     align-items center
-    .svg {
-      left 0
-      right 0
-      margin-left auto
-      margin-right auto
-      top 2.7vh
-      position absolute
-      width 2.1vh
-      height 2.1vh
-    }
     .line {
-      width 0.13vw
       height 100%
-      background #F5F5F5
+      opacity 0.5
+      border-left 0.4vw #3846cf dashed
     }
   }
   .time {
-    position absolute
-    top 2.85vh
-    right 3.33vw
+    margin-top 1.2vh
+    margin-left 18.13vw
     opacity 0.5
     font-size 1.8vh
     font-weight normal
     font-stretch normal
     font-style normal
-    line-height 1.46
+    line-height 2.62vh
     letter-spacing normal
     text-align left
     color #222a36
   }
   .tomato-name {
     margin-left 18.13vw
-    margin-top 2.32vh
-    width 46.67vw
+    margin-top 0.67vh
+    width 63.73vw
     font-size 2.1vh
     font-weight 500
     font-stretch normal
     font-style normal
-    line-height 1.43
+    line-height 3vh
     letter-spacing normal
     text-align left
     color #222a36
   }
   .tomato-description {
-    margin-top 1.5vh
+    margin-top 0.67vh
     margin-left 18.13vw
-    width 76.8vw
+    width 63.73vw
     opacity 0.5
     font-size 1.8vh
     font-weight normal
     font-stretch normal
     font-style normal
-    line-height 1.46
+    line-height 2.62vh
     letter-spacing normal
     text-align left
     color #222a36
@@ -157,7 +147,7 @@ export default defineComponent({
     font-weight normal
     font-stretch normal
     font-style normal
-    line-height 1.46
+    line-height 2.62vh
     letter-spacing normal
     text-align left
     color #959595
@@ -167,7 +157,7 @@ export default defineComponent({
       font-weight normal
       font-stretch normal
       font-style normal
-      line-height 1.46
+      line-height 2.62vh
       letter-spacing normal
       text-align left
     }
