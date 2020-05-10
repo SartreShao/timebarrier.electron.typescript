@@ -1,8 +1,9 @@
 <template>
   <div class="container">
     <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
+      <div v-if="index !== 0" style="height:0.15vh"></div>
+
       <date-item
-        style="margin-top:0.15vh"
         @click="click_dateItem"
         :date="statTomatoDate.date"
         :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
@@ -27,6 +28,7 @@
         :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
         :target-tomato-number="statTomatoDate.targetTomatoNumber"
         :color="colormap[index]"
+        :item-color="tomato.attributes.color"
       ></tomato-item>
     </div>
 
