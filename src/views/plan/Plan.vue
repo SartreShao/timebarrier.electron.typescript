@@ -524,7 +524,16 @@ export default defineComponent({
       );
     };
 
-    const keyUpEnter_targetInputBox = () => {};
+    // 在目标输入框回车：创建目标
+    const keyUpEnter_targetInputBox = () => {
+      PlanPage.createTarget(
+        context.root,
+        input_targetName,
+        input_targetListOfPlan,
+        input_editingPlan,
+        colormap
+      );
+    };
 
     // 点击事件：点击「完成计划」按钮
     const click_completePlanButton = (plan: AV.Object) => {
@@ -613,7 +622,9 @@ export default defineComponent({
       PlanPage.selectAbilityToCommit(ability);
     };
 
-    const click_targetItemSelector = (target: AV.Object) => {};
+    const click_targetItemSelector = (target: AV.Object) => {
+      PlanPage.selectTargetToComit(target);
+    };
 
     // 点击事件：保存选择后的 Ability 结果
     const click_saveAbility = () => {
@@ -624,7 +635,13 @@ export default defineComponent({
       );
     };
 
-    const click_saveTarget = () => {};
+    const click_saveTarget = () => {
+      PlanPage.saveSelectedTargetToEditingPlan(
+        isPlanRelateTargetDrawerDisplayed,
+        input_targetListOfPlan,
+        input_editingPlan
+      );
+    };
 
     // 点击事件：点击「每日计划」上的开始按钮
     const click_startTomatoButton = (plan: AV.Object) => {

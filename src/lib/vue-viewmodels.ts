@@ -737,6 +737,7 @@ const PlanPage = {
           );
         }
       } else {
+        UI.hideLoading(loadingInstance);
         UI.showNotification(
           vue.$notify,
           "数据出错",
@@ -755,6 +756,84 @@ const PlanPage = {
       );
     }
   },
+
+  createTarget: async (
+    vue: ElementVue,
+    input_targetName: Ref<string>,
+    input_targetListOfPlan: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType,
+    colormap: string[]
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 检查传入数据
+    if (input_targetName.value.length === 0) {
+      // doing nothing
+      return;
+    }
+
+    // 尝试请求带有 selected 属性的 Target
+    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的目标");
+
+    try {
+      // 创建目标
+      await Api.createTarget(
+        user,
+        null,
+        input_targetName.value,
+        "",
+        "indefinite",
+        null,
+        [],
+        true,
+        false,
+        colormap
+      );
+
+      // 刷新目标列表
+      if (input_editingPlan.id !== undefined) {
+        try {
+          input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
+            input_editingPlan.id
+          );
+          UI.hideLoading(loadingInstance);
+        } catch (error) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "网络出错",
+            `错误原因：${error.message}`,
+            "error"
+          );
+        }
+      } else {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingPlan.id is undefined",
+          "error"
+        );
+      }
+
+      input_targetName.value = "";
+    } catch (error) {
+      UI.showNotification(
+        vue.$notify,
+        "创建目标失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+
   /**
    * @TO-FIX
    */
@@ -767,6 +846,9 @@ const PlanPage = {
     const temp = ability.attributes.name;
     ability.attributes.name = "";
     ability.attributes.name = temp;
+  },
+  selectTargetToComit: (target: { attributes: { selected: boolean } }) => {
+    target.attributes.selected = !target.attributes.selected;
   },
   /**
    * 将选择好的 Ability(input_abilityListOfPlan) 保存到 input_editingPlan 的 ablityList 中
@@ -789,6 +871,26 @@ const PlanPage = {
       }
     });
     input_editingPlan.abilityList = list;
+  },
+
+  saveSelectedTargetToEditingPlan: (
+    isPlanRelateTargetDrawerDisplayed: Ref<boolean>,
+    input_targetListOfPlan: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType
+  ) => {
+    isPlanRelateTargetDrawerDisplayed.value = false;
+    const list: { id: string; name: string }[] = [];
+    input_targetListOfPlan.value.forEach(target => {
+      if (target.attributes.selected === true) {
+        if (target.id !== undefined) {
+          list.push({
+            id: target.id,
+            name: target.attributes.name
+          });
+        }
+      }
+    });
+    input_editingPlan.targetList = list;
   }
 };
 
