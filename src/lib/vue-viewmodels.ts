@@ -10,7 +10,8 @@ import {
   InputTargetOrTargetSubjectType,
   InputAbilityType,
   TargetAbilityTabType,
-  StatTomatoDate
+  StatTomatoDate,
+  StatStatusMode
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -3311,6 +3312,19 @@ const StatTomatoPage = {
         }
       });
       return targetTomatoNumber;
+    }
+  },
+  changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
+    switch (statStatusMode.value) {
+      case "detail":
+        statStatusMode.value = "date";
+        break;
+      case "simple":
+        statStatusMode.value = "detail";
+        break;
+      case "date":
+        statStatusMode.value = "simple";
+        break;
     }
   }
 };

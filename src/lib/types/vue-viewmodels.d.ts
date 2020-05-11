@@ -96,4 +96,4 @@ export interface StatTomatoDate {
   tomatoList: AV.Object[];
 }
 
-export type TomatoStatStatus = "date" | "detail" | "simple";
+export type StatStatusMode = "date" | "detail" | "simple";

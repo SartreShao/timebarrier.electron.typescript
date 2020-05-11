@@ -1,7 +1,7 @@
 // Plan
 import { provide, ref, reactive } from "@vue/composition-api";
 import AV from "leancloud-storage";
-import { TomatoCloudStatus } from "@/lib/types/vue-viewmodels";
+import { TomatoCloudStatus, StatStatusMode } from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表
 const temporaryPlanList = Symbol();
@@ -49,6 +49,8 @@ const isEditAbilityDrawerDisplayed = Symbol();
 const isCreateAbilityDrawerDisplayed = Symbol();
 // 当前路由是否为主界面的四个
 const isCurrentPageHome = Symbol();
+// 表示番茄记录的列表状态
+const tomatoStatStatusMode = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -159,6 +161,7 @@ function useProvider() {
   provide(isEditAbilityDrawerDisplayed, ref(false));
   provide(isCreateAbilityDrawerDisplayed, ref(false));
   provide(isCurrentPageHome, ref(false));
+  provide(tomatoStatStatusMode, ref<StatStatusMode>("simple"));
 }
 
 export default {
@@ -185,5 +188,6 @@ export default {
   input_creatingAbility,
   isEditAbilityDrawerDisplayed,
   isCreateAbilityDrawerDisplayed,
-  isCurrentPageHome
+  isCurrentPageHome,
+  tomatoStatStatusMode
 };

@@ -1,36 +1,36 @@
 <template>
   <div class="container">
-    <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
-      <div v-if="index !== 0" style="height:0.15vh"></div>
+    <transition-group type="transition" name="flip-list">
+      <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
+        <div v-if="index !== 0" style="height:0.15vh"></div>
 
-      <date-item
-        @click="click_dateItem"
-        :date="statTomatoDate.date"
-        :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
-        :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
-        :totalTime="
-          statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
-        "
-        :color="colormap[index]"
-      ></date-item>
+        <date-item
+          :date="statTomatoDate.date"
+          :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
+          :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
+          :totalTime="
+            statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
+          "
+          :color="colormap[index]"
+        ></date-item>
 
-      <tomato-item
-        v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
-        :key="tomato.id"
-        style="margin-top:0.15vh"
-        :tomato-name="tomato.attributes.name"
-        :tomato-description="tomato.attributes.description"
-        :target-name-list="tomato.attributes.targetNameList"
-        :ability-name-list="tomato.attributes.abilityNameList"
-        :startTime="tomato.attributes.startTime"
-        :endTime="tomato.createdAt"
-        :mode="mode"
-        :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
-        :target-tomato-number="statTomatoDate.targetTomatoNumber"
-        :color="colormap[index]"
-        :item-color="tomato.attributes.color"
-      ></tomato-item>
-    </div>
+        <tomato-item
+          v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
+          :key="tomato.id"
+          style="margin-top:0.15vh"
+          :tomato-name="tomato.attributes.name"
+          :tomato-description="tomato.attributes.description"
+          :target-name-list="tomato.attributes.targetNameList"
+          :ability-name-list="tomato.attributes.abilityNameList"
+          :startTime="tomato.attributes.startTime"
+          :endTime="tomato.createdAt"
+          :mode="tomatoStatStatusMode"
+          :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
+          :target-tomato-number="statTomatoDate.targetTomatoNumber"
+          :color="colormap[index]"
+          :item-color="tomato.attributes.color"
+        ></tomato-item></div
+    ></transition-group>
 
     <div style="height:2.4vh"></div>
   </div>
@@ -48,7 +48,7 @@ import {
 import DateItem from "../components/DateItem.vue";
 import TomatoItem from "../components/TomatoItem.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
-import { StatTomatoDate, TomatoStatStatus } from "@/lib/types/vue-viewmodels";
+import { StatTomatoDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
@@ -61,35 +61,30 @@ export default defineComponent({
       ref([])
     );
 
-    const mode: Ref<TomatoStatStatus> = ref("detail");
+    const tomatoStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.tomatoStatStatusMode,
+      ref("detail")
+    );
 
     const colormap: string[] = inject(Store.colormap, []);
-
-    const click_dateItem = () => {
-      console.log("click");
-      // switch (mode.value) {
-      //   case "detail":
-      //     mode.value = "date";
-      //     break;
-      //   case "simple":
-      //     mode.value = "detail";
-      //     break;
-      //   case "date":
-      //     mode.value = "simple";
-      //     break;
-      // }
-    };
 
     onMounted(() => {
       StatTomatoPage.init(context.root, statTomatoDateList, dailyPlanList);
     });
 
-    return { statTomatoDateList, mode, click_dateItem, colormap };
+    return {
+      statTomatoDateList,
+      tomatoStatStatusMode,
+      colormap
+    };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
 .container {
   height 75.31vh
   width 100%

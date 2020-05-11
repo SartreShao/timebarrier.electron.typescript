@@ -13,7 +13,7 @@
       <router-view />
     </main>
 
-    <div class="transition">
+    <div class="transition" @click="click_changeTomatoStatStatusMode">
       <img :src="assets.icon_transition" alt="icon_transition" />
     </div>
 
@@ -22,11 +22,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, Ref, inject, ref } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
 import icon_transition from "@/assets/icon_transition.svg";
+import { StatStatusMode } from "@/lib/types/vue-viewmodels";
+import Store from "@/store";
+import { StatTomatoPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   setup(props, context) {
@@ -36,8 +39,18 @@ export default defineComponent({
       { route: "/statistic/chart", name: "数据图表" }
     ];
 
+    const tomatoStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.tomatoStatStatusMode,
+      ref("detail")
+    );
+
+    const click_changeTomatoStatStatusMode = () => {
+      StatTomatoPage.changeStatStatusMode(tomatoStatStatusMode);
+    };
+
     return {
       tabRouteList,
+      click_changeTomatoStatStatusMode,
       assets: { icon_transition }
     };
   },
