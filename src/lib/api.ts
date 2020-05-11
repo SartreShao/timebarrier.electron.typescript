@@ -823,6 +823,60 @@ export default {
       }
     }),
   /**
+   * 请求 Plan 列表
+   */
+  fetchPlanListWithTargetSelect: (targetId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const target: AV.Object = await new AV.Query(Target).get(targetId);
+        const user: AV.User = target.attributes.user;
+        const planList = await new AV.Query(Plan)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .ascending("order")
+          .addDescending("createdAt")
+          .find();
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .equalTo("target", AV.Object.createWithoutData(Target, targetId))
+          .containedIn("plan", planList)
+          .find();
+        planList.forEach(plan => {
+          plan.attributes.selected = false;
+        });
+        targetPlanList.forEach(targetPlan => {
+          planList.forEach(plan => {
+            if (targetPlan.attributes.plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+        Log.success("fetchPlanListWithTargetSelect", planList);
+        resolve(planList);
+      } catch (error) {
+        Log.error("fetchPlanListWithTargetSelect", error);
+        reject(error);
+      }
+    }),
+  fetchPlanListWithSelect: (user: AV.User): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const planList = await new AV.Query(Plan)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .ascending("order")
+          .addDescending("createdAt")
+          .find();
+        planList.forEach(plan => {
+          plan.attributes.selected = false;
+        });
+        Log.success("fetchPlanListWithSelect", planList);
+        resolve(planList);
+      } catch (error) {
+        Log.error("fetchPlanListWithSelect", error);
+        reject(error);
+      }
+    }),
+  /**
    * 请求 TargetSubject
    * @param user 当前登录的用户
    */

@@ -44,6 +44,8 @@ export type InputTargetOrTargetSubjectType = {
     validity: Date | null;
     // 关联的能力
     abilityList: { id: string; name: string }[];
+    // 关联的计划
+    planList: { id: string; name: string }[];
     // 是否激活
     isActived: boolean;
     // 是否已完成

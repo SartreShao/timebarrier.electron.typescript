@@ -1698,6 +1698,101 @@ const TargetPage = {
       }
     }
   },
+
+  /**
+   * 打开「关联相关计划」编辑抽屉
+   */
+  openRelatePlanDrawer: async (
+    vue: ElementVue,
+    isTargetRelatePlanDrawerDisplayed: Ref<boolean>,
+    input_planListOfTarget: Ref<AV.Object[]>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 打开抽屉菜单
+    isTargetRelatePlanDrawerDisplayed.value = true;
+
+    // 初始化 input_abilityListOfTarget
+    if (
+      input_editingTargetOrTargetSubject === null &&
+      input_creatingTargetOrTargetSubject === null
+    ) {
+      isTargetRelatePlanDrawerDisplayed.value = false;
+      UI.showNotification(
+        vue.$notify,
+        "出现错误",
+        "input_editingTargetOrTargetSubject and input_creatingTargetOrTargetSubject both is null",
+        "error"
+      );
+      return;
+    }
+
+    // 编辑目标
+    if (input_editingTargetOrTargetSubject !== null) {
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的计划"
+      );
+
+      try {
+        if (input_editingTargetOrTargetSubject.target.id !== undefined) {
+          input_planListOfTarget.value = await Api.fetchPlanListWithTargetSelect(
+            input_editingTargetOrTargetSubject.target.id
+          );
+          UI.hideLoading(loadingInstance);
+        } else {
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingTargetOrTargetSubject.target.id is undefined",
+            "error"
+          );
+          UI.hideLoading(loadingInstance);
+        }
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+
+    // 创建目标
+    else if (input_creatingTargetOrTargetSubject !== null) {
+      // 尝试请求带有 selected 属性的 Ability
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的计划"
+      );
+
+      try {
+        input_planListOfTarget.value = await Api.fetchPlanListWithSelect(user);
+
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+  },
   /**
    * 删除「目标」或「目标目录」
    */
