@@ -2,21 +2,32 @@
   <div class="date-item-container" @click="$emit('click')">
     <div class="date">
       {{ date }}｜{{ todayTomatoNumber }} / {{ targetTomatoNumber }} 番茄｜{{
-        totalTime
+        totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from "@vue/composition-api";
+import { defineComponent, watch, computed } from "@vue/composition-api";
+import { UI } from "@/lib/vue-utils";
 export default defineComponent({
   props: {
     date: String,
     todayTomatoNumber: Number,
     targetTomatoNumber: Number,
-    totalTime: String,
+    totalTime: Number,
     color: String
+  },
+  setup(props, context) {
+    const totalTimeFormat = computed(() =>
+      props.totalTime
+        ? UI.formatTimeHourMinute(Number(props.totalTime / 1000))
+        : undefined
+    );
+    return {
+      totalTimeFormat
+    };
   }
 });
 </script>

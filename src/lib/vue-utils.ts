@@ -151,6 +151,12 @@ const UI = {
       return min + ":" + sec;
     }
   },
+  // 格式化
+  formatTimeHourMinute: (second: number) => {
+    let hour = Math.trunc(second / 3600);
+    let min = Math.trunc((second - hour * 3600) / 60);
+    return `${hour} 小时 ${min} 分钟`;
+  },
   /**
    * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式
    */

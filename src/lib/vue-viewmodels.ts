@@ -3282,13 +3282,16 @@ const StatTomatoPage = {
             date: tDate,
             todayTomatoNumber: 1,
             targetTomatoNumber: targetTomatoNumber,
-            totalTime: tomato.attributes.duration,
+            totalTime:
+              (tomato.createdAt as Date).getTime() -
+              tomato.attributes.startTime.getTime(),
             tomatoList: [tomato]
           });
         } else {
           statTomatoDateList[statTomatoDateList.length - 1].todayTomatoNumber++;
           statTomatoDateList[statTomatoDateList.length - 1].totalTime +=
-            tomato.attributes.duration;
+            (tomato.createdAt as Date).getTime() -
+            tomato.attributes.startTime.getTime();
           statTomatoDateList[statTomatoDateList.length - 1].tomatoList.push(
             tomato
           );

@@ -9,7 +9,7 @@
         :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
         :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
         :totalTime="
-          statTomatoDate.totalTime ? statTomatoDate.totalTime : `暂无用时数据`
+          statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
         "
         :color="colormap[index]"
       ></date-item>
@@ -45,8 +45,8 @@ import {
   inject,
   watchEffect
 } from "@vue/composition-api";
-import DateItem from "./components/DateItem.vue";
-import TomatoItem from "./components/TomatoItem.vue";
+import DateItem from "../components/DateItem.vue";
+import TomatoItem from "../components/TomatoItem.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
 import { StatTomatoDate, TomatoStatStatus } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
@@ -94,5 +94,10 @@ export default defineComponent({
   height 75.31vh
   width 100%
   overflow scroll
+  -ms-overflow-style none
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display none
+  }
 }
 </style>
