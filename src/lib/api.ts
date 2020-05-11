@@ -225,6 +225,26 @@ export default {
           });
         });
 
+        // 查询 plan 相关的 target
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .include("plan")
+          .include("target")
+          .containedIn("plan", planList)
+          .find();
+
+        planList.forEach(plan => {
+          plan.attributes.targetListOfPlan = [];
+          plan.attributes.selected = false;
+
+          targetPlanList.forEach(targetPlan => {
+            if (plan.id === targetPlan.attributes.plan.id) {
+              plan.attributes.targetListOfPlan.push(
+                targetPlan.attributes.target
+              );
+            }
+          });
+        });
+
         Log.success(`fetchPlanList ${planType}`, planList);
         resolve(planList);
       } catch (error) {
@@ -315,10 +335,10 @@ export default {
     name: string,
     target: number,
     type: PlanType,
-    description: string,
     isActived: boolean,
     isFinished: boolean,
-    abilityIdList: string[]
+    abilityIdList: string[],
+    targetIdList: string[]
   ) =>
     new Promise(async (resolve, reject) => {
       try {
@@ -327,20 +347,19 @@ export default {
           .set("name", name)
           .set("target", target)
           .set("type", type)
-          .set("description", description)
           .set("isActived", isActived)
           .set("isFinished", isFinished)
           .save();
 
-        // 删除所有的相关的中间表
+        // 删除所有的相关的中间表：AbilityPlan
         const abilityPlanList = await new AV.Query(AbilityPlan)
           .equalTo("plan", plan)
           .find();
 
         await AV.Object.destroyAll(abilityPlanList);
 
-        // 添加所有的相关的中间表
-        const list: AV.Object[] = [];
+        // 添加所有的相关的中间表：AbilityPlan
+        let list: AV.Object[] = [];
         abilityIdList.forEach(abilityId => {
           list.push(
             new AbilityPlan()
@@ -348,8 +367,26 @@ export default {
               .set("ability", AV.Object.createWithoutData(Ability, abilityId))
           );
         });
-
         await AV.Object.saveAll(list);
+
+        // 删除所有的相关的中间表：TargetPlan
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .equalTo("plan", plan)
+          .find();
+
+        await AV.Object.destroyAll(targetPlanList);
+
+        // 添加所有的相关的中间表：TargetPlan
+        list = [];
+        targetIdList.forEach(targetId => {
+          list.push(
+            new TargetPlan()
+              .set("plan", AV.Object.createWithoutData(Plan, planId))
+              .set("target", AV.Object.createWithoutData(Target, targetId))
+          );
+        });
+        await AV.Object.saveAll(list);
+
         Log.success("editPlan", plan);
         resolve(plan);
       } catch (error) {

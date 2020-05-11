@@ -405,12 +405,16 @@ const PlanPage = {
     input_editingPlan.target = plan.attributes.target;
     input_editingPlan.name = plan.attributes.name;
     input_editingPlan.type = plan.attributes.type;
-    input_editingPlan.description = plan.attributes.description;
     input_editingPlan.isActived = plan.attributes.isActived;
     input_editingPlan.isFinished = plan.attributes.isFinished;
     input_editingPlan.abilityList = plan.attributes.abilityListOfPlan.map(
       (ability: AV.Object) => {
         return { id: ability.id, name: ability.attributes.name };
+      }
+    );
+    input_editingPlan.targetList = plan.attributes.targetListOfPlan.map(
+      (target: AV.Object) => {
+        return { id: target.id, name: target.attributes.name };
       }
     );
   },
@@ -469,10 +473,10 @@ const PlanPage = {
           input_editingPlan.name,
           Number(input_editingPlan.target),
           input_editingPlan.type,
-          input_editingPlan.description,
           input_editingPlan.isActived,
           input_editingPlan.isFinished,
-          input_editingPlan.abilityList.map(ability => ability.id)
+          input_editingPlan.abilityList.map(ability => ability.id),
+          input_editingPlan.targetList.map(target => target.id)
         );
 
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
