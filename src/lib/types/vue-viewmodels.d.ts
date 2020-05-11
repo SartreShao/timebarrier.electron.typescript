@@ -21,7 +21,7 @@ export type InputPlanType = {
   name: string;
   type: PlanType;
   abilityList: { id: string; name: string }[];
-  description: string;
+  targetList: { id: string; name: string }[];
   isActived: boolean;
   isFinished: boolean;
   target: string;
