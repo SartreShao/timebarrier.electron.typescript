@@ -11,7 +11,8 @@ import {
   InputAbilityType,
   TargetAbilityTabType,
   StatTomatoDate,
-  StatStatusMode
+  StatStatusMode,
+  StatTargetDate
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -3326,6 +3327,23 @@ const StatTomatoPage = {
         statStatusMode.value = "simple";
         break;
     }
+  }
+};
+
+const statTargetPage = {
+  init: async (vue: ElementVue, statTargetDateList: Ref<StatTargetDate[]>) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取目标记录...");
+
+    function getStatTargetDateList(tomatoList: AV.Object[]) {}
   }
 };
 

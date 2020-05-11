@@ -96,4 +96,11 @@ export interface StatTomatoDate {
   tomatoList: AV.Object[];
 }
 
+export interface StatTargetDate {
+  date: string;
+  todayTargetNumber: number;
+  totalTime: number;
+  targetList: AV.Object[];
+}
+
 export type StatStatusMode = "date" | "detail" | "simple";
