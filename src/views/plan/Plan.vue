@@ -599,7 +599,14 @@ export default defineComponent({
     };
 
     // 点击事件：点击「关联相关目标」按钮
-    const click_relatedTargetButton = () => {};
+    const click_relatedTargetButton = () => {
+      PlanPage.relatedTarget(
+        context.root,
+        isPlanRelateTargetDrawerDisplayed,
+        input_targetListOfPlan,
+        input_editingPlan
+      );
+    };
 
     // 点击事件：点击选择 Ability 的项目
     const click_abilityItemSelector = (ability: AV.Object) => {

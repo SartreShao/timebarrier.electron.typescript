@@ -640,6 +640,48 @@ const PlanPage = {
     }
   },
   /**
+   * 用户点击「关联相关目标」
+   */
+  relatedTarget: async (
+    vue: ElementVue,
+    isPlanRelateTargetDrawerDisplayed: Ref<boolean>,
+    input_targetListOfPlan: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType
+  ) => {
+    // 打开抽屉菜单
+    isPlanRelateTargetDrawerDisplayed.value = true;
+
+    if (input_editingPlan.id !== undefined) {
+      // 尝试请求带有 selected 属性的 Target
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在请求相关的目标"
+      );
+
+      try {
+        input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
+          input_editingPlan.id
+        );
+        UI.hideLoading(loadingInstance);
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    } else {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "错误原因：input_editingPlan.id is undefined",
+        "error"
+      );
+    }
+  },
+  /**
    * 创建一个 Ability
    * 会先创建一个 Ability，然后再刷新 Ability 列表，最后在清空输入框
    */

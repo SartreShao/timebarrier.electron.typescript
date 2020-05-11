@@ -11,6 +11,7 @@ const TargetSubject = AV.Object.extend("TargetSubject");
 const Target = AV.Object.extend("Target");
 const AbilityTarget = AV.Object.extend("AbilityTarget");
 const LevelRule = AV.Object.extend("LevelRule");
+const TargetPlan = AV.Object.extend("TargetPlan");
 
 export default {
   init: () => {
@@ -709,6 +710,43 @@ export default {
       } catch (error) {
         console.log(error);
         Log.error("fetchAbilityListWithPlanSelect", error);
+        reject(error);
+      }
+    }),
+
+  fetchTargetListWithPlanSelect: (planId: string): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const plan: AV.Object = await new AV.Query(Plan).get(planId);
+        const user: string = plan.attributes.user;
+        const targetList = await new AV.Query(Target)
+          .equalTo("user", user)
+          .equalTo("isFinished", false)
+          .ascending("order")
+          .addDescending("createdAt")
+          .find();
+
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .equalTo("plan", AV.Object.createWithoutData(Plan, planId))
+          .containedIn("target", targetList)
+          .find();
+
+        targetList.forEach(target => {
+          target.attributes.selected = false;
+        });
+
+        targetPlanList.forEach(targetPlan => {
+          targetList.forEach(target => {
+            if (targetPlan.attributes.target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
+
+        Log.success("fetchTargetListWithPlanSelect", targetList);
+        resolve(targetList);
+      } catch (error) {
+        Log.error("fetchTargetListWithPlanSelect", error);
         reject(error);
       }
     }),
