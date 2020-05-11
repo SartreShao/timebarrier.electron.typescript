@@ -34,7 +34,6 @@ export default defineComponent({
   .date {
     height 2.62vh
     font-size 1.8vh
-    font-weight normal
     font-stretch normal
     font-style normal
     line-height 1.46

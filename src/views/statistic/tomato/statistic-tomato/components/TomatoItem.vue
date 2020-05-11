@@ -117,13 +117,13 @@ export default defineComponent({
     align-items center
     .line {
       opacity 0.1
-      width 0.13vw
+      width 0.14vw
       background #222A36
       height 4.5vh
     }
     .line-bottom {
       opacity 0.1
-      width 0.13vw
+      width 0.14vw
       background #222A36
       height 100%
     }
