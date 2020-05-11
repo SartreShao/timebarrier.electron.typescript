@@ -13,6 +13,10 @@
       <router-view />
     </main>
 
+    <div class="transition">
+      <img :src="assets.icon_transition" alt="icon_transition" />
+    </div>
+
     <!-- 底边栏 -->
     <bottom-bar></bottom-bar>
   </div>
@@ -22,6 +26,7 @@ import { defineComponent } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
+import icon_transition from "@/assets/icon_transition.svg";
 
 export default defineComponent({
   setup(props, context) {
@@ -32,7 +37,8 @@ export default defineComponent({
     ];
 
     return {
-      tabRouteList
+      tabRouteList,
+      assets: { icon_transition }
     };
   },
   components: { TopBar, BottomBar, TabView }
@@ -53,5 +59,23 @@ main {
   display flex
   flex-direction column
   align-items center
+}
+.transition {
+  cursor pointer
+  position fixed
+  bottom 9vh
+  right 5.07vw
+  width 7.5vh
+  height 7.5vh
+  border-radius 50%
+  background white
+  box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+  display flex
+  justify-content center
+  align-items center
+  img {
+    width 4.85vw
+    height 2.16vh
+  }
 }
 </style>
