@@ -796,6 +796,7 @@ const PlanPage = {
         "indefinite",
         null,
         [],
+        [],
         true,
         false,
         colormap
@@ -1428,6 +1429,7 @@ const TargetPage = {
           input_creatingTargetOrTargetSubject.target.validityType,
           input_creatingTargetOrTargetSubject.target.validity,
           input_creatingTargetOrTargetSubject.target.abilityList,
+          input_creatingTargetOrTargetSubject.target.planList,
           input_creatingTargetOrTargetSubject.target.isActived,
           input_creatingTargetOrTargetSubject.target.isFinished,
           colormap
@@ -3041,6 +3043,7 @@ const AbilityPage = {
           "indefinite",
           null,
           [],
+          [],
           true,
           false,
           colormap
@@ -3101,6 +3104,7 @@ const AbilityPage = {
           "",
           "indefinite",
           null,
+          [],
           [],
           true,
           false,

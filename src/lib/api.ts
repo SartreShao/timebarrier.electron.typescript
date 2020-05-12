@@ -1032,6 +1032,7 @@ export default {
     validityType: "time-bound" | "indefinite",
     validity: Date | null,
     abilityList: { id: string; name: string }[],
+    planList: { id: string; name: string }[],
     isActived: boolean,
     isFinished: boolean,
     colormap: string[]
@@ -1088,6 +1089,19 @@ export default {
 
         if (abilityTargetList.length !== 0) {
           await AV.Object.saveAll(abilityTargetList);
+        }
+
+        const targetPlanList: AV.Object[] = [];
+
+        planList.forEach(plan => {
+          const targetPlan = new TargetPlan()
+            .set("target", target)
+            .set("plan", AV.Object.createWithoutData("Plan", plan.id));
+          targetPlanList.push(targetPlan);
+        });
+
+        if (targetPlanList.length !== 0) {
+          await AV.Object.saveAll(targetPlanList);
         }
 
         Log.success("createTarget", target);
