@@ -2419,6 +2419,126 @@ const TargetPage = {
     }
   },
   /**
+   * 在 Target 关联 Plan 的抽屉菜单中创建 Plan
+   */
+  createPlan: async (
+    vue: ElementVue,
+    input_planName: Ref<string>,
+    input_planListOfTarget: Ref<AV.Object[]>,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType | null
+  ) => {
+    if (input_editingTargetOrTargetSubject !== null) {
+      createPlanInEditTarget(
+        vue,
+        input_planName,
+        input_planListOfTarget,
+        input_editingTargetOrTargetSubject
+      );
+    } else {
+      createPlanInCreateTarget(vue, input_planName, input_planListOfTarget);
+    }
+    async function createPlanInEditTarget(
+      vue: ElementVue,
+      input_planName: Ref<string>,
+      input_planListOfTarget: Ref<AV.Object[]>,
+      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_planName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      if (input_editingTargetOrTargetSubject.target.id === undefined) {
+        UI.showNotification(
+          vue.$notify,
+          "数据出错",
+          "错误原因：input_editingTargetOrTargetSubject.target.id === undefined",
+          "error"
+        );
+        return;
+      }
+
+      // 尝试创建新 Plan
+      const loadingInstance = UI.showLoading(vue.$loading, "正在创建计划...");
+
+      try {
+        await Api.createPlan(input_planName.value, "daily", user);
+
+        // 刷新能力列表
+        input_planListOfTarget.value = await Api.fetchPlanListWithTargetSelect(
+          input_editingTargetOrTargetSubject.target.id
+        );
+
+        UI.hideLoading(loadingInstance);
+        // 清空输入框
+        input_planName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+    async function createPlanInCreateTarget(
+      vue: ElementVue,
+      input_planName: Ref<string>,
+      input_planListOfTarget: Ref<AV.Object[]>
+    ) {
+      // 获取传入参数
+      const user = Api.getCurrentUser();
+
+      // 如果未登录，提示用户请先登录
+      if (user === null) {
+        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+        return;
+      }
+
+      // 检测传入参数
+      if (input_planName.value.length === 0) {
+        // doing nothing
+        return;
+      }
+
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在创建您的计划..."
+      );
+
+      try {
+        // 创建计划
+        await Api.createPlan(input_planName.value, "daily", user);
+
+        // 刷新计划列表
+        input_planListOfTarget.value = await Api.fetchPlanListWithSelect(user);
+
+        UI.hideLoading(loadingInstance);
+
+        input_planName.value = "";
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(
+          vue.$notify,
+          "网络出错",
+          `错误原因：${error.message}`,
+          "error"
+        );
+      }
+    }
+  },
+  /**
    * 完成一个 目标
    */
   finishTarget: async (

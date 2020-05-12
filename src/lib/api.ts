@@ -267,13 +267,17 @@ export default {
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new Plan()
+        const plan = new Plan()
           .set("name", name)
           .set("type", type)
           .set("isFinished", false)
           .set("user", user)
-          .set("order", 0)
-          .save();
+          .set("order", 0);
+
+        if (type === "daily") {
+          plan.set("target", 2);
+        }
+        await plan.save();
         Log.success("createPlan", plan);
         resolve(plan);
       } catch (error) {

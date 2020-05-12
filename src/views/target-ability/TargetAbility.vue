@@ -580,13 +580,13 @@
       title="关联相关计划"
       :visible.sync="isTargetRelatePlanDrawerDisplayed"
     >
-      <!-- 输入框：创建新能力 -->
+      <!-- 输入框：创建新计划 -->
       <div class="input-ability-name-container">
         <input
           type="text"
           placeholder="创建一个新计划"
           class="input-ability-name"
-          @keyup.enter="keyUpEnter_planInputBox"
+          @keyup.enter="keyUpEnter_planInputBoxForTarget"
           v-model="input_planName"
         />
 
@@ -858,13 +858,13 @@
       title="关联相关计划"
       :visible.sync="isAbilityRelatedPlanDrawerDisplayed"
     >
-      <!-- 输入框：创建新 Target -->
+      <!-- 输入框：创建新 Ability -->
       <div class="input-ability-name-container">
         <input
           type="text"
           placeholder="创建一个新能力"
           class="input-ability-name"
-          @keyup.enter="keyUpEnter_planInputBox"
+          @keyup.enter="keyUpEnter_planInputBoxForAbility"
           v-model="input_planName"
         />
 
@@ -1176,7 +1176,7 @@ export default defineComponent({
     };
 
     // 回车事件：Plan 输入框
-    const keyUpEnter_planInputBox = () => {
+    const keyUpEnter_planInputBoxForAbility = () => {
       if (isCreateAbility.value) {
         AbilityPage.createPlan(
           context.root,
@@ -1190,6 +1190,25 @@ export default defineComponent({
           input_planName,
           input_planListOfAbility,
           input_editingAbility
+        );
+      }
+    };
+
+    // 回车事件：Plan 输入框
+    const keyUpEnter_planInputBoxForTarget = () => {
+      if (isCreateTarget.value) {
+        TargetPage.createPlan(
+          context.root,
+          input_planName,
+          input_planListOfTarget,
+          null
+        );
+      } else {
+        TargetPage.createPlan(
+          context.root,
+          input_planName,
+          input_planListOfTarget,
+          input_editingTargetOrTargetSubject
         );
       }
     };
@@ -1425,7 +1444,8 @@ export default defineComponent({
       isAbilityRelatedPlanDrawerDisplayed,
       keyUpEnter_abilityInputBox,
       keyUpEnter_targetInputBox,
-      keyUpEnter_planInputBox,
+      keyUpEnter_planInputBoxForAbility,
+      keyUpEnter_planInputBoxForTarget,
       input_abilityName,
       input_targetName,
       input_planName,
