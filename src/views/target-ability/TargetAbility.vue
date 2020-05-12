@@ -442,6 +442,36 @@
         v-if="input_editingTargetOrTargetSubject.inputType === `target`"
       ></div>
 
+      <!-- 按钮：关联相关计划 -->
+      <div
+        class="related-ability"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+        @click="click_relatedPlanEditTargetButton"
+        v-darked-when-click
+      >
+        <img
+          :src="assets.icon_add"
+          alt="icon_add"
+          v-if="input_editingTargetOrTargetSubject.target.planList.length === 0"
+        />
+        <span
+          v-if="input_editingTargetOrTargetSubject.target.planList.length === 0"
+          >关联相关计划</span
+        >
+        <span v-else>{{
+          "相关计划：" +
+            input_editingTargetOrTargetSubject.target.planList
+              .map(plan => plan.name)
+              .join("、")
+        }}</span>
+      </div>
+
+      <!-- 占位框 -->
+      <div
+        style="height:2.4vh"
+        v-if="input_editingTargetOrTargetSubject.inputType === `target`"
+      ></div>
+
       <!-- 按钮：激活与完成 -->
       <div
         class="radio-container"
@@ -1276,6 +1306,19 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：关联相关计划按钮（编辑目标）
+    const click_relatedPlanEditTargetButton = () => {
+      isCreateTarget.value = false;
+
+      TargetPage.openRelatePlanDrawer(
+        context.root,
+        isTargetRelatePlanDrawerDisplayed,
+        input_planListOfTarget,
+        input_editingTargetOrTargetSubject,
+        null
+      );
+    };
+
     // 点击事件：关联相关能力按钮（编辑目标）
     const click_relatedAbilityEditTargetButton = () => {
       isCreateTarget.value = false;
@@ -1470,6 +1513,7 @@ export default defineComponent({
       click_savePlanOfAbilityButton,
       click_relatedAbilityCreateTargetButton,
       click_relatedPlanCreateTargetButton,
+      click_relatedPlanEditTargetButton,
       click_relatedAbilityEditTargetButton,
       click_relatedTargetEditButton,
       click_relatedPlanEditButton,

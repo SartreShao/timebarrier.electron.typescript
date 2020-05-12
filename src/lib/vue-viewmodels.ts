@@ -1559,6 +1559,11 @@ const TargetPage = {
         return { id: ability.id, name: ability.attributes.name };
       }
     );
+    input_editingTargetOrTargetSubject.target.planList = target.attributes.planListOfTarget.map(
+      (plan: AV.Object) => {
+        return { id: plan.id, name: plan.attributes.name };
+      }
+    );
     input_editingTargetOrTargetSubject.target.isActived =
       target.attributes.isActived;
     input_editingTargetOrTargetSubject.target.isFinished =
@@ -2093,6 +2098,7 @@ const TargetPage = {
             input_editingTargetOrTargetSubject.target.validityType,
             input_editingTargetOrTargetSubject.target.validity,
             input_editingTargetOrTargetSubject.target.abilityList,
+            input_editingTargetOrTargetSubject.target.planList,
             input_editingTargetOrTargetSubject.target.isActived,
             input_editingTargetOrTargetSubject.target.isFinished
           );

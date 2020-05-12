@@ -383,6 +383,7 @@ export default defineComponent({
           validityType: "",
           validity: null,
           abilityList: [],
+          planList: [],
           isActived: true,
           isFinished: false
         },
@@ -406,6 +407,7 @@ export default defineComponent({
           validityType: "",
           validity: null,
           abilityList: [],
+          planList: [],
           isActived: true,
           isFinished: false
         },

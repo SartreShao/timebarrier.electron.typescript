@@ -995,7 +995,7 @@ export default {
         // 获取 targetList
         const targetList = await targetListQuery.find();
 
-        // 获取 abilityTargetLIst
+        // 获取 abilityTargetList
         const abilityTargetList = await new AV.Query(AbilityTarget)
           .include("target")
           .include("ability")
@@ -1009,6 +1009,25 @@ export default {
             if (target.id === abilityTarget.attributes.target.id) {
               target.attributes.abilityListOfTarget.push(
                 abilityTarget.attributes.ability
+              );
+            }
+          });
+        });
+
+        // 获取 targetPlanList
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .include("target")
+          .include("plan")
+          .containedIn("target", targetList)
+          .find();
+
+        // 将 targetPlanList 存入 targetList 中
+        targetList.forEach(target => {
+          target.attributes.planListOfTarget = [];
+          targetPlanList.forEach(targetPlan => {
+            if (target.id === targetPlan.attributes.target.id) {
+              target.attributes.planListOfTarget.push(
+                targetPlan.attributes.plan
               );
             }
           });
@@ -1174,6 +1193,7 @@ export default {
     validityType: "time-bound" | "indefinite",
     validity: Date | null,
     abilityList: { id: string; name: string }[],
+    planList: { id: string; name: string }[],
     isActived: boolean,
     isFinished: boolean
   ) =>
@@ -1219,6 +1239,27 @@ export default {
 
         if (abilityTargetList.length !== 0) {
           await AV.Object.saveAll(abilityTargetList);
+        }
+
+        // 删除所有的相关的中间表
+        const targetPlanListToDelete = await new AV.Query(TargetPlan)
+          .equalTo("target", AV.Object.createWithoutData(Target, targetId))
+          .find();
+
+        AV.Object.destroyAll(targetPlanListToDelete);
+
+        // 保存新的中间表
+        const targetPlanList: AV.Object[] = [];
+
+        planList.forEach(plan => {
+          const targetPlan = new TargetPlan()
+            .set("plan", AV.Object.createWithoutData("Plan", plan.id))
+            .set("target", target);
+          targetPlanList.push(targetPlan);
+        });
+
+        if (targetPlanList.length !== 0) {
+          await AV.Object.saveAll(targetPlanList);
         }
 
         Log.success("saveTarget", target);
