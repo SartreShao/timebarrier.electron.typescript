@@ -24,7 +24,7 @@
           :endTime="target.attributes.tomatoOfTarget.createdAt"
           :color="colormap[index]"
           :mode="targetStatStatusMode"
-          :item-color="colormap[targetIndex % colormap.length]"
+          :item-color="target.attributes.color"
         ></target-item>
       </div>
     </transition-group>
