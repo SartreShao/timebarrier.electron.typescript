@@ -1,5 +1,5 @@
 <template>
-  <div class="target-item-container" >
+  <div class="target-item-container">
     <div class="time">
       {{ startTimeFormat }} - {{ endTimeFormat }}｜{{ duration }}
     </div>
@@ -14,7 +14,28 @@
     <div style="height:2.32vh"></div>
 
     <div class="line-container">
-      <div class="line" :style="{ borderLeft: `0.4vw ${color} dashed` }"></div>
+      <div class="line"></div>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+      >
+        <g
+          id="椭圆_89"
+          data-name="椭圆 89"
+          fill="#fff"
+          :stroke="itemColor ? itemColor : `#222A36`"
+          stroke-width="3"
+          stroke-dasharray="130 361"
+        >
+          <circle cx="15" cy="15" r="15" stroke="none" />
+          <circle cx="15" cy="15" r="13.5" fill="none" />
+        </g>
+      </svg>
+
+      <div class="line-bottom"></div>
     </div>
   </div>
 </template>
@@ -29,7 +50,8 @@ export default defineComponent({
     startTime: Date,
     endTime: Date,
     color: String,
-    mode: String
+    mode: String,
+    itemColor: String
   },
   setup(props, context) {
     const startTimeFormat = computed(() =>
@@ -66,14 +88,25 @@ export default defineComponent({
     position absolute
     width 0.4vw
     height 100%
-    left 5.22vw
+    left 10vw
     display flex
     flex-direction column
     align-items center
     .line {
+      opacity 0.1
+      width 0.14vw
+      background #222A36
+      height 4.5vh
+    }
+    .line-bottom {
+      opacity 0.1
+      width 0.14vw
+      background #222A36
       height 100%
-      opacity 0.5
-      border-left 0.4vw #3846cf dashed
+    }
+    svg {
+      width 2.25vh
+      height 2.25vh
     }
   }
   .time {

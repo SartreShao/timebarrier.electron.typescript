@@ -11,7 +11,7 @@
           :totalTime="
             statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
           "
-          :color="colormap[index]"
+          :color="colormap[index % colormap.length]"
           type="tomato"
         ></date-item>
 
@@ -28,7 +28,7 @@
           :mode="tomatoStatStatusMode"
           :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
           :target-tomato-number="statTomatoDate.targetTomatoNumber"
-          :color="colormap[index]"
+          :color="colormap[index % colormap.length]"
           :item-color="tomato.attributes.color"
         ></tomato-item></div
     ></transition-group>

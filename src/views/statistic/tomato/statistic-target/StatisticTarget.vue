@@ -9,7 +9,7 @@
           :totalTime="
             statTargetDate.totalTime ? statTargetDate.totalTime : undefined
           "
-          :color="colormap[index]"
+          :color="colormap[index % colormap.length]"
           :todayTargetNumber="statTargetDate.todayTargetNumber"
           type="target"
         ></date-item>
@@ -24,6 +24,7 @@
           :endTime="target.attributes.tomatoOfTarget.createdAt"
           :color="colormap[index]"
           :mode="targetStatStatusMode"
+          :item-color="colormap[targetIndex % colormap.length]"
         ></target-item>
       </div>
     </transition-group>
