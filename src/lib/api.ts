@@ -1534,10 +1534,72 @@ export default {
   fetchTomatoList: (user: AV.User): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
+        // 获取番茄列表
         const tomatoList = await new AV.Query(Tomato)
           .equalTo("user", user)
           .descending("startTime")
           .find();
+
+        // 获取与番茄关联的计划
+        const tomatoPlanList = await new AV.Query(TomatoPlan)
+          .containedIn("tomato", tomatoList)
+          .include("plan")
+          .descending("createdAt")
+          .find();
+
+        // 将 planList 存入到 tomato.attributes.planListOfTomato
+        tomatoList.forEach(tomato => {
+          tomato.attributes.planListOfTomato = [];
+          tomatoPlanList.forEach(tomatoPlan => {
+            if (tomatoPlan.attributes.tomato.id === tomato.id) {
+              tomato.attributes.planListOfTomato.push(
+                tomatoPlan.attributes.plan
+              );
+            }
+          });
+        });
+
+        // PlanList
+        const planList = tomatoPlanList.map(
+          tomatoPlan => tomatoPlan.attributes.plan
+        );
+
+        // 获取与 Plan 相关联的 Target
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .containedIn("plan", planList)
+          .include("target")
+          .descending("createdAt")
+          .find();
+
+        // 获取与 Plan 相关的 Ability
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .containedIn("plan", planList)
+          .include("ability")
+          .descending("createdAt")
+          .find();
+
+        // 将 targetList 存入到 plan.attributes.targetListOfPlan
+        planList.forEach(plan => {
+          plan.attributes.targetListOfPlan = [];
+          plan.attributes.abilityListOfPlan = [];
+
+          targetPlanList.forEach(targetPlan => {
+            if (targetPlan.attributes.plan.id === plan.id) {
+              plan.attributes.targetListOfPlan.push(
+                targetPlan.attributes.target
+              );
+            }
+          });
+
+          abilityPlanList.forEach(abilityPlan => {
+            if (abilityPlan.attributes.plan.id === plan.id) {
+              plan.attributes.abilityListOfPlan.push(
+                abilityPlan.attributes.ability
+              );
+            }
+          });
+        });
+
         Log.success("fetchTomatoList", tomatoList);
         resolve(tomatoList);
       } catch (error) {
