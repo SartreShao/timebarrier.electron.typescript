@@ -12,6 +12,7 @@
             statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
           "
           :color="colormap[index]"
+          type="tomato"
         ></date-item>
 
         <tomato-item

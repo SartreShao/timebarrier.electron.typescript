@@ -3731,7 +3731,7 @@ const StatTomatoPage = {
   }
 };
 
-const statTargetPage = {
+const StatTargetPage = {
   init: async (vue: ElementVue, statTargetDateList: Ref<StatTargetDate[]>) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -3744,7 +3744,91 @@ const statTargetPage = {
 
     const loadingInstance = UI.showLoading(vue.$loading, "正在获取目标记录...");
 
-    function getStatTargetDateList(tomatoList: AV.Object[]) {}
+    try {
+      const statTargetList = await Api.fetchStatTargetList(user);
+
+      statTargetDateList.value = getStatTargetDateList(statTargetList);
+
+      console.log("statTargetDateList", statTargetDateList.value);
+
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取统计目标列表失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+
+    function getStatTargetDateList(
+      statTargetList: AV.Object[]
+    ): StatTargetDate[] {
+      const statTargetDateList: StatTargetDate[] = [];
+      let tDate: string = "";
+
+      statTargetList.forEach(statTarget => {
+        if (
+          tDate !==
+          UI.dateToYearMonthDay(
+            statTarget.attributes.tomatoOfTarget.attributes.startTime
+          )
+        ) {
+          tDate = UI.dateToYearMonthDay(
+            statTarget.attributes.tomatoOfTarget.attributes.startTime
+          );
+          statTargetDateList.push({
+            date: tDate,
+            todayTargetNumber: 1,
+            totalTime:
+              (statTarget.attributes.tomatoOfTarget
+                .createdAt as Date).getTime() -
+              statTarget.attributes.tomatoOfTarget.attributes.startTime.getTime(),
+            targetList: [statTarget]
+          });
+        } else {
+          let isStatExist = false;
+          statTargetDateList[statTargetDateList.length - 1].targetList.forEach(
+            oldStatTarget => {
+              if (oldStatTarget.id === statTarget.id) {
+                isStatExist = true;
+              }
+            }
+          );
+
+          if (!isStatExist) {
+            statTargetDateList[statTargetDateList.length - 1]
+              .todayTargetNumber++;
+          }
+
+          let isSameTime = false;
+          statTargetDateList[statTargetDateList.length - 1].targetList.forEach(
+            oldStatTarget => {
+              if (
+                oldStatTarget.attributes.tomatoOfTarget.attributes.startTime ===
+                  statTarget.attributes.tomatoOfTarget.attributes.startTime &&
+                oldStatTarget.attributes.tomatoOfTarget.createdAt ===
+                  statTarget.attributes.tomatoOfTarget.createdAt
+              ) {
+                isSameTime = true;
+              }
+            }
+          );
+          if (!isSameTime) {
+            statTargetDateList[statTargetDateList.length - 1].totalTime +=
+              (statTarget.attributes.tomatoOfTarget
+                .createdAt as Date).getTime() -
+              statTarget.attributes.tomatoOfTarget.attributes.startTime.getTime();
+          }
+
+          statTargetDateList[statTargetDateList.length - 1].targetList.push(
+            statTarget
+          );
+        }
+      });
+      return statTargetDateList;
+    }
   }
 };
 
@@ -3757,5 +3841,6 @@ export {
   TargetPage,
   AbilityPage,
   SettingPage,
-  StatTomatoPage
+  StatTomatoPage,
+  StatTargetPage
 };

@@ -1606,5 +1606,36 @@ export default {
         Log.error("fetchTomatoList", error);
         reject(error);
       }
-    })
+    }),
+
+  /**
+   * 请求统计目标列表
+   */
+  fetchStatTargetList(user: AV.User): Promise<AV.Object[]> {
+    const Api = this;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const tomatoList = await Api.fetchTomatoList(user);
+
+        const statTargetList: AV.Object[] = [];
+
+        tomatoList.forEach(tomato => {
+          tomato.attributes.planListOfTomato.forEach((plan: AV.Object) => {
+            plan.attributes.targetListOfPlan.forEach((target: AV.Object) => {
+              target.attributes.isStat = true;
+              target.attributes.tomatoOfTarget = tomato;
+              target.attributes.planOfTarget = plan;
+              statTargetList.push(target);
+            });
+          });
+        });
+
+        Log.success("fetchStatTargetList", statTargetList);
+        resolve(statTargetList);
+      } catch (error) {
+        Log.error("fetchStatTargetList", error);
+        reject(error);
+      }
+    });
+  }
 };
