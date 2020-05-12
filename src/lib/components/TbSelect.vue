@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "@vue/composition-api";
+import { defineComponent, ref, Ref, computed } from "@vue/composition-api";
 import { Router } from "@/lib/vue-utils";
 /**
  * 传入参数：selectOptions 结构：{name:string, icon:any, route:string}[]
@@ -40,9 +40,17 @@ export default defineComponent({
   setup(props, context) {
     const currentOption: Ref<any> = ref();
 
-    if (props !== undefined && props.selectOptions !== undefined) {
-      currentOption.value = (props.selectOptions[0] as any).route;
-    }
+    const currentRoute = computed(() => context.root.$route.fullPath);
+
+    (props.selectOptions as any).forEach((selectOption: any) => {
+      if (currentRoute.value.startsWith(selectOption.route)) {
+        currentOption.value = selectOption.route;
+      }
+    });
+
+    // if (props !== undefined && props.selectOptions !== undefined) {
+    //   currentOption.value = (props.selectOptions[0] as any).route;
+    // }
 
     const onChange_routeSelect = () => {
       Router.replace(context.root.$router, currentOption.value);
