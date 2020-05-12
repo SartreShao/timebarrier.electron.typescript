@@ -1314,7 +1314,15 @@ export default defineComponent({
       );
     };
 
-    const click_savePlanOfTargetButton = () => {};
+    // 点击事件：保存选择好的 Plan
+    const click_savePlanOfTargetButton = () => {
+      TargetPage.saveSelectedPlanToCreatingOrEditingTarget(
+        isTargetRelatePlanDrawerDisplayed,
+        input_planListOfTarget,
+        input_creatingTargetOrTargetSubject,
+        input_editingTargetOrTargetSubject
+      );
+    };
 
     // 点击事件：保存选择好的 Target
     const click_saveTargetOfAbilityButton = () => {

@@ -2260,6 +2260,34 @@ const TargetPage = {
     input_editingTargetOrTargetSubject.target.abilityList = list;
   },
   /**
+   * 保存 Plan 的选择结果到创建 Target 的用户输入中
+   */
+  saveSelectedPlanToCreatingOrEditingTarget: (
+    isTargetRelatePlanDrawerDisplayed: Ref<boolean>,
+    input_planListOfTarget: Ref<AV.Object[]>,
+    input_creatingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType
+  ) => {
+    // 关闭抽屉菜单
+    isTargetRelatePlanDrawerDisplayed.value = false;
+
+    // 给 input_creatingTarget.target.abilityList 赋值
+    const list: { id: string; name: string }[] = [];
+    input_planListOfTarget.value.forEach(target => {
+      if (target.attributes.selected === true) {
+        if (target.id !== undefined) {
+          list.push({
+            id: target.id,
+            name: target.attributes.name
+          });
+        }
+      }
+    });
+
+    input_creatingTargetOrTargetSubject.target.planList = list;
+    input_editingTargetOrTargetSubject.target.planList = list;
+  },
+  /**
    * 创建能力（在关联能力的框里）
    * @param input_abilityName 需要创建的能力的名称
    * @param input_abilityListOfTarget 需要让用户选择的能力列表（可多选）
