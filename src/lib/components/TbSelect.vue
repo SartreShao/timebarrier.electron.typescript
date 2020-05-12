@@ -48,10 +48,6 @@ export default defineComponent({
       }
     });
 
-    // if (props !== undefined && props.selectOptions !== undefined) {
-    //   currentOption.value = (props.selectOptions[0] as any).route;
-    // }
-
     const onChange_routeSelect = () => {
       Router.replace(context.root.$router, currentOption.value);
       console.log(currentOption.value);
