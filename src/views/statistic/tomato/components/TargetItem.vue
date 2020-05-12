@@ -1,5 +1,5 @@
 <template>
-  <div class="target-item-container" v-if="mode !== `date`">
+  <div class="target-item-container" >
     <div class="time">
       {{ startTimeFormat }} - {{ endTimeFormat }}｜{{ duration }}
     </div>

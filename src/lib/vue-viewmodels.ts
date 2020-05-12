@@ -3791,7 +3791,9 @@ const StatTargetPage = {
           let isStatExist = false;
           statTargetDateList[statTargetDateList.length - 1].targetList.forEach(
             oldStatTarget => {
-              if (oldStatTarget.id === statTarget.id) {
+              if (
+                oldStatTarget.attributes.name === statTarget.attributes.name
+              ) {
                 isStatExist = true;
               }
             }

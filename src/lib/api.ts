@@ -1619,15 +1619,23 @@ export default {
 
         const statTargetList: AV.Object[] = [];
 
-        tomatoList.forEach(tomato => {
-          tomato.attributes.planListOfTomato.forEach((plan: AV.Object) => {
-            plan.attributes.targetListOfPlan.forEach((target: AV.Object) => {
-              target.attributes.isStat = true;
-              target.attributes.tomatoOfTarget = tomato;
-              target.attributes.planOfTarget = plan;
-              statTargetList.push(target);
-            });
-          });
+        tomatoList.forEach((tomato, tomatoIndex) => {
+          tomato.attributes.planListOfTomato.forEach(
+            (plan: AV.Object, planIndex: number) => {
+              plan.attributes.targetListOfPlan.forEach(
+                (target: AV.Object, targetIndex: number) => {
+                  const object = target.clone();
+                  // console.log(
+                  //   `tomato: ${tomatoIndex}, plan:${planIndex}, target:${targetIndex}`
+                  // );
+                  object.attributes.isStat = true;
+                  object.attributes.tomatoOfTarget = tomato;
+                  object.attributes.planOfTarget = plan;
+                  statTargetList.push(object);
+                }
+              );
+            }
+          );
         });
 
         Log.success("fetchStatTargetList", statTargetList);

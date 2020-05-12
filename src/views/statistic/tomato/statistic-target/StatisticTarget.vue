@@ -13,6 +13,18 @@
           :todayTargetNumber="statTargetDate.todayTargetNumber"
           type="target"
         ></date-item>
+
+        <target-item
+          v-for="(target, targetIndex) in statTargetDate.targetList"
+          :key="targetIndex"
+          style="margin-top:0.15vh"
+          :target-name="target.attributes.name"
+          :plan-name="target.attributes.planOfTarget.attributes.name"
+          :startTime="target.attributes.tomatoOfTarget.attributes.startTime"
+          :endTime="target.attributes.tomatoOfTarget.createdAt"
+          :color="colormap[index]"
+          :mode="targetStatStatusMode"
+        ></target-item>
       </div>
     </transition-group>
   </div>
