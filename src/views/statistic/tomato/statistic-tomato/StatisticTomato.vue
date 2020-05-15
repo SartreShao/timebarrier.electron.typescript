@@ -15,6 +15,15 @@
           type="tomato"
         ></date-item>
 
+        <tomato-item-percent
+          name="计划：完成「时间壁垒」APP"
+          :tomato-number="2"
+          :target-tomato-number="4"
+          totalTime="20"
+          :currentTime="6000"
+          :total-tomato-number="40"
+          color="#3D4551"
+        ></tomato-item-percent>
         <tomato-item
           v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
           :key="tomato.id"
@@ -48,12 +57,13 @@ import {
 } from "@vue/composition-api";
 import DateItem from "../components/DateItem.vue";
 import TomatoItem from "../components/TomatoItem.vue";
+import TomatoItemPercent from "../components/TomatoItemPercent.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
 import { StatTomatoDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
-  components: { DateItem, TomatoItem },
+  components: { DateItem, TomatoItem, TomatoItemPercent },
   setup(props, context) {
     const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
 

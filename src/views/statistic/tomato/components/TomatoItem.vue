@@ -1,11 +1,12 @@
 <template>
   <div class="tomato-item-container" v-if="mode !== `date`">
     <div class="time">
-      {{ startTimeFormat }} - {{ endTimeFormat }}｜{{ duration }}
+      {{ startTimeFormat }}
+      - {{ endTimeFormat }}｜{{ duration }}
     </div>
 
     <div class="tomato-name">
-      {{ tomatoName }}（{{ todayTomatoNumber }}/{{ targetTomatoNumber }}）
+      {{ tomatoName }}
     </div>
     <div class="tomato-description" v-if="tomatoDescription">
       {{ tomatoDescription }}
