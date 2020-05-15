@@ -15,15 +15,7 @@
           type="tomato"
         ></date-item>
 
-        <tomato-item-percent
-          name="计划：完成「时间壁垒」APP"
-          :tomato-number="2"
-          :target-tomato-number="4"
-          totalTime="20"
-          :currentTime="6000"
-          :total-tomato-number="40"
-          color="#3D4551"
-        ></tomato-item-percent>
+
         <tomato-item
           v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
           :key="tomato.id"
