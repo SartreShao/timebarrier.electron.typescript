@@ -5,7 +5,15 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { defineComponent, inject, watch, Ref, ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  inject,
+  watch,
+  Ref,
+  ref,
+  computed,
+  watchEffect
+} from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
 export default defineComponent({

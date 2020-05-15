@@ -22,7 +22,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, Ref, inject, ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  Ref,
+  inject,
+  ref,
+  computed,
+  watchEffect
+} from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
@@ -44,8 +51,15 @@ export default defineComponent({
       ref("detail")
     );
 
+    // 当前页面的路由
+    const currentRoute = computed(() => context.root.$route.fullPath);
+
     const click_changeTomatoStatStatusMode = () => {
-      StatTomatoPage.changeStatStatusMode(tomatoStatStatusMode);
+      switch (currentRoute.value) {
+        case "/statistic/tomato/statistic-tomato":
+          StatTomatoPage.changeStatStatusMode(tomatoStatStatusMode);
+          break;
+      }
     };
 
     return {
