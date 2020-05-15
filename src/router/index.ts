@@ -58,6 +58,14 @@ const routes = [
               )
           },
           {
+            path: "statistic-plan",
+            name: "statistic-plan",
+            component: () =>
+              import(
+                "../views/statistic/tomato/statistic-plan/StatisticPlan.vue"
+              )
+          },
+          {
             path: "statistic-target",
             name: "statistic-target",
             component: () =>

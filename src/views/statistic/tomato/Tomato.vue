@@ -16,6 +16,7 @@ import TbSelect from "@/lib/components/TbSelect.vue";
 import icon_ability_tab from "@/assets/icon_ability_tab.svg";
 import icon_target_tab from "@/assets/icon_target_tab.svg";
 import icon_tomato_tab from "@/assets/icon_tomato_tab.svg";
+import icon_plan_tab from "@/assets/icon_plan_tab.svg";
 
 export default defineComponent({
   components: { TbSelect },
@@ -29,6 +30,11 @@ export default defineComponent({
         name: "番茄视图",
         icon: icon_tomato_tab,
         route: "/statistic/tomato/statistic-tomato"
+      },
+      {
+        name: "计划视图",
+        icon: icon_plan_tab,
+        route: "/statistic/tomato/statistic-plan"
       },
       {
         name: "目标视图",

@@ -1,5 +1,5 @@
 <template>
-  <div class="tomato-item-percent-container">
+  <div class="plan-item-container">
     <aside v-bind:style="{ width: widthPercent, background: color }"></aside>
 
     <div class="tomato-container">
@@ -53,7 +53,7 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
-.tomato-item-percent-container {
+.plan-item-container {
   width 100%
   position relative
   background #222a36

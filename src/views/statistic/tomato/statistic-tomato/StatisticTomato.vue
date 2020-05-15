@@ -57,13 +57,13 @@ import {
 } from "@vue/composition-api";
 import DateItem from "../components/DateItem.vue";
 import TomatoItem from "../components/TomatoItem.vue";
-import TomatoItemPercent from "../components/TomatoItemPercent.vue";
+import PlanItem from "../components/PlanItem.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
 import { StatTomatoDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
-  components: { DateItem, TomatoItem, TomatoItemPercent },
+  components: { DateItem, TomatoItem, PlanItem },
   setup(props, context) {
     const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
 
