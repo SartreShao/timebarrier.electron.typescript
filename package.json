@@ -16,6 +16,7 @@
   "main": "background.js",
   "dependencies": {
     "@leancloud/adapter-types": "^1.0.1",
+    "@types/echarts": "^4.6.0",
     "@types/gsap": "^1.20.2",
     "@types/vuedraggable": "^2.23.0",
     "@typescript-eslint/eslint-plugin": "^2.24.0",
