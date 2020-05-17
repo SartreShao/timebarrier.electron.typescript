@@ -1,16 +1,21 @@
 <template>
   <div class="plan-item-container">
     <aside v-bind:style="{ width: widthPercent, background: color }"></aside>
-
-    <div class="tomato-container">
+    <div class="tomato-container" v-if="targetTomatoNumber">
       <div class="percent">
         {{ ((tomatoNumber / targetTomatoNumber) * 100).toFixed(0) + "%" }}
       </div>
       <div class="tomato">{{ tomatoNumber }} / {{ targetTomatoNumber }}</div>
     </div>
+    <div class="tomato-number" v-if="!targetTomatoNumber">
+      {{ tomatoNumber }} 番茄
+    </div>
     <div class="name">{{ name }}</div>
     <div class="total">
-      共累计 {{ totalTime }} 小时，{{ totalTomatoNumber }} 个番茄
+      <span v-if="totalTimeFormat.length !== 0"
+        >共累计 {{ totalTimeFormat }}， {{ totalTomatoNumber }} 个番茄</span
+      >
+      <span v-else>临时计划</span>
     </div>
     <div class="time">{{ currentTimeFormat }}</div>
   </div>
@@ -26,7 +31,7 @@ export default defineComponent({
     name: String,
     time: String,
     color: String,
-    totalTime: String,
+    totalTime: Number,
     totalTomatoNumber: Number,
     currentTime: Number
   },
@@ -42,27 +47,42 @@ export default defineComponent({
     );
 
     const currentTimeFormat = computed(() =>
-      UI.formatTimeHourMinute(props.currentTime as any)
+      props.currentTime
+        ? UI.formatTimeHourMinute((props.currentTime as any) / 1000)
+        : ""
     );
+
+    const totalTimeFormat = computed(() =>
+      props.totalTime
+        ? UI.formatTimeHourMinute((props.totalTime as any) / 1000)
+        : ""
+    );
+
     return {
       widthPercent,
-      currentTimeFormat
+      currentTimeFormat,
+      totalTimeFormat
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
+$backgroundColor = #222a36 // #222a36
+$textColor = #ffffff // #ffffff
 .plan-item-container {
   width 100%
   position relative
-  background #222a36
-  height 10.94vh
+  background $backgroundColor
+  display flex
+  flex-direction column
 }
 aside {
   position absolute
-  height 10.94vh
+  height 100%
   border-radius 0 4.5vh 1.57vh 0
+  bottom 0
+  left 0
 }
 .tomato-container {
   height 4.72vh
@@ -84,7 +104,7 @@ aside {
     line-height 1.45
     letter-spacing normal
     text-align center
-    color #ffffff
+    color $textColor
   }
   .tomato {
     opacity 0.49
@@ -95,13 +115,30 @@ aside {
     line-height 1.45
     letter-spacing normal
     text-align center
-    color #ffffff
+    color $textColor
   }
 }
-.name {
+.tomato-number {
+  height 2.4vh
   position absolute
-  left 18.13vw
-  top 2.32vh
+  left 4.67vw
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  font-size 1.65vh
+  font-weight normal
+  font-stretch normal
+  font-style normal
+  line-height 1.45
+  letter-spacing normal
+  text-align center
+  color $textColor
+}
+.name {
+  width 56.67vw
+  margin-left 18.13vw
+  margin-top 2.32vh
   font-size 2.1vh
   font-weight bold
   font-stretch normal
@@ -109,12 +146,14 @@ aside {
   line-height 1.43
   letter-spacing normal
   text-align left
-  color #ffffff
+  color $textColor
+  z-index 111
 }
 .total {
-  position absolute
-  left 18.13vw
-  bottom 2.32vh
+  margin-left 18.13vw
+  margin-top 1vh
+  margin-bottom 2.32vh
+  height 2.62vh
   opacity 0.5
   font-size 1.8vh
   font-weight normal
@@ -123,7 +162,7 @@ aside {
   line-height 1.46
   letter-spacing normal
   text-align left
-  color #ffffff
+  color $textColor
 }
 .time {
   position absolute
@@ -140,6 +179,6 @@ aside {
   line-height 1.45
   letter-spacing normal
   text-align right
-  color #ffffff
+  color $textColor
 }
 </style>

@@ -1,6 +1,7 @@
 import * as AV from "leancloud-storage";
 import { Log } from "../lib/vue-utils";
 import { PlanType } from "./types/vue-viewmodels";
+import _ from "lodash";
 
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
@@ -1625,9 +1626,6 @@ export default {
               plan.attributes.targetListOfPlan.forEach(
                 (target: AV.Object, targetIndex: number) => {
                   const object = target.clone();
-                  // console.log(
-                  //   `tomato: ${tomatoIndex}, plan:${planIndex}, target:${targetIndex}`
-                  // );
                   object.attributes.isStat = true;
                   object.attributes.tomatoOfTarget = tomato;
                   object.attributes.planOfTarget = plan;
@@ -1642,6 +1640,35 @@ export default {
         resolve(statTargetList);
       } catch (error) {
         Log.error("fetchStatTargetList", error);
+        reject(error);
+      }
+    });
+  },
+
+  /**
+   * 请求计划列表
+   * @param user
+   */
+  fetchStatPlanList(user: AV.User): Promise<AV.Object[]> {
+    const Api = this;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const tomatoList = await Api.fetchTomatoList(user);
+
+        const statPlanList: AV.Object[] = [];
+
+        tomatoList.forEach(tomato => {
+          tomato.attributes.planListOfTomato.forEach((plan: AV.Object) => {
+            const object = _.cloneDeep(plan);
+            object.attributes.tomatoOfPlan = tomato;
+            statPlanList.push(object);
+          });
+        });
+
+        Log.success("fetchStatPlanList", statPlanList);
+        resolve(statPlanList);
+      } catch (error) {
+        Log.error("fetchStatPlanList", error);
         reject(error);
       }
     });

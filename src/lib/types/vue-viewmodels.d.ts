@@ -105,4 +105,12 @@ export interface StatTargetDate {
   targetList: AV.Object[];
 }
 
+export interface StatPlanDate {
+  date: string;
+  todayPlanNumber: number;
+  totalTime: number;
+  planList: AV.Object[];
+  statPlanList?: AV.Object[];
+}
+
 export type StatStatusMode = "date" | "detail" | "simple";
