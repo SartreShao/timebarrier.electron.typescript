@@ -9,8 +9,8 @@
             statPlanDate.totalTime ? statPlanDate.totalTime : undefined
           "
           :color="colormap[index % colormap.length]"
-          :todayTargetNumber="statPlanDate.todayPlanNumber"
-          type="target"
+          :todayPlanNumber="statPlanDate.todayPlanNumber"
+          type="plan"
         ></date-item>
 
         <plan-item
@@ -24,6 +24,7 @@
           :currentTime="plan.attributes.todayTotalTime"
           :total-tomato-number="plan.attributes.tomatoNumber"
           :color="colormap[planIndex % colormap.length]"
+          :mode="planStatStatusMode"
         ></plan-item>
       </div>
     </transition-group>
@@ -42,13 +43,19 @@ import {
 } from "@vue/composition-api";
 import PlanItem from "../components/PlanItem.vue";
 import DateItem from "../components/DateItem.vue";
-import { StatPlanDate } from "@/lib/types/vue-viewmodels";
+import { StatPlanDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import { StatPlanPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   components: { DateItem, PlanItem },
   setup(props, context) {
     const statPlanDateList: Ref<StatPlanDate[]> = ref([]);
+
+    const planStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.planStatStatusMode,
+      ref("simple")
+    );
+
     const colormap: string[] = inject(Store.colormap, []);
 
     onMounted(() => {
@@ -56,6 +63,7 @@ export default defineComponent({
     });
     return {
       statPlanDateList,
+      planStatStatusMode,
       colormap
     };
   }

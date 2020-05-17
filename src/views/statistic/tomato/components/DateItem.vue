@@ -10,6 +10,11 @@
         totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>
+    <div class="date" v-if="type === `plan`">
+      {{ date }}｜训练了 {{ todayPlanNumber }} 项计划｜{{
+        totalTimeFormat ? totalTimeFormat : "暂无用时数据"
+      }}
+    </div>
   </div>
 </template>
 
@@ -22,6 +27,7 @@ export default defineComponent({
     todayTomatoNumber: Number,
     targetTomatoNumber: Number,
     todayTargetNumber: Number,
+    todayPlanNumber: Number,
     totalTime: Number,
     color: String,
     type: String

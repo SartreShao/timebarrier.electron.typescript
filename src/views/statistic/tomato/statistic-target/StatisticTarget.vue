@@ -52,7 +52,7 @@ export default defineComponent({
 
     const targetStatStatusMode: Ref<StatStatusMode> = inject(
       Store.targetStatStatusMode,
-      ref("detail")
+      ref("simple")
     );
 
     const colormap: string[] = inject(Store.colormap, []);

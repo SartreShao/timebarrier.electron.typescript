@@ -3970,6 +3970,21 @@ const StatPlanPage = {
     }
   }
 };
+const StatPage = {
+  changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
+    switch (statStatusMode.value) {
+      case "detail":
+        statStatusMode.value = "date";
+        break;
+      case "simple":
+        statStatusMode.value = "detail";
+        break;
+      case "date":
+        statStatusMode.value = "simple";
+        break;
+    }
+  }
+};
 
 export {
   SplashPage,
@@ -3982,5 +3997,6 @@ export {
   SettingPage,
   StatTomatoPage,
   StatTargetPage,
-  StatPlanPage
+  StatPlanPage,
+  StatPage
 };

@@ -53,6 +53,8 @@ const isCurrentPageHome = Symbol();
 const tomatoStatStatusMode = Symbol();
 // 表示目标记录的列表状态
 const targetStatStatusMode = Symbol();
+// 表示计划记录的列表状态
+const planStatStatusMode = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -167,6 +169,7 @@ function useProvider() {
   provide(isCurrentPageHome, ref(false));
   provide(tomatoStatStatusMode, ref<StatStatusMode>("simple"));
   provide(targetStatStatusMode, ref<StatStatusMode>("simple"));
+  provide(planStatStatusMode, ref<StatStatusMode>("simple"));
 }
 
 export default {
@@ -195,5 +198,6 @@ export default {
   isCreateAbilityDrawerDisplayed,
   isCurrentPageHome,
   tomatoStatStatusMode,
-  targetStatStatusMode
+  targetStatStatusMode,
+  planStatStatusMode
 };

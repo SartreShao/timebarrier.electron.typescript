@@ -36,7 +36,7 @@ import TabView from "../../components/TabView.vue";
 import icon_transition from "@/assets/icon_transition.svg";
 import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
-import { StatTomatoPage } from "@/lib/vue-viewmodels";
+import { StatTomatoPage, StatPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   setup(props, context) {
@@ -51,13 +51,21 @@ export default defineComponent({
       ref("detail")
     );
 
+    const planStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.planStatStatusMode,
+      ref("simple")
+    );
+
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
     const click_changeTomatoStatStatusMode = () => {
       switch (currentRoute.value) {
         case "/statistic/tomato/statistic-tomato":
-          StatTomatoPage.changeStatStatusMode(tomatoStatStatusMode);
+          StatPage.changeStatStatusMode(tomatoStatStatusMode);
+          break;
+        case "/statistic/tomato/statistic-plan":
+          StatPage.changeStatStatusMode(planStatStatusMode);
           break;
       }
     };

@@ -1,5 +1,5 @@
 <template>
-  <div class="plan-item-container">
+  <div class="plan-item-container" v-if="mode !== `date`">
     <aside v-bind:style="{ width: widthPercent, background: color }"></aside>
     <div class="tomato-container" v-if="targetTomatoNumber">
       <div class="percent">
@@ -33,7 +33,8 @@ export default defineComponent({
     color: String,
     totalTime: Number,
     totalTomatoNumber: Number,
-    currentTime: Number
+    currentTime: Number,
+    mode: String
   },
   setup(props, context) {
     const widthPercent = computed(
