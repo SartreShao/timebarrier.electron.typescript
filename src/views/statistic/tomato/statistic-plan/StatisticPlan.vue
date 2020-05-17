@@ -13,6 +13,12 @@
           type="plan"
         ></date-item>
 
+        <plan-charts
+          :mode="planStatStatusMode"
+          style="margin-top:0.15vh"
+          :statPlanDateList="statPlanDate.statPlanList"
+        ></plan-charts>
+
         <plan-item
           v-for="(plan, planIndex) in statPlanDate.statPlanList"
           :key="planIndex"
@@ -39,15 +45,17 @@ import {
   Ref,
   ref,
   onMounted,
-  inject
+  inject,
+  watchEffect
 } from "@vue/composition-api";
 import PlanItem from "../components/PlanItem.vue";
 import DateItem from "../components/DateItem.vue";
+import PlanCharts from "../components/PlanCharts.vue";
 import { StatPlanDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import { StatPlanPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { DateItem, PlanItem },
+  components: { DateItem, PlanItem, PlanCharts },
   setup(props, context) {
     const statPlanDateList: Ref<StatPlanDate[]> = ref([]);
 
@@ -71,6 +79,9 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
 .container {
   height 75.31vh
   width 100%

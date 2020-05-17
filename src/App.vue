@@ -55,6 +55,7 @@ export default defineComponent({
 * {
   flex-shrink 0
   -webkit-tap-highlight-color rgba(0, 0, 0, 0) /* 点击高亮的颜色 */
+  overflow-x hidden
 }
 #app {
   width 100%

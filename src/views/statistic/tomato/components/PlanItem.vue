@@ -1,5 +1,5 @@
 <template>
-  <div class="plan-item-container" v-if="mode !== `date`">
+  <div class="plan-item-container" v-if="mode === `simple`">
     <aside v-bind:style="{ width: widthPercent, background: color }"></aside>
     <div class="tomato-container" v-if="targetTomatoNumber">
       <div class="percent">

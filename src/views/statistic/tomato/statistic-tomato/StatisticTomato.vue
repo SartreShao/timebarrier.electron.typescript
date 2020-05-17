@@ -15,7 +15,6 @@
           type="tomato"
         ></date-item>
 
-
         <tomato-item
           v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
           :key="tomato.id"
