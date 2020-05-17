@@ -27,6 +27,7 @@
         ></plan-item>
       </div>
     </transition-group>
+    <div style="height:12.32vh"></div>
   </div>
 </template>
 
