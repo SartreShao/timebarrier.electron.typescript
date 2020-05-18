@@ -127,6 +127,29 @@ export default defineComponent({
       }
     });
 
+    onMounted(() => {
+      const charts = document.getElementById(id) as HTMLDivElement;
+      const myChart = charts ? echarts.init(charts) : null;
+      // 指定图表的配置项和数据
+      const option = {
+        tooltip: {
+          position: ["16%", "55%"],
+          formatter: (params: Object) => {
+            return (params as any).name + ", " + (params as any).percent + "%";
+          }
+        },
+        legend: legend.value,
+        series: series.value,
+        color: colormap
+      };
+      if (myChart !== null) {
+        myChart.setOption(option as any);
+      }
+      if (myChart !== null) {
+        myChart.resize();
+      }
+    });
+
     return {
       id,
       series,
