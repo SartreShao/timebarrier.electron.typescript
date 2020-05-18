@@ -72,6 +72,7 @@ export default defineComponent({
 $backgroundColor = #222a36 // #222a36
 $textColor = #ffffff // #ffffff
 .plan-item-container {
+  overflow-x hidden
   width 100%
   position relative
   background $backgroundColor
