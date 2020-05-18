@@ -963,6 +963,35 @@ export default {
             }
           );
         });
+
+        // 接下来请求关联的 targetPlanList
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .include("plan")
+          .include("target")
+          .containedIn(
+            "target",
+            targetIdList.map(targetId =>
+              AV.Object.createWithoutData("Target", targetId)
+            )
+          )
+          .find();
+
+        // 记下来将它们组合到一起
+        targetSubjectList.forEach(targetSubject => {
+          targetSubject.attributes.targetListOfTargetSubject.forEach(
+            (target: AV.Object) => {
+              target.attributes.planListOfTarget = [];
+              targetPlanList.forEach(targetPlan => {
+                if (targetPlan.attributes.target.id === target.id) {
+                  target.attributes.planListOfTarget.push(
+                    targetPlan.attributes.plan
+                  );
+                }
+              });
+            }
+          );
+        });
+
         Log.success("fetchTargetSubjectList", targetSubjectList);
         resolve(targetSubjectList);
       } catch (error) {
