@@ -15,16 +15,17 @@
         ></date-item>
 
         <target-item
-          v-for="(target, targetIndex) in statTargetDate.targetList"
+          v-for="(target, targetIndex) in statTargetDate.statTargetList"
           :key="targetIndex"
+          :name="target.attributes.name"
           style="margin-top:0.15vh"
-          :target-name="target.attributes.name"
-          :plan-name="target.attributes.planOfTarget.attributes.name"
-          :startTime="target.attributes.tomatoOfTarget.attributes.startTime"
-          :endTime="target.attributes.tomatoOfTarget.createdAt"
-          :color="colormap[index]"
-          :mode="targetStatStatusMode"
-          :item-color="target.attributes.color"
+          :tomato-number="target.attributes.todayTomatoNumber"
+          :target-tomato-number="target.attributes.targetTomatoNumber"
+          :totalTime="target.attributes.totalTime"
+          :currentTime="target.attributes.todayTotalTime"
+          :total-tomato-number="target.attributes.tomatoNumber"
+          :color="colormap[targetIndex % colormap.length]"
+          mode="simple"
         ></target-item>
       </div>
     </transition-group>
@@ -43,6 +44,7 @@ import { StatTargetDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatTargetPage } from "@/lib/vue-viewmodels";
 import DateItem from "../components/DateItem.vue";
+
 import TargetItem from "../components/TargetItem.vue";
 
 export default defineComponent({

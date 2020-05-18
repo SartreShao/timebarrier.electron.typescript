@@ -103,6 +103,7 @@ export interface StatTargetDate {
   todayTargetNumber: number;
   totalTime: number;
   targetList: AV.Object[];
+  statTargetList?: AV.Object[];
 }
 
 export interface StatPlanDate {

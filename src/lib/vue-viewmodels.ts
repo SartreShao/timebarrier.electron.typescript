@@ -3748,7 +3748,9 @@ const StatTargetPage = {
     try {
       const statTargetList = await Api.fetchStatTargetList(user);
 
-      statTargetDateList.value = getStatTargetDateList(statTargetList);
+      statTargetDateList.value = await addPlanListOfStatTargetList(
+        addStatTargetList(getStatTargetDateList(statTargetList))
+      );
 
       console.log("statTargetDateList", statTargetDateList.value);
 
@@ -3828,6 +3830,85 @@ const StatTargetPage = {
           statTargetDateList[statTargetDateList.length - 1].targetList.push(
             statTarget
           );
+        }
+      });
+      return statTargetDateList;
+    }
+
+    function addStatTargetList(statTargetDateList: StatTargetDate[]) {
+      statTargetDateList.forEach(statTargetDate => {
+        statTargetDate.statTargetList = [];
+        statTargetDate.targetList.forEach(target => {
+          // 判断 target 是否已经被加入到 statTargetDate.statTargetList 中
+          let isTargetInStatTargetList = false;
+          // 记录 target 在 statTargetDate.statTargetList 中的位置信息
+          let tIndex = -1;
+
+          if (statTargetDate.statTargetList === undefined) {
+            throw "statTargetDate.statTargetList is undefined";
+          }
+
+          statTargetDate.statTargetList.forEach((statTarget, index) => {
+            if (statTarget.id === target.id) {
+              isTargetInStatTargetList = true;
+              tIndex = index;
+            }
+          });
+
+          if (isTargetInStatTargetList) {
+            statTargetDate.statTargetList[tIndex].attributes
+              .todayTomatoNumber++;
+            statTargetDate.statTargetList[
+              tIndex
+            ].attributes.todayTotalTime += target.attributes.tomatoOfTarget
+              .attributes.duration
+              ? target.attributes.tomatoOfTarget.attributes.duration
+              : target.attributes.tomatoOfTarget.createdAt -
+                target.attributes.tomatoOfTarget.attributes.startTime;
+          } else {
+            target.attributes.todayTomatoNumber = 1;
+            target.attributes.todayTotalTime = target.attributes.tomatoOfTarget
+              .attributes.duration
+              ? target.attributes.tomatoOfTarget.attributes.duration
+              : target.attributes.tomatoOfTarget.createdAt -
+                target.attributes.tomatoOfTarget.attributes.startTime;
+            statTargetDate.statTargetList.push(target);
+          }
+        });
+      });
+      return statTargetDateList;
+    }
+
+    async function addPlanListOfStatTargetList(
+      statTargetDateList: StatTargetDate[]
+    ) {
+      const tempTargetList: AV.Object[] = [];
+      statTargetDateList.forEach(statTargetDate => {
+        if (statTargetDate.statTargetList !== undefined) {
+          statTargetDate.statTargetList.forEach(statTarget => {
+            let isTargetInList = false;
+            tempTargetList.forEach(tempTarget => {
+              if (tempTarget.id === statTarget.id) {
+                isTargetInList = true;
+              }
+            });
+            if (!isTargetInList) {
+              tempTargetList.push(statTarget);
+            }
+          });
+        }
+      });
+      await Api.fetchPlanListOfTargetList(tempTargetList);
+      statTargetDateList.forEach(statTargetDate => {
+        if (statTargetDate.statTargetList !== undefined) {
+          statTargetDate.statTargetList.forEach(statTarget => {
+            tempTargetList.forEach(tempTarget => {
+              if (statTarget.id === tempTarget.id) {
+                statTarget.attributes.targetTomatoNumber =
+                  tempTarget.attributes.targetTomatoNumber;
+              }
+            });
+          });
         }
       });
       return statTargetDateList;
@@ -3956,12 +4037,18 @@ const StatPlanPage = {
           // plan.attributes.todayTotalTime += plan.attributes.duration
           if (isPlanInStatPlanList) {
             statPlanDate.statPlanList[tIndex].attributes.todayTomatoNumber++;
-            statPlanDate.statPlanList[tIndex].attributes.todayTotalTime +=
-              plan.attributes.tomatoOfPlan.attributes.duration;
+            statPlanDate.statPlanList[tIndex].attributes.todayTotalTime += plan
+              .attributes.tomatoOfPlan.attributes.duration
+              ? plan.attributes.tomatoOfPlan.attributes.duration
+              : plan.attributes.tomatoOfPlan.createdAt -
+                plan.attributes.tomatoOfPlan.attributes.duration;
           } else {
             plan.attributes.todayTomatoNumber = 1;
-            plan.attributes.todayTotalTime =
-              plan.attributes.tomatoOfPlan.attributes.duration;
+            plan.attributes.todayTotalTime = plan.attributes.tomatoOfPlan
+              .attributes.duration
+              ? plan.attributes.tomatoOfPlan.attributes.duration
+              : plan.attributes.tomatoOfPlan.createdAt -
+                plan.attributes.tomatoOfPlan.attributes.duration;
             statPlanDate.statPlanList.push(plan);
           }
         });
@@ -3970,6 +4057,7 @@ const StatPlanPage = {
     }
   }
 };
+
 const StatPage = {
   changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
     switch (statStatusMode.value) {

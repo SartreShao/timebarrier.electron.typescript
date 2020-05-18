@@ -1625,7 +1625,7 @@ export default {
             (plan: AV.Object, planIndex: number) => {
               plan.attributes.targetListOfPlan.forEach(
                 (target: AV.Object, targetIndex: number) => {
-                  const object = target.clone();
+                  const object = _.cloneDeep(target);
                   object.attributes.isStat = true;
                   object.attributes.tomatoOfTarget = tomato;
                   object.attributes.planOfTarget = plan;
@@ -1672,5 +1672,44 @@ export default {
         reject(error);
       }
     });
-  }
+  },
+
+  /**
+   * 给传入的 TargetList 添加 planListOfTarget
+   */
+  fetchPlanListOfTargetList: (targetList: AV.Object[]): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const targetPlanList = await new AV.Query(TargetPlan)
+          .containedIn("target", targetList)
+          .include("plan")
+          .find();
+
+        targetList.forEach(target => {
+          target.attributes.planListOfTarget = [];
+          targetPlanList.forEach(targetPlan => {
+            if (target.id === targetPlan.attributes.target.id) {
+              target.attributes.planListOfTarget.push(
+                targetPlan.attributes.plan
+              );
+            }
+          });
+        });
+
+        targetList.forEach(target => {
+          target.attributes.targetTomatoNumber = 0;
+          target.attributes.planListOfTarget.forEach((plan: AV.Object) => {
+            target.attributes.targetTomatoNumber += plan.attributes.target
+              ? plan.attributes.target
+              : 0;
+          });
+        });
+
+        Log.success("fetchPlanListOfTargetList", targetList);
+        resolve(targetList);
+      } catch (error) {
+        Log.error("fetchPlanListOfTargetList", error);
+        reject(error);
+      }
+    })
 };
