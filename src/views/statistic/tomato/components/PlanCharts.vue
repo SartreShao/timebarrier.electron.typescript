@@ -22,6 +22,7 @@ import { StatPlanDate } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import _ from "lodash";
 import Store from "@/store";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   props: {
@@ -73,6 +74,31 @@ export default defineComponent({
           radius: "57%",
           center: ["50%", "40%"],
           selectMode: "single",
+          label: {
+            normal: {
+              show: true,
+              position: "inside",
+              // formatter: "{b}\n{c}, {d}%",
+              formatter: (params: Object) => {
+                return (
+                  (params as any).name +
+                  "\n" +
+                  UI.formatTimeHourMinute((params as any).value / 1000) +
+                  ", " +
+                  (params as any).percent +
+                  "%"
+                );
+              },
+
+              textStyle: {
+                align: "center",
+                baseline: "middle",
+                // fontFamily: "微软雅黑",
+                // fontSize: 15,
+                fontWeight: "bolder"
+              }
+            }
+          },
           data: data
         }
       ];

@@ -6,12 +6,12 @@
       }}
     </div>
     <div class="date" v-if="type === `target`">
-      {{ date }}｜训练了 {{ todayTargetNumber }} 种目标｜{{
+      {{ date }}｜为 {{ todayTargetNumber }} 项目标做出努力｜{{
         totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>
     <div class="date" v-if="type === `plan`">
-      {{ date }}｜训练了 {{ todayPlanNumber }} 项计划｜{{
+      {{ date }}｜执行了 {{ todayPlanNumber }} 项计划｜{{
         totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>
