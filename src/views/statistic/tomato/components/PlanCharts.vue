@@ -110,7 +110,10 @@ export default defineComponent({
       // 指定图表的配置项和数据
       const option = {
         tooltip: {
-          position: ["16%", "55%"]
+          position: ["16%", "55%"],
+          formatter: (params: Object) => {
+            return (params as any).name + ", " + (params as any).percent + "%";
+          }
         },
         legend: legend.value,
         series: series.value,
