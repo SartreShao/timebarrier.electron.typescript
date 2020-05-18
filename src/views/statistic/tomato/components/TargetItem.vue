@@ -69,6 +69,8 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+// $backgroundColor = #ffffff // #222a36
+// $textColor = #222a36 // #ffffff
 $backgroundColor = #222a36 // #222a36
 $textColor = #ffffff // #ffffff
 .target-item-container {
