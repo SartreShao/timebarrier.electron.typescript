@@ -56,6 +56,11 @@ export default defineComponent({
       ref("simple")
     );
 
+    const targetStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.targetStatStatusMode,
+      ref("simple")
+    );
+
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
@@ -66,6 +71,9 @@ export default defineComponent({
           break;
         case "/statistic/tomato/statistic-plan":
           StatPage.changeStatStatusMode(planStatStatusMode);
+          break;
+        case "/statistic/tomato/statistic-target":
+          StatPage.changeStatStatusMode(targetStatStatusMode);
           break;
       }
     };

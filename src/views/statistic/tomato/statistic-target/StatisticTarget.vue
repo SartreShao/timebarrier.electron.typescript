@@ -14,6 +14,12 @@
           type="target"
         ></date-item>
 
+        <target-charts
+          :mode="targetStatStatusMode"
+          style="margin-top:0.15vh"
+          :statTargetList="statTargetDate.statTargetList"
+        ></target-charts>
+
         <target-item
           v-for="(target, targetIndex) in statTargetDate.statTargetList"
           :key="targetIndex"
@@ -25,7 +31,7 @@
           :currentTime="target.attributes.todayTotalTime"
           :total-tomato-number="target.attributes.tomatoNumber"
           :color="colormap[targetIndex % colormap.length]"
-          mode="simple"
+          :mode="targetStatStatusMode"
         ></target-item>
       </div>
     </transition-group>
@@ -44,11 +50,12 @@ import { StatTargetDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatTargetPage } from "@/lib/vue-viewmodels";
 import DateItem from "../components/DateItem.vue";
+import TargetCharts from "../components/TargetCharts.vue";
 
 import TargetItem from "../components/TargetItem.vue";
 
 export default defineComponent({
-  components: { DateItem, TargetItem },
+  components: { DateItem, TargetItem, TargetCharts },
   setup(props, context) {
     const statTargetDateList: Ref<StatTargetDate[]> = ref([]);
 
@@ -73,6 +80,9 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
 .container {
   height 75.31vh
   width 100%

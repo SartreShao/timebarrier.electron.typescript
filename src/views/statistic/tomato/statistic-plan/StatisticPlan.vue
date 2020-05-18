@@ -16,7 +16,7 @@
         <plan-charts
           :mode="planStatStatusMode"
           style="margin-top:0.15vh"
-          :statPlanDateList="statPlanDate.statPlanList"
+          :statPlanList="statPlanDate.statPlanList"
         ></plan-charts>
 
         <plan-item
