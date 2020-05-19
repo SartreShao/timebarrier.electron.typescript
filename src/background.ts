@@ -24,11 +24,11 @@ function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
     width: 375,
-    height: 667,
+    height: 691,
     minWidth: 375,
-    minHeight: 667,
+    minHeight: 691,
     maxWidth: 375,
-    maxHeight: 667,
+    maxHeight: 691,
     webPreferences: {
       nodeIntegration: true,
       backgroundThrottling: false
