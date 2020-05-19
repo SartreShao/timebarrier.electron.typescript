@@ -1,17 +1,16 @@
 <template>
-  <div class="target-item-container">
-    <div class="time">
-      {{ startTimeFormat }} - {{ endTimeFormat }}｜{{ duration }}
+  <div class="tomato-item-container" v-if="mode === `stat`">
+    <div style="height:1.65vh"></div>
+
+    <div class="tomato-name">
+      {{ tomatoName }}
     </div>
 
-    <div class="target-name">
-      {{ targetName }}
-    </div>
-    <div class="plan-name" v-if="planName">
-      {{ planName }}
-    </div>
+    <div class="tomato-description">共计 {{ todayTotalTimeFormat }}</div>
 
     <div style="height:2.32vh"></div>
+
+    <div class="tomato-number">{{ todayTomatoNumber }} 个番茄</div>
 
     <div class="line-container">
       <div class="line"></div>
@@ -26,7 +25,7 @@
           id="椭圆_89"
           data-name="椭圆 89"
           fill="#fff"
-          :stroke="itemColor ? itemColor : `#222A36`"
+          :stroke="color ? color : `#222A36`"
           stroke-width="3"
           stroke-dasharray="130 361"
         >
@@ -43,42 +42,28 @@
 <script lang="ts">
 import { defineComponent, computed } from "@vue/composition-api";
 import { UI } from "@/lib/vue-utils";
+import AV from "leancloud-storage";
 export default defineComponent({
   props: {
-    targetName: String,
-    planName: String,
-    startTime: Date,
-    endTime: Date,
+    tomatoName: String,
+    todayTotalTime: Number,
     color: String,
     mode: String,
-    itemColor: String
+    todayTomatoNumber: Number
   },
   setup(props, context) {
-    const startTimeFormat = computed(() =>
-      UI.dateToHourMinute12(props.startTime as any)
+    const todayTotalTimeFormat = computed(() =>
+      props.todayTotalTime
+        ? UI.formatTimeHourMinute((props.todayTotalTime as any) / 1000)
+        : ""
     );
-
-    const endTimeFormat = computed(() =>
-      UI.dateToHourMinute12(props.endTime as any)
-    );
-
-    const duration = UI.formatTime(
-      ((props.endTime as any).getTime() - (props.startTime as any).getTime()) /
-        1000,
-      true
-    );
-
-    return {
-      startTimeFormat,
-      endTimeFormat,
-      duration
-    };
+    return { todayTotalTimeFormat };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.target-item-container {
+.tomato-item-container {
   background white
   width 100vw
   display flex
@@ -96,7 +81,7 @@ export default defineComponent({
       opacity 0.1
       width 0.14vw
       background #222A36
-      height 4.5vh
+      height 2.74vh
     }
     .line-bottom {
       opacity 0.1
@@ -122,7 +107,7 @@ export default defineComponent({
     text-align left
     color #222a36
   }
-  .target-name {
+  .tomato-name {
     margin-left 18.13vw
     margin-top 0.67vh
     width 63.73vw
@@ -135,7 +120,7 @@ export default defineComponent({
     text-align left
     color #222a36
   }
-  .plan-name {
+  .tomato-description {
     margin-top 0.67vh
     margin-left 18.13vw
     width 63.73vw
@@ -149,51 +134,23 @@ export default defineComponent({
     text-align left
     color #222a36
   }
-  .related-target-list {
-    margin-top 1.5vh
-    margin-left 18.13vw
-    width 76.8vw
-    font-size 1.8vh
-    font-weight normal
-    font-stretch normal
-    font-style normal
-    line-height 2.62vh
-    letter-spacing normal
-    text-align left
-    color #959595
-    span {
-      color #222a36
-      font-size 1.8vh
-      font-weight normal
-      font-stretch normal
-      font-style normal
-      line-height 2.62vh
-      letter-spacing normal
-      text-align left
-    }
-  }
-  .related-ability-list {
-    margin-top 1.5vh
-    margin-left 18.13vw
-    width 76.8vw
+  .tomato-number {
+    position absolute
+    right 7.33vw
+    top 0
+    bottom 0
+    margin-top auto
+    margin-bottom auto
+    height 2.62vh
+    opacity 0.5
     font-size 1.8vh
     font-weight normal
     font-stretch normal
     font-style normal
     line-height 1.46
     letter-spacing normal
-    text-align left
-    color #959595
-    span {
-      color #222a36
-      font-size 1.8vh
-      font-weight normal
-      font-stretch normal
-      font-style normal
-      line-height 1.46
-      letter-spacing normal
-      text-align left
-    }
+    text-align right
+    color #222a36
   }
 }
 </style>

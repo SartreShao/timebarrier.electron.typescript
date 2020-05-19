@@ -13,7 +13,8 @@ import {
   StatTomatoDate,
   StatStatusMode,
   StatTargetDate,
-  StatPlanDate
+  StatPlanDate,
+  TomatoStatStatusMode
 } from "./types/vue-viewmodels";
 import Api from "./api";
 /**
@@ -3657,10 +3658,11 @@ const StatTomatoPage = {
 
       const targetTomatoNumber = getTargetTomatoNumber(dailyPlanList);
 
-      statTomatoDateList.value = getStatTomatoDateList(
-        tomatoList,
-        targetTomatoNumber
+      statTomatoDateList.value = addStatTomatoList(
+        getStatTomatoDateList(tomatoList, targetTomatoNumber)
       );
+
+      console.log("statTomatoDateList", statTomatoDateList.value);
 
       UI.hideLoading(loadingInstance);
     } catch (error) {
@@ -3671,6 +3673,44 @@ const StatTomatoPage = {
         `错误原因：${error.message}`,
         "error"
       );
+    }
+
+    function addStatTomatoList(statTomatoDateList: StatTomatoDate[]) {
+      statTomatoDateList.forEach(statTomatoDate => {
+        statTomatoDate.statTomatoList = [];
+        statTomatoDate.tomatoList.forEach(tomato => {
+          // 判断 tomato 是否已经被加入到 statTomatoDate.statTomatoList 中
+          let isTomatoInStatTomatoList = false;
+          // 记录 tomato 在 statTomatoDate.statTomatoList 中的位置信息
+          let tIndex = -1;
+
+          if (statTomatoDate.statTomatoList === undefined) {
+            throw "statTomatoDate.statTomatoList is undefined";
+          }
+
+          statTomatoDate.statTomatoList.forEach((statTomato, index) => {
+            if (statTomato.attributes.name === tomato.attributes.name) {
+              isTomatoInStatTomatoList = true;
+              tIndex = index;
+            }
+          });
+
+          if (isTomatoInStatTomatoList) {
+            statTomatoDate.statTomatoList[tIndex].attributes
+              .todayTomatoNumber++;
+            statTomatoDate.statTomatoList[tIndex].attributes.todayTotalTime +=
+              (tomato.createdAt as Date).getTime() -
+              tomato.attributes.startTime.getTime();
+          } else {
+            tomato.attributes.todayTomatoNumber = 1;
+            tomato.attributes.todayTotalTime =
+              (tomato.createdAt as Date).getTime() -
+              tomato.attributes.startTime.getTime();
+            statTomatoDate.statTomatoList.push(tomato);
+          }
+        });
+      });
+      return statTomatoDateList;
     }
 
     function getStatTomatoDateList(
@@ -3717,13 +3757,16 @@ const StatTomatoPage = {
       return targetTomatoNumber;
     }
   },
-  changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
+  changeStatStatusMode: (statStatusMode: Ref<TomatoStatStatusMode>) => {
     switch (statStatusMode.value) {
       case "detail":
-        statStatusMode.value = "date";
+        statStatusMode.value = "stat";
         break;
       case "simple":
         statStatusMode.value = "detail";
+        break;
+      case "stat":
+        statStatusMode.value = "date";
         break;
       case "date":
         statStatusMode.value = "simple";
@@ -4040,15 +4083,15 @@ const StatPlanPage = {
             statPlanDate.statPlanList[tIndex].attributes.todayTotalTime += plan
               .attributes.tomatoOfPlan.attributes.duration
               ? plan.attributes.tomatoOfPlan.attributes.duration
-              : plan.attributes.tomatoOfPlan.createdAt -
-                plan.attributes.tomatoOfPlan.attributes.duration;
+              : plan.attributes.tomatoOfPlan.createdAt.getTime() -
+                plan.attributes.tomatoOfPlan.attributes.startTime.getTime();
           } else {
             plan.attributes.todayTomatoNumber = 1;
             plan.attributes.todayTotalTime = plan.attributes.tomatoOfPlan
               .attributes.duration
               ? plan.attributes.tomatoOfPlan.attributes.duration
-              : plan.attributes.tomatoOfPlan.createdAt -
-                plan.attributes.tomatoOfPlan.attributes.duration;
+              : plan.attributes.tomatoOfPlan.createdAt.getTime() -
+                plan.attributes.tomatoOfPlan.attributes.startTime.getTime();
             statPlanDate.statPlanList.push(plan);
           }
         });

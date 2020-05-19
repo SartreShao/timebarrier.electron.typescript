@@ -30,8 +30,20 @@
           :target-tomato-number="statTomatoDate.targetTomatoNumber"
           :color="colormap[index % colormap.length]"
           :item-color="tomato.attributes.color"
-        ></tomato-item></div
-    ></transition-group>
+        ></tomato-item>
+
+        <stat-tomato-item
+          v-for="statTomato in statTomatoDate.statTomatoList"
+          :key="statTomato.name"
+          style="margin-top:0.15vh"
+          :tomatoName="statTomato.attributes.name"
+          :todayTotalTime="statTomato.attributes.todayTotalTime"
+          :color="statTomato.attributes.color"
+          :mode="tomatoStatStatusMode"
+          :todayTomatoNumber="statTomato.attributes.todayTomatoNumber"
+        ></stat-tomato-item>
+      </div>
+    </transition-group>
 
     <div style="height:2.4vh"></div>
   </div>
@@ -49,12 +61,17 @@ import {
 import DateItem from "../components/DateItem.vue";
 import TomatoItem from "../components/TomatoItem.vue";
 import PlanItem from "../components/PlanItem.vue";
+import StatTomatoItem from "../components/StatTomatoItem.vue";
 import { StatTomatoPage } from "@/lib/vue-viewmodels";
-import { StatTomatoDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
+import {
+  StatTomatoDate,
+  StatStatusMode,
+  TomatoStatStatusMode
+} from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
-  components: { DateItem, TomatoItem, PlanItem },
+  components: { DateItem, TomatoItem, PlanItem, StatTomatoItem },
   setup(props, context) {
     const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
 
@@ -63,10 +80,14 @@ export default defineComponent({
       ref([])
     );
 
-    const tomatoStatStatusMode: Ref<StatStatusMode> = inject(
+    const tomatoStatStatusMode: Ref<TomatoStatStatusMode> = inject(
       Store.tomatoStatStatusMode,
       ref("detail")
     );
+
+    watchEffect(() => {
+      console.log(tomatoStatStatusMode.value);
+    });
 
     const colormap: string[] = inject(Store.colormap, []);
 

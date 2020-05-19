@@ -1,5 +1,8 @@
 <template>
-  <div class="tomato-item-container" v-if="mode !== `date`">
+  <div
+    class="tomato-item-container"
+    v-if="mode === `simple` || mode === `detail`"
+  >
     <div class="time">
       {{ startTimeFormat }}
       - {{ endTimeFormat }}｜{{ duration }}

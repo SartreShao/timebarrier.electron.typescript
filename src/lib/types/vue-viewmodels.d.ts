@@ -96,6 +96,7 @@ export interface StatTomatoDate {
   targetTomatoNumber: number;
   totalTime: number;
   tomatoList: AV.Object[];
+  statTomatoList?: AV.Object[];
 }
 
 export interface StatTargetDate {
@@ -115,3 +116,5 @@ export interface StatPlanDate {
 }
 
 export type StatStatusMode = "date" | "detail" | "simple";
+
+export type TomatoStatStatusMode = "date" | "detail" | "simple" | "stat";

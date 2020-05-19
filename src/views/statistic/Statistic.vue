@@ -34,7 +34,10 @@ import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
 import icon_transition from "@/assets/icon_transition.svg";
-import { StatStatusMode } from "@/lib/types/vue-viewmodels";
+import {
+  StatStatusMode,
+  TomatoStatStatusMode
+} from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatTomatoPage, StatPage } from "@/lib/vue-viewmodels";
 
@@ -46,7 +49,7 @@ export default defineComponent({
       { route: "/statistic/chart", name: "数据图表" }
     ];
 
-    const tomatoStatStatusMode: Ref<StatStatusMode> = inject(
+    const tomatoStatStatusMode: Ref<TomatoStatStatusMode> = inject(
       Store.tomatoStatStatusMode,
       ref("detail")
     );
@@ -67,7 +70,7 @@ export default defineComponent({
     const click_changeTomatoStatStatusMode = () => {
       switch (currentRoute.value) {
         case "/statistic/tomato/statistic-tomato":
-          StatPage.changeStatStatusMode(tomatoStatStatusMode);
+          StatTomatoPage.changeStatStatusMode(tomatoStatStatusMode);
           break;
         case "/statistic/tomato/statistic-plan":
           StatPage.changeStatStatusMode(planStatStatusMode);
@@ -77,6 +80,8 @@ export default defineComponent({
           break;
       }
     };
+
+
 
     return {
       tabRouteList,

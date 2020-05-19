@@ -1,7 +1,7 @@
 // Plan
 import { provide, ref, reactive } from "@vue/composition-api";
 import AV from "leancloud-storage";
-import { TomatoCloudStatus, StatStatusMode } from "@/lib/types/vue-viewmodels";
+import { TomatoCloudStatus, StatStatusMode, TomatoStatStatusMode } from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表
 const temporaryPlanList = Symbol();
@@ -167,7 +167,7 @@ function useProvider() {
   provide(isEditAbilityDrawerDisplayed, ref(false));
   provide(isCreateAbilityDrawerDisplayed, ref(false));
   provide(isCurrentPageHome, ref(false));
-  provide(tomatoStatStatusMode, ref<StatStatusMode>("simple"));
+  provide(tomatoStatStatusMode, ref<TomatoStatStatusMode>("simple"));
   provide(targetStatStatusMode, ref<StatStatusMode>("simple"));
   provide(planStatStatusMode, ref<StatStatusMode>("simple"));
 }
