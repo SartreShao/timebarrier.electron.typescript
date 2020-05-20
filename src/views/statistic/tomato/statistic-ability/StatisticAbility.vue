@@ -1,6 +1,38 @@
 <template>
   <div class="container">
-    <transition-group type="transition" name="flip-list"> </transition-group>
+    <transition-group type="transition" name="flip-list">
+      <div v-for="(statAbilityDate, index) in statAbilityDateList" :key="index">
+        <div v-if="index !== 0" style="height:0.15vh"></div>
+
+        <date-item
+          :date="statAbilityDate.date"
+          :totalTime="statAbilityDate.totalTime"
+          :color="colormap[index % colormap.length]"
+          :todayAbilityNumber="statAbilityDate.todayAbilityNumber"
+          type="ability"
+        ></date-item>
+
+        <ability-charts
+          :mode="abilityStatStatusMode"
+          style="margin-top:0.15vh"
+          :statAbilityList="statAbilityDate.statAbilityList"
+        ></ability-charts>
+
+        <ability-item
+          v-for="(ability, abilityIndex) in statAbilityDate.statAbilityList"
+          :key="abilityIndex"
+          :name="ability.attributes.name"
+          style="margin-top:0.15vh"
+          :tomato-number="ability.attributes.todayTomatoNumber"
+          :target-tomato-number="ability.attributes.targetTomatoNumber"
+          :totalTime="ability.attributes.totalTime"
+          :currentTime="ability.attributes.todayTotalTime"
+          :total-tomato-number="ability.attributes.tomatoNumber"
+          :color="colormap[abilityIndex % colormap.length]"
+          :mode="abilityStatStatusMode"
+        ></ability-item>
+      </div>
+    </transition-group>
   </div>
 </template>
 

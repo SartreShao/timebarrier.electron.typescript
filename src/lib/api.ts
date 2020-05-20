@@ -1801,7 +1801,7 @@ export default {
         abilityList.forEach(ability => {
           ability.attributes.targetTomatoNumber = 0;
           ability.attributes.planListOfAbility.forEach((plan: AV.Object) => {
-            ability.attributes.targetTomatoNumber += plan.attributes.ability
+            ability.attributes.targetTomatoNumber += plan.attributes.target
               ? plan.attributes.target
               : 0;
           });
