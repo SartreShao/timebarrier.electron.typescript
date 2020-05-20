@@ -15,6 +15,11 @@
         totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>
+    <div class="date" v-if="type === `ability`">
+      {{ date }}｜训练了 {{ todayAbilityNumber }} 项能力｜{{
+        totalTimeFormat ? totalTimeFormat : "暂无用时数据"
+      }}
+    </div>
   </div>
 </template>
 
@@ -28,6 +33,7 @@ export default defineComponent({
     targetTomatoNumber: Number,
     todayTargetNumber: Number,
     todayPlanNumber: Number,
+    todayAbilityNumber: Number,
     totalTime: Number,
     color: String,
     type: String

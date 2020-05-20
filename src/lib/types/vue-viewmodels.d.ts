@@ -107,6 +107,14 @@ export interface StatTargetDate {
   statTargetList?: AV.Object[];
 }
 
+export interface StatAbilityDate {
+  date: string;
+  todayAbilityNumber: number;
+  totalTime: number;
+  abilityList: AV.Object[];
+  statAbilityList?: AV.Object[];
+}
+
 export interface StatPlanDate {
   date: string;
   todayPlanNumber: number;

@@ -1675,6 +1675,42 @@ export default {
   },
 
   /**
+   * 请求统计能力列表
+   * @param user
+   */
+  fetchStatAbilityList(user: AV.User): Promise<AV.Object[]> {
+    const Api = this;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const tomatoList = await Api.fetchTomatoList(user);
+
+        const statAbilityList: AV.Object[] = [];
+
+        tomatoList.forEach((tomato, tomatoIndex) => {
+          tomato.attributes.planListOfTomato.forEach(
+            (plan: AV.Object, planIndex: number) => {
+              plan.attributes.abilityListOfPlan.forEach(
+                (ability: AV.Object, abilityIndex: number) => {
+                  const object = _.cloneDeep(ability);
+                  object.attributes.tomatoOfAbility = tomato;
+                  object.attributes.planOfAbility = plan;
+                  statAbilityList.push(object);
+                }
+              );
+            }
+          );
+        });
+
+        Log.success("fetchStatAbilityList", statAbilityList);
+        resolve(statAbilityList);
+      } catch (error) {
+        Log.error("fetchStatAbilityList", error);
+        reject(error);
+      }
+    });
+  },
+
+  /**
    * 请求计划列表
    * @param user
    */
@@ -1738,6 +1774,43 @@ export default {
         resolve(targetList);
       } catch (error) {
         Log.error("fetchPlanListOfTargetList", error);
+        reject(error);
+      }
+    }),
+  fetchPlanListOfAbilityList: (
+    abilityList: AV.Object[]
+  ): Promise<AV.Object[]> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const abilityPlanList = await new AV.Query(AbilityPlan)
+          .containedIn("ability", abilityList)
+          .include("plan")
+          .find();
+
+        abilityList.forEach(ability => {
+          ability.attributes.planListOfAbility = [];
+          abilityPlanList.forEach(abilityPlan => {
+            if (ability.id === abilityPlan.attributes.ability.id) {
+              ability.attributes.planListOfAbility.push(
+                abilityPlan.attributes.plan
+              );
+            }
+          });
+        });
+
+        abilityList.forEach(ability => {
+          ability.attributes.targetTomatoNumber = 0;
+          ability.attributes.planListOfAbility.forEach((plan: AV.Object) => {
+            ability.attributes.targetTomatoNumber += plan.attributes.ability
+              ? plan.attributes.target
+              : 0;
+          });
+        });
+
+        Log.success("fetchPlanListOfAbilityList", abilityList);
+        resolve(abilityList);
+      } catch (error) {
+        Log.error("fetchPlanListOfAbilityList", error);
         reject(error);
       }
     })
