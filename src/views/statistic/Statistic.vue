@@ -64,6 +64,11 @@ export default defineComponent({
       ref("simple")
     );
 
+    const abilityStatStatusMode: Ref<StatStatusMode> = inject(
+      Store.abilityStatStatusMode,
+      ref("simple")
+    );
+
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
@@ -78,10 +83,11 @@ export default defineComponent({
         case "/statistic/tomato/statistic-target":
           StatPage.changeStatStatusMode(targetStatStatusMode);
           break;
+        case "/statistic/tomato/statistic-ability":
+          StatPage.changeStatStatusMode(abilityStatStatusMode);
+          break;
       }
     };
-
-
 
     return {
       tabRouteList,

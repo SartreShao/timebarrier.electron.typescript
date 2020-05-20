@@ -61,6 +61,8 @@ const tomatoStatStatusMode = Symbol();
 const targetStatStatusMode = Symbol();
 // 表示计划记录的列表状态
 const planStatStatusMode = Symbol();
+// 表示能力记录的列表状态
+const abilityStatStatusMode = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -183,6 +185,7 @@ function useProvider() {
   provide(tomatoStatStatusMode, ref<TomatoStatStatusMode>("simple"));
   provide(targetStatStatusMode, ref<StatStatusMode>("simple"));
   provide(planStatStatusMode, ref<StatStatusMode>("simple"));
+  provide(abilityStatStatusMode, ref<StatStatusMode>("simple"));
 }
 
 export default {
@@ -213,5 +216,6 @@ export default {
   tomatoStatStatusMode,
   targetStatStatusMode,
   planStatStatusMode,
-  colormapForChart
+  colormapForChart,
+  abilityStatStatusMode
 };
