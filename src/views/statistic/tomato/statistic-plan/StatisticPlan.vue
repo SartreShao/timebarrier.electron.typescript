@@ -29,7 +29,7 @@
           :totalTime="plan.attributes.totalTime"
           :currentTime="plan.attributes.todayTotalTime"
           :total-tomato-number="plan.attributes.tomatoNumber"
-          :color="colormap[planIndex % colormap.length]"
+          :color="plan.attributes.tomatoOfPlan.attributes.color"
           :mode="planStatStatusMode"
         ></plan-item>
       </div>
