@@ -1,7 +1,11 @@
 // Plan
 import { provide, ref, reactive } from "@vue/composition-api";
 import AV from "leancloud-storage";
-import { TomatoCloudStatus, StatStatusMode, TomatoStatStatusMode } from "@/lib/types/vue-viewmodels";
+import {
+  TomatoCloudStatus,
+  StatStatusMode,
+  TomatoStatStatusMode
+} from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表
 const temporaryPlanList = Symbol();
@@ -33,8 +37,10 @@ const input_editingTargetOrTargetSubject = Symbol();
 const input_creatingTargetOrTargetSubject = Symbol();
 // 配置信息：Vue Dragger
 const draggableOptions = Symbol();
-// 色彩表
+// 色彩表：常规色彩表
 const colormap = Symbol();
+// 色彩表：图表色彩表
+const colormapForChart = Symbol();
 // 等级规则
 const levelRuleList = Symbol();
 // 能力列表
@@ -139,6 +145,13 @@ function useProvider() {
     "#59596F",
     "#CE0057"
   ]);
+  provide(colormapForChart, [
+    "#004182",
+    "#118DF0",
+    "#FF4A68",
+    "#1A2634",
+    "#203E5F"
+  ]);
   provide(levelRuleList, ref<AV.Object[]>([]));
   provide(abilityList, ref<AV.Object[]>([]));
   provide(
@@ -199,5 +212,6 @@ export default {
   isCurrentPageHome,
   tomatoStatStatusMode,
   targetStatStatusMode,
-  planStatStatusMode
+  planStatStatusMode,
+  colormapForChart
 };

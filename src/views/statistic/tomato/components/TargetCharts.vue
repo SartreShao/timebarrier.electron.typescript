@@ -36,7 +36,7 @@ export default defineComponent({
 
     const isShow: Ref<boolean> = ref(true);
 
-    const colormap: string[] = inject(Store.colormap, []);
+    const colormapForChart: string[] = inject(Store.colormapForChart, []);
 
     const legend = computed(() => {
       const data: any[] = [];
@@ -71,6 +71,7 @@ export default defineComponent({
       return [
         {
           type: "pie",
+          // radius: ["55%", "57%"],
           radius: "57%",
           center: ["50%", "40%"],
           selectMode: "single",
@@ -106,7 +107,6 @@ export default defineComponent({
                   "%"
                 );
               },
-
               textStyle: {
                 align: "center",
                 baseline: "middle",
@@ -134,7 +134,7 @@ export default defineComponent({
         // },
         legend: legend.value,
         series: series.value,
-        color: colormap
+        color: colormapForChart
       };
       if (myChart !== null) {
         myChart.setOption(option as any);
@@ -157,7 +157,7 @@ export default defineComponent({
         },
         legend: legend.value,
         series: series.value,
-        color: colormap
+        color: colormapForChart
       };
       if (myChart !== null) {
         myChart.setOption(option as any);
