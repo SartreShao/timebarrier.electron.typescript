@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+  <g id="组_1639" data-name="组 1639" transform="translate(-406 75) rotate(-90)">
+    <circle id="椭圆_105" data-name="椭圆 105" cx="15" cy="15" r="15" transform="translate(45 406)" fill="#fff"/>
+    <g id="椭圆_105-2" data-name="椭圆 105" transform="translate(45 406)" fill="none" stroke="#3846cf" stroke-width="3" opacity="0.395">
+      <circle cx="15" cy="15" r="15" stroke="none"/>
+      <circle cx="15" cy="15" r="13.5" fill="none"/>
+    </g>
+    <g id="椭圆_106" data-name="椭圆 106" transform="translate(45 406)" fill="none" stroke="#3846cf" stroke-width="3" stroke-dasharray="50 84.7">
+      <circle cx="15" cy="15" r="15" stroke="none"/>
+      <circle cx="15" cy="15" r="13.5" fill="none"/>
+    </g>
+  </g>
+</svg>
