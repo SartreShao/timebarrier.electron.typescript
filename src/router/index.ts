@@ -86,7 +86,40 @@ const routes = [
       {
         path: "chart",
         name: "chart",
-        component: () => import("../views/statistic/chart/Chart.vue")
+        component: () => import("../views/statistic/chart/Chart.vue"),
+        redirect: { name: "multiple-analyse" },
+        children: [
+          {
+            path: "multiple-analyse",
+            name: "multiple-analyse",
+            component: () =>
+              import(
+                "../views/statistic/chart/multiple-analyse/MultipleAnalyse.vue"
+              )
+          },
+          {
+            path: "plan-analyse",
+            name: "plan-analyse",
+            component: () =>
+              import("../views/statistic/chart/plan-analyse/PlanAnalyse.vue")
+          },
+          {
+            path: "target-analyse",
+            name: "target-analyse",
+            component: () =>
+              import(
+                "../views/statistic/chart/target-analyse/TargetAnalyse.vue"
+              )
+          },
+          {
+            path: "ability-analyse",
+            name: "ability-analyse",
+            component: () =>
+              import(
+                "../views/statistic/chart/ability-analyse/AbilityAnalyse.vue"
+              )
+          }
+        ]
       }
     ],
     redirect: { name: "tomato" }
