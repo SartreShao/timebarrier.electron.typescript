@@ -17,6 +17,7 @@ import icon_ability_tab from "@/assets/icon_ability_tab.svg";
 import icon_target_tab from "@/assets/icon_target_tab.svg";
 import icon_personal from "@/assets/icon_personal.svg";
 import icon_plan_tab from "@/assets/icon_plan_tab.svg";
+import icon_tomato_tab from "@/assets/icon_tomato_tab.svg";
 
 export default defineComponent({
   components: { TbSelect },
@@ -27,22 +28,27 @@ export default defineComponent({
       route: string;
     }[]> = ref([
       {
-        name: "综合分析",
+        name: "整体统计",
         icon: icon_personal,
         route: "/statistic/chart/multiple-analyse"
       },
       {
-        name: "计划分析",
+        name: "番茄统计",
+        icon: icon_tomato_tab,
+        route: "/statistic/chart/tomato-analyse"
+      },
+      {
+        name: "计划统计",
         icon: icon_plan_tab,
         route: "/statistic/chart/plan-analyse"
       },
       {
-        name: "目标分析",
+        name: "目标统计",
         icon: icon_target_tab,
         route: "/statistic/chart/target-analyse"
       },
       {
-        name: "能力分析",
+        name: "能力统计",
         icon: icon_ability_tab,
         route: "/statistic/chart/ability-analyse"
       }

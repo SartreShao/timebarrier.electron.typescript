@@ -98,6 +98,14 @@ const routes = [
               )
           },
           {
+            path: "tomato-analyse",
+            name: "tomato-analyse",
+            component: () =>
+              import(
+                "../views/statistic/chart/tomato-analyse/TomatoAnalyse.vue"
+              )
+          },
+          {
             path: "plan-analyse",
             name: "plan-analyse",
             component: () =>
