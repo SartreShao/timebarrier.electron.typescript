@@ -3725,6 +3725,7 @@ const StatTomatoPage = {
           tDate = UI.dateToYearMonthDay(tomato.attributes.startTime);
           statTomatoDateList.push({
             date: tDate,
+            timeStamp: tomato.attributes.startTime.getTime(),
             todayTomatoNumber: 1,
             targetTomatoNumber: targetTomatoNumber,
             totalTime:

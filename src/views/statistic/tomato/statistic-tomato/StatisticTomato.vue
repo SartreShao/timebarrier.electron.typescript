@@ -73,7 +73,10 @@ import Store from "@/store";
 export default defineComponent({
   components: { DateItem, TomatoItem, PlanItem, StatTomatoItem },
   setup(props, context) {
-    const statTomatoDateList: Ref<StatTomatoDate[]> = ref([]);
+    const statTomatoDateList: Ref<StatTomatoDate[]> = inject(
+      Store.statTomatoDateList,
+      ref([])
+    );
 
     const dailyPlanList: Ref<AV.Object[]> = inject(
       Store.dailyPlanList,

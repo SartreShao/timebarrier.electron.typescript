@@ -4,7 +4,8 @@ import AV from "leancloud-storage";
 import {
   TomatoCloudStatus,
   StatStatusMode,
-  TomatoStatStatusMode
+  TomatoStatStatusMode,
+  StatTomatoDate
 } from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表
@@ -63,6 +64,8 @@ const targetStatStatusMode = Symbol();
 const planStatStatusMode = Symbol();
 // 表示能力记录的列表状态
 const abilityStatStatusMode = Symbol();
+// 统计番茄列表
+const statTomatoDateList = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -186,6 +189,7 @@ function useProvider() {
   provide(targetStatStatusMode, ref<StatStatusMode>("simple"));
   provide(planStatStatusMode, ref<StatStatusMode>("simple"));
   provide(abilityStatStatusMode, ref<StatStatusMode>("simple"));
+  provide(statTomatoDateList, ref<StatTomatoDate[]>([]));
 }
 
 export default {
@@ -217,5 +221,6 @@ export default {
   targetStatStatusMode,
   planStatStatusMode,
   colormapForChart,
-  abilityStatStatusMode
+  abilityStatStatusMode,
+  statTomatoDateList
 };

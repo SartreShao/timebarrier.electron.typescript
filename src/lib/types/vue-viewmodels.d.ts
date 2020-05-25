@@ -92,6 +92,7 @@ export type TomatoCloudStatus = "prepared" | "finished" | "processive";
 
 export interface StatTomatoDate {
   date: string;
+  timeStamp: Number;
   todayTomatoNumber: number;
   targetTomatoNumber: number;
   totalTime: number;
