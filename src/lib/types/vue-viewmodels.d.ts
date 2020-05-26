@@ -101,40 +101,6 @@ export interface StatDate {
   statTargetList?: AV.Object[]; // 今日训练的目标能力列表，可由 tomatoList 映射得出
 }
 
-export interface StatTomatoDate {
-  date: string;
-  timeStamp: Number;
-  todayTomatoNumber: number;
-  targetTomatoNumber: number;
-  totalTime: number;
-  tomatoList: AV.Object[];
-  statTomatoList?: AV.Object[];
-}
-
-export interface StatTargetDate {
-  date: string;
-  todayTargetNumber: number;
-  totalTime: number;
-  targetList: AV.Object[];
-  statTargetList?: AV.Object[];
-}
-
-export interface StatAbilityDate {
-  date: string;
-  todayAbilityNumber: number;
-  totalTime: number;
-  abilityList: AV.Object[];
-  statAbilityList?: AV.Object[];
-}
-
-export interface StatPlanDate {
-  date: string;
-  todayPlanNumber: number;
-  totalTime: number;
-  planList: AV.Object[];
-  statPlanList?: AV.Object[];
-}
-
 export type StatStatusMode = "date" | "detail" | "simple";
 
 export type TomatoStatStatusMode = "date" | "detail" | "simple" | "stat";
