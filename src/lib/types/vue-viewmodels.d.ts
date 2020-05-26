@@ -90,6 +90,17 @@ export interface ElementVue {
  */
 export type TomatoCloudStatus = "prepared" | "finished" | "processive";
 
+export interface StatDate {
+  date: string; // 日期：格式化为 xx 年 xx 月 xx 日
+  timeStamp: number; // 时间戳：startTime 为准
+  tomatoList: AV.Object[]; // 今日训练的番茄列表
+  totalTime?: number; // 今日训练总时长，可由 tomatoList 映射得出
+  statTomatoList?: AV.Object[]; // 今日训练的统计番茄列表，可由 tomatoList 映射得出
+  statPlanList?: AV.Object[]; // 今日训练的统计计划列表，可由 tomatoList 映射得出
+  statAbilityList?: AV.Object[]; // 今日训练的统计能力列表，可由 tomatoList 映射得出
+  statTargetList?: AV.Object[]; // 今日训练的目标能力列表，可由 tomatoList 映射得出
+}
+
 export interface StatTomatoDate {
   date: string;
   timeStamp: Number;
