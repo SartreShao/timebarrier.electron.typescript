@@ -1,11 +1,12 @@
 // Plan
-import { provide, ref, reactive } from "@vue/composition-api";
+import { provide, ref, reactive, inject } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import {
   TomatoCloudStatus,
   StatStatusMode,
   TomatoStatStatusMode,
-  StatTomatoDate
+  StatTomatoDate,
+  StatDate
 } from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表
@@ -64,8 +65,8 @@ const targetStatStatusMode = Symbol();
 const planStatStatusMode = Symbol();
 // 表示能力记录的列表状态
 const abilityStatStatusMode = Symbol();
-// 统计番茄列表
-const statTomatoDateList = Symbol();
+// 番茄列表
+const tomatoList = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -189,7 +190,7 @@ function useProvider() {
   provide(targetStatStatusMode, ref<StatStatusMode>("simple"));
   provide(planStatStatusMode, ref<StatStatusMode>("simple"));
   provide(abilityStatStatusMode, ref<StatStatusMode>("simple"));
-  provide(statTomatoDateList, ref<StatTomatoDate[]>([]));
+  provide(tomatoList, ref<AV.Object[]>([]));
 }
 
 export default {
@@ -222,5 +223,5 @@ export default {
   planStatStatusMode,
   colormapForChart,
   abilityStatStatusMode,
-  statTomatoDateList
+  tomatoList
 };

@@ -402,7 +402,7 @@ import {
 import AV from "leancloud-storage";
 import BottomBar from "../../components/BottomBar.vue";
 import TopBar from "../../components/TopBar.vue";
-import { PlanPage, TomatoTimerPage } from "@/lib/vue-viewmodels";
+import { PlanPage, TomatoTimerPage } from "@/lib/vue-viewmodels/index";
 import Store from "../../store";
 import icon_finished from "../../assets/icon_finished.svg";
 import icon_logo from "../../assets/icon_logo.svg";

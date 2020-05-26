@@ -1,22 +1,20 @@
 <template>
   <div class="container">
     <transition-group type="transition" name="flip-list">
-      <div v-for="(statTomatoDate, index) in statTomatoDateList" :key="index">
+      <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
 
         <date-item
-          :date="statTomatoDate.date"
-          :todayTomatoNumber="statTomatoDate.todayTomatoNumber"
-          :targetTomatoNumber="statTomatoDate.targetTomatoNumber"
-          :totalTime="
-            statTomatoDate.totalTime ? statTomatoDate.totalTime : undefined
-          "
+          :date="statDate.date"
+          :todayTomatoNumber="statDate.tomatoList.length"
+          :targetTomatoNumber="targetTomatoNumber"
+          :totalTime="statDate.totalTime"
           :color="colormap[index % colormap.length]"
           type="tomato"
         ></date-item>
 
         <tomato-item
-          v-for="(tomato, tomatoIndex) in statTomatoDate.tomatoList"
+          v-for="(tomato, tomatoIndex) in statDate.tomatoList"
           :key="tomato.id"
           style="margin-top:0.15vh"
           :tomato-name="tomato.attributes.name"
@@ -26,14 +24,14 @@
           :startTime="tomato.attributes.startTime"
           :endTime="tomato.createdAt"
           :mode="tomatoStatStatusMode"
-          :today-tomato-number="statTomatoDate.tomatoList.length - tomatoIndex"
-          :target-tomato-number="statTomatoDate.targetTomatoNumber"
+          :today-tomato-number="statDate.tomatoList.length - tomatoIndex"
+          :target-tomato-number="targetTomatoNumber"
           :color="colormap[index % colormap.length]"
           :item-color="tomato.attributes.color"
         ></tomato-item>
 
         <stat-tomato-item
-          v-for="statTomato in statTomatoDate.statTomatoList"
+          v-for="statTomato in statDate.statTomatoList"
           :key="statTomato.name"
           style="margin-top:0.15vh"
           :tomatoName="statTomato.attributes.name"
@@ -56,52 +54,59 @@ import {
   Ref,
   ref,
   inject,
-  watchEffect
+  watchEffect,
+  computed
 } from "@vue/composition-api";
 import DateItem from "../components/DateItem.vue";
 import TomatoItem from "../components/TomatoItem.vue";
 import PlanItem from "../components/PlanItem.vue";
 import StatTomatoItem from "../components/StatTomatoItem.vue";
-import { StatTomatoPage } from "@/lib/vue-viewmodels";
+import { StatTomatoPage, StatPage } from "@/lib/vue-viewmodels/index";
 import {
   StatTomatoDate,
   StatStatusMode,
-  TomatoStatStatusMode
+  TomatoStatStatusMode,
+  StatDate
 } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import Store from "@/store";
 export default defineComponent({
   components: { DateItem, TomatoItem, PlanItem, StatTomatoItem },
   setup(props, context) {
-    const statTomatoDateList: Ref<StatTomatoDate[]> = inject(
-      Store.statTomatoDateList,
-      ref([])
-    );
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
     const dailyPlanList: Ref<AV.Object[]> = inject(
       Store.dailyPlanList,
       ref([])
     );
 
+    const targetTomatoNumber = computed(() => {
+      let targetTomatoNumber = 0;
+      dailyPlanList.value.forEach(plan => {
+        targetTomatoNumber += plan.attributes.target;
+      });
+      return targetTomatoNumber;
+    });
+
     const tomatoStatStatusMode: Ref<TomatoStatStatusMode> = inject(
       Store.tomatoStatStatusMode,
       ref("detail")
     );
 
-    watchEffect(() => {
-      console.log(tomatoStatStatusMode.value);
-    });
-
     const colormap: string[] = inject(Store.colormap, []);
 
     onMounted(() => {
-      StatTomatoPage.init(context.root, statTomatoDateList, dailyPlanList);
+      StatPage.initTomatoList(context.root, tomatoList);
+      StatPage.initDailyTomatoList(context.root, dailyPlanList);
     });
 
     return {
-      statTomatoDateList,
       tomatoStatStatusMode,
-      colormap
+      colormap,
+      statDateList,
+      targetTomatoNumber
     };
   }
 });

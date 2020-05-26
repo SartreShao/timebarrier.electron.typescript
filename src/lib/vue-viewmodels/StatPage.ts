@@ -50,18 +50,18 @@ export default {
       }
     });
 
-    const createStatDate = (tomato: AV.Object): StatDate => {
+    function createStatDate(tomato: AV.Object): StatDate {
       return {
-        date: tomato.attributes.startTime,
+        date: UI.dateToYearMonthDay(tomato.attributes.startTime),
         timeStamp: tomato.attributes.startTime.getTime(),
         tomatoList: [tomato]
       };
-    };
+    }
     /**
      * 解析 statDateList.tomatoList 属性，获取其它相关属性
      * @param statDateList
      */
-    const parseTomatoList = (statDateList: StatDate[]) => {
+    function parseTomatoList(statDateList: StatDate[]) {
       const getDuration = (tomato: AV.Object) =>
         (tomato.createdAt as Date).getTime() -
         tomato.attributes.startTime.getTime();
@@ -200,11 +200,46 @@ export default {
         statDate.statAbilityList = getStatAbilityList(statDate.tomatoList);
         statDate.statTargetList = getStatTargetList(statDate.tomatoList);
       });
-    };
+    }
 
     parseTomatoList(statDateList);
 
     return statDateList;
+  },
+  initDailyTomatoList: async (
+    vue: ElementVue,
+    dailyPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 显示 loading
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取计划列表");
+
+    // 尝试获取计划列表
+    try {
+      // 获取每日计划列表
+      if (dailyPlanList !== null) {
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      }
+
+      // 获取列表成功
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取计划列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
   },
   changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
     switch (statStatusMode.value) {
