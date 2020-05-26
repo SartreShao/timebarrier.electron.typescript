@@ -1,6 +1,6 @@
 import * as AV from "leancloud-storage";
-import { Log } from "../lib/vue-utils";
-import { PlanType } from "./types/vue-viewmodels";
+import { Log } from "@/lib/vue-utils";
+import { PlanType } from "@/lib/types/vue-viewmodels";
 import _ from "lodash";
 
 const Plan = AV.Object.extend("Plan");
@@ -1561,13 +1561,18 @@ export default {
   /**
    * 请求番茄列表
    */
-  fetchTomatoList: (user: AV.User): Promise<AV.Object[]> =>
+  fetchTomatoList: (
+    user: AV.User,
+    startTime: Date = new Date()
+  ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         // 获取番茄列表
         const tomatoList = await new AV.Query(Tomato)
           .equalTo("user", user)
+          .lessThan("startTime", startTime)
           .descending("startTime")
+          .limit(100)
           .find();
 
         // 获取与番茄关联的计划
@@ -1575,6 +1580,7 @@ export default {
           .containedIn("tomato", tomatoList)
           .include("plan")
           .descending("createdAt")
+          .limit(1000)
           .find();
 
         // 将 planList 存入到 tomato.attributes.planListOfTomato
@@ -1599,6 +1605,7 @@ export default {
           .containedIn("plan", planList)
           .include("target")
           .descending("createdAt")
+          .limit(1000)
           .find();
 
         // 获取与 Plan 相关的 Ability
@@ -1606,6 +1613,7 @@ export default {
           .containedIn("plan", planList)
           .include("ability")
           .descending("createdAt")
+          .limit(1000)
           .find();
 
         // 将 targetList 存入到 plan.attributes.targetListOfPlan
