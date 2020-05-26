@@ -1,26 +1,24 @@
 <template>
   <div class="container">
     <transition-group type="transition" name="flip-list">
-      <div v-for="(statPlanDate, index) in statPlanDateList" :key="index">
+      <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
         <date-item
-          :date="statPlanDate.date"
-          :totalTime="
-            statPlanDate.totalTime ? statPlanDate.totalTime : undefined
-          "
+          :date="statDate.date"
+          :totalTime="statDate.totalTime"
           :color="colormap[index % colormap.length]"
-          :todayPlanNumber="statPlanDate.todayPlanNumber"
+          :todayPlanNumber="statDate.statPlanList.length"
           type="plan"
         ></date-item>
 
         <plan-charts
           :mode="planStatStatusMode"
           style="margin-top:0.15vh"
-          :statPlanList="statPlanDate.statPlanList"
+          :statPlanList="statDate.statPlanList"
         ></plan-charts>
 
         <plan-item
-          v-for="(plan, planIndex) in statPlanDate.statPlanList"
+          v-for="(plan, planIndex) in statDate.statPlanList"
           :key="planIndex"
           :name="plan.attributes.name"
           style="margin-top:0.15vh"
@@ -29,7 +27,7 @@
           :totalTime="plan.attributes.totalTime"
           :currentTime="plan.attributes.todayTotalTime"
           :total-tomato-number="plan.attributes.tomatoNumber"
-          :color="plan.attributes.tomatoOfPlan.attributes.color"
+          :color="colormap[index % colormap.length]"
           :mode="planStatStatusMode"
         ></plan-item>
       </div>
@@ -46,18 +44,22 @@ import {
   ref,
   onMounted,
   inject,
-  watchEffect
+  watchEffect,
+  computed
 } from "@vue/composition-api";
 import PlanItem from "../components/PlanItem.vue";
 import DateItem from "../components/DateItem.vue";
 import PlanCharts from "../components/PlanCharts.vue";
 import { StatPlanDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
-import { StatPlanPage } from "@/lib/vue-viewmodels";
+import { StatPlanPage, StatPage } from "@/lib/vue-viewmodels/index";
+import AV from "leancloud-storage";
 
 export default defineComponent({
   components: { DateItem, PlanItem, PlanCharts },
   setup(props, context) {
-    const statPlanDateList: Ref<StatPlanDate[]> = ref([]);
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
     const planStatStatusMode: Ref<StatStatusMode> = inject(
       Store.planStatStatusMode,
@@ -67,12 +69,13 @@ export default defineComponent({
     const colormap: string[] = inject(Store.colormap, []);
 
     onMounted(() => {
-      StatPlanPage.init(context.root, statPlanDateList);
+      StatPage.initTomatoList(context.root, tomatoList);
     });
+
     return {
-      statPlanDateList,
       planStatStatusMode,
-      colormap
+      colormap,
+      statDateList
     };
   }
 });
