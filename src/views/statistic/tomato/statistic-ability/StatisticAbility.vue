@@ -1,25 +1,25 @@
 <template>
   <div class="container">
     <transition-group type="transition" name="flip-list">
-      <div v-for="(statAbilityDate, index) in statAbilityDateList" :key="index">
+      <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
 
         <date-item
-          :date="statAbilityDate.date"
-          :totalTime="statAbilityDate.totalTime"
+          :date="statDate.date"
+          :totalTime="statDate.totalTime"
           :color="colormap[index % colormap.length]"
-          :todayAbilityNumber="statAbilityDate.todayAbilityNumber"
+          :todayAbilityNumber="statDate.statAbilityList.length"
           type="ability"
         ></date-item>
 
         <ability-charts
           :mode="abilityStatStatusMode"
           style="margin-top:0.15vh"
-          :statAbilityList="statAbilityDate.statAbilityList"
+          :statAbilityList="statDate.statAbilityList"
         ></ability-charts>
 
         <ability-item
-          v-for="(ability, abilityIndex) in statAbilityDate.statAbilityList"
+          v-for="(ability, abilityIndex) in statDate.statAbilityList"
           :key="abilityIndex"
           :name="ability.attributes.name"
           style="margin-top:0.15vh"
@@ -42,19 +42,23 @@ import {
   Ref,
   ref,
   inject,
-  onMounted
+  onMounted,
+  computed
 } from "@vue/composition-api";
 import DateItem from "../components/DateItem.vue";
 import AbilityCharts from "../components/AbilityCharts.vue";
 import AbilityItem from "../components/AbilityItem.vue";
 import { StatAbilityDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
-import { StatAbilityPage } from "@/lib/vue-viewmodels";
+import AV from "leancloud-storage";
+import { StatAbilityPage, StatPage } from "@/lib/vue-viewmodels/index";
 
 export default defineComponent({
   components: { DateItem, AbilityCharts, AbilityItem },
   setup(props, context) {
-    const statAbilityDateList: Ref<StatAbilityDate[]> = ref([]);
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
     const abilityStatStatusMode: Ref<StatStatusMode> = inject(
       Store.abilityStatStatusMode,
@@ -64,13 +68,13 @@ export default defineComponent({
     const colormap: string[] = inject(Store.colormap, []);
 
     onMounted(() => {
-      StatAbilityPage.init(context.root, statAbilityDateList);
+      StatPage.initTomatoList(context.root, tomatoList);
     });
 
     return {
-      statAbilityDateList,
       abilityStatStatusMode,
-      colormap
+      colormap,
+      statDateList
     };
   }
 });
