@@ -63,7 +63,6 @@ import PlanItem from "../components/PlanItem.vue";
 import StatTomatoItem from "../components/StatTomatoItem.vue";
 import { StatTomatoPage, StatPage } from "@/lib/vue-viewmodels/index";
 import {
-  StatTomatoDate,
   StatStatusMode,
   TomatoStatStatusMode,
   StatDate

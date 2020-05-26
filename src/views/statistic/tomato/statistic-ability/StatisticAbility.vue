@@ -48,7 +48,7 @@ import {
 import DateItem from "../components/DateItem.vue";
 import AbilityCharts from "../components/AbilityCharts.vue";
 import AbilityItem from "../components/AbilityItem.vue";
-import { StatAbilityDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
+import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatAbilityPage, StatPage } from "@/lib/vue-viewmodels/index";

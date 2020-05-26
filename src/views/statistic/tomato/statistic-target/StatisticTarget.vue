@@ -45,7 +45,7 @@ import {
   onMounted,
   computed
 } from "@vue/composition-api";
-import { StatTargetDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
+import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatTargetPage, StatPage } from "@/lib/vue-viewmodels/index";
 import DateItem from "../components/DateItem.vue";

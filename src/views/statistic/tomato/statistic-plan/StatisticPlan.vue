@@ -50,7 +50,7 @@ import {
 import PlanItem from "../components/PlanItem.vue";
 import DateItem from "../components/DateItem.vue";
 import PlanCharts from "../components/PlanCharts.vue";
-import { StatPlanDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
+import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import { StatPlanPage, StatPage } from "@/lib/vue-viewmodels/index";
 import AV from "leancloud-storage";
 

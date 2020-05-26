@@ -18,7 +18,6 @@ import {
   inject
 } from "@vue/composition-api";
 import echarts from "echarts";
-import { StatTargetDate } from "@/lib/types/vue-viewmodels";
 import AV from "leancloud-storage";
 import _ from "lodash";
 import Store from "@/store";
