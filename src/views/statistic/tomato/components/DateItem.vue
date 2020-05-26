@@ -6,7 +6,7 @@
       }}
     </div>
     <div class="date" v-if="type === `target`">
-      {{ date }}｜为 {{ todayTargetNumber }} 项目标做出努力｜{{
+      {{ date }}｜为 {{ todayTargetNumber }} 项目标努力｜{{
         totalTimeFormat ? totalTimeFormat : "暂无用时数据"
       }}
     </div>

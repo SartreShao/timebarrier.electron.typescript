@@ -1,27 +1,25 @@
 <template>
   <div class="container">
     <transition-group type="transition" name="flip-list">
-      <div v-for="(statTargetDate, index) in statTargetDateList" :key="index">
+      <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
 
         <date-item
-          :date="statTargetDate.date"
-          :totalTime="
-            statTargetDate.totalTime ? statTargetDate.totalTime : undefined
-          "
+          :date="statDate.date"
+          :totalTime="statDate.totalTime"
           :color="colormap[index % colormap.length]"
-          :todayTargetNumber="statTargetDate.todayTargetNumber"
+          :todayTargetNumber="statDate.statTargetList.length"
           type="target"
         ></date-item>
 
         <target-charts
           :mode="targetStatStatusMode"
           style="margin-top:0.15vh"
-          :statTargetList="statTargetDate.statTargetList"
+          :statTargetList="statDate.statTargetList"
         ></target-charts>
 
         <target-item
-          v-for="(target, targetIndex) in statTargetDate.statTargetList"
+          v-for="(target, targetIndex) in statDate.statTargetList"
           :key="targetIndex"
           :name="target.attributes.name"
           style="margin-top:0.15vh"
@@ -44,20 +42,23 @@ import {
   ref,
   Ref,
   inject,
-  onMounted
+  onMounted,
+  computed
 } from "@vue/composition-api";
 import { StatTargetDate, StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
-import { StatTargetPage } from "@/lib/vue-viewmodels";
+import { StatTargetPage, StatPage } from "@/lib/vue-viewmodels/index";
 import DateItem from "../components/DateItem.vue";
 import TargetCharts from "../components/TargetCharts.vue";
-
+import AV from "leancloud-storage";
 import TargetItem from "../components/TargetItem.vue";
 
 export default defineComponent({
   components: { DateItem, TargetItem, TargetCharts },
   setup(props, context) {
-    const statTargetDateList: Ref<StatTargetDate[]> = ref([]);
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
     const targetStatStatusMode: Ref<StatStatusMode> = inject(
       Store.targetStatStatusMode,
@@ -67,13 +68,13 @@ export default defineComponent({
     const colormap: string[] = inject(Store.colormap, []);
 
     onMounted(() => {
-      StatTargetPage.init(context.root, statTargetDateList);
+      StatPage.initTomatoList(context.root, tomatoList);
     });
 
     return {
-      statTargetDateList,
       targetStatStatusMode,
-      colormap
+      colormap,
+      statDateList
     };
   }
 });
