@@ -39,7 +39,7 @@ import {
   TomatoStatStatusMode
 } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
-import { StatTomatoPage, StatPage } from "@/lib/vue-viewmodels";
+import { StatPage, StatTomatoPage } from "@/lib/vue-viewmodels/index";
 
 export default defineComponent({
   setup(props, context) {

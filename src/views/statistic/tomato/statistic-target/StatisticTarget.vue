@@ -47,7 +47,7 @@ import {
 } from "@vue/composition-api";
 import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
-import { StatTargetPage, StatPage } from "@/lib/vue-viewmodels/index";
+import { StatPage } from "@/lib/vue-viewmodels/index";
 import DateItem from "../components/DateItem.vue";
 import TargetCharts from "../components/TargetCharts.vue";
 import AV from "leancloud-storage";

@@ -6,11 +6,8 @@ import TargetPage from "./TargetPage";
 import TargetAbilityPage from "./TargetAbilityPage";
 import AbilityPage from "./AbilityPage";
 import SettingPage from "./SettingPage";
-import StatTomatoPage from "./StatTomatoPage";
-import StatTargetPage from "./StatTargetPage";
-import StatAbilityPage from "./StatAbilityPage";
-import StatPlanPage from "./StatPlanPage";
 import StatPage from "./StatPage";
+import StatTomatoPage from "./StatTomatoPage";
 
 export {
   SplashPage,
@@ -21,9 +18,6 @@ export {
   TargetPage,
   AbilityPage,
   SettingPage,
-  StatTomatoPage,
-  StatTargetPage,
-  StatPlanPage,
   StatPage,
-  StatAbilityPage
+  StatTomatoPage
 };

@@ -1,12 +1,10 @@
 // Plan
-import { provide, ref, reactive, inject } from "@vue/composition-api";
+import { provide, ref, reactive } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import {
   TomatoCloudStatus,
   StatStatusMode,
-  TomatoStatStatusMode,
-  StatTomatoDate,
-  StatDate
+  TomatoStatStatusMode
 } from "@/lib/types/vue-viewmodels";
 
 // 临时计划列表

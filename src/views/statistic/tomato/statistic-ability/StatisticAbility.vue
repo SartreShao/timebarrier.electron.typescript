@@ -51,7 +51,7 @@ import AbilityItem from "../components/AbilityItem.vue";
 import { StatStatusMode } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import AV from "leancloud-storage";
-import { StatAbilityPage, StatPage } from "@/lib/vue-viewmodels/index";
+import { StatPage } from "@/lib/vue-viewmodels/index";
 
 export default defineComponent({
   components: { DateItem, AbilityCharts, AbilityItem },
