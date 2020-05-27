@@ -192,6 +192,10 @@ const UI = {
     }
 
     return `${hour}:${minute} ${type}`;
+  },
+  getTodayTimestamp: (timeStamp: number) => {
+    const timeZone = new Date().getTimezoneOffset() / 60;
+    return timeStamp - ((timeStamp - timeZone * 3600000) % 86400000);
   }
 };
 

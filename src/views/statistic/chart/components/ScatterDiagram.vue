@@ -17,7 +17,7 @@
         />
       </svg> -->
 
-      <div>（番茄/日期）</div>
+      <div>预测：{{ expression }}</div>
     </div>
 
     <div class="scatter-diagram" :id="id"></div>
@@ -33,48 +33,74 @@ import {
   inject,
   ref,
   computed,
-  watchEffect
+  watchEffect,
+  watch
 } from "@vue/composition-api";
 import echarts from "echarts";
 import ecStat from "echarts-stat";
 import _ from "lodash";
-import { StatTomatoDate } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
+import AV from "leancloud-storage";
+import { StatPage } from "@/lib/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
-  props: {},
+  props: {
+    tomatoList: Array
+  },
   setup(props, context) {
     const id = String(_.random(0, Number.MAX_VALUE, true));
 
     const colormap: string[] = inject(Store.colormap, []);
 
-    const statTomatoDateList: Ref<StatTomatoDate[]> = inject(
-      Store.statTomatoDateList,
-      ref([])
-    );
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
 
-    const dataMap = computed(() => {
-      return statTomatoDateList.value.map(statTomatoDate => {
-        return [statTomatoDate.timeStamp, statTomatoDate.todayTomatoNumber];
+    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+
+    const scatterData = computed(() => {
+      return statDateList.value.map(statDate => {
+        return [
+          UI.getTodayTimestamp(statDate.timeStamp),
+          statDate.tomatoList.length
+        ];
       });
     });
 
-    watchEffect(() => {
-      console.log("1,", dataMap.value);
+    const dataRegression = computed(() => {
+      return scatterData.value.map(data => {
+        const minDateItem = _.last(scatterData.value);
+        if (minDateItem !== undefined) {
+          const minDate = minDateItem[0];
+          const date = data[0];
+          const index = (date - minDate) / 86400000;
+          return [index, data[1]];
+        } else {
+          return [data[0], data[1]];
+        }
+      });
     });
 
-    onMounted(() => {
+    const expression = computed(() => {
+      const regression = ecStat.regression(
+        "linear",
+        dataRegression.value as number[][],
+        0
+      );
+
+      regression.points.sort(function(a: any, b: any) {
+        return a[0] - b[0];
+      });
+
+      return regression.expression;
+    });
+    function initChart(id: string) {
       const charts = document.getElementById(id) as HTMLDivElement;
       const myChart = charts ? echarts.init(charts) : null;
 
-      var data = dataMap.value;
+      var data = scatterData.value;
 
       // See https://github.com/ecomfe/echarts-stat
-      var myRegression = ecStat.regression(
-        "exponential",
-        data as number[][],
-        0
-      );
+      var myRegression = ecStat.regression("linear", data as number[][], 0);
 
       myRegression.points.sort(function(a: any, b: any) {
         return a[0] - b[0];
@@ -88,11 +114,15 @@ export default defineComponent({
           }
         },
         xAxis: {
+          name: "日期 x",
+          nameLocation: "end",
+          nameGap: 6,
+          nameTextStyle: {
+            color: "#222A36",
+            fontSize: 10
+          },
           axisLine: { lineStyle: { color: "#99A8B8" } },
           axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
-          // name: "x 轴：日期——y 轴：番茄数量",
-          nameLocation: "middle",
-          nameGap: "32",
           type: "time",
           splitLine: {
             lineStyle: {
@@ -102,8 +132,18 @@ export default defineComponent({
           splitNumber: 5
         },
         yAxis: {
+          name: "番茄数 y",
+          nameLocation: "end",
+          nameTextStyle: {
+            color: "#222A36",
+            fontSize: 10
+          },
           axisLine: { lineStyle: { color: "#99A8B8" } },
-          axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+          axisLabel: {
+            margin: 20,
+            color: "#222A36",
+            fontSize: 10
+          },
           type: "value",
           splitLine: {
             lineStyle: {
@@ -143,13 +183,6 @@ export default defineComponent({
               itemStyle: {
                 color: "transparent"
               },
-              // label: {
-              //   show: true,
-              //   position: "left",
-              //   formatter: myRegression.expression,
-              //   color: "#333",
-              //   fontSize: 14
-              // },
               data: [
                 {
                   coord: myRegression.points[myRegression.points.length - 1]
@@ -166,121 +199,22 @@ export default defineComponent({
       if (myChart !== null) {
         myChart.resize();
       }
+    }
+
+    watch(tomatoList, () => {
+      initChart(id);
+    });
+
+    onMounted(() => {
+      StatPage.initTomatoList(context.root, tomatoList);
+      initChart(id);
     });
 
     onUpdated(() => {
-      const charts = document.getElementById(id) as HTMLDivElement;
-      const myChart = charts ? echarts.init(charts) : null;
-
-      var data = [
-        [1, 4862.4],
-        [2, 5294.7],
-        [3, 5934.5],
-        [4, 7171.0],
-        [5, 8964.4],
-        [6, 10202.2],
-        [7, 11962.5],
-        [8, 14928.3],
-        [9, 16909.2],
-        [10, 18547.9],
-        [11, 21617.8],
-        [12, 26638.1],
-        [13, 34634.4],
-        [14, 46759.4],
-        [15, 58478.1],
-        [16, 67884.6],
-        [17, 74462.6],
-        [18, 79395.7]
-      ];
-
-      // See https://github.com/ecomfe/echarts-stat
-      var myRegression = ecStat.regression("exponential", data, 0);
-
-      myRegression.points.sort(function(a: any, b: any) {
-        return a[0] - b[0];
-      });
-
-      const option = {
-        title: {
-          text: "1981 - 1998 gross domestic product GDP (trillion yuan)",
-          subtext: "By ecStat.regression",
-          sublink: "https://github.com/ecomfe/echarts-stat",
-          left: "center"
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross"
-          }
-        },
-        xAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              type: "dashed"
-            }
-          },
-          splitNumber: 20
-        },
-        yAxis: {
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              type: "dashed"
-            }
-          }
-        },
-        series: [
-          {
-            name: "scatter",
-            type: "scatter",
-            emphasis: {
-              label: {
-                show: true,
-                position: "left",
-                color: "blue",
-                fontSize: 16
-              }
-            },
-            symbolSize: 5,
-
-            data: data
-          },
-          {
-            name: "line",
-            type: "line",
-            showSymbol: false,
-            smooth: true,
-            data: myRegression.points,
-            markPoint: {
-              itemStyle: {
-                color: "transparent"
-              },
-              label: {
-                show: true,
-                position: "left",
-                formatter: myRegression.expression,
-                color: "#333",
-                fontSize: 14
-              },
-              data: [
-                {
-                  coord: myRegression.points[myRegression.points.length - 1]
-                }
-              ]
-            }
-          }
-        ]
-      };
-
-      if (myChart !== null) {
-        myChart.setOption(option as any);
-      }
-      if (myChart !== null) {
-        myChart.resize();
-      }
+      initChart(id);
     });
-    return { id };
+
+    return { id, expression };
   }
 });
 </script>
@@ -329,7 +263,7 @@ export default defineComponent({
     }
     div {
       height 2.02vh
-      font-size 1.42vh
+      font-size 1.6vh
       font-weight normal
       font-stretch normal
       font-style normal
