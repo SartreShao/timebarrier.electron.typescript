@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-infinite-scroll="loadMore">
     <transition-group type="transition" name="flip-list">
       <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
@@ -96,6 +96,11 @@ export default defineComponent({
 
     const colormap: string[] = inject(Store.colormap, []);
 
+    const loadMore = () => {
+      console.log("loadMore");
+      StatPage.loadMore(context.root, tomatoList);
+    };
+
     onMounted(() => {
       StatPage.initTomatoList(context.root, tomatoList);
       StatPage.initDailyTomatoList(context.root, dailyPlanList);
@@ -105,7 +110,8 @@ export default defineComponent({
       tomatoStatStatusMode,
       colormap,
       statDateList,
-      targetTomatoNumber
+      targetTomatoNumber,
+      loadMore
     };
   }
 });

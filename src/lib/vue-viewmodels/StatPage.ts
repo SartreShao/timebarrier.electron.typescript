@@ -8,7 +8,7 @@ import _ from "lodash";
 
 export default {
   /**
-   * 加载 TomatoList
+   * 加载 TomatoList 的前 100 条，越靠后创建的，越先加载出来
    */
   initTomatoList: async (vue: ElementVue, tomatoList: Ref<AV.Object[]>) => {
     // 获取传入参数
@@ -30,6 +30,40 @@ export default {
       UI.showNotification(
         vue.$notify,
         "获取番茄列表失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * 加载更多
+   */
+  loadMore: async (vue: ElementVue, tomatoList: Ref<AV.Object[]>) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // const loadingInstance = UI.showLoading(vue.$loading, "正在加载更多");
+
+    try {
+      const oldTomatoList = tomatoList.value;
+      const lastTomato = _.last(oldTomatoList);
+      const newTomatoList = await Api.fetchTomatoList(
+        user,
+        lastTomato === undefined ? new Date() : lastTomato.attributes.startTime
+      );
+      tomatoList.value = _.concat(oldTomatoList, newTomatoList);
+      // UI.hideLoading(loadingInstance);
+    } catch (error) {
+      // UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "加载更多记录失败",
         `错误原因：${error.message}`,
         "error"
       );
