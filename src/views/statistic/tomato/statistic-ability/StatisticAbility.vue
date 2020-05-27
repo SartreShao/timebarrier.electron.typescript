@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-infinite-scroll="loadMore">
     <transition-group type="transition" name="flip-list">
       <div v-for="(statDate, index) in statDateList" :key="index">
         <div v-if="index !== 0" style="height:0.15vh"></div>
@@ -33,6 +33,7 @@
         ></ability-item>
       </div>
     </transition-group>
+    <div style="height:12.32vh"></div>
   </div>
 </template>
 
@@ -67,6 +68,10 @@ export default defineComponent({
 
     const colormap: string[] = inject(Store.colormap, []);
 
+    const loadMore = () => {
+      StatPage.loadMore(context.root, tomatoList);
+    };
+
     onMounted(() => {
       StatPage.initTomatoList(context.root, tomatoList);
     });
@@ -74,7 +79,8 @@ export default defineComponent({
     return {
       abilityStatStatusMode,
       colormap,
-      statDateList
+      statDateList,
+      loadMore
     };
   }
 });

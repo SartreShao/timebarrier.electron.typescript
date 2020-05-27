@@ -97,7 +97,6 @@ export default defineComponent({
     const colormap: string[] = inject(Store.colormap, []);
 
     const loadMore = () => {
-      console.log("loadMore");
       StatPage.loadMore(context.root, tomatoList);
     };
 
