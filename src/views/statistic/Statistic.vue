@@ -68,6 +68,7 @@ import {
 } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatPage, StatTomatoPage } from "@/lib/vue-viewmodels/index";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
@@ -150,6 +151,17 @@ export default defineComponent({
           break;
       }
     };
+
+    const date = new Date();
+    const week = UI.getWeekStartTimestamp(new Date().getTime());
+    const month = UI.getMonthStartTimestamp(new Date().getTime());
+    const year = UI.getYearStartTimestamp(new Date().getTime());
+    date.setTime(week);
+    console.log("本周", UI.dateToYearMonthDay(date));
+    date.setTime(month);
+    console.log("本月", UI.dateToYearMonthDay(date));
+    date.setTime(year);
+    console.log("本年", UI.dateToYearMonthDay(date));
 
     return {
       tabRouteList,

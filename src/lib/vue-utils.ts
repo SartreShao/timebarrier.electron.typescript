@@ -193,20 +193,27 @@ const UI = {
 
     return `${hour}:${minute} ${type}`;
   },
-  getTodayTimestamp: (timeStamp: number) => {
+  getTodayStartTimestamp: (timeStamp: number) => {
     const timeZone = new Date().getTimezoneOffset() / 60;
     return (
       timeStamp - ((timeStamp - timeZone * 3600 * 1000) % (3600 * 1000 * 24))
     );
   },
-  getThisWeekTimestamp: (timeStamp: number) => {
-    const timeZone = new Date().getTimezoneOffset() / 60;
-    return (
-      timeStamp -
-      ((timeStamp - timeZone * 3600 * 1000) % (3600 * 1000 * 24 * 7))
+  getWeekStartTimestamp: (timeStamp: number) => {
+    const date = new Date();
+    date.setTime(timeStamp);
+    const yearNow = date.getFullYear();
+    const monthNow = date.getMonth();
+    const dayNow = date.getDate();
+    const dayOfWeekNow = date.getDay();
+    const weekStartDate = new Date(
+      yearNow,
+      monthNow,
+      dayNow - dayOfWeekNow + 1
     );
+    return weekStartDate.getTime();
   },
-  getThisMonthTimestamp: function(timeStamp: number) {
+  getMonthStartTimestamp: function(timeStamp: number) {
     const dateToYearMonthDay = (date: Date) => {
       let year = String(date.getFullYear());
       let month = String(date.getMonth() + 1);
@@ -222,7 +229,7 @@ const UI = {
     const result = new Date(dateString);
     return result.getTime();
   },
-  getThisYearTimestamp: function(timeStamp: number) {
+  getYearStartTimestamp: function(timeStamp: number) {
     const dateToYearMonthDay = (date: Date) => {
       let year = String(date.getFullYear());
       return `${year}/01/01`;

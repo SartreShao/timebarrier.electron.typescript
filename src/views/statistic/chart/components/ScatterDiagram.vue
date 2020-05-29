@@ -61,7 +61,7 @@ export default defineComponent({
     const scatterData = computed(() => {
       return statDateList.value.map(statDate => {
         return [
-          UI.getTodayTimestamp(statDate.timeStamp),
+          UI.getTodayStartTimestamp(statDate.timeStamp),
           statDate.tomatoList.length
         ];
       });
