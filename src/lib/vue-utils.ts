@@ -160,7 +160,7 @@ const UI = {
   /**
    * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式
    */
-  dateToYearMonthDay: (date: Date) => {
+  dateToYearMonthDay: (date: Date, separate?: string) => {
     let year = String(date.getFullYear());
     let month = String(date.getMonth() + 1);
     let day = String(date.getDate());
@@ -195,7 +195,44 @@ const UI = {
   },
   getTodayTimestamp: (timeStamp: number) => {
     const timeZone = new Date().getTimezoneOffset() / 60;
-    return timeStamp - ((timeStamp - timeZone * 3600000) % 86400000);
+    return (
+      timeStamp - ((timeStamp - timeZone * 3600 * 1000) % (3600 * 1000 * 24))
+    );
+  },
+  getThisWeekTimestamp: (timeStamp: number) => {
+    const timeZone = new Date().getTimezoneOffset() / 60;
+    return (
+      timeStamp -
+      ((timeStamp - timeZone * 3600 * 1000) % (3600 * 1000 * 24 * 7))
+    );
+  },
+  getThisMonthTimestamp: function(timeStamp: number) {
+    const dateToYearMonthDay = (date: Date) => {
+      let year = String(date.getFullYear());
+      let month = String(date.getMonth() + 1);
+      if (month.length === 1) {
+        month = "0" + month;
+      }
+      return `${year}/${month}/01`;
+    };
+
+    const date = new Date();
+    date.setTime(timeStamp);
+    const dateString = dateToYearMonthDay(date);
+    const result = new Date(dateString);
+    return result.getTime();
+  },
+  getThisYearTimestamp: function(timeStamp: number) {
+    const dateToYearMonthDay = (date: Date) => {
+      let year = String(date.getFullYear());
+      return `${year}/01/01`;
+    };
+
+    const date = new Date();
+    date.setTime(timeStamp);
+    const dateString = dateToYearMonthDay(date);
+    const result = new Date(dateString);
+    return result.getTime();
   }
 };
 

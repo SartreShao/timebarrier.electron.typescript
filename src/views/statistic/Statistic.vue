@@ -28,6 +28,20 @@
     >
       <img :src="assets.icon_date_select" alt="icon_transition" />
       <span>自定义</span>
+
+      <el-date-picker
+        class="picker"
+        v-model="dateRange"
+        type="daterange"
+        align="right"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :picker-options="pickerOptions"
+        size="mini"
+      >
+      </el-date-picker>
     </div>
 
     <!-- 底边栏 -->
@@ -86,6 +100,40 @@ export default defineComponent({
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
+    const dateRange: Ref<[]> = ref([]);
+
+    const pickerOptions = {
+      shortcuts: [
+        {
+          text: "本周",
+          onClick(picker: any) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "本月",
+          onClick(picker: any) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "本年",
+          onClick(picker: any) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+            picker.$emit("pick", [start, end]);
+          }
+        }
+      ]
+    };
+
     const click_changeTomatoStatStatusMode = () => {
       switch (currentRoute.value) {
         case "/statistic/tomato/statistic-tomato":
@@ -107,6 +155,8 @@ export default defineComponent({
       tabRouteList,
       currentRoute,
       click_changeTomatoStatStatusMode,
+      dateRange,
+      pickerOptions,
       assets: { icon_transition, icon_date_select }
     };
   },
@@ -160,6 +210,14 @@ main {
   display flex
   flex-direction column
   align-items center
+  .picker {
+    position absolute
+    width 7.5vh
+    height 7.5vh
+    border-radius 50%
+    opacity 0
+    overflow hidden
+  }
   img {
     margin-top 1.57vh
     width 2.23vh
@@ -167,14 +225,14 @@ main {
   }
   span {
     margin-top 0.54vh
-    font-size 1.4vh
+    font-size 1.2vh
     font-weight normal
     font-stretch normal
     font-style normal
     line-height 1.5
     letter-spacing normal
     text-align center
-    color #99a8b8
+    color #222A36
   }
 }
 </style>
