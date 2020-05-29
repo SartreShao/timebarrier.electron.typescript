@@ -27,7 +27,7 @@
       v-if="currentRoute.startsWith(`/statistic/chart`)"
     >
       <img :src="assets.icon_date_select" alt="icon_transition" />
-      <span>自定义</span>
+      <span>{{ dateTip }}</span>
 
       <el-date-picker
         class="picker"
@@ -101,34 +101,97 @@ export default defineComponent({
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
-    const dateRange: Ref<[]> = ref([]);
+    const dateRange: Ref<Date[]> = ref([]);
+
+    const dateTip: Ref<string> = ref("自定义");
+
+    watchEffect(() => {
+      if (dateRange.value.length === 2) {
+        const startTime = dateRange.value[0];
+        const endTime = dateRange.value[1];
+        // 本周
+        if (
+          startTime.getTime() ===
+            UI.getWeekStartTimestamp(new Date().getTime()) &&
+          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+        ) {
+          dateTip.value = "本周";
+        }
+
+        // 本月
+        else if (
+          startTime.getTime() ===
+            UI.getMonthStartTimestamp(new Date().getTime()) &&
+          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+        ) {
+          dateTip.value = "本月";
+        }
+
+        // 本年
+        else if (
+          startTime.getTime() ===
+            UI.getYearStartTimestamp(new Date().getTime()) &&
+          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+        ) {
+          dateTip.value = "本年";
+        }
+
+        // 全部
+        else if (
+          startTime.getTime() === new Date("1990/01/01").getTime() &&
+          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+        ) {
+          dateTip.value = "全部";
+        }
+
+        // 自定义
+        else {
+          dateTip.value = "自定义";
+        }
+      }
+    });
 
     const pickerOptions = {
       shortcuts: [
         {
-          text: "本周",
+          text: "本周数据",
           onClick(picker: any) {
             const end = new Date();
+            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
             const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            const week = UI.getWeekStartTimestamp(new Date().getTime());
+            start.setTime(week);
             picker.$emit("pick", [start, end]);
           }
         },
         {
-          text: "本月",
+          text: "本月数据",
           onClick(picker: any) {
             const end = new Date();
+            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
             const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            const month = UI.getMonthStartTimestamp(new Date().getTime());
+            start.setTime(month);
             picker.$emit("pick", [start, end]);
           }
         },
         {
-          text: "本年",
+          text: "本年数据",
           onClick(picker: any) {
             const end = new Date();
+            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
             const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+            const year = UI.getYearStartTimestamp(new Date().getTime());
+            start.setTime(year);
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "全部数据",
+          onClick(picker: any) {
+            const end = new Date();
+            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
+            const start = new Date("1990/01/01");
             picker.$emit("pick", [start, end]);
           }
         }
@@ -152,23 +215,13 @@ export default defineComponent({
       }
     };
 
-    const date = new Date();
-    const week = UI.getWeekStartTimestamp(new Date().getTime());
-    const month = UI.getMonthStartTimestamp(new Date().getTime());
-    const year = UI.getYearStartTimestamp(new Date().getTime());
-    date.setTime(week);
-    console.log("本周", UI.dateToYearMonthDay(date));
-    date.setTime(month);
-    console.log("本月", UI.dateToYearMonthDay(date));
-    date.setTime(year);
-    console.log("本年", UI.dateToYearMonthDay(date));
-
     return {
       tabRouteList,
       currentRoute,
       click_changeTomatoStatStatusMode,
       dateRange,
       pickerOptions,
+      dateTip,
       assets: { icon_transition, icon_date_select }
     };
   },
