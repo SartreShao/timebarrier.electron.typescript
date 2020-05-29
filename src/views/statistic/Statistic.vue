@@ -13,8 +13,21 @@
       <router-view />
     </main>
 
-    <div class="transition" @click="click_changeTomatoStatStatusMode">
+    <div
+      class="transition"
+      @click="click_changeTomatoStatStatusMode"
+      v-if="currentRoute.startsWith(`/statistic/tomato`)"
+    >
       <img :src="assets.icon_transition" alt="icon_transition" />
+    </div>
+
+    <div
+      class="select-date"
+      @click="click_changeTomatoStatStatusMode"
+      v-if="currentRoute.startsWith(`/statistic/chart`)"
+    >
+      <img :src="assets.icon_date_select" alt="icon_transition" />
+      <span>自定义</span>
     </div>
 
     <!-- 底边栏 -->
@@ -34,6 +47,7 @@ import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
 import icon_transition from "@/assets/icon_transition.svg";
+import icon_date_select from "@/assets/icon_date_select.svg";
 import {
   StatStatusMode,
   TomatoStatStatusMode
@@ -91,8 +105,9 @@ export default defineComponent({
 
     return {
       tabRouteList,
+      currentRoute,
       click_changeTomatoStatStatusMode,
-      assets: { icon_transition }
+      assets: { icon_transition, icon_date_select }
     };
   },
   components: { TopBar, BottomBar, TabView }
@@ -130,6 +145,36 @@ main {
   img {
     width 4.85vw
     height 2.16vh
+  }
+}
+.select-date {
+  cursor pointer
+  position fixed
+  bottom 9vh
+  right 5.07vw
+  width 7.5vh
+  height 7.5vh
+  border-radius 50%
+  background white
+  box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+  display flex
+  flex-direction column
+  align-items center
+  img {
+    margin-top 1.57vh
+    width 2.23vh
+    height 2.23vh
+  }
+  span {
+    margin-top 0.54vh
+    font-size 1.4vh
+    font-weight normal
+    font-stretch normal
+    font-style normal
+    line-height 1.5
+    letter-spacing normal
+    text-align center
+    color #99a8b8
   }
 }
 </style>
