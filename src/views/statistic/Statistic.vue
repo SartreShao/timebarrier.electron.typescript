@@ -35,9 +35,6 @@
         type="daterange"
         align="right"
         unlink-panels
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
         :picker-options="pickerOptions"
         size="mini"
       >
@@ -133,9 +130,11 @@ export default defineComponent({
         {
           text: "本周数据",
           onClick(picker: any) {
+            dateTip.value = "本周";
             const end = new Date(
               UI.getTodayStartTimestamp(new Date().getTime())
             );
+            console.log("end", UI.dateToYearMonthDay(end));
             const start = new Date(
               UI.getWeekStartTimestamp(new Date().getTime())
             );
@@ -145,6 +144,7 @@ export default defineComponent({
         {
           text: "本月数据",
           onClick(picker: any) {
+            dateTip.value = "本月";
             const end = new Date(
               UI.getTodayStartTimestamp(new Date().getTime())
             );
@@ -157,6 +157,7 @@ export default defineComponent({
         {
           text: "本年数据",
           onClick(picker: any) {
+            dateTip.value = "本年";
             const end = new Date(
               UI.getTodayStartTimestamp(new Date().getTime())
             );
@@ -169,6 +170,7 @@ export default defineComponent({
         {
           text: "全部数据",
           onClick(picker: any) {
+            dateTip.value = "全部";
             const end = new Date(
               UI.getTodayStartTimestamp(new Date().getTime())
             );

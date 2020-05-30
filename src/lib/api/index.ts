@@ -2,7 +2,6 @@ import * as AV from "leancloud-storage";
 import { Log } from "@/lib/vue-utils";
 import { PlanType } from "@/lib/types/vue-viewmodels";
 import _ from "lodash";
-import { runInNewContext } from "vm";
 
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
@@ -1566,19 +1565,29 @@ export default {
     user: AV.User,
     endTime: Date = new Date(),
     startTime?: Date,
-    limit?: number
+    limit?: number,
+    firstQuery: boolean = false
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         // 获取番茄列表
         const query = new AV.Query(Tomato)
           .equalTo("user", user)
-          .lessThan("startTime", endTime)
           .descending("startTime")
           .limit(limit ? limit : 100);
 
+        console.log("firstQuery", firstQuery);
+        console.log("endTime", endTime);
+
+        firstQuery
+          ? query.lessThanOrEqualTo(
+              "startTime",
+              new Date(endTime.getTime() + 3599999 * 24)
+            )
+          : query.lessThan("startTime", endTime);
+
         if (startTime !== undefined) {
-          query.greaterThan("startTime", startTime);
+          query.greaterThanOrEqualTo("startTime", startTime);
         }
 
         const tomatoList = await query.find();
@@ -1665,20 +1674,16 @@ export default {
 
         const statTargetList: AV.Object[] = [];
 
-        tomatoList.forEach((tomato, tomatoIndex) => {
-          tomato.attributes.planListOfTomato.forEach(
-            (plan: AV.Object, planIndex: number) => {
-              plan.attributes.targetListOfPlan.forEach(
-                (target: AV.Object, targetIndex: number) => {
-                  const object = _.cloneDeep(target);
-                  object.attributes.isStat = true;
-                  object.attributes.tomatoOfTarget = tomato;
-                  object.attributes.planOfTarget = plan;
-                  statTargetList.push(object);
-                }
-              );
-            }
-          );
+        tomatoList.forEach(tomato => {
+          tomato.attributes.planListOfTomato.forEach((plan: AV.Object) => {
+            plan.attributes.targetListOfPlan.forEach((target: AV.Object) => {
+              const object = _.cloneDeep(target);
+              object.attributes.isStat = true;
+              object.attributes.tomatoOfTarget = tomato;
+              object.attributes.planOfTarget = plan;
+              statTargetList.push(object);
+            });
+          });
         });
 
         Log.success("fetchStatTargetList", statTargetList);
@@ -1702,19 +1707,15 @@ export default {
 
         const statAbilityList: AV.Object[] = [];
 
-        tomatoList.forEach((tomato, tomatoIndex) => {
-          tomato.attributes.planListOfTomato.forEach(
-            (plan: AV.Object, planIndex: number) => {
-              plan.attributes.abilityListOfPlan.forEach(
-                (ability: AV.Object, abilityIndex: number) => {
-                  const object = _.cloneDeep(ability);
-                  object.attributes.tomatoOfAbility = tomato;
-                  object.attributes.planOfAbility = plan;
-                  statAbilityList.push(object);
-                }
-              );
-            }
-          );
+        tomatoList.forEach(tomato => {
+          tomato.attributes.planListOfTomato.forEach((plan: AV.Object) => {
+            plan.attributes.abilityListOfPlan.forEach((ability: AV.Object) => {
+              const object = _.cloneDeep(ability);
+              object.attributes.tomatoOfAbility = tomato;
+              object.attributes.planOfAbility = plan;
+              statAbilityList.push(object);
+            });
+          });
         });
 
         Log.success("fetchStatAbilityList", statAbilityList);
@@ -1843,12 +1844,10 @@ export default {
       endTime: Date
     ): Promise<AV.Object[]> {
       const limit = 1000;
-      const newTomatoList = await Api.fetchTomatoList(
-        user,
-        endTime,
-        startTime,
-        limit
-      );
+      const newTomatoList =
+        oldTomatoList.length === 0
+          ? await Api.fetchTomatoList(user, endTime, startTime, limit, true)
+          : await Api.fetchTomatoList(user, endTime, startTime, limit, false);
       if (newTomatoList.length < limit) {
         return _.concat(oldTomatoList, newTomatoList);
       } else {

@@ -54,7 +54,10 @@ export default defineComponent({
 
     const colormap: string[] = inject(Store.colormap, []);
 
-    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+    const tomatoList: Ref<AV.Object[]> = inject(
+      Store.tomatoListWithDateRange,
+      ref([])
+    );
 
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
@@ -207,7 +210,6 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      StatPage.initTomatoList(context.root, tomatoList);
       initChart(id);
     });
 
