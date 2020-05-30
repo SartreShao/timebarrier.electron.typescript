@@ -99,14 +99,17 @@ body, h1, h2, h3, h4, h5, h6 {
   float none !important
 }
 .el-picker-panel__sidebar {
-  width 80px !important
+  width 90px !important
 }
 .el-picker-panel [slot=sidebar]+.el-picker-panel__body, .el-picker-panel__sidebar+.el-picker-panel__body {
-  margin-left 80px !important
+  margin-left 88px !important
 }
 .el-date-range-picker__content {
   width 43.42% !important
   padding-bottom 0 !important
   padding-top 1.5vh !important
+}
+.el-picker-panel__shortcut {
+  font-size 12px !important
 }
 </style>

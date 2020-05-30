@@ -338,7 +338,48 @@ export default {
    * 如「本周」、「本月」、「本年」、「全部」、「自定义」
    */
   getDateTip: (startTime: Date, endTime: Date) => {
+    // 近 7 日
     if (
+      startTime.getTime() === endTime.getTime() - 3600 * 1000 * 24 * 7 &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "7 日";
+    }
+
+    // 近 15 日
+    else if (
+      startTime.getTime() === endTime.getTime() - 3600 * 1000 * 24 * 15 &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "15 日";
+    }
+
+    // 近 30 日
+    else if (
+      startTime.getTime() === endTime.getTime() - 3600 * 1000 * 24 * 30 &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "30 日";
+    }
+
+    // 近 180 日
+    else if (
+      startTime.getTime() === endTime.getTime() - 3600 * 1000 * 24 * 180 &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "180 日";
+    }
+
+    // 近 365 日
+    else if (
+      startTime.getTime() === endTime.getTime() - 3600 * 1000 * 24 * 365 &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "365 日";
+    }
+
+    // 本周
+    else if (
       startTime.getTime() === UI.getWeekStartTimestamp(new Date().getTime()) &&
       endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
     ) {

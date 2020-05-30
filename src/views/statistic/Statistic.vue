@@ -105,11 +105,14 @@ export default defineComponent({
     const currentRoute = computed(() => context.root.$route.fullPath);
 
     const dateRange: Ref<Date[]> = ref([
-      new Date(UI.getMonthStartTimestamp(new Date().getTime())),
+      new Date(
+        new Date(UI.getTodayStartTimestamp(new Date().getTime())).getTime() -
+          3600 * 1000 * 24 * 15
+      ),
       new Date(UI.getTodayStartTimestamp(new Date().getTime()))
     ]);
 
-    const dateTip: Ref<string> = ref("本月");
+    const dateTip: Ref<string> = ref("15 日");
 
     watchEffect(() => {
       if (dateRange.value.length === 2) {
@@ -127,6 +130,64 @@ export default defineComponent({
 
     const pickerOptions = {
       shortcuts: [
+        {
+          text: "7日数据",
+          onClick(picker: any) {
+            dateTip.value = "7日";
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(end.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "15日数据",
+          onClick(picker: any) {
+            dateTip.value = "15日";
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(end.getTime() - 3600 * 1000 * 24 * 15);
+
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "30日数据",
+          onClick(picker: any) {
+            dateTip.value = "30日";
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(end.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "180日数据",
+          onClick(picker: any) {
+            dateTip.value = "180日";
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(end.getTime() - 3600 * 1000 * 24 * 180);
+
+            picker.$emit("pick", [start, end]);
+          }
+        },
+        {
+          text: "365日数据",
+          onClick(picker: any) {
+            dateTip.value = "365日";
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(end.getTime() - 3600 * 1000 * 24 * 365);
+
+            picker.$emit("pick", [start, end]);
+          }
+        },
         {
           text: "本周数据",
           onClick(picker: any) {
