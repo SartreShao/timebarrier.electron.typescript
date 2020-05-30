@@ -61,7 +61,8 @@ import icon_transition from "@/assets/icon_transition.svg";
 import icon_date_select from "@/assets/icon_date_select.svg";
 import {
   StatStatusMode,
-  TomatoStatStatusMode
+  TomatoStatStatusMode,
+  ChartMode
 } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import { StatPage, StatTomatoPage } from "@/lib/vue-viewmodels/index";

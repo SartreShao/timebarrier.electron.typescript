@@ -2,7 +2,7 @@
   <div class="scatter-diagram-item-container">
     <h1>近期工作趋势</h1>
     <h2>逐渐变好</h2>
-    <div class="change-date-container">
+    <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="17.955"
@@ -18,7 +18,9 @@
         />
       </svg>
 
-      <div>切换为时间视图</div>
+      <div>
+        {{ chartMode === `tomato` ? `切换为时间视图` : `切换为番茄视图` }}
+      </div>
     </div>
 
     <div class="scatter-diagram" :id="id"></div>
@@ -44,12 +46,15 @@ import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
+import { ChartMode } from "@/lib/types/vue-viewmodels";
 
 export default defineComponent({
   props: {
     tomatoList: Array
   },
   setup(props, context) {
+    const chartMode: Ref<ChartMode> = ref("tomato");
+
     const id = String(_.random(0, Number.MAX_VALUE, true));
 
     const colormap: string[] = inject(Store.colormap, []);
@@ -63,10 +68,17 @@ export default defineComponent({
 
     const scatterData = computed(() => {
       return statDateList.value.map(statDate => {
-        return [
-          UI.getTodayStartTimestamp(statDate.timeStamp),
-          statDate.tomatoList.length
-        ];
+        if (chartMode.value === "tomato") {
+          return [
+            UI.getTodayStartTimestamp(statDate.timeStamp),
+            statDate.tomatoList.length
+          ];
+        } else {
+          return [
+            UI.getTodayStartTimestamp(statDate.timeStamp),
+            UI.timeStampToHour(statDate.totalTime as number)
+          ];
+        }
       });
     });
 
@@ -97,6 +109,7 @@ export default defineComponent({
 
       return regression.expression;
     });
+
     function initChart(id: string) {
       const charts = document.getElementById(id) as HTMLDivElement;
       const myChart = charts ? echarts.init(charts) : null;
@@ -136,7 +149,7 @@ export default defineComponent({
           splitNumber: 5
         },
         yAxis: {
-          name: "番茄数 y",
+          name: chartMode.value === "tomato" ? "番茄数 y" : "小时 y",
           nameLocation: "end",
           nameTextStyle: {
             color: "#222A36",
@@ -217,7 +230,12 @@ export default defineComponent({
       initChart(id);
     });
 
-    return { id, expression };
+    // 点击事件：点击更改图标模式
+    const click_changeChartMode = () => {
+      StatPage.changeChartMode(chartMode);
+    };
+
+    return { id, expression, chartMode, click_changeChartMode };
   }
 });
 </script>

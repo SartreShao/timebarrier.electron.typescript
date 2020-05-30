@@ -240,6 +240,10 @@ const UI = {
     const dateString = dateToYearMonthDay(date);
     const result = new Date(dateString);
     return result.getTime();
+  },
+  timeStampToHour: function(timeStamp: number) {
+    const hour = Number((timeStamp / 1000 / 60 / 60).toFixed(1));
+    return hour;
   }
 };
 

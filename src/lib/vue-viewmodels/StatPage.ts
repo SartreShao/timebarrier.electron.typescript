@@ -1,5 +1,9 @@
 import { Ref } from "@vue/composition-api";
-import { StatStatusMode, StatDate } from "@/lib/types/vue-viewmodels";
+import {
+  StatStatusMode,
+  StatDate,
+  ChartMode
+} from "@/lib/types/vue-viewmodels";
 import { ElementVue } from "@/lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import AV from "leancloud-storage";
@@ -331,6 +335,13 @@ export default {
       case "date":
         statStatusMode.value = "simple";
         break;
+    }
+  },
+  changeChartMode: (chartMode: Ref<ChartMode>) => {
+    if (chartMode.value === "time") {
+      chartMode.value = "tomato";
+    } else {
+      chartMode.value = "time";
     }
   },
   /**

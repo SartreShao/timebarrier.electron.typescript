@@ -104,3 +104,5 @@ export interface StatDate {
 export type StatStatusMode = "date" | "detail" | "simple";
 
 export type TomatoStatStatusMode = "date" | "detail" | "simple" | "stat";
+
+export type ChartMode = "tomato" | "time";
