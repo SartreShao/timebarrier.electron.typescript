@@ -69,6 +69,45 @@ export default {
       );
     }
   },
+  /**
+   * 加载指定日期范围的 tomatoList
+   */
+  initTomatoListWithDateRange: async (
+    vue: ElementVue,
+    tomatoListWithDateRange: Ref<AV.Object[]>,
+    startTime: Date,
+    endTime: Date
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+    const loadingInstance = UI.showLoading(vue.$loading, "正在获取番茄列表");
+
+    try {
+      tomatoListWithDateRange.value = await Api.fetchTomatoListWithDateRange(
+        user,
+        startTime,
+        endTime
+      );
+      UI.hideLoading(loadingInstance);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取番茄列表失败",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * 将 tomatoList 转换成 StatDateList
+   */
   mapStatDate: (tomatoList: AV.Object[]): StatDate[] => {
     const statDateList: StatDate[] = [];
 
@@ -240,6 +279,9 @@ export default {
 
     return statDateList;
   },
+  /**
+   * 初始化 DailyTomatoList，这主要是用用来获取 totalTargetTomatoNumber 的
+   */
   initDailyTomatoList: async (
     vue: ElementVue,
     dailyPlanList: Ref<AV.Object[]>
@@ -275,6 +317,9 @@ export default {
       );
     }
   },
+  /**
+   * 点击「转换」按钮，改变数据呈现样式
+   */
   changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
     switch (statStatusMode.value) {
       case "detail":
@@ -286,6 +331,47 @@ export default {
       case "date":
         statStatusMode.value = "simple";
         break;
+    }
+  },
+  /**
+   * DateTip 是关于提示用户当前时间范围的函数
+   * 如「本周」、「本月」、「本年」、「全部」、「自定义」
+   */
+  getDateTip: (startTime: Date, endTime: Date) => {
+    if (
+      startTime.getTime() === UI.getWeekStartTimestamp(new Date().getTime()) &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "本周";
+    }
+
+    // 本月
+    else if (
+      startTime.getTime() === UI.getMonthStartTimestamp(new Date().getTime()) &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "本月";
+    }
+
+    // 本年
+    else if (
+      startTime.getTime() === UI.getYearStartTimestamp(new Date().getTime()) &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "本年";
+    }
+
+    // 全部
+    else if (
+      startTime.getTime() === new Date("1990/01/01").getTime() &&
+      endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
+    ) {
+      return "全部";
+    }
+
+    // 自定义
+    else {
+      return "自定义";
     }
   }
 };

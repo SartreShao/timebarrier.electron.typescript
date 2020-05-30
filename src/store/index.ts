@@ -65,6 +65,8 @@ const planStatStatusMode = Symbol();
 const abilityStatStatusMode = Symbol();
 // 番茄列表
 const tomatoList = Symbol();
+// 用户选择日期范围的番茄列表
+const tomatoListWithDateRange = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -189,6 +191,7 @@ function useProvider() {
   provide(planStatStatusMode, ref<StatStatusMode>("simple"));
   provide(abilityStatStatusMode, ref<StatStatusMode>("simple"));
   provide(tomatoList, ref<AV.Object[]>([]));
+  provide(tomatoListWithDateRange, ref<AV.Object[]>([]));
 }
 
 export default {
@@ -221,5 +224,6 @@ export default {
   planStatStatusMode,
   colormapForChart,
   abilityStatStatusMode,
-  tomatoList
+  tomatoList,
+  tomatoListWithDateRange
 };

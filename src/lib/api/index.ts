@@ -1830,11 +1830,11 @@ export default {
         reject(error);
       }
     }),
-  fetchTotalTomatoList: function(
+  fetchTomatoListWithDateRange: function(
     user: AV.User,
     startTime: Date,
     endTime: Date
-  ) {
+  ): Promise<AV.Object[]> {
     const Api = this;
     async function next(
       oldTomatoList: AV.Object[],

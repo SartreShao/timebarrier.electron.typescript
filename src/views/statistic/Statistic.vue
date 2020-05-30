@@ -72,6 +72,12 @@ import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
+    // 番茄列表：带日期范围
+    const tomatoListWithDateRange = inject(
+      Store.tomatoListWithDateRange,
+      ref([])
+    );
+
     // Tab 的名称
     const tabRouteList = [
       { route: "/statistic/tomato", name: "番茄记录" },
@@ -101,53 +107,24 @@ export default defineComponent({
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
-    const dateRange: Ref<Date[]> = ref([]);
+    const dateRange: Ref<Date[]> = ref([
+      new Date(UI.getMonthStartTimestamp(new Date().getTime())),
+      new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+    ]);
 
-    const dateTip: Ref<string> = ref("自定义");
+    const dateTip: Ref<string> = ref("本月");
 
     watchEffect(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
         const endTime = dateRange.value[1];
-        // 本周
-        if (
-          startTime.getTime() ===
-            UI.getWeekStartTimestamp(new Date().getTime()) &&
-          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
-        ) {
-          dateTip.value = "本周";
-        }
-
-        // 本月
-        else if (
-          startTime.getTime() ===
-            UI.getMonthStartTimestamp(new Date().getTime()) &&
-          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
-        ) {
-          dateTip.value = "本月";
-        }
-
-        // 本年
-        else if (
-          startTime.getTime() ===
-            UI.getYearStartTimestamp(new Date().getTime()) &&
-          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
-        ) {
-          dateTip.value = "本年";
-        }
-
-        // 全部
-        else if (
-          startTime.getTime() === new Date("1990/01/01").getTime() &&
-          endTime.getTime() === UI.getTodayStartTimestamp(new Date().getTime())
-        ) {
-          dateTip.value = "全部";
-        }
-
-        // 自定义
-        else {
-          dateTip.value = "自定义";
-        }
+        dateTip.value = StatPage.getDateTip(startTime, endTime);
+        StatPage.initTomatoListWithDateRange(
+          context.root,
+          tomatoListWithDateRange,
+          startTime,
+          endTime
+        );
       }
     });
 
@@ -156,42 +133,46 @@ export default defineComponent({
         {
           text: "本周数据",
           onClick(picker: any) {
-            const end = new Date();
-            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
-            const start = new Date();
-            const week = UI.getWeekStartTimestamp(new Date().getTime());
-            start.setTime(week);
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(
+              UI.getWeekStartTimestamp(new Date().getTime())
+            );
             picker.$emit("pick", [start, end]);
           }
         },
         {
           text: "本月数据",
           onClick(picker: any) {
-            const end = new Date();
-            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
-            const start = new Date();
-            const month = UI.getMonthStartTimestamp(new Date().getTime());
-            start.setTime(month);
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(
+              UI.getMonthStartTimestamp(new Date().getTime())
+            );
             picker.$emit("pick", [start, end]);
           }
         },
         {
           text: "本年数据",
           onClick(picker: any) {
-            const end = new Date();
-            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
-            const start = new Date();
-            const year = UI.getYearStartTimestamp(new Date().getTime());
-            start.setTime(year);
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date(
+              UI.getYearStartTimestamp(new Date().getTime())
+            );
             picker.$emit("pick", [start, end]);
           }
         },
         {
           text: "全部数据",
           onClick(picker: any) {
-            const end = new Date();
-            end.setTime(UI.getTodayStartTimestamp(new Date().getTime()));
-            const start = new Date("1990/01/01");
+            const end = new Date(
+              UI.getTodayStartTimestamp(new Date().getTime())
+            );
+            const start = new Date("2020/01/01");
             picker.$emit("pick", [start, end]);
           }
         }
