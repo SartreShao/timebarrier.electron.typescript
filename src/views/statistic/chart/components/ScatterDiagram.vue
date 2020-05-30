@@ -77,9 +77,16 @@ export default defineComponent({
     );
 
     // 线性回归表达式，由 regressionData
-    const linearRegressionExpression = computed(() =>
-      StatPage.getLinearRegressionExpression(scatterData.value)
+    const linearRegressionExpression = inject(
+      Store.linearRegressionExpression,
+      ref("")
     );
+
+    watchEffect(() => {
+      linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
+        scatterData.value
+      );
+    });
 
     watch(tomatoList, () => {
       StatPage.initScatterChart(
