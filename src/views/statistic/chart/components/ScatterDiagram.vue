@@ -53,181 +53,59 @@ export default defineComponent({
     tomatoList: Array
   },
   setup(props, context) {
-    const chartMode: Ref<ChartMode> = ref("tomato");
-
+    // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
 
-    const colormap: string[] = inject(Store.colormap, []);
-
+    // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(
       Store.tomatoListWithDateRange,
       ref([])
     );
 
+    // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
-    const scatterData = computed(() => {
-      return statDateList.value.map(statDate => {
-        if (chartMode.value === "tomato") {
-          return [
-            UI.getTodayStartTimestamp(statDate.timeStamp),
-            statDate.tomatoList.length
-          ];
-        } else {
-          return [
-            UI.getTodayStartTimestamp(statDate.timeStamp),
-            UI.timeStampToHour(statDate.totalTime as number)
-          ];
-        }
-      });
-    });
+    // 表示图表中显示的是时间，还是番茄
+    const chartMode: Ref<ChartMode> = ref("tomato");
 
-    const dataRegression = computed(() => {
-      return scatterData.value.map(data => {
-        const minDateItem = _.last(scatterData.value);
-        if (minDateItem !== undefined) {
-          const minDate = minDateItem[0];
-          const date = data[0];
-          const index = (date - minDate) / 86400000;
-          return [index, data[1]];
-        } else {
-          return [data[0], data[1]];
-        }
-      });
-    });
+    // 颜色表
+    const colormap: string[] = inject(Store.colormap, []);
 
-    const expression = computed(() => {
-      const regression = ecStat.regression(
-        "linear",
-        dataRegression.value as number[][],
-        0
-      );
+    // 用于在图上画点的数据，由 StatDateList 映射而来
+    const scatterData = computed(() =>
+      StatPage.getScatterData(statDateList.value, chartMode.value)
+    );
 
-      regression.points.sort(function(a: any, b: any) {
-        return a[0] - b[0];
-      });
-
-      return regression.expression;
-    });
-
-    function initChart(id: string) {
-      const charts = document.getElementById(id) as HTMLDivElement;
-      const myChart = charts ? echarts.init(charts) : null;
-
-      var data = scatterData.value;
-
-      // See https://github.com/ecomfe/echarts-stat
-      var myRegression = ecStat.regression("linear", data as number[][], 0);
-
-      myRegression.points.sort(function(a: any, b: any) {
-        return a[0] - b[0];
-      });
-
-      const option = {
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross"
-          }
-        },
-        xAxis: {
-          name: "日期 x",
-          nameLocation: "end",
-          nameGap: 6,
-          nameTextStyle: {
-            color: "#222A36",
-            fontSize: 10
-          },
-          axisLine: { lineStyle: { color: "#99A8B8" } },
-          axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
-          type: "time",
-          splitLine: {
-            lineStyle: {
-              type: "dashed"
-            }
-          },
-          splitNumber: 5
-        },
-        yAxis: {
-          name: chartMode.value === "tomato" ? "番茄数 y" : "小时 y",
-          nameLocation: "end",
-          nameTextStyle: {
-            color: "#222A36",
-            fontSize: 10
-          },
-          axisLine: { lineStyle: { color: "#99A8B8" } },
-          axisLabel: {
-            margin: 20,
-            color: "#222A36",
-            fontSize: 10
-          },
-          type: "value",
-          splitLine: {
-            lineStyle: {
-              type: "dashed"
-            }
-          }
-        },
-        series: [
-          {
-            name: "scatter",
-            type: "scatter",
-            emphasis: {
-              label: {
-                show: true,
-                position: "left",
-                color: "blue",
-                fontSize: 16
-              }
-            },
-            symbolSize: 8,
-            symbol: "circle",
-            data: data,
-            itemStyle: {
-              color: (params: any) => {
-                return colormap[params.dataIndex % colormap.length];
-              }
-            }
-          },
-          {
-            name: "line",
-            type: "line",
-            showSymbol: false,
-            smooth: true,
-            data: myRegression.points,
-            itemStyle: { color: "#F9385E" },
-            markPoint: {
-              itemStyle: {
-                color: "transparent"
-              },
-              data: [
-                {
-                  coord: myRegression.points[myRegression.points.length - 1]
-                }
-              ]
-            }
-          }
-        ]
-      };
-
-      if (myChart !== null) {
-        myChart.setOption(option as any);
-      }
-      if (myChart !== null) {
-        myChart.resize();
-      }
-    }
+    // 线性回归表达式，由 regressionData
+    const linearRegressionExpression = computed(() =>
+      StatPage.getLinearRegressionExpression(scatterData.value)
+    );
 
     watch(tomatoList, () => {
-      initChart(id);
+      StatPage.initScatterChart(
+        id,
+        scatterData.value,
+        chartMode.value,
+        colormap
+      );
     });
 
     onMounted(() => {
-      initChart(id);
+      StatPage.initScatterChart(
+        id,
+        scatterData.value,
+        chartMode.value,
+        colormap
+      );
     });
 
     onUpdated(() => {
-      initChart(id);
+      StatPage.initScatterChart(
+        id,
+        scatterData.value,
+        chartMode.value,
+        colormap
+      );
     });
 
     // 点击事件：点击更改图标模式
@@ -235,7 +113,7 @@ export default defineComponent({
       StatPage.changeChartMode(chartMode);
     };
 
-    return { id, expression, chartMode, click_changeChartMode };
+    return { id, linearRegressionExpression, chartMode, click_changeChartMode };
   }
 });
 </script>

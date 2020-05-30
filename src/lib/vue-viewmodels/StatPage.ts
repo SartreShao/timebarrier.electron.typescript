@@ -9,6 +9,8 @@ import { UI } from "@/lib/vue-utils";
 import AV from "leancloud-storage";
 import Api from "@/lib/api";
 import _ from "lodash";
+import ecStat from "echarts-stat";
+import echarts from "echarts";
 
 export default {
   /**
@@ -424,6 +426,173 @@ export default {
     // 自定义
     else {
       return "自定义";
+    }
+  },
+
+  /**
+   * 获取画点的数据
+   */
+  getScatterData: (
+    statDateList: readonly StatDate[],
+    chartMode: ChartMode
+  ): number[][] =>
+    statDateList.map(statDate => {
+      if (chartMode === "tomato") {
+        return [
+          UI.getTodayStartTimestamp(statDate.timeStamp),
+          statDate.tomatoList.length
+        ];
+      } else {
+        return [
+          UI.getTodayStartTimestamp(statDate.timeStamp),
+          UI.timeStampToHour(statDate.totalTime as number)
+        ];
+      }
+    }),
+  /**
+   * 获得「线性回归」的表达式
+   */
+  getLinearRegressionExpression: (scatterData: readonly number[][]) => {
+    const getRegressionData = (scatterData: readonly number[][]): number[][] =>
+      scatterData.map(item => {
+        // 获取最小的 date item
+        const minDateItem = _.last(scatterData);
+        if (minDateItem !== undefined) {
+          const minDate = minDateItem[0];
+          const date = item[0];
+          const index = (date - minDate) / 86400000;
+          return [index, item[1]];
+        } else {
+          return [item[0], item[1]];
+        }
+      });
+
+    const regressionData = getRegressionData(scatterData);
+
+    const regression = ecStat.regression("linear", regressionData, 0);
+
+    regression.points.sort(function(a: any, b: any) {
+      return a[0] - b[0];
+    });
+
+    return regression.expression;
+  },
+  /**
+   * 初始化表格
+   */
+  initScatterChart: (
+    id: string,
+    scatterData: readonly number[][],
+    chartMode: ChartMode,
+    colormap: string[]
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    // See https://github.com/ecomfe/echarts-stat
+    var linearRegression = ecStat.regression(
+      "linear",
+      scatterData as number[][],
+      0
+    );
+
+    linearRegression.points.sort(function(a: any, b: any) {
+      return a[0] - b[0];
+    });
+
+    const option = {
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "cross"
+        }
+      },
+      xAxis: {
+        name: "日期 x",
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        type: "time",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        },
+        splitNumber: 5
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: [
+        {
+          name: "scatter",
+          type: "scatter",
+          emphasis: {
+            label: {
+              show: true,
+              position: "left",
+              color: "blue",
+              fontSize: 16
+            }
+          },
+          symbolSize: 8,
+          symbol: "circle",
+          data: scatterData,
+          itemStyle: {
+            color: (params: any) => {
+              return colormap[params.dataIndex % colormap.length];
+            }
+          }
+        },
+        {
+          name: "line",
+          type: "line",
+          showSymbol: false,
+          smooth: true,
+          data: linearRegression.points,
+          itemStyle: { color: "#F9385E" },
+          markPoint: {
+            itemStyle: {
+              color: "transparent"
+            },
+            data: [
+              {
+                coord:
+                  linearRegression.points[linearRegression.points.length - 1]
+              }
+            ]
+          }
+        }
+      ]
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
     }
   }
 };
