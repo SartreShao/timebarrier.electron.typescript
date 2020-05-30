@@ -2,6 +2,7 @@ import * as AV from "leancloud-storage";
 import { Log } from "@/lib/vue-utils";
 import { PlanType } from "@/lib/types/vue-viewmodels";
 import _ from "lodash";
+import { runInNewContext } from "vm";
 
 const Plan = AV.Object.extend("Plan");
 const Tomato = AV.Object.extend("Tomato");
@@ -1563,17 +1564,24 @@ export default {
    */
   fetchTomatoList: (
     user: AV.User,
-    startTime: Date = new Date()
+    endTime: Date = new Date(),
+    startTime?: Date,
+    limit?: number
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
         // 获取番茄列表
-        const tomatoList = await new AV.Query(Tomato)
+        const query = new AV.Query(Tomato)
           .equalTo("user", user)
-          .lessThan("startTime", startTime)
+          .lessThan("startTime", endTime)
           .descending("startTime")
-          .limit(100)
-          .find();
+          .limit(limit ? limit : 100);
+
+        if (startTime !== undefined) {
+          query.greaterThan("startTime", startTime);
+        }
+
+        const tomatoList = await query.find();
 
         // 获取与番茄关联的计划
         const tomatoPlanList = await new AV.Query(TomatoPlan)
@@ -1821,5 +1829,44 @@ export default {
         Log.error("fetchPlanListOfAbilityList", error);
         reject(error);
       }
-    })
+    }),
+  fetchTotalTomatoList: function(
+    user: AV.User,
+    startTime: Date,
+    endTime: Date
+  ) {
+    const Api = this;
+    async function next(
+      oldTomatoList: AV.Object[],
+      user: AV.User,
+      startTime: Date,
+      endTime: Date
+    ): Promise<AV.Object[]> {
+      const limit = 1000;
+      const newTomatoList = await Api.fetchTomatoList(
+        user,
+        endTime,
+        startTime,
+        limit
+      );
+      if (newTomatoList.length < limit) {
+        return _.concat(oldTomatoList, newTomatoList);
+      } else {
+        const tomatoList = _.concat(oldTomatoList, newTomatoList);
+        const lastEndTime =
+          tomatoList[tomatoList.length - 1].attributes.startTime;
+        return await next(tomatoList, user, startTime, lastEndTime);
+      }
+    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        const tomatoList = await next([], user, startTime, endTime);
+        Log.success("fetchTotalTomatoList", tomatoList);
+        resolve(tomatoList);
+      } catch (error) {
+        Log.error("fetchTotalTomatoList", error);
+        reject(error);
+      }
+    });
+  }
 };
