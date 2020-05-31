@@ -235,6 +235,15 @@ const UI = {
   timeStampToHour: function(timeStamp: number) {
     const hour = Number((timeStamp / 1000 / 60 / 60).toFixed(1));
     return hour;
+  },
+  /**
+   * 根据时间戳，获取 0 - 24 小时数
+   */
+  getHour: function(timeStamp: number) {
+    const hourTimeStamp = timeStamp - this.getTodayStartTimestamp(timeStamp);
+
+    const hour = hourTimeStamp / (3600 * 1000);
+    return hour;
   }
 };
 

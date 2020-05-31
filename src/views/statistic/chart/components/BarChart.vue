@@ -1,7 +1,7 @@
 <template>
-  <div class="scatter-diagram-item-container">
-    <h1>近期工作趋势</h1>
-    <h2>{{ tip }}</h2>
+  <div class="bar-chart-container">
+    <h1>今日分时统计</h1>
+    <h2>最佳工作时段：上午</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -23,30 +23,27 @@
       </div>
     </div>
 
-    <div class="scatter-diagram" :id="id"></div>
+    <div class="bar-chart" :id="id"></div>
   </div>
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
-  onMounted,
-  onUpdated,
+  ref,
   Ref,
   inject,
-  ref,
   computed,
-  watchEffect,
-  watch
+  onMounted,
+  watch,
+  onUpdated
 } from "@vue/composition-api";
-import echarts from "echarts";
-import ecStat from "echarts-stat";
 import _ from "lodash";
 import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
-import { UI } from "@/lib/vue-utils";
 import { ChartMode } from "@/lib/types/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
@@ -59,6 +56,8 @@ export default defineComponent({
       ref([])
     );
 
+    const todayTomatoList: Ref<AV.Object[]> = ref([]);
+
     // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
@@ -68,76 +67,74 @@ export default defineComponent({
     // 颜色表
     const colormap: string[] = inject(Store.colormap, []);
 
-    // 用于在图上画点的数据，由 StatDateList 映射而来
-    const scatterData = computed(() =>
-      StatPage.getScatterData(statDateList.value, chartMode.value)
+    // 点击事件：点击更改图标模式
+    const click_changeChartMode = () => {
+      StatPage.changeChartMode(chartMode);
+    };
+
+    // 今日的 BarChart
+    const todayBarChartData = computed(() =>
+      StatPage.getBarChartData(todayTomatoList.value, chartMode.value)
     );
 
-    // 线性回归表达式，由 regressionData
-    const linearRegressionExpression = inject(
-      Store.linearRegressionExpression,
-      ref("")
+    // 全部的 BarChart
+    const totalBarChartData = computed(() =>
+      StatPage.getBarChartData(tomatoList.value, chartMode.value).map(
+        item => item / statDateList.value.length
+      )
     );
-
-    // 线性回归表达式的斜率 slop
-    const slop = computed(() =>
-      StatPage.getLinearRegressionSlop(linearRegressionExpression.value)
-    );
-
-    const tip: Ref<string> = computed(() => StatPage.getTip(slop.value));
-
-    watchEffect(() => {
-      linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
-        scatterData.value,
-        chartMode.value
-      );
-    });
 
     watch(tomatoList, () => {
-      StatPage.initScatterChart(
+      StatPage.initBarChart(
         id,
-        scatterData.value,
+        todayBarChartData.value,
+        totalBarChartData.value,
         chartMode.value,
         colormap
       );
     });
 
     onMounted(() => {
-      StatPage.initScatterChart(
+      // 获取 todayTomatoList
+      StatPage.initTomatoListWithDateRange(
+        context.root,
+        todayTomatoList,
+        new Date(UI.getTodayStartTimestamp(new Date().getTime())),
+        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+      );
+
+      // 初始化图层
+      StatPage.initBarChart(
         id,
-        scatterData.value,
+        todayBarChartData.value,
+        totalBarChartData.value,
         chartMode.value,
         colormap
       );
     });
 
     onUpdated(() => {
-      StatPage.initScatterChart(
+      // 初始化图层
+      StatPage.initBarChart(
         id,
-        scatterData.value,
+        todayBarChartData.value,
+        totalBarChartData.value,
         chartMode.value,
         colormap
       );
     });
 
-    // 点击事件：点击更改图标模式
-    const click_changeChartMode = () => {
-      StatPage.changeChartMode(chartMode);
-    };
-
     return {
       id,
-      linearRegressionExpression,
       chartMode,
-      click_changeChartMode,
-      tip
+      click_changeChartMode
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.scatter-diagram-item-container {
+.bar-chart-container {
   width 100%
   height 42.19vh
   background white
@@ -194,7 +191,7 @@ export default defineComponent({
       color #99a8b8
     }
   }
-  .scatter-diagram {
+  .bar-chart {
     margin-top -6vh
     width 92.93vw
     height 38vh

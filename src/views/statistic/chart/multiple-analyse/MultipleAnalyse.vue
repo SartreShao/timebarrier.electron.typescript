@@ -53,6 +53,11 @@
     </div>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <bar-chart></bar-chart>
+
+    <!-- 占位 -->
     <div style="height:100.15vh"></div>
 
     <!-- 横向 -->
@@ -83,13 +88,14 @@ import {
   computed
 } from "@vue/composition-api";
 import ScatterDiagram from "../components/ScatterDiagram.vue";
+import BarChart from "../components/BarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { ScatterDiagram, InfoItem },
+  components: { ScatterDiagram, InfoItem, BarChart },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(

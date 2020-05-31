@@ -1576,9 +1576,6 @@ export default {
           .descending("startTime")
           .limit(limit ? limit : 100);
 
-        console.log("firstQuery", firstQuery);
-        console.log("endTime", endTime);
-
         firstQuery
           ? query.lessThanOrEqualTo(
               "startTime",

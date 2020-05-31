@@ -450,6 +450,82 @@ export default {
       }
     }),
   /**
+   * 获取柱状图数据
+   */
+  getBarChartData: (todayTomatoList: AV.Object[], chartMode: ChartMode) => {
+    // 今日的七组数据
+    let deepNight = 0;
+    let earlyMorning = 0;
+    let morning = 0;
+    let noon = 0;
+    let afternoon = 0;
+    let dusk = 0;
+    let evening = 0;
+
+    if (chartMode === "tomato") {
+      // 获取今日番茄分时数据
+      todayTomatoList.forEach(tomato => {
+        const hour = UI.getHour(tomato.attributes.startTime.getTime());
+
+        if (0 <= hour && hour < 6) {
+          deepNight++;
+        }
+        if (6 <= hour && hour < 8) {
+          earlyMorning++;
+        }
+        if (8 <= hour && hour < 12) {
+          morning++;
+        }
+        if (12 <= hour && hour < 14) {
+          noon++;
+        }
+        if (14 <= hour && hour < 18) {
+          afternoon++;
+        }
+        if (18 <= hour && hour < 20) {
+          dusk++;
+        }
+        if (20 <= hour && hour < 24) {
+          evening++;
+        }
+      });
+    } else {
+      // 获取今日总时长分时数据
+      todayTomatoList.forEach(tomato => {
+        const hour = UI.getHour(tomato.attributes.startTime.getTime());
+
+        if (tomato.createdAt === undefined) {
+          throw "tomato.createdAt is undefined";
+        }
+
+        if (0 <= hour && hour < 6) {
+          deepNight += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (6 <= hour && hour < 8) {
+          earlyMorning +=
+            tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (8 <= hour && hour < 12) {
+          morning += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (12 <= hour && hour < 14) {
+          noon += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (14 <= hour && hour < 18) {
+          afternoon += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (18 <= hour && hour < 20) {
+          dusk += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+        if (20 <= hour && hour < 24) {
+          evening += tomato.createdAt.getTime() - tomato.attributes.getTime();
+        }
+      });
+    }
+
+    return [deepNight, earlyMorning, morning, noon, afternoon, dusk, evening];
+  },
+  /**
    * 获得「线性回归」的表达式
    */
   getLinearRegressionExpression: (
@@ -483,7 +559,7 @@ export default {
     return regression.expression + unit;
   },
   /**
-   * 初始化表格
+   * 初始化散点图
    */
   initScatterChart: (
     id: string,
@@ -601,12 +677,100 @@ export default {
     }
   },
   /**
+   * 初始化柱状图
+   */
+  initBarChart: (
+    id: string,
+    todayBarChartData: readonly number[],
+    totalBarChartData: readonly number[],
+    chartMode: ChartMode,
+    colormap: string[]
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const option = {
+      xAxis: {
+        type: "category",
+        data: ["凌晨", "清晨", "上午", "中午", "下午", "傍晚", "夜晚"],
+        // data: [
+        //   "凌晨\n(00:00-06:00)",
+        //   "清晨\n(06:00-08:00)",
+        //   "上午\n(08:00-12:00)",
+        //   "中午\n(12:00-14:00)",
+        //   "下午\n(14:00-18:00)",
+        //   "傍晚\n(18:00-20:00)",
+        //   "夜晚\n(20:00-24:00)"
+        // ],
+        // data: [
+        //   "凌晨\n(0点-6点)",
+        //   "清晨\n(6点-8点)",
+        //   "上午\n(8点-12点)",
+        //   "中午\n(12点-14点)",
+        //   "下午\n(14点-18点)",
+        //   "傍晚\n(18点-20点)",
+        //   "夜晚\n(20点-24点)"
+        // ],
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: [
+        {
+          data: todayBarChartData,
+          type: "bar",
+          showBackground: true,
+          backgroundStyle: {
+            color: "rgba(220, 220, 220, 0.8)"
+          }
+        },
+        {
+          data: totalBarChartData,
+          type: "bar",
+          showBackground: true,
+          backgroundStyle: {
+            color: "rgba(220, 220, 220, 0.8)"
+          }
+        }
+      ]
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+  },
+  /**
    * 获取「线性回归表达式」的斜率 slop
    */
   getLinearRegressionSlop: (expression: string): number => {
     const regex: RegExp = /^y = (.*)x \+ .*$/;
     const execArray = regex.exec(expression);
-    console.log("execArray", execArray);
     if (execArray !== null && execArray[1] !== null) {
       return Number(execArray[1]);
     } else {
@@ -640,10 +804,12 @@ export default {
     startTime: Date,
     endTime: Date
   ) => {
-    const totalDays =
+    const tempTotalDays =
       (UI.getTodayStartTimestamp(endTime.getTime()) -
         UI.getTodayStartTimestamp(startTime.getTime())) /
       (3600 * 1000 * 24);
+
+    const totalDays = tempTotalDays === 0 ? 1 : tempTotalDays;
     return (totalTomatoNumber / totalDays).toFixed(2);
   },
   /**
@@ -666,10 +832,12 @@ export default {
     startTime: Date,
     endTime: Date
   ) => {
-    const totalDays =
+    const tempTotalDays =
       (UI.getTodayStartTimestamp(endTime.getTime()) -
         UI.getTodayStartTimestamp(startTime.getTime())) /
       (3600 * 1000 * 24);
+
+    const totalDays = tempTotalDays === 0 ? 1 : tempTotalDays;
 
     let totalTime = 0;
     statDateList.forEach(statDate => {
@@ -678,8 +846,6 @@ export default {
       }
     });
 
-    console.log("totalDays", totalDays);
-    console.log("totalTime", totalTime);
     return UI.formatTimeHourMinute(totalTime / totalDays / 1000);
   },
   /**
