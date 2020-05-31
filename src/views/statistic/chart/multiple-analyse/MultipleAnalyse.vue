@@ -39,11 +39,15 @@
     <!-- 横向 -->
     <div class="horizontal-container">
       <!-- 每日平均用时 -->
-      <info-item value="5.9" title="每日平均用时" width="49.87vw"></info-item>
+      <info-item
+        :value="averageDailyTime"
+        title="每日平均用时"
+        width="49.87vw"
+      ></info-item>
 
       <!-- 单日最长工作时间 -->
       <info-item
-        value="17"
+        :value="maximumDailyTime"
         title="单日最长工作时间"
         width="49.87vw"
       ></info-item>
@@ -100,10 +104,26 @@ export default defineComponent({
       StatPage.getMaximumDailyTomato(statDateList.value)
     );
 
+    // 每日平均用时
+    const averageDailyTime = computed(() =>
+      StatPage.getAverageDailyTime(
+        statDateList.value,
+        dateRange.value[0],
+        dateRange.value[1]
+      )
+    );
+
+    // 单日最长工作时间
+    const maximumDailyTime = computed(() =>
+      StatPage.getMaximumDailyTime(statDateList.value)
+    );
+
     return {
       linearRegressionExpression,
       averageDailyTomato,
-      maximumDailyTomato
+      maximumDailyTomato,
+      averageDailyTime,
+      maximumDailyTime
     };
   }
 });

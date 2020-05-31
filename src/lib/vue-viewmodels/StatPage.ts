@@ -656,6 +656,41 @@ export default {
         max = statDate.tomatoList.length;
       }
     });
-    return max;
+    return String(max);
+  },
+  /**
+   * 获取每日平均用时
+   */
+  getAverageDailyTime: (
+    statDateList: readonly StatDate[],
+    startTime: Date,
+    endTime: Date
+  ) => {
+    const totalDays =
+      (UI.getTodayStartTimestamp(endTime.getTime()) -
+        UI.getTodayStartTimestamp(startTime.getTime())) /
+      (3600 * 1000 * 24);
+
+    let totalTime = 0;
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        totalTime += statDate.totalTime;
+      }
+    });
+
+    console.log("totalDays", totalDays);
+    console.log("totalTime", totalTime);
+    return UI.formatTimeHourMinute(totalTime / totalDays / 1000);
+  },
+  getMaximumDailyTime: (statDateList: readonly StatDate[]) => {
+    let max = 0;
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        if (max < statDate.totalTime) {
+          max = statDate.totalTime;
+        }
+      }
+    });
+    return UI.formatTimeHourMinute(max / 1000);
   }
 };
