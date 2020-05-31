@@ -27,7 +27,7 @@
 
       <!-- 单日最多完成番茄 -->
       <info-item
-        value="17"
+        :value="maximumDailyTomato"
         title="单日最多完成番茄"
         width="49.87vw"
       ></info-item>
@@ -94,9 +94,16 @@ export default defineComponent({
         dateRange.value[1]
       )
     );
+
+    // 单日最多完成番茄数
+    const maximumDailyTomato = computed(() =>
+      StatPage.getMaximumDailyTomato(statDateList.value)
+    );
+
     return {
       linearRegressionExpression,
-      averageDailyTomato
+      averageDailyTomato,
+      maximumDailyTomato
     };
   }
 });

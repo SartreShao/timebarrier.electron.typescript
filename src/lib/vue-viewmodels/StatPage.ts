@@ -644,6 +644,18 @@ export default {
       (UI.getTodayStartTimestamp(endTime.getTime()) -
         UI.getTodayStartTimestamp(startTime.getTime())) /
       (3600 * 1000 * 24);
-    return (totalTomatoNumber / totalDays).toFixed(2) + " 番茄";
+    return (totalTomatoNumber / totalDays).toFixed(2);
+  },
+  /**
+   * 获取单日最多完成番茄
+   */
+  getMaximumDailyTomato: (statDateList: readonly StatDate[]) => {
+    let max = 0;
+    statDateList.forEach(statDate => {
+      if (max < statDate.tomatoList.length) {
+        max = statDate.tomatoList.length;
+      }
+    });
+    return max;
   }
 };
