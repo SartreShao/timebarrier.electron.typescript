@@ -1,7 +1,7 @@
 <template>
   <div class="scatter-diagram-item-container">
     <h1>近期工作趋势</h1>
-    <h2>逐渐变好</h2>
+    <h2>{{ tip }}</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +82,13 @@ export default defineComponent({
       ref("")
     );
 
+    // 线性回归表达式的斜率 slop
+    const slop = computed(() =>
+      StatPage.getLinearRegressionSlop(linearRegressionExpression.value)
+    );
+
+    const tip: Ref<string> = computed(() => StatPage.getTip(slop.value));
+
     watchEffect(() => {
       linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
         scatterData.value,
@@ -121,7 +128,13 @@ export default defineComponent({
       StatPage.changeChartMode(chartMode);
     };
 
-    return { id, linearRegressionExpression, chartMode, click_changeChartMode };
+    return {
+      id,
+      linearRegressionExpression,
+      chartMode,
+      click_changeChartMode,
+      tip
+    };
   }
 });
 </script>

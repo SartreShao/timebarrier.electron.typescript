@@ -599,5 +599,34 @@ export default {
     if (myChart !== null) {
       myChart.resize();
     }
+  },
+  /**
+   * 获取「线性回归表达式」的斜率 slop
+   */
+  getLinearRegressionSlop: (expression: string): number => {
+    const regex: RegExp = /^y = (.*)x \+ .*$/;
+    const execArray = regex.exec(expression);
+    console.log("execArray", execArray);
+    if (execArray !== null && execArray[1] !== null) {
+      return Number(execArray[1]);
+    } else {
+      return 0;
+    }
+  },
+  getTip: (slop: number): string => {
+    console.log("slop", slop);
+    if (slop === 0) {
+      return "保持平稳";
+    } else if (slop > 0 && slop <= 0.2) {
+      return "稳步上升";
+    } else if (slop < 0 && slop >= -0.2) {
+      return "平稳回落"; //水落归槽
+    } else if (slop > 0.2) {
+      return "突飞猛进";
+    } else if (slop < -0.2) {
+      return "飞转直下";
+    } else {
+      return "等待分析";
+    }
   }
 };
