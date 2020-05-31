@@ -15,6 +15,25 @@
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 今日番茄数 -->
+      <info-item
+        :value="todayTomatoNumber"
+        title="今日番茄数"
+        width="49.87vw"
+      ></info-item>
+
+      <!-- 今日工作时长 -->
+      <info-item
+        :value="todayWorkingTime"
+        title="今日工作时长"
+        width="49.87vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
 
     <!-- 横向 -->
     <div class="horizontal-container">
@@ -25,23 +44,23 @@
         width="49.87vw"
       ></info-item>
 
-      <!-- 单日最多完成番茄 -->
+      <!-- 每日平均用时 -->
       <info-item
-        :value="maximumDailyTomato"
-        title="单日最多完成番茄"
+        :value="averageDailyTime"
+        title="每日平均用时"
         width="49.87vw"
       ></info-item>
     </div>
 
     <!-- 占位 -->
-    <div style="height:0.15vh"></div>
+    <div style="height:100.15vh"></div>
 
     <!-- 横向 -->
     <div class="horizontal-container">
-      <!-- 每日平均用时 -->
+      <!-- 单日最多完成番茄 -->
       <info-item
-        :value="averageDailyTime"
-        title="每日平均用时"
+        :value="maximumDailyTomato"
+        title="单日最多完成番茄"
         width="49.87vw"
       ></info-item>
 
@@ -118,12 +137,24 @@ export default defineComponent({
       StatPage.getMaximumDailyTime(statDateList.value)
     );
 
+    // 今日工作番茄数
+    const todayTomatoNumber = computed(() =>
+      StatPage.getTodayTomatoNumber(statDateList.value)
+    );
+
+    // 今日工作时长
+    const todayWorkingTime = computed(() =>
+      StatPage.getTodayWorkingTime(statDateList.value)
+    );
+
     return {
       linearRegressionExpression,
       averageDailyTomato,
       maximumDailyTomato,
       averageDailyTime,
-      maximumDailyTime
+      maximumDailyTime,
+      todayTomatoNumber,
+      todayWorkingTime
     };
   }
 });

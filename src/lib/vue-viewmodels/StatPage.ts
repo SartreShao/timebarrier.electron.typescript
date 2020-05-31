@@ -682,6 +682,9 @@ export default {
     console.log("totalTime", totalTime);
     return UI.formatTimeHourMinute(totalTime / totalDays / 1000);
   },
+  /**
+   * 获取单日最长工作时间
+   */
   getMaximumDailyTime: (statDateList: readonly StatDate[]) => {
     let max = 0;
     statDateList.forEach(statDate => {
@@ -692,5 +695,25 @@ export default {
       }
     });
     return UI.formatTimeHourMinute(max / 1000);
+  },
+  /**
+   * 获取今日番茄数
+   */
+  getTodayTomatoNumber: (statDateList: readonly StatDate[]) => {
+    if (statDateList.length !== 0) {
+      return String(statDateList[0].tomatoList.length);
+    } else {
+      return "0";
+    }
+  },
+  /**
+   * 获取今日工作时长
+   */
+  getTodayWorkingTime: (statDateList: readonly StatDate[]) => {
+    if (statDateList.length !== 0 && statDateList[0].totalTime !== undefined) {
+      return UI.formatTimeHourMinute(statDateList[0].totalTime / 1000);
+    } else {
+      return "0 小时";
+    }
   }
 };
