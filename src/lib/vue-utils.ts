@@ -199,19 +199,10 @@ const UI = {
       timeStamp - ((timeStamp - timeZone * 3600 * 1000) % (3600 * 1000 * 24))
     );
   },
-  getWeekStartTimestamp: (timeStamp: number) => {
-    const date = new Date();
-    date.setTime(timeStamp);
-    const yearNow = date.getFullYear();
-    const monthNow = date.getMonth();
-    const dayNow = date.getDate();
-    const dayOfWeekNow = date.getDay();
-    const weekStartDate = new Date(
-      yearNow,
-      monthNow,
-      dayNow - dayOfWeekNow + 1
-    );
-    return weekStartDate.getTime();
+  getWeekStartTimestamp: function(timeStamp: number) {
+    const today = new Date(this.getTodayStartTimestamp(timeStamp));
+    const dayOfWeek = today.getDay() === 0 ? 6 : today.getDate() - 1;
+    return today.getTime() - dayOfWeek * 3600 * 1000 * 24;
   },
   getMonthStartTimestamp: function(timeStamp: number) {
     const dateToYearMonthDay = (date: Date) => {
