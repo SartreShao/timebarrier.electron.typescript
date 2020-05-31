@@ -84,7 +84,8 @@ export default defineComponent({
 
     watchEffect(() => {
       linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
-        scatterData.value
+        scatterData.value,
+        chartMode.value
       );
     });
 

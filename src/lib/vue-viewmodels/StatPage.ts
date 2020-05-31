@@ -452,7 +452,10 @@ export default {
   /**
    * 获得「线性回归」的表达式
    */
-  getLinearRegressionExpression: (scatterData: readonly number[][]) => {
+  getLinearRegressionExpression: (
+    scatterData: readonly number[][],
+    chartMode: ChartMode
+  ) => {
     const getRegressionData = (scatterData: readonly number[][]): number[][] =>
       scatterData.map(item => {
         // 获取最小的 date item
@@ -475,7 +478,9 @@ export default {
       return a[0] - b[0];
     });
 
-    return regression.expression;
+    const unit: string =
+      chartMode === "tomato" ? "｜番茄 ∝ 日期" : "｜小时 ∝ 日期";
+    return regression.expression + unit;
   },
   /**
    * 初始化表格
