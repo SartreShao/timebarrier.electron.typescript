@@ -24,10 +24,10 @@
         width="49.87vw"
       ></info-item>
 
-      <!-- 今日工作时长 -->
+      <!-- 每日平均番茄 -->
       <info-item
-        :value="todayWorkingTime"
-        title="今日工作时长"
+        :value="averageDailyTomato"
+        title="每日平均番茄"
         width="49.87vw"
       ></info-item>
     </div>
@@ -37,10 +37,10 @@
 
     <!-- 横向 -->
     <div class="horizontal-container">
-      <!-- 每日平均番茄 -->
+      <!-- 今日工作时长 -->
       <info-item
-        :value="averageDailyTomato"
-        title="每日平均番茄"
+        :value="todayWorkingTime"
+        title="今日工作时长"
         width="49.87vw"
       ></info-item>
 
