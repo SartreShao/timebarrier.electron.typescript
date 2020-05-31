@@ -644,6 +644,6 @@ export default {
       (UI.getTodayStartTimestamp(endTime.getTime()) -
         UI.getTodayStartTimestamp(startTime.getTime())) /
       (3600 * 1000 * 24);
-    return (totalTomatoNumber / totalDays).toFixed(2);
+    return (totalTomatoNumber / totalDays).toFixed(2) + " 番茄";
   }
 };
