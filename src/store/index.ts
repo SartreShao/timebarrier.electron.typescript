@@ -6,6 +6,7 @@ import {
   StatStatusMode,
   TomatoStatStatusMode
 } from "@/lib/types/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 
 // 临时计划列表
 const temporaryPlanList = Symbol();
@@ -69,6 +70,8 @@ const tomatoList = Symbol();
 const tomatoListWithDateRange = Symbol();
 // 线性回归表达式
 const linearRegressionExpression = Symbol();
+// 用户选择的日期范围
+const dateRange = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -195,6 +198,16 @@ function useProvider() {
   provide(tomatoList, ref<AV.Object[]>([]));
   provide(tomatoListWithDateRange, ref<AV.Object[]>([]));
   provide(linearRegressionExpression, ref(""));
+  provide(
+    dateRange,
+    ref([
+      new Date(
+        new Date(UI.getTodayStartTimestamp(new Date().getTime())).getTime() -
+          3600 * 1000 * 24 * 15
+      ),
+      new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+    ])
+  );
 }
 
 export default {
@@ -229,5 +242,6 @@ export default {
   abilityStatStatusMode,
   tomatoList,
   tomatoListWithDateRange,
-  linearRegressionExpression
+  linearRegressionExpression,
+  dateRange
 };

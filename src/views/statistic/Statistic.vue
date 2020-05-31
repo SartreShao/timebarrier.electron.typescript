@@ -105,13 +105,8 @@ export default defineComponent({
     // 当前页面的路由
     const currentRoute = computed(() => context.root.$route.fullPath);
 
-    const dateRange: Ref<Date[]> = ref([
-      new Date(
-        new Date(UI.getTodayStartTimestamp(new Date().getTime())).getTime() -
-          3600 * 1000 * 24 * 15
-      ),
-      new Date(UI.getTodayStartTimestamp(new Date().getTime()))
-    ]);
+    // 用户选择的日期范围
+    const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
 
     const dateTip: Ref<string> = ref("15 日");
 

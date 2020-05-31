@@ -613,6 +613,9 @@ export default {
       return 0;
     }
   },
+  /**
+   * 获取散点图的评论信息
+   */
   getTip: (slop: number): string => {
     console.log("slop", slop);
     if (slop === 0) {
@@ -628,5 +631,19 @@ export default {
     } else {
       return "等待分析";
     }
+  },
+  /**
+   * 获取每日平均番茄数
+   */
+  getAverageDailyTomato: (
+    totalTomatoNumber: number,
+    startTime: Date,
+    endTime: Date
+  ) => {
+    const totalDays =
+      (UI.getTodayStartTimestamp(endTime.getTime()) -
+        UI.getTodayStartTimestamp(startTime.getTime())) /
+      (3600 * 1000 * 24);
+    return (totalTomatoNumber / totalDays).toFixed(2);
   }
 };
