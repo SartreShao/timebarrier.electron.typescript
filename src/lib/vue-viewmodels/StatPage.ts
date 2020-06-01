@@ -714,6 +714,127 @@ export default {
         trigger: "axis",
         axisPointer: {
           type: "shadow"
+        },
+        formatter: (params: any) => {
+          // 总时长
+          let totalTime = 0;
+          // 选中的 Y 轴名称：如「凌晨...」、「上午...」等
+          const yAxisName = params[0].name;
+          switch (yAxisName) {
+            case "凌晨\n00:00-06:00":
+              totalTime = 6;
+              break;
+            case "清晨\n06:00-08:00":
+              totalTime = 2;
+              break;
+            case "上午\n08:00-12:00":
+              totalTime = 4;
+              break;
+            case "中午\n12:00-14:00":
+              totalTime = 2;
+              break;
+            case "下午\n14:00-18:00":
+              totalTime = 4;
+              break;
+            case "傍晚\n18:00-20:00":
+              totalTime = 2;
+              break;
+            case "夜晚\n20:00-24:00":
+              totalTime = 4;
+              break;
+          }
+          const totalTomato = totalTime * 2;
+          // 系列 1 的名称：今日
+          const today = params[0].seriesName;
+          // 系列 2 的名称：平均
+          const average = params[1].seriesName;
+
+          // 今日传入数据
+          const todayData = params[0].data;
+
+          // 平均传入数据
+          const averageData = params[1].data;
+
+          if (chartMode === "time") {
+            return `${yAxisName}
+            <br />时段总时长: ${totalTime + " 小时"}
+              <br />${today}: ${todayData.toFixed(2)} ${"小时"} (${(
+              (todayData / totalTime) *
+              100
+            ).toFixed(2) + "%"})
+            <br />${average}: ${averageData.toFixed(2)} ${"小时"} (${(
+              (averageData / totalTime) *
+              100
+            ).toFixed(2) + "%"})`;
+          } else {
+            return `${yAxisName}
+            <br />番茄容纳量: ${totalTomato + " 番茄"}
+              <br />${today}: ${todayData.toFixed(2)} ${"番茄"} (${(
+              (todayData / totalTomato) *
+              100
+            ).toFixed(2) + "%"})
+            <br />${average}: ${averageData.toFixed(2)} ${"番茄"} (${(
+              (averageData / totalTomato) *
+              100
+            ).toFixed(2) + "%"})`;
+          }
+        }
+      },
+      label: {
+        show: true,
+        position: "insideLeft",
+        fontSize: 11,
+        distance: 10,
+        formatter: (params: any) => {
+          if (params.data !== undefined && params.data !== 0) {
+            // 总时长
+            let totalTime = 0;
+            // 选中的 Y 轴名称：如「凌晨...」、「上午...」等
+            const yAxisName = params.name;
+            switch (yAxisName) {
+              case "凌晨\n00:00-06:00":
+                totalTime = 6;
+                break;
+              case "清晨\n06:00-08:00":
+                totalTime = 2;
+                break;
+              case "上午\n08:00-12:00":
+                totalTime = 4;
+                break;
+              case "中午\n12:00-14:00":
+                totalTime = 2;
+                break;
+              case "下午\n14:00-18:00":
+                totalTime = 4;
+                break;
+              case "傍晚\n18:00-20:00":
+                totalTime = 2;
+                break;
+              case "夜晚\n20:00-24:00":
+                totalTime = 4;
+                break;
+            }
+            const data = params.data;
+            const totalTomato = totalTime * 2;
+            const percent =
+              chartMode === "time" ? data / totalTime : data / totalTomato;
+
+            const totalForUI =
+              chartMode === "time"
+                ? totalTime.toFixed(2) + " 小时"
+                : totalTomato.toFixed(2) + " 番茄";
+            // return dataForUI + " " + (percent * 100).toFixed(2) + "%";
+            return (
+              data.toFixed(2) +
+              " / " +
+              totalForUI +
+              ", " +
+              (percent * 100).toFixed(2) +
+              "%"
+            );
+          } else {
+            return "";
+          }
         }
       },
       // legend: {
@@ -771,8 +892,8 @@ export default {
           }
         }
       },
-      barGap: "10%",
-      barWidth: "30%",
+      barGap: "5%",
+      barWidth: "45%",
       series: [
         {
           name: "今日",
