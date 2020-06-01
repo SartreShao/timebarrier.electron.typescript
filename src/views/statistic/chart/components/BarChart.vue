@@ -137,7 +137,7 @@ export default defineComponent({
 .bar-chart-container {
   width 100%
   // height 42.19vh
-  height 62.5vh
+  height 60vh
   background white
   display flex
   flex-direction column

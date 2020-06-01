@@ -722,14 +722,13 @@ export default {
       //   left: "center"
       // },
       grid: {
-        left: "0%",
-        right: "2%",
+        left: "2%",
+        right: "14%",
         bottom: "10%",
         containLabel: true
       },
       yAxis: {
         type: "category",
-        // data: ["凌晨", "清晨", "上午", "中午", "下午", "傍晚", "夜晚"],
         data: _.reverse([
           "凌晨\n00:00-06:00",
           "清晨\n06:00-08:00",
@@ -739,26 +738,8 @@ export default {
           "傍晚\n18:00-20:00",
           "夜晚\n20:00-24:00"
         ]),
-        // data: [
-        //   "凌晨\n00:00\n-\n06:00",
-        //   "清晨\n06:00\n-\n08:00",
-        //   "上午\n08:00\n-\n12:00",
-        //   "中午\n12:00\n-\n14:00",
-        //   "下午\n14:00\n-\n18:00",
-        //   "傍晚\n18:00\n-\n20:00",
-        //   "夜晚\n20:00\n-\n24:00"
-        // ],
-        // data: [
-        //   "凌晨\n(0点-6点)",
-        //   "清晨\n(6点-8点)",
-        //   "上午\n(8点-12点)",
-        //   "中午\n(12点-14点)",
-        //   "下午\n(14点-18点)",
-        //   "傍晚\n(18点-20点)",
-        //   "夜晚\n(20点-24点)"
-        // ],
         axisLabel: {
-          margin: 20,
+          margin: 10,
           color: "#222A36",
           fontSize: 10,
           rotate: 0
@@ -771,8 +752,8 @@ export default {
       },
       xAxis: {
         name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
-        nameLocation: "center",
-        nameGap: 40,
+        nameLocation: "end",
+        nameGap: 6,
         nameTextStyle: {
           color: "#222A36",
           fontSize: 10
@@ -790,6 +771,8 @@ export default {
           }
         }
       },
+      barGap: "10%",
+      barWidth: "30%",
       series: [
         {
           name: "今日",
@@ -807,7 +790,7 @@ export default {
         },
         {
           name: "平均",
-          data: totalBarChartData,
+          data: _.reverse(totalBarChartData),
           type: "bar",
           showBackground: true,
           itemStyle: {
