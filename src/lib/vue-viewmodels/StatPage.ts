@@ -499,26 +499,46 @@ export default {
         }
 
         if (0 <= hour && hour < 6) {
-          deepNight += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          deepNight +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (6 <= hour && hour < 8) {
           earlyMorning +=
-            tomato.createdAt.getTime() - tomato.attributes.getTime();
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (8 <= hour && hour < 12) {
-          morning += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          morning +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (12 <= hour && hour < 14) {
-          noon += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          noon +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (14 <= hour && hour < 18) {
-          afternoon += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          afternoon +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (18 <= hour && hour < 20) {
-          dusk += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          dusk +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
         if (20 <= hour && hour < 24) {
-          evening += tomato.createdAt.getTime() - tomato.attributes.getTime();
+          evening +=
+            (tomato.createdAt.getTime() -
+              tomato.attributes.startTime.getTime()) /
+            (3600 * 1000);
         }
       });
     }
@@ -690,17 +710,43 @@ export default {
     const myChart = charts ? echarts.init(charts) : null;
 
     const option = {
-      xAxis: {
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "shadow"
+        }
+      },
+      // legend: {
+      //   data: ["今日", "平均"],
+      //   bottom: 30,
+      //   left: "center"
+      // },
+      grid: {
+        left: "0%",
+        right: "2%",
+        bottom: "10%",
+        containLabel: true
+      },
+      yAxis: {
         type: "category",
-        data: ["凌晨", "清晨", "上午", "中午", "下午", "傍晚", "夜晚"],
+        // data: ["凌晨", "清晨", "上午", "中午", "下午", "傍晚", "夜晚"],
+        data: _.reverse([
+          "凌晨\n00:00-06:00",
+          "清晨\n06:00-08:00",
+          "上午\n08:00-12:00",
+          "中午\n12:00-14:00",
+          "下午\n14:00-18:00",
+          "傍晚\n18:00-20:00",
+          "夜晚\n20:00-24:00"
+        ]),
         // data: [
-        //   "凌晨\n(00:00-06:00)",
-        //   "清晨\n(06:00-08:00)",
-        //   "上午\n(08:00-12:00)",
-        //   "中午\n(12:00-14:00)",
-        //   "下午\n(14:00-18:00)",
-        //   "傍晚\n(18:00-20:00)",
-        //   "夜晚\n(20:00-24:00)"
+        //   "凌晨\n00:00\n-\n06:00",
+        //   "清晨\n06:00\n-\n08:00",
+        //   "上午\n08:00\n-\n12:00",
+        //   "中午\n12:00\n-\n14:00",
+        //   "下午\n14:00\n-\n18:00",
+        //   "傍晚\n18:00\n-\n20:00",
+        //   "夜晚\n20:00\n-\n24:00"
         // ],
         // data: [
         //   "凌晨\n(0点-6点)",
@@ -711,16 +757,22 @@ export default {
         //   "傍晚\n(18点-20点)",
         //   "夜晚\n(20点-24点)"
         // ],
-        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10,
+          rotate: 0
+        },
         splitLine: {
           lineStyle: {
             type: "dashed"
           }
         }
       },
-      yAxis: {
+      xAxis: {
         name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
-        nameLocation: "end",
+        nameLocation: "center",
+        nameGap: 40,
         nameTextStyle: {
           color: "#222A36",
           fontSize: 10
@@ -740,19 +792,31 @@ export default {
       },
       series: [
         {
-          data: todayBarChartData,
+          name: "今日",
+          data: _.reverse(todayBarChartData),
           type: "bar",
           showBackground: true,
+          itemStyle: {
+            color: (params: any) => {
+              return "#F9385E";
+            }
+          },
           backgroundStyle: {
-            color: "rgba(220, 220, 220, 0.8)"
+            color: "rgba(220, 220, 220, 0.2)"
           }
         },
         {
+          name: "平均",
           data: totalBarChartData,
           type: "bar",
           showBackground: true,
+          itemStyle: {
+            color: (params: any) => {
+              return "#222A36";
+            }
+          },
           backgroundStyle: {
-            color: "rgba(220, 220, 220, 0.8)"
+            color: "rgba(220, 220, 220, 0.2)"
           }
         }
       ]

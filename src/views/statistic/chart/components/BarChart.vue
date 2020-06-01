@@ -65,7 +65,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormap, []);
+    const colormap: string[] = inject(Store.colormapForChart, []);
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
@@ -136,7 +136,8 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .bar-chart-container {
   width 100%
-  height 42.19vh
+  // height 42.19vh
+  height 62.5vh
   background white
   display flex
   flex-direction column
@@ -192,9 +193,9 @@ export default defineComponent({
     }
   }
   .bar-chart {
-    margin-top -6vh
+    margin-top -7vh
     width 92.93vw
-    height 38vh
+    height 59vh
   }
 }
 </style>
