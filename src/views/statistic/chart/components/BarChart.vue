@@ -1,7 +1,9 @@
 <template>
   <div class="bar-chart-container">
     <h1>今日分时统计</h1>
-    <h2>最佳工作时段：上午</h2>
+    <h2>当前时段：{{ tip }}</h2>
+    <h3>剩余 {{ subTip }}</h3>
+
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -84,13 +86,40 @@ export default defineComponent({
       )
     );
 
+    // 提示语：现在时段
+    const tip = ref("");
+
+    // 提示语：剩余多久
+    const subTip = ref("");
+
+    // 是否显示图标的 label
+    const labelShow = ref(true);
+
+    setInterval(() => {
+      const barChartTip = StatPage.getBarChartTip();
+      tip.value = barChartTip[0];
+      subTip.value = barChartTip[1];
+    }, 1000);
+
     watch(tomatoList, () => {
       StatPage.initBarChart(
         id,
         todayBarChartData.value,
         totalBarChartData.value,
         chartMode.value,
-        colormap
+        colormap,
+        labelShow
+      );
+    });
+
+    watch(labelShow, () => {
+      StatPage.initBarChart(
+        id,
+        todayBarChartData.value,
+        totalBarChartData.value,
+        chartMode.value,
+        colormap,
+        labelShow
       );
     });
 
@@ -109,7 +138,8 @@ export default defineComponent({
         todayBarChartData.value,
         totalBarChartData.value,
         chartMode.value,
-        colormap
+        colormap,
+        labelShow
       );
     });
 
@@ -120,14 +150,17 @@ export default defineComponent({
         todayBarChartData.value,
         totalBarChartData.value,
         chartMode.value,
-        colormap
+        colormap,
+        labelShow
       );
     });
 
     return {
       id,
       chartMode,
-      click_changeChartMode
+      click_changeChartMode,
+      tip,
+      subTip
     };
   }
 });
@@ -137,7 +170,7 @@ export default defineComponent({
 .bar-chart-container {
   width 100%
   // height 42.19vh
-  height 60vh
+  height 62vh
   background white
   display flex
   flex-direction column
@@ -156,8 +189,7 @@ export default defineComponent({
   }
   h2 {
     margin-top 0.52vh
-    height 4.2vh
-    font-size 2.92vh
+    font-size 2.3vh
     font-weight 500
     font-stretch normal
     font-style normal
@@ -166,9 +198,21 @@ export default defineComponent({
     text-align center
     color #222a36
   }
+  h3 {
+    margin-top 0.52vh
+    height 1.95vh
+    font-size 1.35vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing normal
+    text-align center
+    color #99a8b8
+  }
   .change-date-container {
     cursor pointer
-    margin-top 0.52vh
+    margin-top 1vh
     display flex
     flex-direction row
     align-items center

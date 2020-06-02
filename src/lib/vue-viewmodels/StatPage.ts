@@ -498,52 +498,92 @@ export default {
           throw "tomato.createdAt is undefined";
         }
 
+        const duration =
+          (tomato.createdAt.getTime() - tomato.attributes.startTime.getTime()) /
+          (3600 * 1000);
+
         if (0 <= hour && hour < 6) {
-          deepNight +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          deepNight += duration;
         }
         if (6 <= hour && hour < 8) {
-          earlyMorning +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          earlyMorning += duration;
         }
         if (8 <= hour && hour < 12) {
-          morning +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          morning += duration;
         }
         if (12 <= hour && hour < 14) {
-          noon +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          noon += duration;
         }
         if (14 <= hour && hour < 18) {
-          afternoon +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          afternoon += duration;
         }
         if (18 <= hour && hour < 20) {
-          dusk +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          dusk += duration;
         }
         if (20 <= hour && hour < 24) {
-          evening +=
-            (tomato.createdAt.getTime() -
-              tomato.attributes.startTime.getTime()) /
-            (3600 * 1000);
+          evening += duration;
         }
       });
     }
 
-    return [deepNight, earlyMorning, morning, noon, afternoon, dusk, evening];
+    return [evening, dusk, afternoon, noon, morning, earlyMorning, deepNight];
+  },
+  getBarChartTip: (): string[] => {
+    const date = new Date();
+    const hour = UI.getHour(date.getTime());
+
+    if (0 <= hour && hour < 6) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 6 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["凌晨", less];
+    } else if (6 <= hour && hour < 8) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 8 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["清晨", less];
+    } else if (8 <= hour && hour < 12) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 12 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["上午", less];
+    } else if (12 <= hour && hour < 14) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 14 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["中午", less];
+    } else if (14 <= hour && hour < 18) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 18 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["下午", less];
+    } else if (18 <= hour && hour < 20) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 20 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["傍晚", less];
+    } else if (20 <= hour && hour < 24) {
+      const endTimestamp =
+        UI.getTodayStartTimestamp(date.getTime()) + 24 * 3600 * 1000;
+      const less = UI.formatTimeHourMinute(
+        (endTimestamp - date.getTime()) / 1000
+      );
+      return ["夜晚", less];
+    } else {
+      return ["数据错误", ""];
+    }
   },
   /**
    * 获得「线性回归」的表达式
@@ -704,7 +744,8 @@ export default {
     todayBarChartData: readonly number[],
     totalBarChartData: readonly number[],
     chartMode: ChartMode,
-    colormap: string[]
+    colormap: string[],
+    labelShow: Ref<boolean>
   ) => {
     const charts = document.getElementById(id) as HTMLDivElement;
     const myChart = charts ? echarts.init(charts) : null;
@@ -781,7 +822,7 @@ export default {
         }
       },
       label: {
-        show: true,
+        show: labelShow.value,
         position: "insideLeft",
         fontSize: 11,
         distance: 10,
@@ -825,6 +866,8 @@ export default {
                 : totalTomato.toFixed(2) + " 番茄";
             // return dataForUI + " " + (percent * 100).toFixed(2) + "%";
             return (
+              params.seriesName +
+              ": " +
               data.toFixed(2) +
               " / " +
               totalForUI +
@@ -850,15 +893,15 @@ export default {
       },
       yAxis: {
         type: "category",
-        data: _.reverse([
-          "凌晨\n00:00-06:00",
-          "清晨\n06:00-08:00",
-          "上午\n08:00-12:00",
-          "中午\n12:00-14:00",
-          "下午\n14:00-18:00",
+        data: [
+          "夜晚\n20:00-24:00",
           "傍晚\n18:00-20:00",
-          "夜晚\n20:00-24:00"
-        ]),
+          "下午\n14:00-18:00",
+          "中午\n12:00-14:00",
+          "上午\n08:00-12:00",
+          "清晨\n06:00-08:00",
+          "凌晨\n00:00-06:00"
+        ],
         axisLabel: {
           margin: 10,
           color: "#222A36",
@@ -897,7 +940,7 @@ export default {
       series: [
         {
           name: "今日",
-          data: _.reverse(todayBarChartData),
+          data: todayBarChartData,
           type: "bar",
           showBackground: true,
           itemStyle: {
@@ -911,7 +954,7 @@ export default {
         },
         {
           name: "平均",
-          data: _.reverse(totalBarChartData),
+          data: totalBarChartData,
           type: "bar",
           showBackground: true,
           itemStyle: {
@@ -931,6 +974,17 @@ export default {
     }
     if (myChart !== null) {
       myChart.resize();
+    }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        if (labelShow.value == true) {
+          labelShow.value = false;
+        } else {
+          labelShow.value = true;
+        }
+        console.log("labelShow", params);
+      });
     }
   },
   /**
