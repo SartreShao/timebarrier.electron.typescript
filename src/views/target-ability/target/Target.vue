@@ -40,31 +40,13 @@
           :id="targetSubject.id"
         >
           <!-- 目标目录 -->
-          <div
-            class="target-subject-container"
+          <target-subject-item
             v-splash-when-click
             v-longclick="() => click_editTargetSubjectButton(targetSubject)"
-            @click="
-              targetSubject.attributes.showSubjectList = !targetSubject
-                .attributes.showSubjectList
-            "
-          >
-            {{ targetSubject.attributes.name }} ({{
-              targetSubject.attributes.targetListOfTargetSubject.length
-            }})
-            <img
-              class="icon-downward"
-              :src="assets.icon_downward"
-              alt="icon_downward"
-              v-if="targetSubject.attributes.showSubjectList === true"
-            />
-            <img
-              class="icon-leftward"
-              :src="assets.icon_leftward"
-              alt="icon_leftward"
-              v-else
-            />
-          </div>
+            :isShow.sync="targetSubject.attributes.showSubjectList"
+            :name="targetSubject.attributes.name"
+            :length="targetSubject.attributes.targetListOfTargetSubject.length"
+          ></target-subject-item>
 
           <div
             style="width:100%"
@@ -78,74 +60,15 @@
             >
               <transition-group type="transition" name="flip-list">
                 <!-- 目标 -->
-                <div
-                  class="target-item-container"
+                <target-item
                   v-for="target in targetSubject.attributes
                     .targetListOfTargetSubject"
                   :key="target.id"
                   :id="target.id"
                   v-longclick="() => click_editTargetButton(target)"
                   v-splash-when-click
-                >
-                  <!-- 完成目标 -->
-                  <div class="finished-button-container">
-                    <svg
-                      v-darked-when-click
-                      @click="click_finishedTargetButton(target)"
-                      class="finished-button"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="28"
-                      height="28"
-                      viewBox="0 0 28 28"
-                    >
-                      <g
-                        id="椭圆_53"
-                        data-name="椭圆 53"
-                        fill="none"
-                        :stroke="target.attributes.color"
-                        stroke-width="3"
-                      >
-                        <circle cx="14" cy="14" r="14" stroke="none" />
-                        <circle cx="14" cy="14" r="12.5" fill="none" />
-                      </g>
-                    </svg>
-                  </div>
-
-                  <!-- 占位符 -->
-                  <div class="placeholder"></div>
-
-                  <!-- 目标主体 -->
-                  <div class="target-body-container">
-                    <div class="target-type">
-                      {{
-                        target.attributes.validityType === "time-bound"
-                          ? "时限目标"
-                          : "长期目标"
-                      }}{{
-                        target.attributes.validityType === "time-bound"
-                          ? "｜剩余 " +
-                            parseInt(
-                              (target.attributes.validity.getTime() -
-                                new Date().getTime()) /
-                                (1000 * 60 * 60 * 24) +
-                                1
-                            ) +
-                            " 天"
-                          : ""
-                      }}
-                    </div>
-                    <div class="target-name">{{ target.attributes.name }}</div>
-                    <div class="target-ability-container">
-                      <div
-                        class="target-ability"
-                        v-for="ability in target.attributes.abilityListOfTarget"
-                        v-bind:key="ability.id"
-                      >
-                        · {{ ability.attributes.name }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  :target="target"
+                ></target-item>
               </transition-group>
             </draggable>
           </div>
@@ -154,25 +77,11 @@
     </draggable>
 
     <!-- 已完成的目标目录 -->
-    <div
+    <target-subject-item
       v-darked-when-click
-      class="target-subject-container"
-      @click="isCompletedTargetShown = !isCompletedTargetShown"
-    >
-      已完成的目标
-      <img
-        class="icon-downward"
-        :src="assets.icon_downward"
-        alt="icon_downward"
-        v-if="isCompletedTargetShown === true"
-      />
-      <img
-        class="icon-leftward"
-        :src="assets.icon_leftward"
-        alt="icon_leftward"
-        v-else
-      />
-    </div>
+      :isShow.sync="isCompletedTargetShown"
+      name="已完成的目标"
+    ></target-subject-item>
 
     <!-- 已完成的目标 -->
     <div style="width:100%" v-if="isCompletedTargetShown === true">
@@ -211,9 +120,10 @@ import draggable from "vuedraggable";
 import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
 import CreateTargetButton from "./components/CreateTargetButton.vue";
 import TargetItem from "./components/TargetItem.vue";
+import TargetSubjectItem from "./components/TargetSubjectItem.vue";
 
 export default defineComponent({
-  components: { draggable, CreateTargetButton, TargetItem },
+  components: { draggable, CreateTargetButton, TargetItem, TargetSubjectItem },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
@@ -421,126 +331,5 @@ export default defineComponent({
   flex-direction column
   align-items center
   margin-top 6.75vh
-  .target-subject-container {
-    cursor pointer
-    user-select none
-    margin-bottom 0.15vh
-    position relative
-    height 6.52vh
-    width 100%
-    flex-shrink 0
-    background-color #fcfbfc
-    display flex
-    align-items center
-    justify-content center
-    font-size 2.02vh
-    font-weight normal
-    font-stretch normal
-    font-style normal
-    line-height 1.44
-    letter-spacing 0.02vh
-    text-align left
-    color #9a9a9a
-    img.icon-downward {
-      position absolute
-      width 2.35vw
-      height 0.65vh
-      opacity 0.5
-      right 5.52vw
-      top 0
-      bottom 0
-      margin-top auto
-      margin-bottom auto
-    }
-    img.icon-leftward {
-      position absolute
-      width 1.16vw
-      height 1.32vh
-      right 6.12vw
-      opacity 0.5
-      top 0
-      bottom 0
-      margin-top auto
-      margin-bottom auto
-    }
-  }
-  .target-item-container {
-    cursor pointer
-    user-select none
-    width 100%
-    display flex
-    flex-direction row
-    margin-bottom 0.15vh
-    align-items stretch
-    flex-shrink 0
-    .finished-button-container {
-      width 19.6vw
-      background-color #fcfbfc
-      display flex
-      justify-content center
-      align-items center
-      .finished-button {
-        width 2.1vh
-        height 2.1vh
-      }
-      .unfinished-button {
-        width 2.1vh
-        height 1.61vh
-      }
-    }
-    .placeholder {
-      width 0.15vh
-    }
-    .target-body-container {
-      user-select none
-      width 80.13vw
-      background-color #ffffff
-      .target-type {
-        margin-top 2.4vh
-        margin-left 8.53vw
-        margin-right 8.53vw
-        height 2.4vh
-        opacity 0.4
-        font-size 1.65vh
-        font-weight normal
-        font-stretch normal
-        font-style normal
-        line-height 1.45
-        letter-spacing 0.01vh
-        text-align left
-        color #222a36
-      }
-      .target-name {
-        margin-top 0.75vh
-        margin-left 8.53vw
-        margin-right 8.53vw
-        font-size 2.17vh
-        font-weight 500
-        font-stretch normal
-        font-style normal
-        letter-spacing 0.02vh
-        text-align left
-        color #222a36
-      }
-      .target-ability-container {
-        margin-top 0.75vh
-        margin-bottom 2.4vh
-        margin-left 8.53vw
-        margin-right 8.53vw
-        .target-ability {
-          height 2.7vh
-          opacity 0.4
-          font-size 1.87vh
-          font-weight normal
-          font-stretch normal
-          font-style normal
-          line-height 1.44
-          letter-spacing 0.01vh
-          text-align left
-          color #222a36
-        }
-      }
-    }
-  }
 }
 </style>
