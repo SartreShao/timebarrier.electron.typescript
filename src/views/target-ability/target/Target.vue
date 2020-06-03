@@ -13,73 +13,14 @@
       @end="dragend_unSubjectiveTarget"
     >
       <transition-group type="transition" name="flip-list">
-        <div
-          :id="target.id"
-          class="target-item-container"
+        <target-item
           v-for="target in unSubjectiveTargetList"
           :key="target.id"
+          :id="target.id"
           v-longclick="() => click_editTargetButton(target)"
           v-splash-when-click
-        >
-          <!-- 完成目标 -->
-          <div class="finished-button-container">
-            <svg
-              v-darked-when-click
-              @click="click_finishedTargetButton(target)"
-              class="finished-button"
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-            >
-              <g
-                id="椭圆_53"
-                data-name="椭圆 53"
-                fill="none"
-                :stroke="target.attributes.color"
-                stroke-width="3"
-              >
-                <circle cx="14" cy="14" r="14" stroke="none" />
-                <circle cx="14" cy="14" r="12.5" fill="none" />
-              </g>
-            </svg>
-          </div>
-
-          <!-- 占位符 -->
-          <div class="placeholder"></div>
-
-          <!-- 目标主体 -->
-          <div class="target-body-container">
-            <div class="target-type">
-              {{
-                target.attributes.validityType === "time-bound"
-                  ? "时限目标"
-                  : "长期目标"
-              }}{{
-                target.attributes.validityType === "time-bound"
-                  ? "｜剩余 " +
-                    parseInt(
-                      (target.attributes.validity.getTime() -
-                        new Date().getTime()) /
-                        (1000 * 60 * 60 * 24) +
-                        1
-                    ) +
-                    " 天"
-                  : ""
-              }}
-            </div>
-            <div class="target-name">{{ target.attributes.name }}</div>
-            <div class="target-ability-container">
-              <div
-                class="target-ability"
-                v-for="ability in target.attributes.abilityListOfTarget"
-                v-bind:key="ability.id"
-              >
-                · {{ ability.attributes.name }}
-              </div>
-            </div>
-          </div>
-        </div>
+          :target="target"
+        ></target-item>
       </transition-group>
     </draggable>
 
@@ -235,78 +176,14 @@
 
     <!-- 已完成的目标 -->
     <div style="width:100%" v-if="isCompletedTargetShown === true">
-      <div
-        class="target-item-container"
+      <target-item
         v-for="target in completedTargetList"
-        v-bind:key="target.id"
+        :key="target.id"
+        :id="target.id"
         v-longclick="() => click_editTargetButton(target)"
         v-splash-when-click
-      >
-        <!-- 完成目标 -->
-        <div class="finished-button-container">
-          <svg
-            v-darked-when-click
-            class="unfinished-button"
-            @click="click_unfinishedTargetButton(target)"
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="21.484"
-            viewBox="0 0 28 21.484"
-          >
-            <g id="组_1370" data-name="组 1370" transform="translate(-0.385)">
-              <path
-                id="路径_418"
-                data-name="路径 418"
-                d="M15.126,319.693l-3.4,3.436a.8.8,0,0,1-1.1,0L.6,313.08a.8.8,0,0,1,0-1.1l3.4-3.4a.8.8,0,0,1,1.1,0L15.126,318.59A.8.8,0,0,1,15.126,319.693Z"
-                transform="translate(0 -301.863)"
-                :fill="target.attributes.color"
-              />
-              <path
-                id="路径_419"
-                data-name="路径 419"
-                d="M336.708.292l3.047,3.047a1.058,1.058,0,0,1,0,1.459L323.547,21.006a1.058,1.058,0,0,1-1.459,0l-3.047-3.047a1.058,1.058,0,0,1,0-1.459L335.249.292a1.057,1.057,0,0,1,1.459,0Z"
-                transform="translate(-311.662)"
-                :fill="target.attributes.color"
-              />
-            </g>
-          </svg>
-        </div>
-
-        <!-- 占位符 -->
-        <div class="placeholder"></div>
-
-        <!-- 目标主体 -->
-        <div class="target-body-container">
-          <div class="target-type">
-            {{
-              target.attributes.validityType === "time-bound"
-                ? "时限目标"
-                : "长期目标"
-            }}{{
-              target.attributes.validityType === "time-bound"
-                ? "｜剩余 " +
-                  parseInt(
-                    (target.attributes.validity.getTime() -
-                      new Date().getTime()) /
-                      (1000 * 60 * 60 * 24) +
-                      1
-                  ) +
-                  " 天"
-                : ""
-            }}
-          </div>
-          <div class="target-name">{{ target.attributes.name }}</div>
-          <div class="target-ability-container">
-            <div
-              class="target-ability"
-              v-for="ability in target.attributes.abilityListOfTarget"
-              v-bind:key="ability.id"
-            >
-              · {{ ability.attributes.name }}
-            </div>
-          </div>
-        </div>
-      </div>
+        :target="target"
+      ></target-item>
     </div>
 
     <div style="height:15vh"></div>
@@ -333,9 +210,10 @@ import { TargetPage } from "../../../lib/vue-viewmodels";
 import draggable from "vuedraggable";
 import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
 import CreateTargetButton from "./components/CreateTargetButton.vue";
+import TargetItem from "./components/TargetItem.vue";
 
 export default defineComponent({
-  components: { draggable, CreateTargetButton },
+  components: { draggable, CreateTargetButton, TargetItem },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
