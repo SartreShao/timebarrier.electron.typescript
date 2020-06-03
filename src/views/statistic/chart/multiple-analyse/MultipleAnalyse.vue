@@ -21,14 +21,21 @@
       <info-item
         :value="todayTomatoNumber"
         title="今日番茄数"
-        width="49.87vw"
+        width="33.16vw"
       ></info-item>
 
       <!-- 每日平均番茄 -->
       <info-item
         :value="averageDailyTomato"
         title="每日平均番茄"
-        width="49.87vw"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单日最多完成番茄 -->
+      <info-item
+        :value="maximumDailyTomato"
+        title="单日最多完成番茄"
+        width="33.16vw"
       ></info-item>
     </div>
 
@@ -41,14 +48,21 @@
       <info-item
         :value="todayWorkingTime"
         title="今日工作时长"
-        width="49.87vw"
+        width="33.16vw"
       ></info-item>
 
       <!-- 每日平均用时 -->
       <info-item
         :value="averageDailyTime"
         title="每日平均用时"
-        width="49.87vw"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单日最长工作时间 -->
+      <info-item
+        :value="maximumDailyTime"
+        title="单日最长工作时间"
+        width="33.16vw"
       ></info-item>
     </div>
 
@@ -56,26 +70,6 @@
     <div style="height:0.15vh"></div>
 
     <bar-chart></bar-chart>
-
-    <!-- 占位 -->
-    <div style="height:100.15vh"></div>
-
-    <!-- 横向 -->
-    <div class="horizontal-container">
-      <!-- 单日最多完成番茄 -->
-      <info-item
-        :value="maximumDailyTomato"
-        title="单日最多完成番茄"
-        width="49.87vw"
-      ></info-item>
-
-      <!-- 单日最长工作时间 -->
-      <info-item
-        :value="maximumDailyTime"
-        title="单日最长工作时间"
-        width="49.87vw"
-      ></info-item>
-    </div>
   </div>
 </template>
 
