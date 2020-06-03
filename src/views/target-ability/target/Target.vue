@@ -1,11 +1,9 @@
 <template>
   <div class="container">
     <!-- 添加「目标」按钮 -->
-    <div class="add-button" @click="click_createTargetButton">
-      <div v-darked-when-click>
-        <img :src="assets.icon_create_target" alt="icon_create_target" />
-      </div>
-    </div>
+    <create-target-button
+      style="position:fixed;top:12.77vh;margin-top:0.15vh;"
+    ></create-target-button>
 
     <!-- 无目录的目标 -->
     <draggable
@@ -334,9 +332,10 @@ import AV from "leancloud-storage";
 import { TargetPage } from "../../../lib/vue-viewmodels";
 import draggable from "vuedraggable";
 import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
+import CreateTargetButton from "./components/CreateTargetButton.vue";
 
 export default defineComponent({
-  components: { draggable },
+  components: { draggable, CreateTargetButton },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
@@ -544,27 +543,6 @@ export default defineComponent({
   flex-direction column
   align-items center
   margin-top 6.75vh
-  .add-button {
-    cursor pointer
-    position fixed
-    top 12.77vh
-    flex-shrink 0
-    width 100%
-    height 6.45vh
-    background white
-    margin-top 0.15vh
-    div {
-      height 100%
-      width 100%
-      display flex
-      justify-content center
-      align-items center
-      img {
-        width 2.1vh
-        height 2.1vh
-      }
-    }
-  }
   .target-subject-container {
     cursor pointer
     user-select none

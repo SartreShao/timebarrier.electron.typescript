@@ -1,6 +1,6 @@
 <template>
   <div class="bar-chart-container">
-    <h1>今日分时统计</h1>
+    <h1>分时工作量统计</h1>
     <h2>当前时段：{{ tip }}</h2>
     <h3>剩余 {{ subTip }}</h3>
 
@@ -93,7 +93,7 @@ export default defineComponent({
     const subTip = ref("");
 
     // 是否显示图标的 label
-    const labelShow = ref(true);
+    const labelShow = ref(false);
 
     setInterval(() => {
       const barChartTip = StatPage.getBarChartTip();
