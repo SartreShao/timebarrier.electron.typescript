@@ -1214,5 +1214,30 @@ export default {
     }
 
     return fourChronotype;
+  },
+  /**
+   * 获取时型分析
+   */
+  getChronotype: (
+    twoChronotype: TwoChronotype,
+    fourChronotype: FourChronotype
+  ): string => {
+    let description = "";
+    switch (fourChronotype) {
+      case "海豚型":
+        description = "敏感聪慧、注重细节的完美主义者";
+        break;
+      case "熊型":
+        description = "值得信赖、思维开阔的合作者";
+        break;
+      case "狮子型":
+        description = "思维缜密、精力充沛的领导者";
+        break;
+      case "狼型":
+        description = "情感强烈的创造者、冒险家";
+        break;
+    }
+
+    return twoChronotype + " · " + fourChronotype + "｜" + description;
   }
 };

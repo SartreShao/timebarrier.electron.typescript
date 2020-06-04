@@ -69,7 +69,18 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 柱状图：每日用时分析 -->
     <bar-chart></bar-chart>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 散点图的公式 -->
+    <info-item
+      :value="chronotype"
+      title="Chronotype 四类时型分析"
+      width="100vw"
+    ></info-item>
   </div>
 </template>
 
@@ -79,7 +90,8 @@ import {
   ref,
   inject,
   Ref,
-  computed
+  computed,
+  watchEffect
 } from "@vue/composition-api";
 import ScatterDiagram from "../components/ScatterDiagram.vue";
 import BarChart from "../components/BarChart.vue";
@@ -87,6 +99,7 @@ import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
+import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 
 export default defineComponent({
   components: { ScatterDiagram, InfoItem, BarChart },
@@ -99,6 +112,21 @@ export default defineComponent({
 
     // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+
+    // 二类时型分析
+    const twoChronotype = computed(() =>
+      StatPage.getTwoChronotype(tomatoList.value)
+    );
+
+    // 四类时型分析
+    const fourChronotype = computed(() =>
+      StatPage.getFourChronotype(tomatoList.value)
+    );
+
+    // 时型分析
+    const chronotype = computed(() =>
+      StatPage.getChronotype(twoChronotype.value, fourChronotype.value)
+    );
 
     // 线性回归表达式，由 regressionData
     const linearRegressionExpression = inject(
@@ -154,7 +182,8 @@ export default defineComponent({
       averageDailyTime,
       maximumDailyTime,
       todayTomatoNumber,
-      todayWorkingTime
+      todayWorkingTime,
+      chronotype
     };
   }
 });
