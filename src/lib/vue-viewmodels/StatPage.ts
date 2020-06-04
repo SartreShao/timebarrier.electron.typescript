@@ -2,7 +2,9 @@ import { Ref } from "@vue/composition-api";
 import {
   StatStatusMode,
   StatDate,
-  ChartMode
+  ChartMode,
+  TwoChronotype,
+  FourChronotype
 } from "@/lib/types/vue-viewmodels";
 import { ElementVue } from "@/lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
@@ -983,7 +985,6 @@ export default {
         } else {
           labelShow.value = true;
         }
-        console.log("labelShow", params);
       });
     }
   },
@@ -1103,5 +1104,115 @@ export default {
     } else {
       return "0 小时";
     }
+  },
+  /**
+   * 获取两类时型
+   */
+  getTwoChronotype: (tomatoList: AV.Object[]): TwoChronotype => {
+    let earlyBird = 0;
+    let nightHawk = 0;
+
+    tomatoList.forEach(tomato => {
+      const startTime = tomato.attributes.startTime.getTime();
+      const endTime = (tomato.createdAt as Date).getTime();
+      const startTimeHour = UI.getHour(startTime);
+
+      // 夜枭型
+      if (0 <= startTimeHour && startTimeHour < 4) {
+        nightHawk += endTime - startTime;
+      }
+
+      // 早鸟型
+      else if (4 <= startTimeHour && startTimeHour < 16) {
+        earlyBird += endTime - startTime;
+      }
+
+      // 夜枭型
+      else if (16 <= startTimeHour && startTimeHour < 24) {
+        nightHawk += endTime - startTime;
+      }
+    });
+
+    if (earlyBird > nightHawk) {
+      return "早鸟型";
+    } else if (earlyBird < nightHawk) {
+      return "夜枭型";
+    } else {
+      return "极度罕见的平衡型";
+    }
+  },
+  /**
+   * 获取四类时型
+   */
+  getFourChronotype: (tomatoList: AV.Object[]): FourChronotype => {
+    let dolphin = 0;
+    let lion = 0;
+    let bear = 0;
+    let wolf = 0;
+
+    tomatoList.forEach(tomato => {
+      const startTime = tomato.attributes.startTime.getTime();
+      const endTime = (tomato.createdAt as Date).getTime();
+      const startTimeHour = UI.getHour(startTime);
+
+      // 狼型
+      if (0 <= startTimeHour && startTimeHour < 2) {
+        wolf += endTime - startTime;
+      }
+
+      // 狼型
+      if (18 <= startTimeHour && startTimeHour < 24) {
+        wolf += endTime - startTime;
+      }
+
+      // 狮子
+      if (6 <= startTimeHour && startTimeHour < 14) {
+        lion += endTime - startTime;
+      }
+
+      // 熊型
+      if (12 <= startTimeHour && startTimeHour < 20) {
+        bear += endTime - startTime;
+      }
+
+      // 海豚型
+      if (8 <= startTimeHour && startTimeHour < 1) {
+        dolphin += endTime - startTime;
+      }
+
+      // 海豚型
+      if (16 <= startTimeHour && startTimeHour < 18) {
+        dolphin += endTime - startTime;
+      }
+
+      // 海豚型
+      if (20 <= startTimeHour && startTimeHour < 23) {
+        dolphin += endTime - startTime;
+      }
+    });
+
+    const result = [dolphin, lion, bear, wolf].sort((a, b) => b - a);
+
+    let fourChronotype: FourChronotype;
+
+    switch (result[0]) {
+      case dolphin:
+        fourChronotype = "海豚型";
+        break;
+      case lion:
+        fourChronotype = "狮子型";
+        break;
+      case bear:
+        fourChronotype = "熊型";
+        break;
+      case wolf:
+        fourChronotype = "狼型";
+        break;
+      default:
+        fourChronotype = "数据出错";
+        break;
+    }
+
+    return fourChronotype;
   }
 };
