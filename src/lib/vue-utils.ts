@@ -247,4 +247,34 @@ const UI = {
   }
 };
 
-export { Router, Time, Log, Check, UI };
+const Mathematic = {
+  standardDeviation: function(list: number[]) {
+    const variance = this.variance(list);
+    return Math.sqrt(variance);
+  },
+
+  variance: function(list: number[]) {
+    const average = this.average(list);
+    const n = list.length;
+    let total = 0;
+    list.forEach(item => {
+      total += this.square(item - average);
+    });
+    return total / n;
+  },
+  /**
+   * 求平均数
+   */
+  average: (list: number[]) => {
+    let total = 0;
+    list.forEach(item => {
+      total += item;
+    });
+    return total / list.length;
+  },
+  /**
+   * 求平方
+   */
+  square: (number: number) => number * number
+};
+export { Router, Time, Log, Check, UI, Mathematic };

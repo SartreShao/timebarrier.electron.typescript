@@ -58,7 +58,13 @@ export default defineComponent({
       ref([])
     );
 
-    const todayTomatoList: Ref<AV.Object[]> = ref([]);
+    const todayTomatoList = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return statDateList.value[0].tomatoList;
+      } else {
+        return [];
+      }
+    });
 
     // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
@@ -76,7 +82,10 @@ export default defineComponent({
 
     // 今日的 BarChart
     const todayBarChartData = computed(() =>
-      StatPage.getBarChartData(todayTomatoList.value, chartMode.value)
+      StatPage.getBarChartData(
+        todayTomatoList.value as AV.Object[],
+        chartMode.value
+      )
     );
 
     // 全部的 BarChart
@@ -124,14 +133,6 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      // 获取 todayTomatoList
-      StatPage.initTomatoListWithDateRange(
-        context.root,
-        todayTomatoList,
-        new Date(UI.getTodayStartTimestamp(new Date().getTime())),
-        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
-      );
-
       // 初始化图层
       StatPage.initBarChart(
         id,

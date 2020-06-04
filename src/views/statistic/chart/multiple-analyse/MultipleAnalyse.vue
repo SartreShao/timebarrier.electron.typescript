@@ -81,6 +81,82 @@
       title="Chronotype 四类时型分析"
       width="100vw"
     ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 今日工作时长 -->
+      <info-item
+        :value="todayTomatoEfficiency"
+        title="今日番茄效率"
+        width="24.80vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="averageTomatoEfficiency"
+        title="平均番茄效率"
+        width="24.80vw"
+      ></info-item>
+      <!-- 今日工作时长 -->
+      <info-item
+        :value="todayTimeEfficiency"
+        title="今日用时效率"
+        width="24.80vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="averageTimeEfficiency"
+        title="平均用时效率"
+        width="24.80vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 今日工作时长 -->
+      <info-item
+        :value="todayTomatoStandardDeviation"
+        title="今日番茄效率标准差"
+        width="49.87vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="averageTomatoStandardDeviation"
+        title="平均番茄效率标准差"
+        width="49.87vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 今日工作时长 -->
+      <info-item
+        :value="todayTimeStandardDeviation"
+        title="今日用时效率标准差"
+        width="49.87vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="averageTimeStandardDeviation"
+        title="平均用时效率标准差"
+        width="49.87vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:150vh"></div>
   </div>
 </template>
 
@@ -100,6 +176,7 @@ import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: { ScatterDiagram, InfoItem, BarChart },
@@ -175,6 +252,70 @@ export default defineComponent({
       StatPage.getTodayWorkingTime(statDateList.value)
     );
 
+    // 平均番茄效率
+    const averageTomatoEfficiency = computed(() =>
+      StatPage.getTomatoEfficiency(statDateList.value)
+    );
+
+    // 今日用时效率
+    const todayTomatoEfficiency = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return StatPage.getTomatoEfficiency([statDateList.value[0]]);
+      } else {
+        return StatPage.getTomatoEfficiency([]);
+      }
+    });
+
+    // 平均用时效率
+    const averageTimeEfficiency = computed(() =>
+      StatPage.getTimeEfficiency(statDateList.value)
+    );
+
+    // 今日用时效率
+    const todayTimeEfficiency = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return StatPage.getTimeEfficiency([statDateList.value[0]]);
+      } else {
+        return StatPage.getTimeEfficiency([]);
+      }
+    });
+
+    // 平均时间效率标准差
+    const averageTimeStandardDeviation = computed(() =>
+      UI.formatTimeHourMinute(
+        StatPage.getTimeStandardDeviation(statDateList.value) / 1000
+      )
+    );
+
+    // 今日时间效率标准差
+    const todayTimeStandardDeviation = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return UI.formatTimeHourMinute(
+          StatPage.getTimeStandardDeviation([statDateList.value[0]]) / 1000
+        );
+      } else {
+        return UI.formatTimeHourMinute(
+          StatPage.getTimeStandardDeviation([]) / 1000
+        );
+      }
+    });
+
+    // 平均番茄效率标准差
+    const averageTomatoStandardDeviation = computed(() =>
+      StatPage.getTomatoStandardDeviation(statDateList.value).toFixed(2)
+    );
+
+    // 今日番茄效率标准差
+    const todayTomatoStandardDeviation = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return StatPage.getTomatoStandardDeviation([
+          statDateList.value[0]
+        ]).toFixed(2);
+      } else {
+        return StatPage.getTomatoStandardDeviation([]).toFixed(2);
+      }
+    });
+
     return {
       linearRegressionExpression,
       averageDailyTomato,
@@ -183,7 +324,15 @@ export default defineComponent({
       maximumDailyTime,
       todayTomatoNumber,
       todayWorkingTime,
-      chronotype
+      chronotype,
+      averageTimeEfficiency,
+      todayTimeEfficiency,
+      todayTomatoEfficiency,
+      averageTomatoEfficiency,
+      averageTimeStandardDeviation,
+      todayTimeStandardDeviation,
+      averageTomatoStandardDeviation,
+      todayTomatoStandardDeviation
     };
   }
 });
