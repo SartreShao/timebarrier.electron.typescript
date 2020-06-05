@@ -1406,5 +1406,124 @@ export default {
     const result = Mathematic.standardDeviation(list);
 
     return result;
+  },
+  getAveragePeriodTime: (statDateList: readonly StatDate[]) => {
+    // 今日的七组数据
+    let deepNight = 0;
+    let earlyMorning = 0;
+    let morning = 0;
+    let noon = 0;
+    let afternoon = 0;
+    let dusk = 0;
+    let evening = 0;
+
+    statDateList.forEach(statDate => {
+      statDate.tomatoList.forEach(tomato => {
+        const hour = UI.getHour(tomato.attributes.startTime.getTime());
+
+        if (tomato.createdAt === undefined) {
+          throw "tomato.createdAt is undefined";
+        }
+
+        const duration =
+          tomato.createdAt.getTime() - tomato.attributes.startTime.getTime();
+
+        if (0 <= hour && hour < 6) {
+          deepNight += duration;
+        }
+        if (6 <= hour && hour < 8) {
+          earlyMorning += duration;
+        }
+        if (8 <= hour && hour < 12) {
+          morning += duration;
+        }
+        if (12 <= hour && hour < 14) {
+          noon += duration;
+        }
+        if (14 <= hour && hour < 18) {
+          afternoon += duration;
+        }
+        if (18 <= hour && hour < 20) {
+          dusk += duration;
+        }
+        if (20 <= hour && hour < 24) {
+          evening += duration;
+        }
+      });
+    });
+
+    deepNight = deepNight / statDateList.length;
+    earlyMorning = earlyMorning / statDateList.length;
+    morning = morning / statDateList.length;
+    noon = noon / statDateList.length;
+    afternoon = afternoon / statDateList.length;
+    dusk = dusk / statDateList.length;
+    evening = evening / statDateList.length;
+
+    return Mathematic.average([
+      evening,
+      dusk,
+      afternoon,
+      noon,
+      morning,
+      earlyMorning,
+      deepNight
+    ]);
+  },
+  getAveragePeriodTomato: (statDateList: readonly StatDate[]) => {
+    // 今日的七组数据
+    let deepNight = 0;
+    let earlyMorning = 0;
+    let morning = 0;
+    let noon = 0;
+    let afternoon = 0;
+    let dusk = 0;
+    let evening = 0;
+
+    statDateList.forEach(statDate => {
+      statDate.tomatoList.forEach(tomato => {
+        const hour = UI.getHour(tomato.attributes.startTime.getTime());
+
+        if (0 <= hour && hour < 6) {
+          deepNight++;
+        }
+        if (6 <= hour && hour < 8) {
+          earlyMorning++;
+        }
+        if (8 <= hour && hour < 12) {
+          morning++;
+        }
+        if (12 <= hour && hour < 14) {
+          noon++;
+        }
+        if (14 <= hour && hour < 18) {
+          afternoon++;
+        }
+        if (18 <= hour && hour < 20) {
+          dusk++;
+        }
+        if (20 <= hour && hour < 24) {
+          evening++;
+        }
+      });
+    });
+
+    deepNight = deepNight / statDateList.length;
+    earlyMorning = earlyMorning / statDateList.length;
+    morning = morning / statDateList.length;
+    noon = noon / statDateList.length;
+    afternoon = afternoon / statDateList.length;
+    dusk = dusk / statDateList.length;
+    evening = evening / statDateList.length;
+
+    return Mathematic.average([
+      evening,
+      dusk,
+      afternoon,
+      noon,
+      morning,
+      earlyMorning,
+      deepNight
+    ]);
   }
 };

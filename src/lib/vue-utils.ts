@@ -155,7 +155,11 @@ const UI = {
   formatTimeHourMinute: (second: number) => {
     let hour = Math.trunc(second / 3600);
     let min = Math.trunc((second - hour * 3600) / 60);
-    return `${hour} 小时 ${min} 分钟`;
+    if (hour === 0) {
+      return `${min} 分钟`;
+    } else {
+      return `${hour} 小时 ${min} 分钟`;
+    }
   },
   /**
    * 将传入 Date 格式化为 xxxx 年 xx 月 xx 日的形式
