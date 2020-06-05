@@ -452,9 +452,12 @@ export default {
       }
     }),
   /**
-   * 获取柱状图数据
+   * 获取分时数据
    */
-  getBarChartData: (todayTomatoList: AV.Object[], chartMode: ChartMode) => {
+  getEachPeriodData: (
+    todayTomatoList: AV.Object[],
+    chartMode: ChartMode
+  ): number[] => {
     // 今日的七组数据
     let deepNight = 0;
     let earlyMorning = 0;
@@ -530,7 +533,10 @@ export default {
 
     return [evening, dusk, afternoon, noon, morning, earlyMorning, deepNight];
   },
-  getBarChartTip: (): string[] => {
+  /**
+   * 获取分时数据名称
+   */
+  getNowPeriodName: (): string[] => {
     const date = new Date();
     const hour = UI.getHour(date.getTime());
 
@@ -1527,5 +1533,189 @@ export default {
       earlyMorning,
       deepNight
     ]);
+  },
+
+  /**
+   * 获取周数据
+   */
+  getWeekStatData: (
+    statDateList: readonly StatDate[],
+    chartMode: ChartMode
+  ) => {
+    let monday: number = 0;
+    let tuesday: number = 0;
+    let wednesday: number = 0;
+    let thursday: number = 0;
+    let friday: number = 0;
+    let saturday: number = 0;
+    let sunday: number = 0;
+
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        const dayOfWeek = new Date(statDate.timeStamp).getDay();
+        switch (dayOfWeek) {
+          case 0:
+            sunday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 1:
+            monday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 2:
+            tuesday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 3:
+            wednesday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 4:
+            thursday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 5:
+            friday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 6:
+            saturday +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+        }
+      }
+    });
+
+    return [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
+  },
+
+  /**
+   * 获取月数据
+   */
+  getMonthStatData: (
+    statDateList: readonly StatDate[],
+    chartMode: ChartMode
+  ) => {
+    let january: number = 0;
+    let february: number = 0;
+    let march: number = 0;
+    let april: number = 0;
+    let may: number = 0;
+    let june: number = 0;
+    let july: number = 0;
+    let auguest: number = 0;
+    let september: number = 0;
+    let october: number = 0;
+    let november: number = 0;
+    let december: number = 0;
+
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        const month = new Date(statDate.timeStamp).getMonth() + 1;
+        switch (month) {
+          case 1:
+            january +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 2:
+            february +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 3:
+            march +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 4:
+            april +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 5:
+            may +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 6:
+            june +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 7:
+            july +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 8:
+            auguest +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 9:
+            september +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 10:
+            october +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 11:
+            november +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+          case 12:
+            december +=
+              chartMode === "tomato"
+                ? statDate.tomatoList.length
+                : statDate.totalTime;
+            break;
+        }
+      }
+    });
+
+    return [
+      january,
+      february,
+      march,
+      april,
+      may,
+      june,
+      july,
+      auguest,
+      september,
+      october,
+      november,
+      december
+    ];
   }
 };

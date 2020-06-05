@@ -82,7 +82,7 @@ export default defineComponent({
 
     // 今日的 BarChart
     const todayBarChartData = computed(() =>
-      StatPage.getBarChartData(
+      StatPage.getEachPeriodData(
         todayTomatoList.value as AV.Object[],
         chartMode.value
       )
@@ -90,7 +90,7 @@ export default defineComponent({
 
     // 全部的 BarChart
     const totalBarChartData = computed(() =>
-      StatPage.getBarChartData(tomatoList.value, chartMode.value).map(
+      StatPage.getEachPeriodData(tomatoList.value, chartMode.value).map(
         item => item / statDateList.value.length
       )
     );
@@ -105,7 +105,7 @@ export default defineComponent({
     const labelShow = ref(false);
 
     setInterval(() => {
-      const barChartTip = StatPage.getBarChartTip();
+      const barChartTip = StatPage.getNowPeriodName();
       tip.value = barChartTip[0];
       subTip.value = barChartTip[1];
     }, 1000);
