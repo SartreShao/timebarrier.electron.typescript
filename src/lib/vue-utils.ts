@@ -279,6 +279,8 @@ const Mathematic = {
   /**
    * 求平方
    */
-  square: (number: number) => number * number
+  square: (number: number) => number * number,
+  keepDecimal: (number: number, decimal: number) =>
+    Number(number.toFixed(decimal))
 };
 export { Router, Time, Log, Check, UI, Mathematic };

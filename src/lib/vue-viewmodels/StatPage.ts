@@ -1674,6 +1674,14 @@ export default {
     let saturday: number = 0;
     let sunday: number = 0;
 
+    let mondayNumber: number = 0;
+    let tuesdayNumber: number = 0;
+    let wednesdayNumber: number = 0;
+    let thursdayNumber: number = 0;
+    let fridayNumber: number = 0;
+    let saturdayNumber: number = 0;
+    let sundayNumber: number = 0;
+
     statDateList.forEach(statDate => {
       if (statDate.totalTime !== undefined) {
         const dayOfWeek = new Date(statDate.timeStamp).getDay();
@@ -1682,49 +1690,64 @@ export default {
             sunday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            sundayNumber++;
             break;
           case 1:
             monday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            mondayNumber++;
             break;
           case 2:
             tuesday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            tuesdayNumber++;
             break;
           case 3:
             wednesday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            wednesdayNumber++;
             break;
           case 4:
             thursday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            thursdayNumber++;
             break;
           case 5:
             friday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            fridayNumber++;
             break;
           case 6:
             saturday +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : statDate.totalTime / (1000 * 3600);
+            saturdayNumber++;
             break;
         }
       }
     });
 
-    return [monday, tuesday, wednesday, thursday, friday, saturday, sunday];
+    return [
+      Mathematic.keepDecimal(monday / mondayNumber, 2),
+      Mathematic.keepDecimal(tuesday / tuesdayNumber, 2),
+      Mathematic.keepDecimal(wednesday / wednesdayNumber, 2),
+      Mathematic.keepDecimal(thursday / thursdayNumber, 2),
+      Mathematic.keepDecimal(friday / fridayNumber, 2),
+      Mathematic.keepDecimal(saturday / saturdayNumber, 2),
+      Mathematic.keepDecimal(sunday / sundayNumber, 2)
+    ];
   },
 
   /**
