@@ -1,6 +1,6 @@
 <template>
   <div class="scatter-diagram-item-container">
-    <h1>周中最佳工作日</h1>
+    <h1>最佳工作日</h1>
     <h2>{{ tip }}</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
