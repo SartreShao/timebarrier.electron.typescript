@@ -759,76 +759,76 @@ export default {
     const myChart = charts ? echarts.init(charts) : null;
 
     const option = {
-      tooltip: {
-        trigger: "axis",
-        axisPointer: {
-          type: "shadow"
-        },
-        formatter: (params: any) => {
-          // 总时长
-          let totalTime = 0;
-          // 选中的 Y 轴名称：如「凌晨...」、「上午...」等
-          const yAxisName = params[0].name;
-          switch (yAxisName) {
-            case "凌晨\n00:00-06:00":
-              totalTime = 6;
-              break;
-            case "清晨\n06:00-08:00":
-              totalTime = 2;
-              break;
-            case "上午\n08:00-12:00":
-              totalTime = 4;
-              break;
-            case "中午\n12:00-14:00":
-              totalTime = 2;
-              break;
-            case "下午\n14:00-18:00":
-              totalTime = 4;
-              break;
-            case "傍晚\n18:00-20:00":
-              totalTime = 2;
-              break;
-            case "夜晚\n20:00-24:00":
-              totalTime = 4;
-              break;
-          }
-          const totalTomato = totalTime * 2;
-          // 系列 1 的名称：今日
-          const today = params[0].seriesName;
-          // 系列 2 的名称：平均
-          const average = params[1].seriesName;
+      // tooltip: {
+      //   trigger: "axis",
+      //   axisPointer: {
+      //     type: "shadow"
+      //   },
+      //   formatter: (params: any) => {
+      //     // 总时长
+      //     let totalTime = 0;
+      //     // 选中的 Y 轴名称：如「凌晨...」、「上午...」等
+      //     const yAxisName = params[0].name;
+      //     switch (yAxisName) {
+      //       case "凌晨\n00:00-06:00":
+      //         totalTime = 6;
+      //         break;
+      //       case "清晨\n06:00-08:00":
+      //         totalTime = 2;
+      //         break;
+      //       case "上午\n08:00-12:00":
+      //         totalTime = 4;
+      //         break;
+      //       case "中午\n12:00-14:00":
+      //         totalTime = 2;
+      //         break;
+      //       case "下午\n14:00-18:00":
+      //         totalTime = 4;
+      //         break;
+      //       case "傍晚\n18:00-20:00":
+      //         totalTime = 2;
+      //         break;
+      //       case "夜晚\n20:00-24:00":
+      //         totalTime = 4;
+      //         break;
+      //     }
+      //     const totalTomato = totalTime * 2;
+      //     // 系列 1 的名称：今日
+      //     const today = params[0].seriesName;
+      //     // 系列 2 的名称：平均
+      //     const average = params[1].seriesName;
 
-          // 今日传入数据
-          const todayData = params[0].data;
+      //     // 今日传入数据
+      //     const todayData = params[0].data;
 
-          // 平均传入数据
-          const averageData = params[1].data;
+      //     // 平均传入数据
+      //     const averageData = params[1].data;
 
-          if (chartMode === "time") {
-            return `${yAxisName}
-            <br />时段总时长: ${totalTime + " 小时"}
-              <br />${today}: ${todayData.toFixed(2)} ${"小时"} (${(
-              (todayData / totalTime) *
-              100
-            ).toFixed(2) + "%"})
-            <br />${average}: ${averageData.toFixed(2)} ${"小时"} (${(
-              (averageData / totalTime) *
-              100
-            ).toFixed(2) + "%"})`;
-          } else {
-            return `${yAxisName}
-            <br />番茄容纳量: ${totalTomato + " 番茄"}
-              <br />${today}: ${todayData.toFixed(2)} ${"番茄"} (${(
-              (todayData / totalTomato) *
-              100
-            ).toFixed(2) + "%"})
-            <br />${average}: ${averageData.toFixed(2)} ${"番茄"} (${(
-              (averageData / totalTomato) *
-              100
-            ).toFixed(2) + "%"})`;
-          }
-        }
-      },
+      //     if (chartMode === "time") {
+      //       return `${yAxisName}
+      //       <br />时段总时长: ${totalTime + " 小时"}
+      //         <br />${today}: ${todayData.toFixed(2)} ${"小时"} (${(
+      //         (todayData / totalTime) *
+      //         100
+      //       ).toFixed(2) + "%"})
+      //       <br />${average}: ${averageData.toFixed(2)} ${"小时"} (${(
+      //         (averageData / totalTime) *
+      //         100
+      //       ).toFixed(2) + "%"})`;
+      //     } else {
+      //       return `${yAxisName}
+      //       <br />番茄容纳量: ${totalTomato + " 番茄"}
+      //         <br />${today}: ${todayData.toFixed(2)} ${"番茄"} (${(
+      //         (todayData / totalTomato) *
+      //         100
+      //       ).toFixed(2) + "%"})
+      //       <br />${average}: ${averageData.toFixed(2)} ${"番茄"} (${(
+      //         (averageData / totalTomato) *
+      //         100
+      //       ).toFixed(2) + "%"})`;
+      //     }
+      //   }
+      // },
       label: {
         show: labelShow.value,
         position: "insideLeft",
@@ -995,6 +995,95 @@ export default {
     }
   },
   /**
+   * 初始化周数据
+   */
+  initWeekBarChart: (
+    id: string,
+    weekStatDate: readonly number[],
+    chartMode: ChartMode,
+    colormap: string[],
+    labelShow: Ref<boolean>
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const option = {
+      label: {
+        show: labelShow.value
+      },
+      xAxis: {
+        name: "日期 x",
+        type: "category",
+        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: [
+        {
+          data: weekStatDate,
+          type: "bar",
+          showBackground: true,
+          backgroundStyle: {
+            color: "rgba(220, 220, 220, 0.2)"
+          },
+          itemStyle: {
+            color: (params: any) => {
+              return colormap[params.dataIndex % colormap.length];
+            }
+          }
+        }
+      ]
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        if (labelShow.value == true) {
+          labelShow.value = false;
+        } else {
+          labelShow.value = true;
+        }
+      });
+    }
+  },
+  /**
    * 获取「线性回归表达式」的斜率 slop
    */
   getLinearRegressionSlop: (expression: string): number => {
@@ -1009,7 +1098,7 @@ export default {
   /**
    * 获取散点图的评论信息
    */
-  getTip: (slop: number): string => {
+  getLinearRegressionTip: (slop: number): string => {
     console.log("slop", slop);
     if (slop === 0) {
       return "保持平稳";
@@ -1024,6 +1113,41 @@ export default {
     } else {
       return "等待分析";
     }
+  },
+  getWeekStatTip: (weekStatData: readonly number[]) => {
+    let max = 0;
+    let tIndex = 0;
+    weekStatData.forEach((weekStat, index) => {
+      if (max <= weekStat) {
+        max = weekStat;
+        tIndex = index;
+      }
+    });
+    let result;
+    switch (tIndex) {
+      case 0:
+        result = "星期一";
+        break;
+      case 1:
+        result = "星期二";
+        break;
+      case 2:
+        result = "星期三";
+        break;
+      case 3:
+        result = "星期四";
+        break;
+      case 4:
+        result = "星期五";
+        break;
+      case 5:
+        result = "星期六";
+        break;
+      case 6:
+        result = "星期日";
+        break;
+    }
+    return result;
   },
   /**
    * 获取每日平均番茄数

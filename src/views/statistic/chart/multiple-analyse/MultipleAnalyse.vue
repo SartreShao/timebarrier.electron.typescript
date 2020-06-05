@@ -70,7 +70,7 @@
     <div style="height:0.15vh"></div>
 
     <!-- 柱状图：每日用时分析 -->
-    <bar-chart></bar-chart>
+    <period-bar-chart></period-bar-chart>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
@@ -136,6 +136,11 @@
     </div>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <week-bar-chart></week-bar-chart>
+
+    <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -151,6 +156,7 @@ import {
 } from "@vue/composition-api";
 import ScatterDiagram from "../components/ScatterDiagram.vue";
 import PeriodBarChart from "../components/PeriodBarChart.vue";
+import WeekBarChart from "../components/WeekBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
@@ -159,7 +165,7 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
-  components: { ScatterDiagram, InfoItem, PeriodBarChart },
+  components: { ScatterDiagram, InfoItem, PeriodBarChart, WeekBarChart },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(

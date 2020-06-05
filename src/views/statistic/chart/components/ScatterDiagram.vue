@@ -84,7 +84,9 @@ export default defineComponent({
       StatPage.getLinearRegressionSlop(linearRegressionExpression.value)
     );
 
-    const tip: Ref<string> = computed(() => StatPage.getTip(slop.value));
+    const tip: Ref<string> = computed(() =>
+      StatPage.getLinearRegressionTip(slop.value)
+    );
 
     watchEffect(() => {
       linearRegressionExpression.value = StatPage.getLinearRegressionExpression(

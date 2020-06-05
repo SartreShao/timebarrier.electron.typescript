@@ -1,9 +1,7 @@
 <template>
-  <div class="period-bar-chart-container">
-    <h1>分时工作量统计</h1>
-    <h2>当前时段：{{ tip }}</h2>
-    <h3>剩余 {{ subTip }}</h3>
-
+  <div class="scatter-diagram-item-container">
+    <h1>周中最佳工作日</h1>
+    <h2>{{ tip }}</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -25,28 +23,27 @@
       </div>
     </div>
 
-    <div class="bar-chart" :id="id"></div>
+    <div class="scatter-diagram" :id="id"></div>
   </div>
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
-  ref,
   Ref,
+  ref,
   inject,
   computed,
-  onMounted,
   watch,
-  onUpdated,
-  watchEffect
+  watchEffect,
+  onMounted,
+  onUpdated
 } from "@vue/composition-api";
-import _ from "lodash";
-import Store from "@/store";
-import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 import { ChartMode } from "@/lib/types/vue-viewmodels";
-import { UI } from "@/lib/vue-utils";
+import _ from "lodash";
+import AV from "leancloud-storage";
+import Store from "@/store";
 
 export default defineComponent({
   setup(props, context) {
@@ -59,14 +56,6 @@ export default defineComponent({
       ref([])
     );
 
-    const todayTomatoList = computed(() => {
-      if (statDateList.value.length !== 0) {
-        return statDateList.value[0].tomatoList;
-      } else {
-        return [];
-      }
-    });
-
     // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
@@ -74,48 +63,28 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapForChart, []);
+    const colormap: string[] = inject(Store.colormap, []);
+
+    // 周中数据
+    const weekStatDate = computed(() =>
+      StatPage.getWeekStatData(statDateList.value, chartMode.value)
+    );
+
+    // 提示语
+    const tip = computed(() => StatPage.getWeekStatTip(weekStatDate.value));
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
       StatPage.changeChartMode(chartMode);
     };
 
-    // 今日的 BarChart
-    const todayBarChartData = computed(() =>
-      StatPage.getEachPeriodData(
-        todayTomatoList.value as AV.Object[],
-        chartMode.value
-      )
-    );
-
-    // 全部的 BarChart
-    const totalBarChartData = computed(() =>
-      StatPage.getEachPeriodData(tomatoList.value, chartMode.value).map(
-        item => item / statDateList.value.length
-      )
-    );
-
-    // 提示语：现在时段
-    const tip = ref("");
-
-    // 提示语：剩余多久
-    const subTip = ref("");
-
     // 是否显示图标的 label
-    const labelShow = ref(false);
-
-    setInterval(() => {
-      const barChartTip = StatPage.getNowPeriodName();
-      tip.value = barChartTip[0];
-      subTip.value = barChartTip[1];
-    }, 1000);
+    const labelShow: Ref<boolean> = ref(false);
 
     watchEffect(() => {
-      StatPage.initPeriodBarChart(
+      StatPage.initWeekBarChart(
         id,
-        todayBarChartData.value,
-        totalBarChartData.value,
+        weekStatDate.value,
         chartMode.value,
         colormap,
         labelShow
@@ -123,11 +92,9 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      // 初始化图层
-      StatPage.initPeriodBarChart(
+      StatPage.initWeekBarChart(
         id,
-        todayBarChartData.value,
-        totalBarChartData.value,
+        weekStatDate.value,
         chartMode.value,
         colormap,
         labelShow
@@ -135,11 +102,9 @@ export default defineComponent({
     });
 
     onUpdated(() => {
-      // 初始化图层
-      StatPage.initPeriodBarChart(
+      StatPage.initWeekBarChart(
         id,
-        todayBarChartData.value,
-        totalBarChartData.value,
+        weekStatDate.value,
         chartMode.value,
         colormap,
         labelShow
@@ -149,19 +114,17 @@ export default defineComponent({
     return {
       id,
       chartMode,
-      click_changeChartMode,
       tip,
-      subTip
+      click_changeChartMode
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.period-bar-chart-container {
+.scatter-diagram-item-container {
   width 100%
-  // height 42.19vh
-  height 62vh
+  height 42.19vh
   background white
   display flex
   flex-direction column
@@ -180,7 +143,8 @@ export default defineComponent({
   }
   h2 {
     margin-top 0.52vh
-    font-size 2.3vh
+    height 4.2vh
+    font-size 2.92vh
     font-weight 500
     font-stretch normal
     font-style normal
@@ -189,21 +153,9 @@ export default defineComponent({
     text-align center
     color #222a36
   }
-  h3 {
-    margin-top 0.52vh
-    height 1.95vh
-    font-size 1.35vh
-    font-weight 500
-    font-stretch normal
-    font-style normal
-    line-height 1.44
-    letter-spacing normal
-    text-align center
-    color #99a8b8
-  }
   .change-date-container {
     cursor pointer
-    margin-top 1vh
+    margin-top 0.52vh
     display flex
     flex-direction row
     align-items center
@@ -227,10 +179,10 @@ export default defineComponent({
       color #99a8b8
     }
   }
-  .bar-chart {
-    margin-top -7vh
+  .scatter-diagram {
+    margin-top -6vh
     width 92.93vw
-    height 59vh
+    height 38vh
   }
 }
 </style>
