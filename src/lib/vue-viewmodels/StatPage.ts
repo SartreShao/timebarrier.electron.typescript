@@ -1000,6 +1000,8 @@ export default {
   initWeekBarChart: (
     id: string,
     weekStatDate: readonly number[],
+    todayTomatoNumber: number,
+    todayTotalTime: number,
     chartMode: ChartMode,
     colormap: string[],
     labelShow: Ref<boolean>
@@ -1012,7 +1014,7 @@ export default {
         show: labelShow.value
       },
       xAxis: {
-        name: "日期 x",
+        // name: "日期 x",
         type: "category",
         data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
         nameLocation: "end",
@@ -1061,6 +1063,37 @@ export default {
             color: (params: any) => {
               return colormap[params.dataIndex % colormap.length];
             }
+          },
+          markLine: {
+            symbol: "none",
+            lineStyle: {
+              type: "dotted"
+            },
+            data: [
+              {
+                name: "今日数据",
+                yAxis:
+                  chartMode === "tomato" ? todayTomatoNumber : todayTotalTime,
+                itemStyle: {
+                  color: "#222A36"
+                },
+                label: {
+                  textStyle: {
+                    fontSize: 10,
+                    lineHeight: 12
+                  },
+                  formatter: (params: any) => {
+                    console.log(params.value);
+                    return (
+                      "今日\n" +
+                      (chartMode === "tomato"
+                        ? params.value.toFixed(2)
+                        : params.value.toFixed(2))
+                    );
+                  }
+                }
+              }
+            ]
           }
         }
       ]

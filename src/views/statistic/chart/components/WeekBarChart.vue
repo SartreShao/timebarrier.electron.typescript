@@ -81,10 +81,33 @@ export default defineComponent({
     // 是否显示图标的 label
     const labelShow: Ref<boolean> = ref(false);
 
+    // 今日工作番茄数
+    const todayTomatoNumber = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return statDateList.value[0].tomatoList.length;
+      } else {
+        return 0;
+      }
+    });
+
+    // 今日工作时长
+    const todayWorkingTime = computed(() => {
+      if (
+        statDateList.value.length !== 0 &&
+        statDateList.value[0].totalTime !== undefined
+      ) {
+        return statDateList.value[0].totalTime / (1000 * 3600);
+      } else {
+        return 0;
+      }
+    });
+
     watchEffect(() => {
       StatPage.initWeekBarChart(
         id,
         weekStatDate.value,
+        todayTomatoNumber.value,
+        todayWorkingTime.value,
         chartMode.value,
         colormap,
         labelShow
@@ -95,6 +118,8 @@ export default defineComponent({
       StatPage.initWeekBarChart(
         id,
         weekStatDate.value,
+        todayTomatoNumber.value,
+        todayWorkingTime.value,
         chartMode.value,
         colormap,
         labelShow
@@ -105,6 +130,8 @@ export default defineComponent({
       StatPage.initWeekBarChart(
         id,
         weekStatDate.value,
+        todayTomatoNumber.value,
+        todayWorkingTime.value,
         chartMode.value,
         colormap,
         labelShow
