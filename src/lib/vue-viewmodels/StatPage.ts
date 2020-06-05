@@ -1083,7 +1083,6 @@ export default {
                     lineHeight: 12
                   },
                   formatter: (params: any) => {
-                    console.log(params.value);
                     return (
                       "今日\n" +
                       (chartMode === "tomato"
