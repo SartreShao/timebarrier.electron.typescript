@@ -63,7 +63,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormap, []);
+    const colormap: string[] = inject(Store.colormapForChart, []);
 
     // 周中数据
     const weekStatDate = computed(() =>
