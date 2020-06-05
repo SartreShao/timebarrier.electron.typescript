@@ -150,7 +150,7 @@ import {
   watchEffect
 } from "@vue/composition-api";
 import ScatterDiagram from "../components/ScatterDiagram.vue";
-import BarChart from "../components/BarChart.vue";
+import PeriodBarChart from "../components/PeriodBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
@@ -159,7 +159,7 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
-  components: { ScatterDiagram, InfoItem, BarChart },
+  components: { ScatterDiagram, InfoItem, PeriodBarChart },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(
