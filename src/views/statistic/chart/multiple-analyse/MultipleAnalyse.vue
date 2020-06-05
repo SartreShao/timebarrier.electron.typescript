@@ -120,43 +120,23 @@
 
     <!-- 横向 -->
     <div class="horizontal-container">
-      <!-- 今日工作时长 -->
+      <!-- 每日平均用时 -->
       <info-item
-        :value="todayTomatoStandardDeviation"
-        title="今日番茄效率标准差"
+        :value="averagePeriodTomato + ` / ` + averagePeriodTime"
+        title="平均时段番茄 / 时间"
         width="49.87vw"
       ></info-item>
 
       <!-- 每日平均用时 -->
       <info-item
-        :value="averageTomatoStandardDeviation"
-        title="平均番茄效率标准差"
+        :value="`标准差 / 均值：` + coefficientOfVariation"
+        title="Standard Deviation Rate 均衡发力分析"
         width="49.87vw"
       ></info-item>
     </div>
 
     <!-- 占位 -->
-    <div style="height:0.15vh"></div>
-
-    <!-- 横向 -->
-    <div class="horizontal-container">
-      <!-- 今日工作时长 -->
-      <info-item
-        :value="todayTimeStandardDeviation"
-        title="今日用时效率标准差"
-        width="49.87vw"
-      ></info-item>
-
-      <!-- 每日平均用时 -->
-      <info-item
-        :value="averageTimeStandardDeviation"
-        title="平均用时效率标准差"
-        width="49.87vw"
-      ></info-item>
-    </div>
-
-    <!-- 占位 -->
-    <div style="height:150vh"></div>
+    <div style="height:15vh"></div>
   </div>
 </template>
 
@@ -316,6 +296,45 @@ export default defineComponent({
       }
     });
 
+    // 平均分时段番茄
+    const averagePeriodTomato = computed(
+      () => StatPage.getPeriodTomato(statDateList.value).toFixed(2) + " 番茄"
+    );
+
+    // 今日分时段番茄
+    const todayPeriodTomato = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return StatPage.getPeriodTomato([statDateList.value[0]]).toFixed(2);
+      } else {
+        return StatPage.getPeriodTomato([]).toFixed(2);
+      }
+    });
+
+    // 平均分时段用时
+    const averagePeriodTime = computed(() =>
+      UI.formatTimeHourMinute(StatPage.getPeriodTime(statDateList.value) / 1000)
+    );
+
+    // 今日分时段用时
+    const todayPeriodTime = computed(() => {
+      if (statDateList.value.length !== 0) {
+        return UI.formatTimeHourMinute(
+          StatPage.getPeriodTime([statDateList.value[0]]) / 1000
+        );
+      } else {
+        return UI.formatTimeHourMinute(StatPage.getPeriodTomato([]));
+      }
+    });
+
+    const coefficientOfVariation = computed(
+      () =>
+        (
+          (StatPage.getTimeStandardDeviation(statDateList.value) /
+            StatPage.getPeriodTime(statDateList.value)) *
+          100
+        ).toFixed(2) + "%"
+    );
+
     return {
       linearRegressionExpression,
       averageDailyTomato,
@@ -332,7 +351,12 @@ export default defineComponent({
       averageTimeStandardDeviation,
       todayTimeStandardDeviation,
       averageTomatoStandardDeviation,
-      todayTomatoStandardDeviation
+      todayTomatoStandardDeviation,
+      averagePeriodTomato,
+      todayPeriodTomato,
+      averagePeriodTime,
+      todayPeriodTime,
+      coefficientOfVariation
     };
   }
 });

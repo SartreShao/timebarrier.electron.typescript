@@ -1117,7 +1117,7 @@ export default {
       const endTime = (tomato.createdAt as Date).getTime();
       const startTimeHour = UI.getHour(startTime);
 
-      // 夜枭型
+      // 夜鹰型
       if (0 <= startTimeHour && startTimeHour < 4) {
         nightHawk += endTime - startTime;
       }
@@ -1127,7 +1127,7 @@ export default {
         earlyBird += endTime - startTime;
       }
 
-      // 夜枭型
+      // 夜鹰型
       else if (16 <= startTimeHour && startTimeHour < 24) {
         nightHawk += endTime - startTime;
       }
@@ -1136,7 +1136,7 @@ export default {
     if (earlyBird > nightHawk) {
       return "早鸟型";
     } else if (earlyBird < nightHawk) {
-      return "夜枭型";
+      return "夜鹰型";
     } else {
       return "极度罕见的平衡型";
     }
@@ -1407,7 +1407,9 @@ export default {
 
     return result;
   },
-  getAveragePeriodTime: (statDateList: readonly StatDate[]) => {
+
+  // 时段平均
+  getPeriodTime: (statDateList: readonly StatDate[]) => {
     // 今日的七组数据
     let deepNight = 0;
     let earlyMorning = 0;
@@ -1470,7 +1472,7 @@ export default {
       deepNight
     ]);
   },
-  getAveragePeriodTomato: (statDateList: readonly StatDate[]) => {
+  getPeriodTomato: (statDateList: readonly StatDate[]) => {
     // 今日的七组数据
     let deepNight = 0;
     let earlyMorning = 0;

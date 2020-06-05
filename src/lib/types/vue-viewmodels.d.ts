@@ -110,7 +110,7 @@ export type ChartMode = "tomato" | "time";
 /**
  * 二类时型分析
  */
-export type TwoChronotype = "早鸟型" | "夜枭型" | "极度罕见的平衡型";
+export type TwoChronotype = "早鸟型" | "夜鹰型" | "极度罕见的平衡型";
 
 /**
  * 四类时型分析
