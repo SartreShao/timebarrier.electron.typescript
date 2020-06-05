@@ -747,7 +747,7 @@ export default {
   /**
    * 初始化柱状图
    */
-  initBarChart: (
+  initPeriodBarChart: (
     id: string,
     todayBarChartData: readonly number[],
     totalBarChartData: readonly number[],

@@ -111,7 +111,7 @@ export default defineComponent({
     }, 1000);
 
     watch(tomatoList, () => {
-      StatPage.initBarChart(
+      StatPage.initPeriodBarChart(
         id,
         todayBarChartData.value,
         totalBarChartData.value,
@@ -122,7 +122,7 @@ export default defineComponent({
     });
 
     watch(labelShow, () => {
-      StatPage.initBarChart(
+      StatPage.initPeriodBarChart(
         id,
         todayBarChartData.value,
         totalBarChartData.value,
@@ -134,7 +134,7 @@ export default defineComponent({
 
     onMounted(() => {
       // 初始化图层
-      StatPage.initBarChart(
+      StatPage.initPeriodBarChart(
         id,
         todayBarChartData.value,
         totalBarChartData.value,
@@ -146,7 +146,7 @@ export default defineComponent({
 
     onUpdated(() => {
       // 初始化图层
-      StatPage.initBarChart(
+      StatPage.initPeriodBarChart(
         id,
         todayBarChartData.value,
         totalBarChartData.value,
