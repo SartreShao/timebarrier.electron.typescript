@@ -4,7 +4,9 @@ import {
   StatDate,
   ChartMode,
   TwoChronotype,
-  FourChronotype
+  FourChronotype,
+  TotalStatDate,
+  TotalStat
 } from "@/lib/types/vue-viewmodels";
 import { ElementVue } from "@/lib/types/vue-viewmodels";
 import { UI, Mathematic } from "@/lib/vue-utils";
@@ -286,6 +288,51 @@ export default {
     parseTomatoList(statDateList);
 
     return statDateList;
+  },
+  mapTotalStatDate: (statDateList: readonly StatDate[]): TotalStat => {
+    let totalStatDateList: TotalStat;
+
+    const tomatoTotalStatDateList: TotalStatDate[] = [];
+
+    statDateList.forEach((statDate, index) => {
+      let tomatoTotalStatDate: TotalStatDate;
+      if (index === 0) {
+        tomatoTotalStatDate = getTomatoTotalStatDate(statDate);
+      } else {
+        tomatoTotalStatDate = getTomatoTotalStatDate(
+          statDate,
+          tomatoTotalStatDateList[index - 1]
+        );
+      }
+      tomatoTotalStatDateList.push(tomatoTotalStatDate);
+    });
+
+    totalStatDateList = { tomatoTotalStatDateList: tomatoTotalStatDateList };
+
+    function getTomatoTotalStatDate(
+      statDate: StatDate,
+      lastTomatoTotalStatDate?: TotalStatDate
+    ): TotalStatDate {
+      if (statDate.totalTime === undefined) {
+        throw "statDate.totaltTime is undefined";
+      }
+
+      const date = statDate.date;
+      const timeStamp = statDate.timeStamp;
+      const totalTime =
+        lastTomatoTotalStatDate === undefined
+          ? statDate.totalTime
+          : statDate.totalTime + lastTomatoTotalStatDate.totalTime;
+      const totalTomatoNumber =
+        lastTomatoTotalStatDate === undefined
+          ? statDate.tomatoList.length
+          : statDate.tomatoList.length +
+            lastTomatoTotalStatDate.totalTomatoNumber;
+      const type = "tomato";
+      return { date, timeStamp, totalTime, totalTomatoNumber, type };
+    }
+
+    return totalStatDateList;
   },
   /**
    * 初始化 DailyTomatoList，这主要是用用来获取 totalTargetTomatoNumber 的
