@@ -289,12 +289,14 @@ export default {
 
     return statDateList;
   },
-  mapTotalStatDate: (statDateList: readonly StatDate[]): TotalStat => {
+  mapTotalStat: (statDateList: readonly StatDate[]): TotalStat => {
     let totalStatDateList: TotalStat;
 
     const tomatoTotalStatDateList: TotalStatDate[] = [];
 
-    statDateList.forEach((statDate, index) => {
+    const statDateListAsc = _.reverse(statDateList);
+
+    statDateListAsc.forEach((statDate, index) => {
       let tomatoTotalStatDate: TotalStatDate;
       if (index === 0) {
         tomatoTotalStatDate = getTomatoTotalStatDate(statDate);
@@ -373,9 +375,144 @@ export default {
     }
   },
   /**
-   * 点击「转换」按钮，改变数据呈现样式
+   * 获取整体的番茄涨势数据
    */
-  changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
+  mapTotalStatToTomatoList: (
+    totalStat: TotalStat,
+    chartMode: ChartMode
+  ): number[][] =>
+    totalStat.tomatoTotalStatDateList.map(tomatoTotalStatDate => {
+      if (chartMode === "tomato") {
+        return [
+          UI.getTodayStartTimestamp(tomatoTotalStatDate.timeStamp),
+          tomatoTotalStatDate.totalTomatoNumber
+        ];
+      } else {
+        return [
+          UI.getTodayStartTimestamp(tomatoTotalStatDate.timeStamp),
+          UI.timeStampToHour(tomatoTotalStatDate.totalTime as number)
+        ];
+      }
+    }),
+  /**
+   * 初始化全部走势散点图
+   */
+  initTotalScatterChart: function(
+    id: string,
+    totalStat: TotalStat,
+    chartMode: ChartMode,
+    colormap: string[]
+  ) {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const data = this.mapTotalStatToTomatoList(totalStat, chartMode);
+
+    // See https://github.com/ecomfe/echarts-stat
+    var linearRegression = ecStat.regression("linear", data, 0);
+
+    linearRegression.points.sort(function(a: any, b: any) {
+      return a[0] - b[0];
+    });
+
+    const option = {
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "cross"
+        }
+      },
+      xAxis: {
+        name: "日期 x",
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        type: "time",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        },
+        splitNumber: 5
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: [
+        {
+          name: "scatter",
+          type: "scatter",
+          emphasis: {
+            label: {
+              show: true,
+              position: "left",
+              color: "blue",
+              fontSize: 16
+            }
+          },
+          symbolSize: 8,
+          symbol: "circle",
+          data: data,
+          itemStyle: {
+            color: (params: any) => {
+              return colormap[params.dataIndex % colormap.length];
+            }
+          }
+        },
+        {
+          name: "line",
+          type: "line",
+          showSymbol: false,
+          smooth: true,
+          data: linearRegression.points,
+          itemStyle: { color: "#F9385E" },
+          markPoint: {
+            itemStyle: {
+              color: "transparent"
+            },
+            data: [
+              {
+                coord:
+                  linearRegression.points[linearRegression.points.length - 1]
+              }
+            ]
+          }
+        }
+      ]
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+  },
+  /**
+   * 点击「转换」按钮，改变数据呈现样式
+   */ changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
     switch (statStatusMode.value) {
       case "detail":
         statStatusMode.value = "date";

@@ -1,7 +1,7 @@
 <template>
-  <div class="scatter-diagram-item-container">
+  <div class="total-scatter-diagram-item-container">
     <h1>近期工作趋势</h1>
-    <h2>{{ tip }}</h2>
+    <h2>还不错</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -46,8 +46,11 @@ import Store from "@/store";
 import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
-import { ChartMode } from "@/lib/types/vue-viewmodels";
-
+import {
+  ChartMode,
+  TotalStatDate,
+  TotalStat
+} from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
@@ -59,8 +62,11 @@ export default defineComponent({
       ref([])
     );
 
-    // 真正使用的数据，由番茄列表映射而来
+    // 分日数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+
+    // 整体数据
+    const totalStat = computed(() => StatPage.mapTotalStat(statDateList.value));
 
     // 表示图表中显示的是时间，还是番茄
     const chartMode: Ref<ChartMode> = ref("tomato");
@@ -68,78 +74,49 @@ export default defineComponent({
     // 颜色表
     const colormap: string[] = inject(Store.colormap, []);
 
-    // 用于在图上画点的数据，由 StatDateList 映射而来
-    const scatterData = computed(() =>
-      StatPage.getScatterData(statDateList.value, chartMode.value)
-    );
-
-    // 线性回归表达式，由 regressionData
-    const linearRegressionExpression = inject(
-      Store.linearRegressionExpression,
-      ref("")
-    );
-
-    // 线性回归表达式的斜率 slop
-    const slop = computed(() =>
-      StatPage.getLinearRegressionSlop(linearRegressionExpression.value)
-    );
-
-    const tip: Ref<string> = computed(() =>
-      StatPage.getLinearRegressionTip(slop.value)
-    );
+    // 点击事件：点击更改图标模式
+    const click_changeChartMode = () => {
+      StatPage.changeChartMode(chartMode);
+    };
 
     watchEffect(() => {
-      linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
-        scatterData.value,
-        chartMode.value
-      );
-    });
-
-    watch(tomatoList, () => {
-      StatPage.initScatterChart(
+      StatPage.initTotalScatterChart(
         id,
-        scatterData.value,
+        totalStat.value,
         chartMode.value,
         colormap
       );
     });
 
     onMounted(() => {
-      StatPage.initScatterChart(
+      StatPage.initTotalScatterChart(
         id,
-        scatterData.value,
+        totalStat.value,
         chartMode.value,
         colormap
       );
     });
 
     onUpdated(() => {
-      StatPage.initScatterChart(
+      StatPage.initTotalScatterChart(
         id,
-        scatterData.value,
+        totalStat.value,
         chartMode.value,
         colormap
       );
     });
 
-    // 点击事件：点击更改图标模式
-    const click_changeChartMode = () => {
-      StatPage.changeChartMode(chartMode);
-    };
-
     return {
       id,
-      linearRegressionExpression,
       chartMode,
-      click_changeChartMode,
-      tip
+      click_changeChartMode
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.scatter-diagram-item-container {
+.total-scatter-diagram-item-container {
   width 100%
   height 42.19vh
   background white

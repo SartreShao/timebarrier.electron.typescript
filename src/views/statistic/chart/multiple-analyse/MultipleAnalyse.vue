@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 散点图 -->
-    <scatter-diagram></scatter-diagram>
+    <average-scatter-diagram></average-scatter-diagram>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
@@ -138,6 +138,11 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <total-scatter-diagram></total-scatter-diagram>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
     <week-bar-chart></week-bar-chart>
 
     <!-- 占位 -->
@@ -154,7 +159,8 @@ import {
   computed,
   watchEffect
 } from "@vue/composition-api";
-import ScatterDiagram from "../components/ScatterDiagram.vue";
+import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
+import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
 import PeriodBarChart from "../components/PeriodBarChart.vue";
 import WeekBarChart from "../components/WeekBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
@@ -165,7 +171,13 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
-  components: { ScatterDiagram, InfoItem, PeriodBarChart, WeekBarChart },
+  components: {
+    AverageScatterDiagram,
+    InfoItem,
+    PeriodBarChart,
+    WeekBarChart,
+    TotalScatterDiagram
+  },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(
@@ -332,6 +344,7 @@ export default defineComponent({
       }
     });
 
+    // 标准差率
     const coefficientOfVariation = computed(
       () =>
         (
