@@ -72,6 +72,8 @@ const tomatoListWithDateRange = Symbol();
 const beforeTomatoList = Symbol();
 // 用户选择日期范围的番茄列表之后的番茄列表
 const afterTomatoList = Symbol();
+// 全部的 TomatoList
+const totalTomatoList = Symbol();
 // 线性回归表达式
 const linearRegressionExpression = Symbol();
 // 用户选择的日期范围
@@ -205,6 +207,7 @@ function useProvider() {
   provide(tomatoListWithDateRange, ref<AV.Object[]>([]));
   provide(beforeTomatoList, ref<AV.Object[]>([]));
   provide(afterTomatoList, ref<AV.Object[]>([]));
+  provide(totalTomatoList, ref<AV.Object[]>([]));
   provide(linearRegressionExpression, ref(""));
   provide(
     dateRange,
@@ -252,6 +255,7 @@ export default {
   tomatoListWithDateRange,
   beforeTomatoList,
   afterTomatoList,
+  totalTomatoList,
   linearRegressionExpression,
   dateRange
 };
