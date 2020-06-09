@@ -452,9 +452,7 @@ export default {
       },
       yAxis: {
         min:
-          symbolSize.value === 8
-            ? 0
-            : totalStat.tomatoTotalStatDateList.length === 0
+          totalStat.tomatoTotalStatDateList.length === 0
             ? 0
             : chartMode === "tomato"
             ? totalStat.tomatoTotalStatDateList[0].totalTomatoNumber
