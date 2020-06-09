@@ -490,7 +490,7 @@ export default {
           lineStyle: {
             color: "#552FB9"
           }
-        },
+        }
         // {
         //   name: "line",
         //   type: "line",
