@@ -1,7 +1,7 @@
 <template>
   <div class="total-scatter-diagram-item-container">
     <h1>工作总量趋势</h1>
-    <h2>累计工作：20 小时</h2>
+    <h2>{{ title }}</h2>
     <h3>{{ subTitle }}</h3>
 
     <div class="change-date-container" @click="click_changeChartMode">
@@ -67,11 +67,14 @@ export default defineComponent({
     // 用户选择的日期范围
     const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
 
-    const subTitle: Ref<string> = computed(
-      () =>
-        UI.dateToYearMonthDay(dateRange.value[0], "-") +
-        " 至 " +
-        UI.dateToYearMonthDay(dateRange.value[1], "-")
+    // 主标题
+    const title = computed(() =>
+      StatPage.getTotalScatterDiagramTitle(tomatoList.value, chartMode.value)
+    );
+
+    // 副标题
+    const subTitle: Ref<string> = computed(() =>
+      StatPage.getTotalScatterDiagramSubTitle(dateRange.value)
     );
 
     // 分日数据，由番茄列表映射而来
@@ -127,6 +130,7 @@ export default defineComponent({
       id,
       chartMode,
       click_changeChartMode,
+      title,
       subTitle
     };
   }

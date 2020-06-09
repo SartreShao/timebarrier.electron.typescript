@@ -290,8 +290,7 @@ export default {
     return statDateList;
   },
   mapTotalStat: (statDateList: readonly StatDate[]): TotalStat => {
-    console.log("statDateList", statDateList);
-    let totalStatDateList: TotalStat;
+    let totalStat: TotalStat;
 
     const tomatoTotalStatDateList: TotalStatDate[] = [];
 
@@ -310,7 +309,7 @@ export default {
       tomatoTotalStatDateList.push(tomatoTotalStatDate);
     });
 
-    totalStatDateList = { tomatoTotalStatDateList: tomatoTotalStatDateList };
+    totalStat = { tomatoTotalStatDateList: tomatoTotalStatDateList };
 
     function getTomatoTotalStatDate(
       statDate: StatDate,
@@ -337,7 +336,8 @@ export default {
       return { date, timeStamp, totalTime, totalTomatoNumber, type };
     }
 
-    return totalStatDateList;
+    console.log("TotalStat", totalStat);
+    return totalStat;
   },
   /**
    * 初始化 DailyTomatoList，这主要是用用来获取 totalTargetTomatoNumber 的
@@ -2113,5 +2113,35 @@ export default {
       november,
       december
     ];
-  }
+  },
+  /**
+   * 统计累计工作时长或番茄
+   */
+  getTotalScatterDiagramTitle: (
+    tomatoListWithDateRange: AV.Object[],
+    chartMode: ChartMode
+  ) => {
+    let totalTime = 0;
+    let totalTomatoNumber = 0;
+    tomatoListWithDateRange.forEach(tomato => {
+      totalTime +=
+        (tomato.createdAt as Date).getTime() -
+        tomato.attributes.startTime.getTime();
+      totalTomatoNumber++;
+    });
+    console.log("totalTime", totalTime);
+    return chartMode === "tomato"
+      ? `累计工作：${totalTomatoNumber} 番茄`
+      : `累计工作：${UI.formatTimeHourMinute(totalTime / 1000)}`;
+  },
+  getTotalScatterDiagramSubTitle: (dateRange: Date[]) =>
+    UI.dateToYearMonthDay(dateRange[0], "-") +
+    " 至 " +
+    UI.dateToYearMonthDay(dateRange[1], "-") +
+    "，共 " +
+    (
+      (dateRange[1].getTime() - dateRange[0].getTime()) /
+      (1000 * 3600 * 24)
+    ).toFixed(0) +
+    " 天"
 };
