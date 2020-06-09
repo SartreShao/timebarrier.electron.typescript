@@ -94,7 +94,22 @@ export default defineComponent({
       StatPage.changeChartMode(chartMode);
     };
 
+    // 线性回归表达式，由 regressionData
+    const totalLinearRegressionExpression = inject(
+      Store.totalLinearRegressionExpression,
+      ref("")
+    );
+
     const symbolSize = ref(8);
+
+    watchEffect(() => {
+      totalLinearRegressionExpression.value = StatPage.getLinearRegressionExpression(
+        _.reverse(
+          StatPage.mapTotalStatToTomatoList(totalStat.value, chartMode.value)
+        ),
+        chartMode.value
+      );
+    });
 
     watchEffect(() => {
       StatPage.initTotalScatterChart(

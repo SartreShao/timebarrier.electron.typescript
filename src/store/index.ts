@@ -68,8 +68,10 @@ const abilityStatStatusMode = Symbol();
 const tomatoList = Symbol();
 // 用户选择日期范围的番茄列表
 const tomatoListWithDateRange = Symbol();
-// 线性回归表达式
-const linearRegressionExpression = Symbol();
+// 平均线性回归表达式
+const averageLinearRegressionExpression = Symbol();
+// 总体线性回归表达式
+const totalLinearRegressionExpression = Symbol();
 // 用户选择的日期范围
 const dateRange = Symbol();
 
@@ -199,7 +201,8 @@ function useProvider() {
   provide(abilityStatStatusMode, ref<StatStatusMode>("simple"));
   provide(tomatoList, ref<AV.Object[]>([]));
   provide(tomatoListWithDateRange, ref<AV.Object[]>([]));
-  provide(linearRegressionExpression, ref(""));
+  provide(averageLinearRegressionExpression, ref(""));
+  provide(totalLinearRegressionExpression, ref(""));
   provide(
     dateRange,
     ref([
@@ -244,6 +247,7 @@ export default {
   abilityStatStatusMode,
   tomatoList,
   tomatoListWithDateRange,
-  linearRegressionExpression,
+  averageLinearRegressionExpression,
+  totalLinearRegressionExpression,
   dateRange
 };

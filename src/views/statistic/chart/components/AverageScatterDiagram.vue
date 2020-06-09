@@ -74,14 +74,14 @@ export default defineComponent({
     );
 
     // 线性回归表达式，由 regressionData
-    const linearRegressionExpression = inject(
-      Store.linearRegressionExpression,
+    const averageLinearRegressionExpression = inject(
+      Store.averageLinearRegressionExpression,
       ref("")
     );
 
     // 线性回归表达式的斜率 slop
     const slop = computed(() =>
-      StatPage.getLinearRegressionSlop(linearRegressionExpression.value)
+      StatPage.getLinearRegressionSlop(averageLinearRegressionExpression.value)
     );
 
     const tip: Ref<string> = computed(() =>
@@ -89,7 +89,7 @@ export default defineComponent({
     );
 
     watchEffect(() => {
-      linearRegressionExpression.value = StatPage.getLinearRegressionExpression(
+      averageLinearRegressionExpression.value = StatPage.getLinearRegressionExpression(
         scatterData.value,
         chartMode.value
       );
@@ -129,7 +129,7 @@ export default defineComponent({
 
     return {
       id,
-      linearRegressionExpression,
+      averageLinearRegressionExpression,
       chartMode,
       click_changeChartMode,
       tip

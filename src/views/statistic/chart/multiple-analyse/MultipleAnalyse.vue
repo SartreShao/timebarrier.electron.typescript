@@ -8,7 +8,7 @@
 
     <!-- 散点图的公式 -->
     <info-item
-      :value="linearRegressionExpression"
+      :value="averageLinearRegressionExpression"
       title="Linear Regression 每日工作量预测分析"
       width="100vw"
     ></info-item>
@@ -75,7 +75,7 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <!-- 散点图的公式 -->
+    <!-- 四类时型分析 -->
     <info-item
       :value="chronotype"
       title="Chronotype 四类时型分析"
@@ -143,6 +143,16 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 散点图的公式 -->
+    <info-item
+      :value="totalLinearRegressionExpression"
+      title="Linear Regression 工作总量预测分析"
+      width="100vw"
+    ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
     <week-bar-chart></week-bar-chart>
 
     <!-- 占位 -->
@@ -204,8 +214,14 @@ export default defineComponent({
     );
 
     // 线性回归表达式，由 regressionData
-    const linearRegressionExpression = inject(
-      Store.linearRegressionExpression,
+    const averageLinearRegressionExpression = inject(
+      Store.averageLinearRegressionExpression,
+      ref("")
+    );
+
+    // 线性回归表达式，由 regressionData
+    const totalLinearRegressionExpression = inject(
+      Store.totalLinearRegressionExpression,
       ref("")
     );
 
@@ -355,7 +371,8 @@ export default defineComponent({
     );
 
     return {
-      linearRegressionExpression,
+      averageLinearRegressionExpression,
+      totalLinearRegressionExpression,
       averageDailyTomato,
       maximumDailyTomato,
       averageDailyTime,
