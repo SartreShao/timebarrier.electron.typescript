@@ -176,7 +176,7 @@
     <!-- 散点图的公式 -->
     <info-item
       :value="totalLinearRegressionExpression"
-      title="10000 小时达成日期预测"
+      title="「10,000 小时定律」达成日期预测"
       width="100vw"
     ></info-item>
 
