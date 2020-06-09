@@ -153,6 +153,36 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="totalTomatoNumber"
+        title="总番茄数"
+        width="49.87vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="totalTime"
+        title="总工作时长"
+        width="49.87vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 散点图的公式 -->
+    <info-item
+      :value="totalLinearRegressionExpression"
+      title="10000 小时达成日期预测"
+      width="100vw"
+    ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
     <week-bar-chart></week-bar-chart>
 
     <!-- 占位 -->
@@ -167,7 +197,8 @@ import {
   inject,
   Ref,
   computed,
-  watchEffect
+  watchEffect,
+  onMounted
 } from "@vue/composition-api";
 import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
 import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
@@ -370,6 +401,29 @@ export default defineComponent({
         ).toFixed(2) + "%"
     );
 
+    const totalTime = ref("0 小时");
+
+    const totalTomatoNumber = ref("0 番茄");
+
+    onMounted(() => {
+      if (dateRange.value.length === 2) {
+        const startTime = dateRange.value[0];
+        const endTime = dateRange.value[1];
+        StatPage.initTomatoListWithDateRange(
+          context.root,
+          tomatoList,
+          startTime,
+          endTime
+        );
+      }
+
+      StatPage.fetchTotalTomatoAndTime(
+        context.root,
+        totalTomatoNumber,
+        totalTime
+      );
+    });
+
     return {
       averageLinearRegressionExpression,
       totalLinearRegressionExpression,
@@ -392,7 +446,9 @@ export default defineComponent({
       todayPeriodTomato,
       averagePeriodTime,
       todayPeriodTime,
-      coefficientOfVariation
+      coefficientOfVariation,
+      totalTomatoNumber,
+      totalTime
     };
   }
 });

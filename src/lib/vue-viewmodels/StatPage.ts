@@ -2143,5 +2143,37 @@ export default {
       (dateRange[1].getTime() - dateRange[0].getTime()) /
       (1000 * 3600 * 24)
     ).toFixed(0) +
-    " 天"
+    " 天",
+  /**
+   * 获取全部的 TomatoNumber 和 Time
+   */
+  fetchTotalTomatoAndTime: async (
+    vue: ElementVue,
+    totalTomatoNumber: Ref<string>,
+    totalTime: Ref<string>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    try {
+      await user.fetch();
+      totalTomatoNumber.value = user.attributes.totalTomatoNumber + " 番茄";
+      totalTime.value = UI.formatTimeHourMinute(
+        user.attributes.totalTime / 1000
+      );
+    } catch (error) {
+      UI.showNotification(
+        vue.$notify,
+        "网络错误",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+  }
 };
