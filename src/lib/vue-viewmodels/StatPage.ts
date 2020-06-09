@@ -1,4 +1,4 @@
-import { Ref } from "@vue/composition-api";
+import { Ref, ref } from "@vue/composition-api";
 import {
   StatStatusMode,
   StatDate,
@@ -290,6 +290,7 @@ export default {
     return statDateList;
   },
   mapTotalStat: (statDateList: readonly StatDate[]): TotalStat => {
+    console.log("statDateList", statDateList);
     let totalStatDateList: TotalStat;
 
     const tomatoTotalStatDateList: TotalStatDate[] = [];
@@ -323,11 +324,13 @@ export default {
       const timeStamp = statDate.timeStamp;
       const totalTime =
         lastTomatoTotalStatDate === undefined
-          ? statDate.totalTime
+          ? statDate.tomatoList[statDate.tomatoList.length - 1].attributes
+              .totalTime
           : statDate.totalTime + lastTomatoTotalStatDate.totalTime;
       const totalTomatoNumber =
         lastTomatoTotalStatDate === undefined
-          ? statDate.tomatoList.length
+          ? statDate.tomatoList[statDate.tomatoList.length - 1].attributes
+              .totalTomatoNumber
           : statDate.tomatoList.length +
             lastTomatoTotalStatDate.totalTomatoNumber;
       const type = "tomato";
@@ -401,7 +404,8 @@ export default {
     id: string,
     totalStat: TotalStat,
     chartMode: ChartMode,
-    colormap: string[]
+    colormap: string[],
+    symbolSize: Ref<number>
   ) {
     const charts = document.getElementById(id) as HTMLDivElement;
     const myChart = charts ? echarts.init(charts) : null;
@@ -447,6 +451,16 @@ export default {
         splitNumber: 5
       },
       yAxis: {
+        min:
+          symbolSize.value === 8
+            ? 0
+            : totalStat.tomatoTotalStatDateList.length === 0
+            ? 0
+            : chartMode === "tomato"
+            ? totalStat.tomatoTotalStatDateList[0].totalTomatoNumber
+            : UI.timeStampToHour(
+                totalStat.tomatoTotalStatDateList[0].totalTime
+              ),
         name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
         nameLocation: "end",
         nameTextStyle: {
@@ -479,7 +493,7 @@ export default {
               fontSize: 16
             }
           },
-          symbolSize: 8,
+          symbolSize: symbolSize.value,
           symbol: "circle",
           data: data,
           itemStyle: {
@@ -519,10 +533,21 @@ export default {
     if (myChart !== null) {
       myChart.resize();
     }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        if (symbolSize.value === 1) {
+          symbolSize.value = 8;
+        } else {
+          symbolSize.value = 1;
+        }
+      });
+    }
   },
   /**
    * 点击「转换」按钮，改变数据呈现样式
-   */ changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
+   */
+  changeStatStatusMode: (statStatusMode: Ref<StatStatusMode>) => {
     switch (statStatusMode.value) {
       case "detail":
         statStatusMode.value = "date";

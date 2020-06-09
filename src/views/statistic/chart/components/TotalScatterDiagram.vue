@@ -81,12 +81,15 @@ export default defineComponent({
       StatPage.changeChartMode(chartMode);
     };
 
+    const symbolSize = ref(8);
+
     watchEffect(() => {
       StatPage.initTotalScatterChart(
         id,
         totalStat.value,
         chartMode.value,
-        colormap
+        colormap,
+        symbolSize
       );
     });
 
@@ -95,7 +98,8 @@ export default defineComponent({
         id,
         totalStat.value,
         chartMode.value,
-        colormap
+        colormap,
+        symbolSize
       );
     });
 
@@ -104,7 +108,8 @@ export default defineComponent({
         id,
         totalStat.value,
         chartMode.value,
-        colormap
+        colormap,
+        symbolSize
       );
     });
 
