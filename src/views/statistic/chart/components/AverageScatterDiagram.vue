@@ -1,6 +1,6 @@
 <template>
   <div class="average-scatter-diagram-item-container">
-    <h1>近期工作趋势</h1>
+    <h1>每日工作趋势</h1>
     <h2>{{ tip }}</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg

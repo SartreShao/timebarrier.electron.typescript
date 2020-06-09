@@ -1,6 +1,6 @@
 <template>
   <div class="total-scatter-diagram-item-container">
-    <h1>近期工作趋势</h1>
+    <h1>工作总量趋势</h1>
     <h2>还不错</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
@@ -72,7 +72,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormap, []);
+    const colormap: string[] = inject(Store.colormapForChart, []);
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
@@ -175,7 +175,7 @@ export default defineComponent({
   }
   .scatter-diagram {
     margin-top -6vh
-    width 92.93vw
+    width 100vw
     height 38vh
   }
 }

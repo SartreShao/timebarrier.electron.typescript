@@ -416,6 +416,12 @@ export default {
     });
 
     const option = {
+      grid: {
+        left: "3.2%",
+        right: "14%",
+        bottom: "10%",
+        containLabel: true
+      },
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -463,7 +469,8 @@ export default {
       series: [
         {
           name: "scatter",
-          type: "scatter",
+          type: "line",
+          smooth: true,
           emphasis: {
             label: {
               show: true,
@@ -479,27 +486,30 @@ export default {
             color: (params: any) => {
               return colormap[params.dataIndex % colormap.length];
             }
+          },
+          lineStyle: {
+            color: "#552FB9"
           }
         },
-        {
-          name: "line",
-          type: "line",
-          showSymbol: false,
-          smooth: true,
-          data: linearRegression.points,
-          itemStyle: { color: "#F9385E" },
-          markPoint: {
-            itemStyle: {
-              color: "transparent"
-            },
-            data: [
-              {
-                coord:
-                  linearRegression.points[linearRegression.points.length - 1]
-              }
-            ]
-          }
-        }
+        // {
+        //   name: "line",
+        //   type: "line",
+        //   showSymbol: false,
+        //   smooth: true,
+        //   data: linearRegression.points,
+        //   itemStyle: { color: "#552FB9" },
+        //   markPoint: {
+        //     itemStyle: {
+        //       color: "transparent"
+        //     },
+        //     data: [
+        //       {
+        //         coord:
+        //           linearRegression.points[linearRegression.points.length - 1]
+        //       }
+        //     ]
+        //   }
+        // }
       ]
     };
 
