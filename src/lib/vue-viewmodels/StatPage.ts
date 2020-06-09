@@ -422,7 +422,7 @@ export default {
     const option = {
       grid: {
         left: "3.2%",
-        right: "14%",
+        right: "12%",
         bottom: "10%",
         containLabel: true
       },
