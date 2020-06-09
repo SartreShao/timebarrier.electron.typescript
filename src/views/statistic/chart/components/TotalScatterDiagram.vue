@@ -1,7 +1,9 @@
 <template>
   <div class="total-scatter-diagram-item-container">
     <h1>工作总量趋势</h1>
-    <h2>还不错</h2>
+    <h2>累计工作：20 小时</h2>
+    <h3>2020-05-04 至 2020-06-28</h3>
+
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +120,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .total-scatter-diagram-item-container {
   width 100%
-  height 42.19vh
+  height 43.19vh
   background white
   display flex
   flex-direction column
@@ -137,8 +139,7 @@ export default defineComponent({
   }
   h2 {
     margin-top 0.52vh
-    height 4.2vh
-    font-size 2.92vh
+    font-size 2.3vh
     font-weight 500
     font-stretch normal
     font-style normal
@@ -147,9 +148,21 @@ export default defineComponent({
     text-align center
     color #222a36
   }
+  h3 {
+    margin-top 0.52vh
+    height 1.95vh
+    font-size 1.35vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing normal
+    text-align center
+    color #99a8b8
+  }
   .change-date-container {
     cursor pointer
-    margin-top 0.52vh
+    margin-top 1vh
     display flex
     flex-direction row
     align-items center
