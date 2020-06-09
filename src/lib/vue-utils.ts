@@ -177,7 +177,11 @@ const UI = {
       day = "0" + day;
     }
 
-    return `${year} 年 ${month} 月 ${day} 日`;
+    if (separate === undefined) {
+      return `${year} 年 ${month} 月 ${day} 日`;
+    } else {
+      return `${year}${separate}${month}${separate}${day}`;
+    }
   },
   dateToHourMinute12: (date: Date) => {
     let hour: number | string = date.getHours();
