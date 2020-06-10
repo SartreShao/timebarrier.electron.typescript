@@ -2215,73 +2215,85 @@ export default {
             january +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 2:
             february +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 3:
             march +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 4:
             april +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 5:
             may +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 6:
             june +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 7:
             july +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 8:
             auguest +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 9:
             september +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 10:
             october +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 11:
             november +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
           case 12:
             december +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : Number(UI.getHour(statDate.totalTime).toFixed(2));
+                : UI.timeStampToHour(statDate.totalTime);
+
             break;
         }
       }

@@ -62,6 +62,10 @@ export default defineComponent({
       StatPage.mapStatDate(thisYearTomatoList.value)
     );
 
+    watchEffect(() => {
+      console.log("全年数据", statDateList.value);
+    });
+
     // 表示图表中显示的是时间，还是番茄
     const chartMode: Ref<ChartMode> = ref("tomato");
 
