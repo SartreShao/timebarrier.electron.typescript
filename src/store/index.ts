@@ -72,6 +72,8 @@ const tomatoListWithDateRange = Symbol();
 const averageLinearRegressionExpression = Symbol();
 // 总体线性回归表达式
 const totalLinearRegressionExpression = Symbol();
+// 总体线性回归表达式：Time=》for 一万小时定律
+const totalLinearRegressionExpressionTime = Symbol();
 // 用户选择的日期范围
 const dateRange = Symbol();
 
@@ -213,6 +215,7 @@ function useProvider() {
       new Date(UI.getTodayStartTimestamp(new Date().getTime()))
     ])
   );
+  provide(totalLinearRegressionExpressionTime, ref(""));
 }
 
 export default {
@@ -249,5 +252,6 @@ export default {
   tomatoListWithDateRange,
   averageLinearRegressionExpression,
   totalLinearRegressionExpression,
+  totalLinearRegressionExpressionTime,
   dateRange
 };

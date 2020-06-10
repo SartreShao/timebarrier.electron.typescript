@@ -175,7 +175,7 @@
 
     <!-- 散点图的公式 -->
     <info-item
-      :value="totalLinearRegressionExpression"
+      :value="tenThousandHourDate"
       title="「10,000 小时定律」达成日期预测"
       width="100vw"
     ></info-item>
@@ -253,6 +253,12 @@ export default defineComponent({
     // 线性回归表达式，由 regressionData
     const totalLinearRegressionExpression = inject(
       Store.totalLinearRegressionExpression,
+      ref("")
+    );
+
+    // 线性回归表达式，由 regressionData
+    const totalLinearRegressionExpressionTime = inject(
+      Store.totalLinearRegressionExpressionTime,
       ref("")
     );
 
@@ -401,9 +407,24 @@ export default defineComponent({
         ).toFixed(2) + "%"
     );
 
+    // 整体时间
     const totalTime = ref("0 小时");
 
+    // 整体番茄
     const totalTomatoNumber = ref("0 番茄");
+
+    // 一万小时定律
+    const tenThousandHourDate = computed(() =>
+      StatPage.get10000HoursDate(
+        dateRange.value[0].getTime(),
+        StatPage.getLinearRegressionSlop(
+          totalLinearRegressionExpressionTime.value
+        ),
+        StatPage.getLinearRegressionIntercept(
+          totalLinearRegressionExpressionTime.value
+        )
+      )
+    );
 
     onMounted(() => {
       if (dateRange.value.length === 2) {
@@ -448,7 +469,8 @@ export default defineComponent({
       todayPeriodTime,
       coefficientOfVariation,
       totalTomatoNumber,
-      totalTime
+      totalTime,
+      tenThousandHourDate
     };
   }
 });

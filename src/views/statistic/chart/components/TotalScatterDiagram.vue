@@ -100,6 +100,12 @@ export default defineComponent({
       ref("")
     );
 
+    // 线性回归表达式，由 regressionData
+    const totalLinearRegressionExpressionTime = inject(
+      Store.totalLinearRegressionExpressionTime,
+      ref("")
+    );
+
     const symbolSize = ref(8);
 
     watchEffect(() => {
@@ -107,6 +113,11 @@ export default defineComponent({
         _.reverse(
           StatPage.mapTotalStatToTomatoList(totalStat.value, chartMode.value)
         ),
+        chartMode.value
+      );
+
+      totalLinearRegressionExpressionTime.value = StatPage.getLinearRegressionExpression(
+        _.reverse(StatPage.mapTotalStatToTomatoList(totalStat.value, "time")),
         chartMode.value
       );
     });

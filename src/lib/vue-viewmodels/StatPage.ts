@@ -1345,6 +1345,19 @@ export default {
     }
   },
   /**
+   * 获取「线性回归表达式」的截距 intercept
+   */
+  getLinearRegressionIntercept: (expression: string): number => {
+    const regex = /^y = .*x \+ (.*)｜.*$/;
+    const execArray = regex.exec(expression);
+    if (execArray !== null && execArray[1] !== null) {
+      console.log("shit", execArray);
+      return Number(execArray[1]);
+    } else {
+      return 0;
+    }
+  },
+  /**
    * 获取散点图的评论信息
    */
   getLinearRegressionTip: (slop: number): string => {
@@ -2175,5 +2188,13 @@ export default {
         "error"
       );
     }
+  },
+  get10000HoursDate: (startTimeStamp: number, k: number, b: number) => {
+    const result = ((10000 - b) / k) * 3600 * 1000 * 24 + startTimeStamp;
+    console.log("startTimeStamp", startTimeStamp);
+    console.log("b", b);
+    console.log("k", k);
+    console.log("fuck", result);
+    return UI.dateToYearMonthDay(new Date(result));
   }
 };
