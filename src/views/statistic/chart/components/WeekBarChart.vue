@@ -71,7 +71,7 @@ export default defineComponent({
     );
 
     // 提示语
-    const tip = computed(() => StatPage.getWeekStatTip(weekStatDate.value));
+    const tip = computed(() => StatPage.getBestDayInWeek(weekStatDate.value));
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {

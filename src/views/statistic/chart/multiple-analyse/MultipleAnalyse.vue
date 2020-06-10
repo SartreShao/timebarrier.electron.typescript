@@ -240,6 +240,11 @@
     </div>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <month-bar-chart></month-bar-chart>
+
+    <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -258,6 +263,7 @@ import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
 import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
 import PeriodBarChart from "../components/PeriodBarChart.vue";
 import WeekBarChart from "../components/WeekBarChart.vue";
+import MonthBarChart from "../components/MonthBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
@@ -271,6 +277,7 @@ export default defineComponent({
     InfoItem,
     PeriodBarChart,
     WeekBarChart,
+    MonthBarChart,
     TotalScatterDiagram
   },
   setup(props, context) {

@@ -1334,6 +1334,102 @@ export default {
       });
     }
   },
+
+  /**
+   * 初始化月数据
+   */
+  initMonthBarChart: (
+    id: string,
+    monthStatDate: readonly number[],
+    chartMode: ChartMode,
+    colormap: string[],
+    labelShow: Ref<boolean>
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const option = {
+      grid: {
+        left: "3.2%",
+        right: "12%",
+        bottom: "10%",
+        containLabel: true
+      },
+      label: {
+        show: labelShow.value
+      },
+      xAxis: {
+        name: "月份 x",
+        type: "category",
+        data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: [
+        {
+          data: monthStatDate,
+          type: "bar",
+          showBackground: true,
+          backgroundStyle: {
+            color: "rgba(220, 220, 220, 0.2)"
+          },
+          itemStyle: {
+            color: (params: any) => {
+              return colormap[params.dataIndex % colormap.length];
+            }
+          }
+        }
+      ]
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        if (labelShow.value == true) {
+          labelShow.value = false;
+        } else {
+          labelShow.value = true;
+        }
+      });
+    }
+  },
   /**
    * 获取「线性回归表达式」的斜率 slop
    */
@@ -1378,7 +1474,10 @@ export default {
       return "等待分析";
     }
   },
-  getWeekStatTip: (weekStatData: readonly number[]) => {
+  /**
+   * 获取最佳工作日
+   */
+  getBestDayInWeek: (weekStatData: readonly number[]) => {
     let max = 0;
     let tIndex = 0;
     weekStatData.forEach((weekStat, index) => {
@@ -1413,6 +1512,58 @@ export default {
     }
     return result;
   },
+
+  getBestMonth: (monthStatData: readonly number[]) => {
+    let max = 0;
+    let tIndex = 0;
+    monthStatData.forEach((monthStat, index) => {
+      if (max <= monthStat) {
+        max = monthStat;
+        tIndex = index;
+      }
+    });
+    let result;
+    switch (tIndex) {
+      case 0:
+        result = "1月";
+        break;
+      case 1:
+        result = "2月";
+        break;
+      case 2:
+        result = "3月";
+        break;
+      case 3:
+        result = "4月";
+        break;
+      case 4:
+        result = "5月";
+        break;
+      case 5:
+        result = "6月";
+        break;
+      case 6:
+        result = "7月";
+        break;
+      case 7:
+        result = "8月";
+        break;
+      case 8:
+        result = "9月";
+        break;
+      case 9:
+        result = "10月";
+        break;
+      case 10:
+        result = "11月";
+        break;
+      case 11:
+        result = "12月";
+        break;
+    }
+    return result;
+  },
+
   /**
    * 获取每日平均番茄数
    */
@@ -2042,91 +2193,91 @@ export default {
             january +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 2:
             february +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 3:
             march +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 4:
             april +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 5:
             may +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 6:
             june +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 7:
             july +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 8:
             auguest +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 9:
             september +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 10:
             october +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 11:
             november +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
           case 12:
             december +=
               chartMode === "tomato"
                 ? statDate.tomatoList.length
-                : statDate.totalTime;
+                : Number(UI.getHour(statDate.totalTime).toFixed(2));
             break;
         }
       }
     });
 
     return [
-      january,
-      february,
-      march,
-      april,
-      may,
-      june,
-      july,
-      auguest,
-      september,
-      october,
-      november,
-      december
+      Number(january.toFixed(2)),
+      Number(february.toFixed(2)),
+      Number(march.toFixed(2)),
+      Number(april.toFixed(2)),
+      Number(may.toFixed(2)),
+      Number(june.toFixed(2)),
+      Number(july.toFixed(2)),
+      Number(auguest.toFixed(2)),
+      Number(september.toFixed(2)),
+      Number(october.toFixed(2)),
+      Number(november.toFixed(2)),
+      Number(december.toFixed(2))
     ];
   },
   /**
