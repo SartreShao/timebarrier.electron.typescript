@@ -1477,7 +1477,7 @@ export default {
   /**
    * 获取最佳工作日
    */
-  getBestDayInWeek: (weekStatData: readonly number[]) => {
+  getBestDayInWeek: (weekStatData: readonly number[], chartMode: ChartMode) => {
     let max = 0;
     let tIndex = 0;
     weekStatData.forEach((weekStat, index) => {
@@ -1486,7 +1486,7 @@ export default {
         tIndex = index;
       }
     });
-    let result;
+    let result = "正在计算";
     switch (tIndex) {
       case 0:
         result = "星期一";
@@ -1510,7 +1510,11 @@ export default {
         result = "星期日";
         break;
     }
-    return result;
+
+    `${result}｜${chartMode === "tomato" ? max : UI.formatTimeHourMinute(max)}`;
+    return `${result}｜${
+      chartMode === "tomato" ? "日均 " + max + " 番茄" : "日均 " + max + " 小时"
+    }`;
   },
 
   getBestMonth: (monthStatData: readonly number[]) => {
@@ -2450,5 +2454,33 @@ export default {
     return UI.formatTimeHourMinute(
       ((totalTime / statDateList.length) * 7) / 1000
     );
+  },
+  getTodayInWeek: () => {
+    const dayInWeek = new Date().getDay();
+    let result = "等待计算";
+    switch (dayInWeek) {
+      case 1:
+        result = "星期一";
+        break;
+      case 2:
+        result = "星期二";
+        break;
+      case 3:
+        result = "星期三";
+        break;
+      case 4:
+        result = "星期四";
+        break;
+      case 5:
+        result = "星期五";
+        break;
+      case 6:
+        result = "星期六";
+        break;
+      case 0:
+        result = "星期日";
+        break;
+    }
+    return result;
   }
 };

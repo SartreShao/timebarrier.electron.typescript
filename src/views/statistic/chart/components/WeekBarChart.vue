@@ -1,6 +1,6 @@
 <template>
   <div class="scatter-diagram-item-container">
-    <h1>最佳工作日</h1>
+    <h1>每周工作趋势</h1>
     <h2>{{ tip }}</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
@@ -71,7 +71,17 @@ export default defineComponent({
     );
 
     // 提示语
-    const tip = computed(() => StatPage.getBestDayInWeek(weekStatDate.value));
+    const tip = computed(() => "今日：" + StatPage.getTodayInWeek());
+
+    // 最佳工作日
+    const bestDayInWeek: Ref<string> = inject(Store.bestDayInWeek, ref(""));
+
+    watchEffect(() => {
+      bestDayInWeek.value = StatPage.getBestDayInWeek(
+        weekStatDate.value,
+        chartMode.value
+      );
+    });
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
@@ -170,8 +180,7 @@ export default defineComponent({
   }
   h2 {
     margin-top 0.52vh
-    height 4.2vh
-    font-size 2.92vh
+    font-size 2.3vh
     font-weight 500
     font-stretch normal
     font-style normal

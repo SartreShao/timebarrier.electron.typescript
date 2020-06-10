@@ -78,6 +78,8 @@ const totalLinearRegressionExpression = Symbol();
 const totalLinearRegressionExpressionTime = Symbol();
 // 用户选择的日期范围
 const dateRange = Symbol();
+// 最佳工作日：周
+const bestDayInWeek = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -227,6 +229,7 @@ function useProvider() {
     ])
   );
   provide(totalLinearRegressionExpressionTime, ref(""));
+  provide(bestDayInWeek, ref(""));
 }
 
 export default {
@@ -265,5 +268,6 @@ export default {
   averageLinearRegressionExpression,
   totalLinearRegressionExpression,
   totalLinearRegressionExpressionTime,
-  dateRange
+  dateRange,
+  bestDayInWeek
 };

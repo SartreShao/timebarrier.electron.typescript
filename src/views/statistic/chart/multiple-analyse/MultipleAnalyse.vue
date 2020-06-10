@@ -188,6 +188,16 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 四类时型分析 -->
+    <info-item
+      :value="bestDayInWeek"
+      title="最佳工作日"
+      width="100vw"
+    ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
     <!-- 横向 -->
     <div class="horizontal-container">
       <!-- 本周番茄数 -->
@@ -517,6 +527,9 @@ export default defineComponent({
       StatPage.getTheMostWeekWorkingTime(statDateList.value)
     );
 
+    // 最佳工作日
+    const bestDayInWeek: Ref<string> = inject(Store.bestDayInWeek, ref(""));
+
     onMounted(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
@@ -567,7 +580,8 @@ export default defineComponent({
       theMostWeekTomato,
       thisWeekWorkingTime,
       weekAverageWorkingTime,
-      theMostWeekWorkingTime
+      theMostWeekWorkingTime,
+      bestDayInWeek
     };
   }
 });
