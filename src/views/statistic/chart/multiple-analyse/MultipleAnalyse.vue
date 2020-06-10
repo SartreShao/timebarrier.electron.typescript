@@ -65,6 +65,7 @@
         width="33.16vw"
       ></info-item>
     </div>
+
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
@@ -183,6 +184,60 @@
     <div style="height:0.15vh"></div>
 
     <week-bar-chart></week-bar-chart>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 本周番茄数 -->
+      <info-item
+        :value="thisWeekTomatoNumber"
+        title="本周番茄数"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 周平均番茄 -->
+      <info-item
+        :value="weekAverageTomato"
+        title="周平均番茄"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单周最多完成番茄 -->
+      <info-item
+        :value="theMostWeekTomato"
+        title="单周最多完成番茄"
+        width="33.16vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 本周工作时长 -->
+      <info-item
+        :value="thisWeekWorkingTime"
+        title="本周工作时长"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 周平均用时 -->
+      <info-item
+        :value="weekAverageWorkingTime"
+        title="周平均用时"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单周最长工作时间 -->
+      <info-item
+        :value="theMostWeekWorkingTime"
+        title="单周最长工作时间"
+        width="33.16vw"
+      ></info-item>
+    </div>
 
     <!-- 占位 -->
     <div style="height:15vh"></div>
@@ -425,6 +480,36 @@ export default defineComponent({
       )
     );
 
+    // 本周番茄数
+    const thisWeekTomatoNumber = computed(() =>
+      StatPage.getThisWeekTomatoNumber(statDateList.value)
+    );
+
+    // 周平均番茄
+    const weekAverageTomato = computed(() =>
+      StatPage.getWeekAverageTomato(statDateList.value)
+    );
+
+    // 单周最多完成番茄
+    const theMostWeekTomato = computed(() =>
+      StatPage.getTheMostWeekTomato(statDateList.value)
+    );
+
+    // 本周工作时长
+    const thisWeekWorkingTime = computed(() =>
+      StatPage.getThisWeekWorkingTime(statDateList.value)
+    );
+
+    // 周平均用时
+    const weekAverageWorkingTime = computed(() =>
+      StatPage.getWeekAverageWorkingTime(statDateList.value)
+    );
+
+    // 单周最长工作时间
+    const theMostWeekWorkingTime = computed(() =>
+      StatPage.getTheMostWeekWorkingTime(statDateList.value)
+    );
+
     onMounted(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
@@ -469,7 +554,13 @@ export default defineComponent({
       coefficientOfVariation,
       totalTomatoNumber,
       totalTime,
-      tenThousandHourDate
+      tenThousandHourDate,
+      thisWeekTomatoNumber,
+      weekAverageTomato,
+      theMostWeekTomato,
+      thisWeekWorkingTime,
+      weekAverageWorkingTime,
+      theMostWeekWorkingTime
     };
   }
 });

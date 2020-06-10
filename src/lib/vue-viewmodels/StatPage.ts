@@ -287,6 +287,8 @@ export default {
 
     parseTomatoList(statDateList);
 
+    console.log("statDateList", statDateList);
+
     return statDateList;
   },
   mapTotalStat: (statDateList: readonly StatDate[]): TotalStat => {
@@ -2187,12 +2189,113 @@ export default {
       );
     }
   },
+  /**
+   * 获取 10000 小时定律的日期
+   */
   get10000HoursDate: (startTimeStamp: number, k: number, b: number) => {
     const result = ((10000 - b) / k) * 3600 * 1000 * 24 + startTimeStamp;
-    console.log("startTimeStamp", startTimeStamp);
-    console.log("b", b);
-    console.log("k", k);
-    console.log("fuck", result);
     return UI.dateToYearMonthDay(new Date(result));
+  },
+  /**
+   * 获取本周的番茄数
+   */
+  getThisWeekTomatoNumber: (statDateList: readonly StatDate[]) => {
+    let tomatoNumber = 0;
+
+    try {
+      statDateList.forEach(statDate => {
+        tomatoNumber += statDate.tomatoList.length;
+        if (new Date(statDate.timeStamp).getDay() === 1) {
+          throw "done";
+        }
+      });
+    } catch (error) {}
+    return String(tomatoNumber);
+  },
+  /**
+   * 获取本周的工作时长
+   */
+  getThisWeekWorkingTime: (statDateList: readonly StatDate[]) => {
+    let totalTime = 0;
+
+    try {
+      statDateList.forEach(statDate => {
+        if (statDate.totalTime !== undefined) {
+          totalTime += statDate.totalTime;
+        }
+        if (new Date(statDate.timeStamp).getDay() === 1) {
+          throw "done";
+        }
+      });
+    } catch (error) {}
+    return UI.formatTimeHourMinute(totalTime / 1000);
+  },
+  /**
+   * 获取最多的周番茄数
+   */
+  getTheMostWeekTomato: (statDateList: readonly StatDate[]) => {
+    let totalTomatoNumber = 0;
+    const list: number[] = [];
+
+    statDateList.forEach(statDate => {
+      totalTomatoNumber += statDate.tomatoList.length;
+      if (new Date(statDate.timeStamp).getDay() === 1) {
+        list.push(totalTomatoNumber);
+        totalTomatoNumber = 0;
+      }
+    });
+
+    return String(
+      list.sort(function(a, b) {
+        return b - a;
+      })[0]
+    );
+  },
+  /**
+   * 获取最多的周时间数
+   */
+  getTheMostWeekWorkingTime: (statDateList: readonly StatDate[]) => {
+    let totalTime = 0;
+    const list: number[] = [];
+
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        totalTime += statDate.totalTime;
+      }
+      if (new Date(statDate.timeStamp).getDay() === 1) {
+        list.push(totalTime);
+        totalTime = 0;
+      }
+    });
+
+    return UI.formatTimeHourMinute(
+      list.sort(function(a, b) {
+        return b - a;
+      })[0] / 1000
+    );
+  },
+  /**
+   * 获取周平均番茄
+   */
+  getWeekAverageTomato: (statDateList: readonly StatDate[]) => {
+    let totalTomatoNumber = 0;
+    statDateList.forEach(statDate => {
+      totalTomatoNumber += statDate.tomatoList.length;
+    });
+    return ((totalTomatoNumber / statDateList.length) * 7).toFixed(2);
+  },
+  /**
+   * 获取周平均工作时长
+   */
+  getWeekAverageWorkingTime: (statDateList: readonly StatDate[]) => {
+    let totalTime = 0;
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        totalTime += statDate.totalTime;
+      }
+    });
+    return UI.formatTimeHourMinute(
+      ((totalTime / statDateList.length) * 7) / 1000
+    );
   }
 };
