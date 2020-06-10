@@ -323,13 +323,11 @@ export default {
       const timeStamp = statDate.timeStamp;
       const totalTime =
         lastTomatoTotalStatDate === undefined
-          ? statDate.tomatoList[statDate.tomatoList.length - 1].attributes
-              .totalTime
+          ? statDate.tomatoList[0].attributes.totalTime
           : statDate.totalTime + lastTomatoTotalStatDate.totalTime;
       const totalTomatoNumber =
         lastTomatoTotalStatDate === undefined
-          ? statDate.tomatoList[statDate.tomatoList.length - 1].attributes
-              .totalTomatoNumber
+          ? statDate.tomatoList[0].attributes.totalTomatoNumber
           : statDate.tomatoList.length +
             lastTomatoTotalStatDate.totalTomatoNumber;
       const type = "tomato";
