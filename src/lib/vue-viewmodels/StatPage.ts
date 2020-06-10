@@ -2482,5 +2482,48 @@ export default {
         break;
     }
     return result;
+  },
+  getTodayMonth: () => {
+    const month = new Date().getMonth();
+    let result = "等待计算";
+    switch (month) {
+      case 0:
+        result = "一月";
+        break;
+      case 1:
+        result = "二月";
+        break;
+      case 2:
+        result = "三月";
+        break;
+      case 3:
+        result = "四月";
+        break;
+      case 4:
+        result = "五月";
+        break;
+      case 5:
+        result = "六月";
+        break;
+      case 6:
+        result = "七月";
+        break;
+      case 7:
+        result = "八月";
+        break;
+      case 8:
+        result = "九月";
+        break;
+      case 9:
+        result = "十月";
+        break;
+      case 10:
+        result = "十一月";
+        break;
+      case 11:
+        result = "十二月";
+        break;
+    }
+    return "当前月份：" + result;
   }
 };

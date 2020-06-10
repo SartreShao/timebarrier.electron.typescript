@@ -1857,10 +1857,10 @@ export default {
     return new Promise(async (resolve, reject) => {
       try {
         const tomatoList = await next([], user, startTime, endTime);
-        Log.success("fetchTotalTomatoList", tomatoList);
+        Log.success("fetchTomatoListWithDateRange", tomatoList);
         resolve(tomatoList);
       } catch (error) {
-        Log.error("fetchTotalTomatoList", error);
+        Log.error("fetchTomatoListWithDateRange", error);
         reject(error);
       }
     });
