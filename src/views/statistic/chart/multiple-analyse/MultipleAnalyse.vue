@@ -65,6 +65,50 @@
         width="33.16vw"
       ></info-item>
     </div>
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <total-scatter-diagram></total-scatter-diagram>
+
+    <!-- 占位 -->
+    <!-- <div style="height:0.15vh"></div> -->
+
+    <!-- 散点图的公式 -->
+    <!-- <info-item
+      :value="totalLinearRegressionExpression"
+      title="Linear Regression 工作总量预测分析"
+      width="100vw"
+    ></info-item> -->
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 散点图的公式 -->
+    <info-item
+      :value="tenThousandHourDate"
+      title="「10,000 小时定律」达成日期预测"
+      width="100vw"
+    ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="totalTomatoNumber"
+        title="总番茄数"
+        width="49.87vw"
+      ></info-item>
+
+      <!-- 每日平均用时 -->
+      <info-item
+        :value="totalTime"
+        title="总工作时长"
+        width="49.87vw"
+      ></info-item>
+    </div>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
@@ -134,51 +178,6 @@
         width="49.87vw"
       ></info-item>
     </div>
-
-    <!-- 占位 -->
-    <div style="height:0.15vh"></div>
-
-    <total-scatter-diagram></total-scatter-diagram>
-
-    <!-- 占位 -->
-    <div style="height:0.15vh"></div>
-
-    <!-- 散点图的公式 -->
-    <info-item
-      :value="totalLinearRegressionExpression"
-      title="Linear Regression 工作总量预测分析"
-      width="100vw"
-    ></info-item>
-
-    <!-- 占位 -->
-    <div style="height:0.15vh"></div>
-
-    <!-- 横向 -->
-    <div class="horizontal-container">
-      <!-- 每日平均用时 -->
-      <info-item
-        :value="totalTomatoNumber"
-        title="总番茄数"
-        width="49.87vw"
-      ></info-item>
-
-      <!-- 每日平均用时 -->
-      <info-item
-        :value="totalTime"
-        title="总工作时长"
-        width="49.87vw"
-      ></info-item>
-    </div>
-
-    <!-- 占位 -->
-    <div style="height:0.15vh"></div>
-
-    <!-- 散点图的公式 -->
-    <info-item
-      :value="tenThousandHourDate"
-      title="「10,000 小时定律」达成日期预测"
-      width="100vw"
-    ></info-item>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
