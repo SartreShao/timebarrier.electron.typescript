@@ -80,6 +80,8 @@ const totalLinearRegressionExpressionTime = Symbol();
 const dateRange = Symbol();
 // 最佳工作日：周
 const bestDayInWeek = Symbol();
+// 今年的番茄列表：为了月统计用
+const thisYearTomatoList = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -230,6 +232,7 @@ function useProvider() {
   );
   provide(totalLinearRegressionExpressionTime, ref(""));
   provide(bestDayInWeek, ref(""));
+  provide(thisYearTomatoList, ref<AV.Object[]>([]));
 }
 
 export default {
@@ -269,5 +272,6 @@ export default {
   totalLinearRegressionExpression,
   totalLinearRegressionExpressionTime,
   dateRange,
-  bestDayInWeek
+  bestDayInWeek,
+  thisYearTomatoList
 };

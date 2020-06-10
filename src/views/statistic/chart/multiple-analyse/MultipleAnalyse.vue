@@ -297,6 +297,12 @@ export default defineComponent({
       ref([])
     );
 
+    // 本年的番茄列表
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
+      ref([])
+    );
+
     // 真正使用的数据，由番茄列表映射而来
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
 
@@ -546,6 +552,13 @@ export default defineComponent({
         context.root,
         totalTomatoNumber,
         totalTime
+      );
+
+      StatPage.initTomatoListWithDateRange(
+        context.root,
+        thisYearTomatoList,
+        new Date(UI.getYearStartTimestamp(new Date().getTime())),
+        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
       );
     });
 

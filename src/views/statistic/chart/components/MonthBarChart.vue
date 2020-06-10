@@ -44,20 +44,23 @@ import { ChartMode } from "@/lib/types/vue-viewmodels";
 import _ from "lodash";
 import AV from "leancloud-storage";
 import Store from "@/store";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
 
-    // 外部注入的番茄列表
-    const tomatoList: Ref<AV.Object[]> = inject(
-      Store.tomatoListWithDateRange,
+    // 本年的番茄列表
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
       ref([])
     );
 
     // 真正使用的数据，由番茄列表映射而来
-    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+    const statDateList = computed(() =>
+      StatPage.mapStatDate(thisYearTomatoList.value)
+    );
 
     // 表示图表中显示的是时间，还是番茄
     const chartMode: Ref<ChartMode> = ref("tomato");
