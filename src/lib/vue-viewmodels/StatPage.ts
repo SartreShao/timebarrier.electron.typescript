@@ -1517,7 +1517,7 @@ export default {
     }`;
   },
 
-  getBestMonth: (monthStatData: readonly number[]) => {
+  getBestMonth: (monthStatData: readonly number[], chartMode: ChartMode) => {
     let max = 0;
     let tIndex = 0;
     monthStatData.forEach((monthStat, index) => {
@@ -1526,46 +1526,64 @@ export default {
         tIndex = index;
       }
     });
-    let result;
+    let result = "正在计算";
     switch (tIndex) {
       case 0:
-        result = "1月";
+        result = "一月份";
+        max = max / 31;
         break;
       case 1:
-        result = "2月";
+        result = "二月份";
+        max = max / 28;
         break;
       case 2:
-        result = "3月";
+        result = "三月份";
+        max = max / 31;
         break;
       case 3:
-        result = "4月";
+        result = "四月份";
+        max = max / 30;
         break;
       case 4:
-        result = "5月";
+        result = "五月份";
+        max = max / 31;
         break;
       case 5:
-        result = "6月";
+        result = "六月份";
+        max = max / 30;
         break;
       case 6:
-        result = "7月";
+        result = "七月份";
+        max = max / 31;
         break;
       case 7:
-        result = "8月";
+        result = "八月份";
+        max = max / 31;
         break;
       case 8:
-        result = "9月";
+        result = "九月份";
+        max = max / 30;
         break;
       case 9:
-        result = "10月";
+        result = "十月份";
+        max = max / 31;
         break;
       case 10:
-        result = "11月";
+        result = "十一月份";
+        max = max / 30;
         break;
       case 11:
-        result = "12月";
+        result = "十二月份";
+        max = max / 31;
         break;
     }
-    return result;
+
+    let data =
+      chartMode === "tomato"
+        ? max.toFixed(2) + " 番茄"
+        : max.toFixed(2) + " 小时";
+
+    return `${result}｜日均 ${data}`;
   },
 
   /**

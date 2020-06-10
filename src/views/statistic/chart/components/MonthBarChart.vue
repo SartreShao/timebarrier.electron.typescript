@@ -76,7 +76,15 @@ export default defineComponent({
     // 提示语
     const tip = computed(() => StatPage.getTodayMonth());
 
-    StatPage.getBestMonth(monthStatDate.value);
+    // 最佳月份
+    const bestMonthInYear: Ref<string> = inject(Store.bestMonthInYear, ref(""));
+
+    watchEffect(() => {
+      bestMonthInYear.value = StatPage.getBestMonth(
+        monthStatDate.value,
+        chartMode.value
+      );
+    });
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {

@@ -188,7 +188,7 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <!-- 四类时型分析 -->
+    <!-- 最佳工作日 -->
     <info-item
       :value="bestDayInWeek"
       title="最佳工作日"
@@ -253,6 +253,67 @@
     <div style="height:0.15vh"></div>
 
     <month-bar-chart></month-bar-chart>
+
+    <!-- 最佳工作月 -->
+    <info-item
+      :value="bestMonthInYear"
+      title="最佳工作月份"
+      width="100vw"
+    ></info-item>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 本周番茄数 -->
+      <info-item
+        :value="thisWeekTomatoNumber"
+        title="本周番茄数"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 周平均番茄 -->
+      <info-item
+        :value="weekAverageTomato"
+        title="周平均番茄"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单周最多完成番茄 -->
+      <info-item
+        :value="theMostWeekTomato"
+        title="单周最多完成番茄"
+        width="33.16vw"
+      ></info-item>
+    </div>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 横向 -->
+    <div class="horizontal-container">
+      <!-- 本周工作时长 -->
+      <info-item
+        :value="thisWeekWorkingTime"
+        title="本周工作时长"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 周平均用时 -->
+      <info-item
+        :value="weekAverageWorkingTime"
+        title="周平均用时"
+        width="33.16vw"
+      ></info-item>
+
+      <!-- 单周最长工作时间 -->
+      <info-item
+        :value="theMostWeekWorkingTime"
+        title="单周最长工作时间"
+        width="33.16vw"
+      ></info-item>
+    </div>
 
     <!-- 占位 -->
     <div style="height:15vh"></div>
@@ -536,6 +597,9 @@ export default defineComponent({
     // 最佳工作日
     const bestDayInWeek: Ref<string> = inject(Store.bestDayInWeek, ref(""));
 
+    // 最佳月份
+    const bestMonthInYear: Ref<string> = inject(Store.bestMonthInYear, ref(""));
+
     onMounted(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
@@ -594,7 +658,8 @@ export default defineComponent({
       thisWeekWorkingTime,
       weekAverageWorkingTime,
       theMostWeekWorkingTime,
-      bestDayInWeek
+      bestDayInWeek,
+      bestMonthInYear
     };
   }
 });

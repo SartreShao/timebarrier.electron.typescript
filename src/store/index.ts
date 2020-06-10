@@ -80,6 +80,8 @@ const totalLinearRegressionExpressionTime = Symbol();
 const dateRange = Symbol();
 // 最佳工作日：周
 const bestDayInWeek = Symbol();
+// 最佳工作月份
+const bestMonthInYear = Symbol();
 // 今年的番茄列表：为了月统计用
 const thisYearTomatoList = Symbol();
 
@@ -232,6 +234,7 @@ function useProvider() {
   );
   provide(totalLinearRegressionExpressionTime, ref(""));
   provide(bestDayInWeek, ref(""));
+  provide(bestMonthInYear, ref(""));
   provide(thisYearTomatoList, ref<AV.Object[]>([]));
 }
 
@@ -273,5 +276,6 @@ export default {
   totalLinearRegressionExpressionTime,
   dateRange,
   bestDayInWeek,
+  bestMonthInYear,
   thisYearTomatoList
 };
