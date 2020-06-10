@@ -2485,6 +2485,9 @@ export default {
       ((totalTime / statDateList.length) * 7) / 1000
     );
   },
+  /**
+   * 获取今天是礼拜几
+   */
   getTodayInWeek: () => {
     const dayInWeek = new Date().getDay();
     let result = "等待计算";
@@ -2513,6 +2516,9 @@ export default {
     }
     return result;
   },
+  /**
+   * 获取今天是几月
+   */
   getTodayMonth: () => {
     const month = new Date().getMonth();
     let result = "等待计算";
@@ -2555,5 +2561,85 @@ export default {
         break;
     }
     return "当前月份：" + result;
+  },
+  /**
+   * 获取本月的番茄数
+   */
+  getThisMonthTomatoNumber: (statDateList: readonly StatDate[]) => {
+    let tomatoNumber = 0;
+    const thisMonth = new Date().getMonth();
+    statDateList.forEach(statDate => {
+      const month = new Date(statDate.timeStamp).getMonth();
+      if (month === thisMonth) {
+        tomatoNumber += statDate.tomatoList.length;
+      }
+    });
+    return String(tomatoNumber);
+  },
+  /**
+   * 获取本月的工作时长
+   */
+  getThisMonthWorkingTime: (statDateList: readonly StatDate[]) => {
+    let totalTime = 0;
+    const thisMonth = new Date().getMonth();
+    statDateList.forEach(statDate => {
+      const month = new Date(statDate.timeStamp).getMonth();
+      if (month === thisMonth && statDate.totalTime !== undefined) {
+        totalTime += statDate.totalTime;
+      }
+    });
+    return UI.formatTimeHourMinute(totalTime / 1000);
+  },
+  /**
+   * 获取最多的月番茄数
+   */
+  getTheMostMonthTomato: function(statDateList: readonly StatDate[]) {
+    let max = 0;
+    const monthStatData = this.getMonthStatData(statDateList, "tomato");
+    monthStatData.forEach((monthStat, index) => {
+      if (max <= monthStat) {
+        max = monthStat;
+      }
+    });
+    return String(max);
+  },
+  /**
+   * 获取最多的月工作时长
+   */
+  getTheMostMonthWorkingTime: function(statDateList: readonly StatDate[]) {
+    let max = 0;
+    const monthStatData = this.getMonthStatData(statDateList, "time");
+    monthStatData.forEach((monthStat, index) => {
+      if (max <= monthStat) {
+        max = monthStat;
+      }
+    });
+    return UI.formatTimeHourMinute(max * 3600);
+  },
+  /**
+   * 获取月平均番茄
+   */
+  getMonthAverageTomato: (statDateList: readonly StatDate[]) => {
+    let totalTomatoNumber = 0;
+    statDateList.forEach(statDate => {
+      totalTomatoNumber += statDate.tomatoList.length;
+    });
+    return ((totalTomatoNumber / statDateList.length) * 30.416666666).toFixed(
+      2
+    );
+  },
+  /**
+   * 获取月平均工作时长
+   */
+  getMonthAverageWorkingTime: (statDateList: readonly StatDate[]) => {
+    let totalTime = 0;
+    statDateList.forEach(statDate => {
+      if (statDate.totalTime !== undefined) {
+        totalTime += statDate.totalTime;
+      }
+    });
+    return UI.formatTimeHourMinute(
+      ((totalTime / statDateList.length) * 30.416666666) / 1000
+    );
   }
 };

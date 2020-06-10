@@ -237,7 +237,7 @@
       <!-- 周平均用时 -->
       <info-item
         :value="weekAverageWorkingTime"
-        title="周平均用时"
+        title="周平均工作时长"
         width="33.16vw"
       ></info-item>
 
@@ -254,6 +254,9 @@
 
     <month-bar-chart></month-bar-chart>
 
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
     <!-- 最佳工作月 -->
     <info-item
       :value="bestMonthInYear"
@@ -268,22 +271,22 @@
     <div class="horizontal-container">
       <!-- 本周番茄数 -->
       <info-item
-        :value="thisWeekTomatoNumber"
-        title="本周番茄数"
+        :value="thisMonthTomatoNumber"
+        title="本月番茄数"
         width="33.16vw"
       ></info-item>
 
       <!-- 周平均番茄 -->
       <info-item
-        :value="weekAverageTomato"
-        title="周平均番茄"
+        :value="monthAverageTomato"
+        title="月平均番茄"
         width="33.16vw"
       ></info-item>
 
       <!-- 单周最多完成番茄 -->
       <info-item
-        :value="theMostWeekTomato"
-        title="单周最多完成番茄"
+        :value="theMostMonthTomato"
+        title="单月最多完成番茄"
         width="33.16vw"
       ></info-item>
     </div>
@@ -295,22 +298,22 @@
     <div class="horizontal-container">
       <!-- 本周工作时长 -->
       <info-item
-        :value="thisWeekWorkingTime"
-        title="本周工作时长"
+        :value="thisMonthWorkingTime"
+        title="本月工作时长"
         width="33.16vw"
       ></info-item>
 
       <!-- 周平均用时 -->
       <info-item
-        :value="weekAverageWorkingTime"
-        title="周平均用时"
+        :value="mongthAverageWorkingTime"
+        title="月平均工作时长"
         width="33.16vw"
       ></info-item>
 
       <!-- 单周最长工作时间 -->
       <info-item
-        :value="theMostWeekWorkingTime"
-        title="单周最长工作时间"
+        :value="theMostMonthWorkingTime"
+        title="单月最长工作时间"
         width="33.16vw"
       ></info-item>
     </div>
@@ -364,8 +367,13 @@ export default defineComponent({
       ref([])
     );
 
-    // 真正使用的数据，由番茄列表映射而来
+    // 真正使用的数据，由番茄列表映射而来（用户选择）
     const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+
+    // 真正使用的数据，由番茄列表映射而来（本年）
+    const thisYearStatDateList = computed(() =>
+      StatPage.mapStatDate(thisYearTomatoList.value)
+    );
 
     // 二类时型分析
     const twoChronotype = computed(() =>
@@ -600,6 +608,36 @@ export default defineComponent({
     // 最佳月份
     const bestMonthInYear: Ref<string> = inject(Store.bestMonthInYear, ref(""));
 
+    // 本月番茄数
+    const thisMonthTomatoNumber = computed(() =>
+      StatPage.getThisMonthTomatoNumber(thisYearStatDateList.value)
+    );
+
+    // 本月的工作时长
+    const thisMonthWorkingTime = computed(() =>
+      StatPage.getThisMonthWorkingTime(thisYearStatDateList.value)
+    );
+
+    // 最多的月番茄数
+    const theMostMonthTomato = computed(() =>
+      StatPage.getTheMostMonthTomato(thisYearStatDateList.value)
+    );
+
+    // 最多的月工作时长
+    const theMostMonthWorkingTime = computed(() =>
+      StatPage.getTheMostMonthWorkingTime(thisYearStatDateList.value)
+    );
+
+    // 月平均番茄
+    const monthAverageTomato = computed(() =>
+      StatPage.getMonthAverageTomato(thisYearStatDateList.value)
+    );
+
+    // 月平均工作时长
+    const mongthAverageWorkingTime = computed(() =>
+      StatPage.getMonthAverageWorkingTime(thisYearStatDateList.value)
+    );
+
     onMounted(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
@@ -659,7 +697,13 @@ export default defineComponent({
       weekAverageWorkingTime,
       theMostWeekWorkingTime,
       bestDayInWeek,
-      bestMonthInYear
+      bestMonthInYear,
+      thisMonthTomatoNumber,
+      thisMonthWorkingTime,
+      theMostMonthTomato,
+      theMostMonthWorkingTime,
+      monthAverageTomato,
+      mongthAverageWorkingTime
     };
   }
 });
