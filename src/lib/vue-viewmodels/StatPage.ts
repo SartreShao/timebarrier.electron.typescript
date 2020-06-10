@@ -1170,6 +1170,7 @@ export default {
           showBackground: true,
           itemStyle: {
             color: (params: any) => {
+              // return colormap[params.dataIndex % colormap.length];
               return "#F9385E";
             }
           },
@@ -1184,7 +1185,8 @@ export default {
           showBackground: true,
           itemStyle: {
             color: (params: any) => {
-              return "#222A36";
+              // return colormap[params.dataIndex % colormap.length];
+              return "#1B3C79";
             }
           },
           backgroundStyle: {

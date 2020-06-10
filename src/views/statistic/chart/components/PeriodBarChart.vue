@@ -74,7 +74,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapForChart, []);
+    const colormap: string[] = inject(Store.colormapPantone, []);
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
