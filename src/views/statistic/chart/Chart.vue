@@ -33,11 +33,6 @@ export default defineComponent({
         route: "/statistic/chart/multiple-analyse"
       },
       {
-        name: "番茄统计",
-        icon: icon_tomato_tab,
-        route: "/statistic/chart/tomato-analyse"
-      },
-      {
         name: "计划统计",
         icon: icon_plan_tab,
         route: "/statistic/chart/plan-analyse"
