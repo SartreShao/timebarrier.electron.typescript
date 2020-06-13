@@ -17,20 +17,16 @@ export default {
     const myChart = charts ? echarts.init(charts) : null;
 
     const option = {
-      visualMap: {
-        //这种写法才是目前主流的写法
-        color: colormap
-      },
+      color: colormap,
       series: [
         {
+          top: "5%",
+          left: "5%",
+          right: "5%",
+          bottom: "12%",
           type: "treemap",
           data: data,
-          itemStyle: {
-            color: (params: any) => {
-              console.log("params", params.dataIndex);
-              return colormap[params.dataIndex % colormap.length];
-            }
-          }
+          roam: false
         }
       ]
     };

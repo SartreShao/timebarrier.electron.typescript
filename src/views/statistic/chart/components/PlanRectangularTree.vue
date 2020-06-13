@@ -176,7 +176,7 @@ export default defineComponent({
     }
   }
   .scatter-diagram {
-    margin-top -2vh
+    margin-top 0vh
     width 100vw
     height 40vh
   }
