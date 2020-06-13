@@ -1,6 +1,41 @@
 <template>
   <div class="container">
     <plan-rectangular-tree></plan-rectangular-tree>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <el-carousel indicator-position="none" height="15.75vh">
+      <el-carousel-item v-for="(item, index) in treeData" :key="index">
+        <div class="vertical-container">
+          <info-item
+            title="能力名称"
+            :value="`No.` + (index + 1) + ` ` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <!-- 横向 -->
+          <div class="horizontal-container">
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.totalTomatoNumber + ` 番茄`"
+              title="番茄个数"
+              width="49.87vw"
+            ></info-item>
+
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.totalTime + ` 小时`"
+              title="工作时长"
+              width="49.87vw"
+            ></info-item>
+          </div>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
@@ -27,7 +62,7 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import PlanRectangularTree from "../components/PlanRectangularTree.vue";
 export default defineComponent({
-  components: { PlanRectangularTree },
+  components: { PlanRectangularTree, InfoItem },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(
@@ -37,6 +72,14 @@ export default defineComponent({
 
     // 用户选择的日期范围
     const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
+
+    const treeData: Ref<{
+      name: string;
+      totalTomatoNumber: number;
+      totalTime: number;
+    }[]> = inject(Store.planTreeData, ref([]));
+
+    watchEffect(() => console.log("treeData", treeData.value));
 
     onMounted(() => {
       if (dateRange.value.length === 2) {
@@ -50,6 +93,8 @@ export default defineComponent({
         );
       }
     });
+
+    return { treeData };
   }
 });
 </script>
@@ -76,5 +121,17 @@ export default defineComponent({
   display flex
   justify-content space-between
   background #F5F5F5
+}
+.vertical-container {
+  width 100%
+  display flex
+  flex-direction column
+  background #F5F5F5
+}
+.el-carousel__item h3 {
+  color #475669
+  font-size 18px
+  opacity 0.75
+  margin 0
 }
 </style>

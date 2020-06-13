@@ -80,6 +80,26 @@ export default defineComponent({
       )
     );
 
+    const treeData: Ref<{
+      name: string;
+      totalTomatoNumber: number;
+      totalTime: number;
+    }[]> = inject(Store.planTreeData, ref([]));
+
+    watch(statList, newValue => {
+      treeData.value = StatPagePlanAbilityTarget.getTreeData(
+        newValue as Map<string, AV.Object>,
+        chartMode.value
+      );
+    });
+
+    watch(chartMode, newValue => {
+      treeData.value = StatPagePlanAbilityTarget.getTreeData(
+        statList.value as Map<string, AV.Object>,
+        newValue
+      );
+    });
+
     watchEffect(() => {
       StatPagePlanAbilityTarget.initRectangularTree(
         id,

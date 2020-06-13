@@ -58,6 +58,29 @@ export default {
     return data;
   },
   /**
+   * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
+   * 这将用于展示数据列表
+   */
+  getTreeData: (map: Map<string, AV.Object>, chartMode: ChartMode) => {
+    const data: {
+      name: string;
+      totalTomatoNumber: number;
+      totalTime: number;
+    }[] = [];
+
+    map.forEach(value => {
+      data.push({
+        name: value.attributes.name,
+        totalTomatoNumber: value.attributes.todayTomatoNumber,
+        totalTime: UI.timeStampToHour(value.attributes.todayTotalTime)
+      });
+    });
+
+    return chartMode === "tomato"
+      ? data.sort((a, b) => b.totalTomatoNumber - a.totalTomatoNumber)
+      : data.sort((a, b) => b.totalTime - a.totalTime);
+  },
+  /**
    * 获取 Ability 用于矩形树图
    */
   fetchStatAbilityList: (

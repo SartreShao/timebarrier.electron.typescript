@@ -84,6 +84,8 @@ const bestDayInWeek = Symbol();
 const bestMonthInYear = Symbol();
 // 今年的番茄列表：为了月统计用
 const thisYearTomatoList = Symbol();
+// 树图的数据：用于列表展示
+const planTreeData = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -236,6 +238,16 @@ function useProvider() {
   provide(bestDayInWeek, ref(""));
   provide(bestMonthInYear, ref(""));
   provide(thisYearTomatoList, ref<AV.Object[]>([]));
+  provide(
+    planTreeData,
+    ref<
+      {
+        name: string;
+        totalTomatoNumber: number;
+        totalTime: number;
+      }[]
+    >([])
+  );
 }
 
 export default {
@@ -277,5 +289,6 @@ export default {
   dateRange,
   bestDayInWeek,
   bestMonthInYear,
-  thisYearTomatoList
+  thisYearTomatoList,
+  planTreeData
 };
