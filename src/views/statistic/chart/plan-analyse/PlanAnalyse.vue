@@ -10,7 +10,7 @@
         <div class="vertical-container">
           <info-item
             title="能力名称"
-            :value="`No.` + (index + 1) + ` ` + item.name"
+            :value="`No.` + (index + 1) + `：` + item.name"
             width="100vw"
           ></info-item>
 
