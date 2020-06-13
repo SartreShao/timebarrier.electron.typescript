@@ -5,7 +5,12 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <el-carousel indicator-position="none" height="15.75vh">
+    <el-carousel
+      indicator-position="none"
+      :autoplay="false"
+      height="15.75vh"
+      ref="planTreeCarousel"
+    >
       <el-carousel-item v-for="(item, index) in treeData" :key="index">
         <div class="vertical-container">
           <info-item
@@ -47,7 +52,8 @@ import {
   Ref,
   computed,
   watchEffect,
-  onMounted
+  onMounted,
+  watch
 } from "@vue/composition-api";
 import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
 import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
@@ -61,6 +67,7 @@ import { StatPage } from "@/lib/vue-viewmodels";
 import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import PlanRectangularTree from "../components/PlanRectangularTree.vue";
+import { Carousel } from "element-ui/types/element-ui";
 export default defineComponent({
   components: { PlanRectangularTree, InfoItem },
   setup(props, context) {
@@ -79,7 +86,17 @@ export default defineComponent({
       totalTime: number;
     }[]> = inject(Store.planTreeData, ref([]));
 
-    watchEffect(() => console.log("treeData", treeData.value));
+    // 用于指示计划
+    const planTreeDataIndex: Ref<number> = inject(
+      Store.planTreeDataIndex,
+      ref(0)
+    );
+
+    const planTreeCarousel: Ref<Carousel | null> = ref(null);
+
+    watch(planTreeDataIndex, newValue => {
+      (planTreeCarousel.value as Carousel).setActiveItem(newValue);
+    });
 
     onMounted(() => {
       if (dateRange.value.length === 2) {
@@ -94,7 +111,7 @@ export default defineComponent({
       }
     });
 
-    return { treeData };
+    return { treeData, planTreeCarousel };
   }
 });
 </script>

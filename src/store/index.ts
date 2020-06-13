@@ -86,6 +86,8 @@ const bestMonthInYear = Symbol();
 const thisYearTomatoList = Symbol();
 // 树图的数据：用于列表展示
 const planTreeData = Symbol();
+// 当前点击了什么数据
+const planTreeDataIndex = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -248,6 +250,7 @@ function useProvider() {
       }[]
     >([])
   );
+  provide(planTreeDataIndex, ref<number>(0));
 }
 
 export default {
@@ -290,5 +293,6 @@ export default {
   bestDayInWeek,
   bestMonthInYear,
   thisYearTomatoList,
-  planTreeData
+  planTreeData,
+  planTreeDataIndex
 };

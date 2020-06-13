@@ -100,11 +100,18 @@ export default defineComponent({
       );
     });
 
+    // 用于指示计划
+    const planTreeDataIndex: Ref<number> = inject(
+      Store.planTreeDataIndex,
+      ref(0)
+    );
+
     watchEffect(() => {
       StatPagePlanAbilityTarget.initRectangularTree(
         id,
         rectangularTreeData.value,
-        colormap
+        colormap,
+        planTreeDataIndex
       );
     });
 
@@ -112,7 +119,8 @@ export default defineComponent({
       StatPagePlanAbilityTarget.initRectangularTree(
         id,
         rectangularTreeData.value,
-        colormap
+        colormap,
+        planTreeDataIndex
       );
     });
 
@@ -120,7 +128,8 @@ export default defineComponent({
       StatPagePlanAbilityTarget.initRectangularTree(
         id,
         rectangularTreeData.value,
-        colormap
+        colormap,
+        planTreeDataIndex
       );
     });
 

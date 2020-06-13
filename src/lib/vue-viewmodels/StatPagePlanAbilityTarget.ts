@@ -3,6 +3,7 @@ import AV from "leancloud-storage";
 import ecStat from "echarts-stat";
 import echarts from "echarts";
 import { UI } from "../vue-utils";
+import { Ref } from "@vue/composition-api";
 
 export default {
   /**
@@ -11,7 +12,8 @@ export default {
   initRectangularTree: async (
     id: string,
     data: readonly { name: string; value: number }[],
-    colormap: string[]
+    colormap: string[],
+    planTreeDataIndex: Ref<number>
   ) => {
     const charts = document.getElementById(id) as HTMLDivElement;
     const myChart = charts ? echarts.init(charts) : null;
@@ -37,6 +39,12 @@ export default {
     if (myChart !== null) {
       myChart.resize();
     }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        planTreeDataIndex.value = params.dataIndex - 1;
+      });
+    }
   },
   /**
    * 获取矩形树图的数据
@@ -55,7 +63,7 @@ export default {
             : UI.timeStampToHour(value.attributes.todayTotalTime)
       });
     });
-    return data;
+    return data.sort((a, b) => b.value - a.value);
   },
   /**
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
