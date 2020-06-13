@@ -181,8 +181,8 @@ function useProvider() {
   ]);
   provide(colormapPantone, [
     "#1B3C79",
+    "#1A2634",
     "#5F4B8B",
-    "#E2583E",
     "#F0C05A",
     "#D94F70",
     "#45B5AA",
