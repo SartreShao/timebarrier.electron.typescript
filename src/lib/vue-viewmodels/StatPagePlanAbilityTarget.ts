@@ -4,6 +4,7 @@ import ecStat from "echarts-stat";
 import echarts from "echarts";
 import { UI } from "../vue-utils";
 import { Ref } from "@vue/composition-api";
+import _ from "lodash";
 
 export default {
   /**
@@ -113,8 +114,6 @@ export default {
       });
     });
 
-    console.log("lineChartData", map);
-
     return map;
   },
   initLineChart: (
@@ -131,18 +130,25 @@ export default {
       type: string;
       smooth: boolean;
       data: number[][];
+      symbolSize: number;
+      stack?: string;
+      areaStyle?: {};
     }[] = [];
+
+    const legend: string[] = [];
 
     lineChartData.forEach((data, name) => {
       series.push({
         name: name,
         type: "line",
-        smooth: true,
-        data: data
+        smooth: false,
+        areaStyle: {},
+        data: data,
+        symbolSize: 1
       });
-    });
 
-    console.log("series", series);
+      legend.push(name);
+    });
 
     // // See https://github.com/ecomfe/echarts-stat
     // var linearRegression = ecStat.regression("linear", data, 0);
@@ -156,13 +162,23 @@ export default {
       grid: {
         left: "3.2%",
         right: "12%",
-        bottom: "10%",
+        bottom: "13%",
         containLabel: true
       },
       tooltip: {
         trigger: "axis",
         axisPointer: {
           type: "cross"
+        }
+      },
+      legend: {
+        data: legend,
+        type: "scroll",
+        bottom: "0%",
+        left: "2.5%",
+        right: "2.5%",
+        textStyle: {
+          fontSize: 11
         }
       },
       xAxis: {

@@ -122,7 +122,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .line-chart-container {
   width 100%
-  height 43.19vh
+  height 46.19vh
   background white
   display flex
   flex-direction column
@@ -191,7 +191,7 @@ export default defineComponent({
   .scatter-diagram {
     margin-top -6vh
     width 100vw
-    height 38vh
+    height 41vh
   }
 }
 </style>
