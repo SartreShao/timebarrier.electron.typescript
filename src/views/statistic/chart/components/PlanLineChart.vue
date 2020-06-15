@@ -1,7 +1,7 @@
 <template>
   <div class="line-chart-container">
     <h1>计划每日趋势图</h1>
-    <h2>执行最多：撰写【时间壁垒】App</h2>
+    <h2>期间共执行计划：4 项</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
