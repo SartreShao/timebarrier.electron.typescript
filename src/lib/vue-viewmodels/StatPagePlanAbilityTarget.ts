@@ -118,7 +118,8 @@ export default {
   initLineChart: (
     id: string,
     lineChartData: Map<string, number[][]>,
-    chartMode: ChartMode
+    chartMode: ChartMode,
+    colormap: string[]
   ) => {
     const charts = document.getElementById(id) as HTMLDivElement;
     const myChart = charts ? echarts.init(charts) : null;
@@ -147,6 +148,7 @@ export default {
     // });
 
     const option = {
+      color: colormap,
       grid: {
         left: "3.2%",
         right: "12%",

@@ -46,6 +46,9 @@
     <div style="height:0.15vh"></div>
 
     <plan-line-chart></plan-line-chart>
+
+    <!-- 占位 -->
+    <div style="height:15vh"></div>
   </div>
 </template>
 
