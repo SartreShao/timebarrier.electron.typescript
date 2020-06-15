@@ -161,7 +161,7 @@ export default defineComponent({
 .period-bar-chart-container {
   width 100%
   // height 42.19vh
-  height 62vh
+  height 65vh
   background white
   display flex
   flex-direction column

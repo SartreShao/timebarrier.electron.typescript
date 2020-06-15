@@ -1105,11 +1105,15 @@ export default {
           }
         }
       },
-      // legend: {
-      //   data: ["今日", "平均"],
-      //   bottom: 30,
-      //   left: "center"
-      // },
+      color: ["#F9385E", "#1B3C79"],
+      legend: {
+        data: ["今日", "平均"],
+        type: "scroll",
+        bottom: "1.4%",
+        textStyle: {
+          fontSize: 11
+        }
+      },
       grid: {
         left: "2%",
         right: "14%",
