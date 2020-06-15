@@ -113,6 +113,8 @@ export default {
       });
     });
 
+    console.log("lineChartData", map);
+
     return map;
   },
   initLineChart: (
@@ -139,6 +141,8 @@ export default {
         data: data
       });
     });
+
+    console.log("series", series);
 
     // // See https://github.com/ecomfe/echarts-stat
     // var linearRegression = ecStat.regression("linear", data, 0);
@@ -203,7 +207,7 @@ export default {
     };
 
     if (myChart !== null) {
-      myChart.setOption(option as any);
+      myChart.setOption(option as any, true);
     }
     if (myChart !== null) {
       myChart.resize();
