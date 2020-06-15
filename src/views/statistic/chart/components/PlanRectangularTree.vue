@@ -1,7 +1,9 @@
 <template>
   <div class="rectangular-tree-container">
     <h1>计划矩形树图</h1>
-    <h2>执行最多：撰写【时间壁垒】App</h2>
+    <h2>80% 的番茄</h2>
+    <h3>用于执行：「撰写【时间壁垒】App」</h3>
+
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +152,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .rectangular-tree-container {
   width 100%
-  height 52.19vh
+  height 54.2vh
   background white
   display flex
   flex-direction column
@@ -178,9 +180,21 @@ export default defineComponent({
     text-align center
     color #222a36
   }
+  h3 {
+    margin-top 0.52vh
+    height 1.95vh
+    font-size 1.35vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.44
+    letter-spacing normal
+    text-align center
+    color #99a8b8
+  }
   .change-date-container {
     cursor pointer
-    margin-top 0.52vh
+    margin-top 1vh
     display flex
     flex-direction row
     align-items center
@@ -205,7 +219,7 @@ export default defineComponent({
     }
   }
   .scatter-diagram {
-    margin-top 0vh
+    margin-top -0.5vh
     width 100vw
     height 40vh
   }
