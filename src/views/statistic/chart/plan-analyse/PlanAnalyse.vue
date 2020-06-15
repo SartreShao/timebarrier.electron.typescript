@@ -41,6 +41,11 @@
         </div>
       </el-carousel-item>
     </el-carousel>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <plan-line-chart></plan-line-chart>
   </div>
 </template>
 
@@ -67,9 +72,10 @@ import { StatPage } from "@/lib/vue-viewmodels";
 import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import PlanRectangularTree from "../components/PlanRectangularTree.vue";
+import PlanLineChart from "../components/PlanLineChart.vue";
 import { Carousel } from "element-ui/types/element-ui";
 export default defineComponent({
-  components: { PlanRectangularTree, InfoItem },
+  components: { PlanRectangularTree, PlanLineChart, InfoItem },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(
@@ -95,7 +101,9 @@ export default defineComponent({
     const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
     watch(planTreeDataIndex, newValue => {
-      (planTreeCarousel.value as Carousel).setActiveItem(newValue);
+      if (planTreeCarousel.value !== null) {
+        planTreeCarousel.value.setActiveItem(newValue);
+      }
     });
 
     onMounted(() => {

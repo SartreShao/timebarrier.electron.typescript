@@ -66,6 +66,148 @@ export default {
     return data.sort((a, b) => b.value - a.value);
   },
   /**
+   * 获取折线图的 Plan 的数据
+   */
+  mapLineChartData: (
+    statDateList: readonly StatDate[],
+    type: "plan" | "target" | "ability",
+    chartMode: ChartMode
+  ): Map<string, number[][]> => {
+    const map: Map<string, number[][]> = new Map();
+
+    statDateList.forEach(statDate => {
+      let statList: AV.Object[] = [];
+      if (type === "plan") {
+        statList = statDate.statPlanList as AV.Object[];
+      } else if (type === "target") {
+        statList = statDate.statTargetList as AV.Object[];
+      } else if (type === "ability") {
+        statList = statDate.statAbilityList as AV.Object[];
+      }
+      statList.forEach(object => {
+        map.set(object.attributes.name as string, []);
+      });
+    });
+
+    statDateList.forEach(statDate => {
+      let statList: AV.Object[] = [];
+      if (type === "plan") {
+        statList = statDate.statPlanList as AV.Object[];
+      } else if (type === "target") {
+        statList = statDate.statTargetList as AV.Object[];
+      } else if (type === "ability") {
+        statList = statDate.statAbilityList as AV.Object[];
+      }
+      map.forEach((objectList, name) => {
+        objectList.push([UI.getTodayStartTimestamp(statDate.timeStamp), 0]);
+        statList.forEach(statObject => {
+          if (statObject.attributes.name === name) {
+            objectList[objectList.length - 1] = [
+              UI.getTodayStartTimestamp(statDate.timeStamp),
+              chartMode === "tomato"
+                ? statObject.attributes.todayTomatoNumber
+                : UI.timeStampToHour(statObject.attributes.todayTotalTime)
+            ];
+          }
+        });
+      });
+    });
+
+    return map;
+  },
+  initLineChart: (
+    id: string,
+    lineChartData: Map<string, number[][]>,
+    chartMode: ChartMode
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const series: {
+      name: string;
+      type: string;
+      smooth: boolean;
+      data: number[][];
+    }[] = [];
+
+    lineChartData.forEach((data, name) => {
+      series.push({
+        name: name,
+        type: "line",
+        smooth: true,
+        data: data
+      });
+    });
+
+    // // See https://github.com/ecomfe/echarts-stat
+    // var linearRegression = ecStat.regression("linear", data, 0);
+
+    // linearRegression.points.sort(function(a: any, b: any) {
+    //   return a[0] - b[0];
+    // });
+
+    const option = {
+      grid: {
+        left: "3.2%",
+        right: "12%",
+        bottom: "10%",
+        containLabel: true
+      },
+      tooltip: {
+        trigger: "axis",
+        axisPointer: {
+          type: "cross"
+        }
+      },
+      xAxis: {
+        name: "日期 x",
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        type: "time",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        },
+        splitNumber: 5
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: series
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+  },
+  /**
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
    * 这将用于展示数据列表
    */
