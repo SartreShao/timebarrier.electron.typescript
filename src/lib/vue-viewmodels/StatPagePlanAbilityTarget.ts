@@ -284,10 +284,14 @@ export default {
     statList.forEach(value => {
       data.push({
         name: value.attributes.name,
-        averageDailyTomatoNumber:
-          value.attributes.todayTomatoNumber / durationDays,
-        averageDailyTime:
-          UI.timeStampToHour(value.attributes.todayTotalTime) / durationDays
+        averageDailyTomatoNumber: Number(
+          (value.attributes.todayTomatoNumber / durationDays).toFixed(2)
+        ),
+        averageDailyTime: Number(
+          (
+            UI.timeStampToHour(value.attributes.todayTotalTime) / durationDays
+          ).toFixed(2)
+        )
       });
     });
     return chartMode === "tomato"

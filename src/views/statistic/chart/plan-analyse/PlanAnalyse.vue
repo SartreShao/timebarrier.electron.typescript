@@ -14,7 +14,7 @@
       <el-carousel-item v-for="(item, index) in totalStatData" :key="index">
         <div class="vertical-container">
           <info-item
-            title="能力名称"
+            title="计划名称"
             :value="`No.` + (index + 1) + `：` + item.name"
             width="100vw"
           ></info-item>
@@ -27,14 +27,14 @@
             <!-- 每日平均用时 -->
             <info-item
               :value="item.totalTomatoNumber + ` 番茄`"
-              title="番茄个数"
+              title="总番茄个数"
               width="49.87vw"
             ></info-item>
 
             <!-- 每日平均用时 -->
             <info-item
               :value="item.totalTime + ` 小时`"
-              title="工作时长"
+              title="总工作时长"
               width="49.87vw"
             ></info-item>
           </div>
@@ -62,7 +62,7 @@
       >
         <div class="vertical-container">
           <info-item
-            title="能力名称"
+            title="计划名称"
             :value="`No.` + (index + 1) + `：` + item.name"
             width="100vw"
           ></info-item>
@@ -75,14 +75,14 @@
             <!-- 每日平均用时 -->
             <info-item
               :value="item.averageDailyTomatoNumber + ` 番茄`"
-              title="番茄个数"
+              title="每日平均番茄"
               width="49.87vw"
             ></info-item>
 
             <!-- 每日平均用时 -->
             <info-item
               :value="item.averageDailyTime + ` 小时`"
-              title="工作时长"
+              title="每日平均工作时长"
               width="49.87vw"
             ></info-item>
           </div>
