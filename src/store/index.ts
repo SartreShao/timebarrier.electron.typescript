@@ -88,6 +88,8 @@ const thisYearTomatoList = Symbol();
 const planTotalStatData = Symbol();
 // 当前点击了什么数据
 const planTotalStatDataIndex = Symbol();
+// 线性图的数据：用于列表展示
+const planAverageDailyStatData = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -251,6 +253,7 @@ function useProvider() {
     >([])
   );
   provide(planTotalStatDataIndex, ref<number>(0));
+  provide(planAverageDailyStatData, ref([]));
 }
 
 export default {
@@ -294,5 +297,6 @@ export default {
   bestMonthInYear,
   thisYearTomatoList,
   planTotalStatData,
-  planTotalStatDataIndex
+  planTotalStatDataIndex,
+  planAverageDailyStatData
 };

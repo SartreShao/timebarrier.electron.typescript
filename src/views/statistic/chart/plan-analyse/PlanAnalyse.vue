@@ -48,6 +48,49 @@
     <plan-line-chart></plan-line-chart>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <el-carousel
+      indicator-position="none"
+      :autoplay="false"
+      height="15.75vh"
+      ref="planTreeCarousel"
+    >
+      <el-carousel-item
+        v-for="(item, index) in averageDailyStatData"
+        :key="index"
+      >
+        <div class="vertical-container">
+          <info-item
+            title="能力名称"
+            :value="`No.` + (index + 1) + `：` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <!-- 横向 -->
+          <div class="horizontal-container">
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.averageDailyTomatoNumber + ` 番茄`"
+              title="番茄个数"
+              width="49.87vw"
+            ></info-item>
+
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.averageDailyTime + ` 小时`"
+              title="工作时长"
+              width="49.87vw"
+            ></info-item>
+          </div>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
+
+    <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -101,6 +144,13 @@ export default defineComponent({
       ref(0)
     );
 
+    // 线性图用于展示列表的数据
+    const averageDailyStatData: Ref<{
+      name: string;
+      averageDailyTomatoNumber: number;
+      averageDailyTime: number;
+    }[]> = inject(Store.planAverageDailyStatData, ref([]));
+
     const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
     watch(planTotalStatDataIndex, newValue => {
@@ -122,7 +172,7 @@ export default defineComponent({
       }
     });
 
-    return { totalStatData, planTreeCarousel };
+    return { totalStatData, planTreeCarousel, averageDailyStatData };
   }
 });
 </script>

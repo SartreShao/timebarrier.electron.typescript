@@ -234,7 +234,7 @@ export default {
    * 这将用于展示数据列表
    */
   getTotalStatData: (
-    map: Map<string, AV.Object>,
+    statList: Map<string, AV.Object>,
     chartMode: ChartMode
   ): {
     name: string;
@@ -247,7 +247,7 @@ export default {
       totalTime: number;
     }[] = [];
 
-    map.forEach(value => {
+    statList.forEach(value => {
       data.push({
         name: value.attributes.name,
         totalTomatoNumber: value.attributes.todayTomatoNumber,
@@ -258,6 +258,43 @@ export default {
     return chartMode === "tomato"
       ? data.sort((a, b) => b.totalTomatoNumber - a.totalTomatoNumber)
       : data.sort((a, b) => b.totalTime - a.totalTime);
+  },
+  /**
+   * 获取线性图的数据，并按照 chartMode 进行降序排列；
+   * 这将用于展示数据列表
+   */
+  getAverageDailyStatData: (
+    statList: Map<string, AV.Object>,
+    dateRange: Date[],
+    chartMode: ChartMode
+  ): {
+    name: string;
+    averageDailyTomatoNumber: number;
+    averageDailyTime: number;
+  }[] => {
+    const data: {
+      name: string;
+      averageDailyTomatoNumber: number;
+      averageDailyTime: number;
+    }[] = [];
+
+    const durationDays: number =
+      (dateRange[1].getTime() - dateRange[0].getTime()) / (3600 * 1000 * 24);
+
+    statList.forEach(value => {
+      data.push({
+        name: value.attributes.name,
+        averageDailyTomatoNumber:
+          value.attributes.todayTomatoNumber / durationDays,
+        averageDailyTime:
+          UI.timeStampToHour(value.attributes.todayTotalTime) / durationDays
+      });
+    });
+    return chartMode === "tomato"
+      ? data.sort(
+          (a, b) => b.averageDailyTomatoNumber - a.averageDailyTomatoNumber
+        )
+      : data.sort((a, b) => b.averageDailyTime - a.averageDailyTime);
   },
   /**
    * 获取矩形树图的 Tip：

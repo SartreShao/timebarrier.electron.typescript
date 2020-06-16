@@ -78,6 +78,44 @@ export default defineComponent({
       )
     );
 
+    // 用户选择的日期范围
+    const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
+
+    // 线性图用于展示列表的数据
+    const averageDailyStatData: Ref<{
+      name: string;
+      averageDailyTomatoNumber: number;
+      averageDailyTime: number;
+    }[]> = inject(Store.planAverageDailyStatData, ref([]));
+
+    const statList = computed(() =>
+      StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
+    );
+
+    watch(statList, newValue => {
+      averageDailyStatData.value = StatPagePlanAbilityTarget.getAverageDailyStatData(
+        newValue as Map<string, AV.Object>,
+        dateRange.value,
+        chartMode.value
+      );
+    });
+
+    watch(dateRange, newValue => {
+      averageDailyStatData.value = StatPagePlanAbilityTarget.getAverageDailyStatData(
+        statList.value as Map<string, AV.Object>,
+        newValue,
+        chartMode.value
+      );
+    });
+
+    watch(chartMode, newValue => {
+      averageDailyStatData.value = StatPagePlanAbilityTarget.getAverageDailyStatData(
+        statList.value as Map<string, AV.Object>,
+        dateRange.value,
+        newValue
+      );
+    });
+
     watchEffect(() => {
       StatPagePlanAbilityTarget.initLineChart(
         id,
