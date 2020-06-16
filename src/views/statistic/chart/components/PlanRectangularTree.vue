@@ -116,8 +116,8 @@ export default defineComponent({
     });
 
     // 用于指示计划
-    const planTreeDataIndex: Ref<number> = inject(
-      Store.planTreeDataIndex,
+    const planTotalStatDataIndex: Ref<number> = inject(
+      Store.planTotalStatDataIndex,
       ref(0)
     );
 
@@ -126,7 +126,7 @@ export default defineComponent({
         id,
         rectangularTreeData.value,
         colormap,
-        planTreeDataIndex
+        planTotalStatDataIndex
       );
     });
 
@@ -135,7 +135,7 @@ export default defineComponent({
         id,
         rectangularTreeData.value,
         colormap,
-        planTreeDataIndex
+        planTotalStatDataIndex
       );
     });
 
@@ -144,7 +144,7 @@ export default defineComponent({
         id,
         rectangularTreeData.value,
         colormap,
-        planTreeDataIndex
+        planTotalStatDataIndex
       );
     });
 

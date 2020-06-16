@@ -96,14 +96,14 @@ export default defineComponent({
     }[]> = inject(Store.planTotalStatData, ref([]));
 
     // 用于指示计划
-    const planTreeDataIndex: Ref<number> = inject(
-      Store.planTreeDataIndex,
+    const planTotalStatDataIndex: Ref<number> = inject(
+      Store.planTotalStatDataIndex,
       ref(0)
     );
 
     const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
-    watch(planTreeDataIndex, newValue => {
+    watch(planTotalStatDataIndex, newValue => {
       if (planTreeCarousel.value !== null) {
         planTreeCarousel.value.setActiveItem(newValue);
       }
