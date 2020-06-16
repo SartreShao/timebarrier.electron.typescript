@@ -1,8 +1,12 @@
 <template>
   <div class="rectangular-tree-container">
     <h1>计划矩形树图</h1>
-    <h2>80% 的番茄</h2>
-    <h3>用于执行：「撰写【时间壁垒】App」</h3>
+    <h2>
+      {{ rectangularTreeTip.percent }}% 的{{
+        chartMode === "tomato" ? "番茄" : "时间"
+      }}
+    </h2>
+    <h3>用于执行：「{{ rectangularTreeTip.name }}」</h3>
 
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
@@ -82,11 +86,20 @@ export default defineComponent({
       )
     );
 
+    // 用于外部的列表数据
     const treeData: Ref<{
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
     }[]> = inject(Store.planTreeData, ref([]));
+
+    // Tip
+    const rectangularTreeTip = computed(() =>
+      StatPagePlanAbilityTarget.getRectangularTreeTip(
+        treeData.value,
+        chartMode.value
+      )
+    );
 
     watch(statList, newValue => {
       treeData.value = StatPagePlanAbilityTarget.getTreeData(
@@ -143,7 +156,8 @@ export default defineComponent({
     return {
       id,
       chartMode,
-      click_changeChartMode
+      click_changeChartMode,
+      rectangularTreeTip
     };
   }
 });
