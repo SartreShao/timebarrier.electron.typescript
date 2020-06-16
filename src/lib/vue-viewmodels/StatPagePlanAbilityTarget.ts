@@ -233,7 +233,7 @@ export default {
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
    * 这将用于展示数据列表
    */
-  getTreeData: (
+  getTotalStatData: (
     map: Map<string, AV.Object>,
     chartMode: ChartMode
   ): {

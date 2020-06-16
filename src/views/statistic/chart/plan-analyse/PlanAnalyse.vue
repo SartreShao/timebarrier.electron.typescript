@@ -11,7 +11,7 @@
       height="15.75vh"
       ref="planTreeCarousel"
     >
-      <el-carousel-item v-for="(item, index) in treeData" :key="index">
+      <el-carousel-item v-for="(item, index) in totalStatData" :key="index">
         <div class="vertical-container">
           <info-item
             title="能力名称"
@@ -89,11 +89,11 @@ export default defineComponent({
     // 用户选择的日期范围
     const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
 
-    const treeData: Ref<{
+    const totalStatData: Ref<{
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
-    }[]> = inject(Store.planTreeData, ref([]));
+    }[]> = inject(Store.planTotalStatData, ref([]));
 
     // 用于指示计划
     const planTreeDataIndex: Ref<number> = inject(
@@ -122,7 +122,7 @@ export default defineComponent({
       }
     });
 
-    return { treeData, planTreeCarousel };
+    return { totalStatData, planTreeCarousel };
   }
 });
 </script>

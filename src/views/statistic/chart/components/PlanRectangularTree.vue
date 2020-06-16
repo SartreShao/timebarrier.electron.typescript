@@ -87,29 +87,29 @@ export default defineComponent({
     );
 
     // 用于外部的列表数据
-    const treeData: Ref<{
+    const totalStatData: Ref<{
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
-    }[]> = inject(Store.planTreeData, ref([]));
+    }[]> = inject(Store.planTotalStatData, ref([]));
 
     // Tip
     const rectangularTreeTip = computed(() =>
       StatPagePlanAbilityTarget.getRectangularTreeTip(
-        treeData.value,
+        totalStatData.value,
         chartMode.value
       )
     );
 
     watch(statList, newValue => {
-      treeData.value = StatPagePlanAbilityTarget.getTreeData(
+      totalStatData.value = StatPagePlanAbilityTarget.getTotalStatData(
         newValue as Map<string, AV.Object>,
         chartMode.value
       );
     });
 
     watch(chartMode, newValue => {
-      treeData.value = StatPagePlanAbilityTarget.getTreeData(
+      totalStatData.value = StatPagePlanAbilityTarget.getTotalStatData(
         statList.value as Map<string, AV.Object>,
         newValue
       );
