@@ -233,7 +233,14 @@ export default {
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
    * 这将用于展示数据列表
    */
-  getTreeData: (map: Map<string, AV.Object>, chartMode: ChartMode) => {
+  getTreeData: (
+    map: Map<string, AV.Object>,
+    chartMode: ChartMode
+  ): {
+    name: string;
+    totalTomatoNumber: number;
+    totalTime: number;
+  }[] => {
     const data: {
       name: string;
       totalTomatoNumber: number;
@@ -251,6 +258,47 @@ export default {
     return chartMode === "tomato"
       ? data.sort((a, b) => b.totalTomatoNumber - a.totalTomatoNumber)
       : data.sort((a, b) => b.totalTime - a.totalTime);
+  },
+  /**
+   * 获取矩形树图的 Tip：
+   * 1. name：该段时间，总时间 / 总番茄数值量最大的 Plan / Ability / Target 的名字
+   * 2. percent：其占据总体的百分比
+   */
+  getRectangularTreeTip: (
+    treeData: {
+      name: string;
+      totalTomatoNumber: number;
+      totalTime: number;
+    }[],
+    chartMode: ChartMode
+  ): { name: string; percent: string } => {
+    let totalTime = 0;
+    let totalTomatoNumber = 0;
+    let maxTime = 0;
+    let maxTomatoNumber = 0;
+    let maxTimeName = "";
+    let maxTomatoNumberName = "";
+    treeData.forEach(item => {
+      totalTime += item.totalTime;
+      totalTomatoNumber += item.totalTomatoNumber;
+      if (maxTime <= item.totalTime) {
+        maxTime = item.totalTime;
+        maxTimeName = item.name;
+      }
+      if (maxTomatoNumber <= item.totalTomatoNumber) {
+        maxTomatoNumber = item.totalTomatoNumber;
+        maxTomatoNumberName = item.name;
+      }
+    });
+    return chartMode === "tomato"
+      ? {
+          name: maxTomatoNumberName,
+          percent: ((maxTomatoNumber / totalTomatoNumber) * 100).toFixed(2)
+        }
+      : {
+          name: maxTimeName,
+          percent: ((maxTime / totalTime) * 100).toFixed(2)
+        };
   },
   /**
    * 获取 Ability 用于矩形树图
