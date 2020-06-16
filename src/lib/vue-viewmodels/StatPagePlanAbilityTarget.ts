@@ -114,6 +114,8 @@ export default {
       });
     });
 
+    console.log("map", map);
+
     return map;
   },
   initLineChart: (
@@ -384,7 +386,7 @@ export default {
           oldPlan.attributes.todayTomatoNumber +=
             plan.attributes.todayTomatoNumber;
         } else {
-          planMap.set(plan.id, plan);
+          planMap.set(plan.id, _.cloneDeep(plan));
         }
       });
     });
