@@ -182,6 +182,8 @@ export default {
       }
     });
 
+    console.log("fuck", map);
+
     return map;
   },
   initLineChart: (
@@ -228,6 +230,10 @@ export default {
       }
 
       legend.push(name);
+    });
+
+    series.sort((a, b) => {
+      return b.data[b.data.length - 1][1] - a.data[a.data.length - 1][1];
     });
 
     // // See https://github.com/ecomfe/echarts-stat
