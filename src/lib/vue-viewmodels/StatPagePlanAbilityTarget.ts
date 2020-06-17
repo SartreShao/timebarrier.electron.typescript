@@ -174,9 +174,10 @@ export default {
           });
         });
       } catch (error) {
-        const startValue = totalValue - maxValue;
+        const startValue =
+          totalValue - maxValue >= 0 ? totalValue - maxValue : 0;
         list.forEach(item => {
-          item[1] = item[1] + startValue;
+          item[1] = Number((item[1] + startValue).toFixed(2));
         });
       }
     });
