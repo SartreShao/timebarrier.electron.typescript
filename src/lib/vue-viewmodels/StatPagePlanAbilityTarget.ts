@@ -114,8 +114,6 @@ export default {
       });
     });
 
-    console.log("map", map);
-
     return map;
   },
   mapTotalStatData: function(
