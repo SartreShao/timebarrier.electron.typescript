@@ -121,7 +121,9 @@ export default defineComponent({
         id,
         lineChartData.value as Map<string, number[][]>,
         chartMode.value,
-        colormap
+        colormap,
+        false,
+        false
       );
     });
 
@@ -130,7 +132,9 @@ export default defineComponent({
         id,
         lineChartData.value as Map<string, number[][]>,
         chartMode.value,
-        colormap
+        colormap,
+        false,
+        false
       );
     });
 
@@ -139,7 +143,9 @@ export default defineComponent({
         id,
         lineChartData.value as Map<string, number[][]>,
         chartMode.value,
-        colormap
+        colormap,
+        false,
+        false
       );
     });
 

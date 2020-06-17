@@ -136,7 +136,7 @@ export default {
         const timeStamp = item[0];
         const todayValue = item[1];
         if (index === 0) {
-          item[1] = 0;
+          item[1] = todayValue;
         } else {
           item[1] = list[index - 1][1] + todayValue;
         }
@@ -149,7 +149,9 @@ export default {
     id: string,
     lineChartData: Map<string, number[][]>,
     chartMode: ChartMode,
-    colormap: string[]
+    colormap: string[],
+    smooth: boolean,
+    isLine: boolean
   ) => {
     const charts = document.getElementById(id) as HTMLDivElement;
     const myChart = charts ? echarts.init(charts) : null;
@@ -167,14 +169,24 @@ export default {
     const legend: string[] = [];
 
     lineChartData.forEach((data, name) => {
-      series.push({
-        name: name,
-        type: "line",
-        smooth: false,
-        areaStyle: {},
-        data: data,
-        symbolSize: 1
-      });
+      if (isLine) {
+        series.push({
+          name: name,
+          type: "line",
+          smooth: smooth,
+          data: data,
+          symbolSize: 1
+        });
+      } else {
+        series.push({
+          name: name,
+          type: "line",
+          smooth: smooth,
+          areaStyle: {},
+          data: data,
+          symbolSize: 1
+        });
+      }
 
       legend.push(name);
     });
