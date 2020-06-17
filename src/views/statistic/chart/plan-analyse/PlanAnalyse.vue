@@ -91,6 +91,11 @@
     </el-carousel>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <plan-total-line-chart></plan-total-line-chart>
+
+    <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -119,9 +124,15 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import PlanRectangularTree from "../components/PlanRectangularTree.vue";
 import PlanLineChart from "../components/PlanLineChart.vue";
+import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
 import { Carousel } from "element-ui/types/element-ui";
 export default defineComponent({
-  components: { PlanRectangularTree, PlanLineChart, InfoItem },
+  components: {
+    PlanRectangularTree,
+    PlanLineChart,
+    InfoItem,
+    PlanTotalLineChart
+  },
   setup(props, context) {
     // 外部注入的番茄列表
     const tomatoList: Ref<AV.Object[]> = inject(

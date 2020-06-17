@@ -118,6 +118,33 @@ export default {
 
     return map;
   },
+  mapTotalStatData: function(
+    statDateList: readonly StatDate[],
+    type: "plan" | "target" | "ability",
+    chartMode: ChartMode
+  ) {
+    const statDateListAsc = _.reverse(_.cloneDeep(statDateList));
+
+    const map: Map<string, number[][]> = this.mapLineChartData(
+      statDateListAsc,
+      type,
+      chartMode
+    );
+
+    map.forEach(list => {
+      list.forEach((item, index) => {
+        const timeStamp = item[0];
+        const todayValue = item[1];
+        if (index === 0) {
+          item[1] = 0;
+        } else {
+          item[1] = list[index - 1][1] + todayValue;
+        }
+      });
+    });
+
+    return map;
+  },
   initLineChart: (
     id: string,
     lineChartData: Map<string, number[][]>,
@@ -362,7 +389,7 @@ export default {
           oldAbility.attributes.todayTomatoNumber +=
             ability.attributes.todayTomatoNumber;
         } else {
-          abilityMap.set(ability.id, ability);
+          abilityMap.set(ability.id, _.cloneDeep(ability));
         }
       });
     });
@@ -411,7 +438,7 @@ export default {
           oldTarget.attributes.todayTomatoNumber +=
             target.attributes.todayTomatoNumber;
         } else {
-          targetMap.set(target.id, target);
+          targetMap.set(target.id, _.cloneDeep(target));
         }
       });
     });
