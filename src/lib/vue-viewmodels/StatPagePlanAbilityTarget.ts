@@ -133,12 +133,11 @@ export default {
 
     map.forEach(list => {
       list.forEach((item, index) => {
-        const timeStamp = item[0];
         const todayValue = item[1];
         if (index === 0) {
-          item[1] = todayValue;
+          item[1] = Number(todayValue.toFixed(2));
         } else {
-          item[1] = list[index - 1][1] + todayValue;
+          item[1] = Number((list[index - 1][1] + todayValue).toFixed(2));
         }
       });
     });
