@@ -140,6 +140,47 @@ export default {
       });
     });
 
+    map.forEach((list, name) => {
+      const lastItem = list[list.length - 1];
+      const maxValue = lastItem[1];
+      let totalValue: number = 0;
+
+      try {
+        statDateList.forEach(statDate => {
+          let statList: AV.Object[] = [];
+
+          if (type === "plan" && statDate.statPlanList !== undefined) {
+            statList = statDate.statPlanList;
+          } else if (
+            type === "target" &&
+            statDate.statTargetList !== undefined
+          ) {
+            statList = statDate.statTargetList;
+          } else if (
+            type === "ability" &&
+            statDate.statAbilityList !== undefined
+          ) {
+            statList = statDate.statAbilityList;
+          }
+
+          statList.forEach(object => {
+            if (object.attributes.name === name) {
+              totalValue =
+                chartMode === "tomato"
+                  ? object.attributes.tomatoNumber
+                  : UI.timeStampToHour(object.attributes.totalTime);
+              throw "get totalValue success!!";
+            }
+          });
+        });
+      } catch (error) {
+        const startValue = totalValue - maxValue;
+        list.forEach(item => {
+          item[1] = item[1] + startValue;
+        });
+      }
+    });
+
     return map;
   },
   initLineChart: (
