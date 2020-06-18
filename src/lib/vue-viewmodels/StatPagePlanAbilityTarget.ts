@@ -182,8 +182,6 @@ export default {
       }
     });
 
-    console.log("fuck", map);
-
     return map;
   },
   initLineChart: (
