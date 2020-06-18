@@ -210,8 +210,7 @@ export default {
       const prediction = StatPage.get10000HoursDate(startTimeStamp, k, b);
       result.push({
         name: name,
-        prediction:
-          k === 0 ? `目前看：「10000 小时」这辈子是达不太成了` : prediction,
+        prediction: k === 0 ? `当前数据显示：永远无法达成` : prediction,
         k: k
       });
     });
