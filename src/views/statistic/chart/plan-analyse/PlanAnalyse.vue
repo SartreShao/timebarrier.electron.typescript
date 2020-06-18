@@ -96,6 +96,39 @@
     <plan-total-line-chart></plan-total-line-chart>
 
     <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 一万小时预测列表 -->
+    <el-carousel
+      indicator-position="none"
+      :autoplay="false"
+      height="15.75vh"
+      ref="planTreeCarousel"
+    >
+      <el-carousel-item
+        v-for="(item, index) in plan10000HoursPrediction"
+        :key="index"
+      >
+        <div class="vertical-container">
+          <info-item
+            title="计划名称"
+            :value="`No.` + (index + 1) + `：` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <info-item
+            title="「10,000 小时定律」达成日期预测"
+            :value="item.prediction"
+            width="100vw"
+          ></info-item>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
+
+    <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -162,6 +195,12 @@ export default defineComponent({
       averageDailyTime: number;
     }[]> = inject(Store.planAverageDailyStatData, ref([]));
 
+    // 一万小时预测数据
+    const plan10000HoursPrediction: Ref<{
+      name: string;
+      prediction: string;
+    }[]> = inject(Store.plan10000HoursPrediction, ref([]));
+
     const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
     watch(planTotalStatDataIndex, newValue => {
@@ -183,7 +222,12 @@ export default defineComponent({
       }
     });
 
-    return { totalStatData, planTreeCarousel, averageDailyStatData };
+    return {
+      totalStatData,
+      planTreeCarousel,
+      averageDailyStatData,
+      plan10000HoursPrediction
+    };
   }
 });
 </script>

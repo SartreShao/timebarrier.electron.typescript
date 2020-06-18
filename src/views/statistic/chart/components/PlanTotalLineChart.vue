@@ -92,6 +92,25 @@ export default defineComponent({
       StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
     );
 
+    const plan10000HoursPrediction: Ref<{
+      name: string;
+      prediction: string;
+    }[]> = inject(Store.plan10000HoursPrediction, ref([]));
+
+    watch(lineChartData, newValue => {
+      plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
+        newValue as Map<string, number[][]>,
+        dateRange.value[0].getTime()
+      );
+    });
+
+    watch(dateRange, newValue => {
+      plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
+        lineChartData.value as Map<string, number[][]>,
+        newValue[0].getTime()
+      );
+    });
+
     watch(statList, newValue => {
       averageDailyStatData.value = StatPagePlanAbilityTarget.getAverageDailyStatData(
         newValue as Map<string, AV.Object>,

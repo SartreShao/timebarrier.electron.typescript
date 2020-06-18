@@ -90,6 +90,8 @@ const planTotalStatData = Symbol();
 const planTotalStatDataIndex = Symbol();
 // 线性图的数据：用于列表展示
 const planAverageDailyStatData = Symbol();
+// 计划 10000 小时预测数据
+const plan10000HoursPrediction = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -254,6 +256,7 @@ function useProvider() {
   );
   provide(planTotalStatDataIndex, ref<number>(0));
   provide(planAverageDailyStatData, ref([]));
+  provide(plan10000HoursPrediction, ref([]));
 }
 
 export default {
@@ -298,5 +301,6 @@ export default {
   thisYearTomatoList,
   planTotalStatData,
   planTotalStatDataIndex,
-  planAverageDailyStatData
+  planAverageDailyStatData,
+  plan10000HoursPrediction
 };

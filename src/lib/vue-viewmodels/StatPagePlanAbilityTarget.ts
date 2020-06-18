@@ -5,6 +5,7 @@ import echarts from "echarts";
 import { UI } from "../vue-utils";
 import { Ref } from "@vue/composition-api";
 import _ from "lodash";
+import StatPage from "./StatPage";
 
 export default {
   /**
@@ -116,6 +117,12 @@ export default {
 
     return map;
   },
+  /**
+   * 获取全部的统计数据
+   * @param statDateList
+   * @param type
+   * @param chartMode
+   */
   mapTotalStatData: function(
     statDateList: readonly StatDate[],
     type: "plan" | "target" | "ability",
@@ -183,6 +190,32 @@ export default {
     });
 
     return map;
+  },
+  /**
+   * 获取 10000 小时定律达成时间
+   */
+  map10000HoursPrediction: function(
+    totalStatData: Map<string, number[][]>,
+    startTimeStamp: number
+  ): {
+    name: string;
+    prediction: string;
+    k?: number;
+  }[] {
+    const result: { name: string; prediction: string; k: number }[] = [];
+    totalStatData.forEach((data, name) => {
+      const expression = StatPage.getLinearRegressionExpression(data, "time");
+      const k = StatPage.getLinearRegressionSlop(expression);
+      const b = StatPage.getLinearRegressionIntercept(expression);
+      const prediction = StatPage.get10000HoursDate(startTimeStamp, k, b);
+      result.push({
+        name: name,
+        prediction:
+          k === 0 ? `目前看：「10000 小时」这辈子是达不太成了` : prediction,
+        k: k
+      });
+    });
+    return result.sort((a, b) => b.k - a.k);
   },
   initLineChart: (
     id: string,
