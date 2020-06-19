@@ -142,7 +142,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        true
+        false
       );
     });
 
@@ -153,7 +153,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        true
+        false
       );
     });
 
@@ -164,7 +164,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        true
+        false
       );
     });
 
