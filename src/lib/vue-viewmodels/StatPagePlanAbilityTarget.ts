@@ -319,7 +319,20 @@ export default {
         showBackground: false,
         backgroundStyle: { color: "rgba(220, 220, 220, 0.2)" }
       });
-      legend.push(name);
+    });
+
+    function total(data: number[]) {
+      let total = 0;
+      data.forEach(item => {
+        total += item;
+      });
+      return total;
+    }
+
+    series.sort((a, b) => total(b.data) - total(a.data));
+
+    series.forEach(item => {
+      legend.push(item.name);
     });
 
     const option = {
@@ -327,7 +340,7 @@ export default {
       grid: {
         left: "3.2%",
         right: "12%",
-        bottom: "10%",
+        bottom: "13%",
         containLabel: true
       },
       label: {

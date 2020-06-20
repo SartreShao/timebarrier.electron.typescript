@@ -156,7 +156,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .month-bar-chart-container {
   width 100%
-  height 42.19vh
+  height 46.19vh
   background white
   display flex
   flex-direction column
@@ -213,7 +213,7 @@ export default defineComponent({
   .scatter-diagram {
     margin-top -6vh
     width 100vw
-    height 38vh
+    height 41vh
   }
 }
 </style>

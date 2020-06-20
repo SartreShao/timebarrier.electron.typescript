@@ -207,6 +207,12 @@ export default defineComponent({
 
     const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
+    // 本年的番茄列表
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
+      ref([])
+    );
+
     watch(planTotalStatDataIndex, newValue => {
       if (planTreeCarousel.value !== null) {
         planTreeCarousel.value.setActiveItem(newValue);
@@ -224,6 +230,13 @@ export default defineComponent({
           endTime
         );
       }
+
+      StatPage.initTomatoListWithDateRange(
+        context.root,
+        thisYearTomatoList,
+        new Date(UI.getYearStartTimestamp(new Date().getTime())),
+        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+      );
     });
 
     return {
