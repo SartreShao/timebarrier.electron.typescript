@@ -216,6 +216,192 @@ export default {
     });
     return result.sort((a, b) => b.k - a.k);
   },
+
+  /**
+   * 获取月份数据
+   */
+  mapMonthStatData: (
+    statDateList: readonly StatDate[],
+    chartMode: ChartMode,
+    type: "plan" | "ability" | "target"
+  ): Map<string, number[]> => {
+    const map: Map<string, number[]> = new Map();
+    statDateList.forEach(statDate => {
+      let statList: AV.Object[] = [];
+      if (type === "plan") {
+        statList = statDate.statPlanList as AV.Object[];
+      } else if (type === "ability") {
+        statList = statDate.statAbilityList as AV.Object[];
+      } else if (type === "target") {
+        statList = statDate.statTargetList as AV.Object[];
+      }
+      statList.forEach(object => {
+        // 1. 看看 object 是否已经在已经在 map 中
+        if (map.has(object.attributes.name)) {
+          // 若已经在 map 中
+          const list = map.get(object.attributes.name) as number[];
+          const { month, value } = getMonthAndValue(
+            object,
+            statDate,
+            chartMode
+          );
+          list[month] = Number((list[month] + value).toFixed(2));
+          map.set(object.attributes.name, list);
+        } else {
+          // 若不在 map 中，则加入到其中
+          const list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          const { month, value } = getMonthAndValue(
+            object,
+            statDate,
+            chartMode
+          );
+          list[month] = value;
+          map.set(object.attributes.name, list);
+        }
+      });
+    });
+
+    /**
+     * 获取 object
+     */
+    function getMonthAndValue(
+      object: AV.Object,
+      statDate: StatDate,
+      chartMode: ChartMode
+    ): { month: number; value: number } {
+      const month = new Date(statDate.timeStamp).getMonth();
+      const value =
+        chartMode === "tomato"
+          ? object.attributes.todayTomatoNumber
+          : Number(
+              UI.timeStampToHour(object.attributes.todayTotalTime).toFixed(2)
+            );
+      return {
+        month,
+        value
+      };
+    }
+    return map;
+  },
+
+  /**
+   * 初始化月数据
+   */
+  initMonthBarChart: (
+    id: string,
+    monthStatDate: Map<string, number[]>,
+    chartMode: ChartMode,
+    colormap: string[],
+    labelShow: Ref<boolean>
+  ) => {
+    const charts = document.getElementById(id) as HTMLDivElement;
+    const myChart = charts ? echarts.init(charts) : null;
+
+    const series: {
+      name: string;
+      data: number[];
+      type: "bar";
+      stack: "总量";
+      showBackground: false;
+      backgroundStyle: {
+        color: "rgba(220, 220, 220, 0.2)";
+      };
+    }[] = [];
+
+    const legend: string[] = [];
+
+    monthStatDate.forEach((data, name) => {
+      series.push({
+        name: name,
+        data: data,
+        type: "bar",
+        stack: "总量",
+        showBackground: false,
+        backgroundStyle: { color: "rgba(220, 220, 220, 0.2)" }
+      });
+      legend.push(name);
+    });
+
+    const option = {
+      color: colormap,
+      grid: {
+        left: "3.2%",
+        right: "12%",
+        bottom: "10%",
+        containLabel: true
+      },
+      label: {
+        show: labelShow.value
+      },
+      legend: {
+        data: legend,
+        type: "scroll",
+        bottom: "0%",
+        left: "2.5%",
+        right: "2.5%",
+        textStyle: {
+          fontSize: 11
+        }
+      },
+      xAxis: {
+        name: "月份 x",
+        type: "category",
+        data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+        nameLocation: "end",
+        nameGap: 6,
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: { margin: 20, color: "#222A36", fontSize: 10 },
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      yAxis: {
+        name: chartMode === "tomato" ? "番茄数 y" : "小时 y",
+        nameLocation: "end",
+        nameTextStyle: {
+          color: "#222A36",
+          fontSize: 10
+        },
+        axisLine: { lineStyle: { color: "#99A8B8" } },
+        axisLabel: {
+          margin: 20,
+          color: "#222A36",
+          fontSize: 10
+        },
+        type: "value",
+        splitLine: {
+          lineStyle: {
+            type: "dashed"
+          }
+        }
+      },
+      series: series
+    };
+
+    if (myChart !== null) {
+      myChart.setOption(option as any);
+    }
+    if (myChart !== null) {
+      myChart.resize();
+    }
+    if (myChart !== null) {
+      myChart.off("click");
+      myChart.on("click", function(params: any) {
+        if (labelShow.value == true) {
+          labelShow.value = false;
+        } else {
+          labelShow.value = true;
+        }
+      });
+    }
+  },
+
   initLineChart: (
     id: string,
     lineChartData: Map<string, number[][]>,

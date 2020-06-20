@@ -128,6 +128,8 @@
       </el-carousel-item>
     </el-carousel>
 
+    <plan-month-bar-chart></plan-month-bar-chart>
+
     <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
@@ -158,13 +160,15 @@ import { UI } from "@/lib/vue-utils";
 import PlanRectangularTree from "../components/PlanRectangularTree.vue";
 import PlanLineChart from "../components/PlanLineChart.vue";
 import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
+import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
 import { Carousel } from "element-ui/types/element-ui";
 export default defineComponent({
   components: {
     PlanRectangularTree,
     PlanLineChart,
     InfoItem,
-    PlanTotalLineChart
+    PlanTotalLineChart,
+    PlanMonthBarChart
   },
   setup(props, context) {
     // 外部注入的番茄列表
