@@ -545,6 +545,102 @@ export default {
     }
   },
   /**
+   * 获取分月展示的数据，并且按照 chartMode 进行降序排列
+   * 这将用于展示数据列表
+   */
+  getMonthStatData: function(
+    statDateList: readonly StatDate[],
+    type: "plan" | "ability" | "target"
+  ): Map<
+    string,
+    { totalTime: number; totalTomatoNumber: number; percent: number }
+  >[] {
+    const result: Map<
+      string,
+      { totalTime: number; totalTomatoNumber: number; percent: number }
+    >[] = [];
+
+    for (let i = 0; i < 12; i++) {
+      result.push(
+        new Map<
+          string,
+          { totalTime: number; totalTomatoNumber: number; percent: number }
+        >()
+      );
+    }
+
+    const monthStatDataTime = this.mapMonthStatData(statDateList, "time", type);
+
+    const monthStatDataTomato = this.mapMonthStatData(
+      statDateList,
+      "tomato",
+      type
+    );
+
+    monthStatDataTime.forEach((objectList, name) => {
+      objectList.forEach((totalTime, index) => {
+        const currentLoopMonthMap = result[index];
+        if (currentLoopMonthMap.has(name)) {
+          const map = currentLoopMonthMap.get(name);
+          const value = {
+            totalTime: totalTime,
+            totalTomatoNumber: map ? map.totalTomatoNumber : 0,
+            percent: map ? map.percent : 0
+          };
+          currentLoopMonthMap.set(name, value);
+        } else {
+          const value = {
+            totalTime: totalTime,
+            totalTomatoNumber: 0,
+            percent: 0
+          };
+          currentLoopMonthMap.set(name, value);
+        }
+      });
+    });
+
+    monthStatDataTomato.forEach((objectList, name) => {
+      objectList.forEach((totalTomatoNumber, index) => {
+        const currentLoopMonthMap = result[index];
+        if (currentLoopMonthMap.has(name)) {
+          const map = currentLoopMonthMap.get(name);
+          const value = {
+            totalTime: map ? map.totalTime : 0,
+            totalTomatoNumber: totalTomatoNumber,
+            percent: map ? map.percent : 0
+          };
+          currentLoopMonthMap.set(name, value);
+        } else {
+          const value = {
+            totalTime: 0,
+            totalTomatoNumber: totalTomatoNumber,
+            percent: 0
+          };
+          currentLoopMonthMap.set(name, value);
+        }
+      });
+    });
+
+    const totalTimeList: number[] = [];
+    result.forEach(map => {
+      let totalTime = 0;
+      map.forEach(value => {
+        totalTime += value.totalTime;
+      });
+      totalTimeList.push(totalTime);
+    });
+
+    result.forEach((map, index) => {
+      map.forEach(value => {
+        value.percent = Number(
+          (value.totalTime / totalTimeList[index]).toFixed(2)
+        );
+      });
+    });
+
+    return result;
+  },
+  /**
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；
    * 这将用于展示数据列表
    */
