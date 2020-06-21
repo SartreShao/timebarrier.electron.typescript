@@ -130,6 +130,55 @@
 
     <plan-month-bar-chart></plan-month-bar-chart>
 
+    <!--分月展示的数据 -->
+    <div v-for="(item, index) in planMonthStatData" :key="index">
+      <div class="vertical-container">
+        <!-- 占位 -->
+        <div style="height:0.15vh"></div>
+
+        <div class="month-container" :style="{ background: item.color }">
+          {{ item.month }}｜完成 {{ item.value.length }} 项计划
+        </div>
+
+        <div
+          class="vertical-container"
+          v-for="(value, index) in item.value"
+          :key="index"
+        >
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <info-item
+            :title="item.month + `计划`"
+            :value="`No.` + (index + 1) + `：` + value.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <div class="horizontal-container">
+            <info-item
+              title="当月番茄数"
+              :value="value.totalTomatoNumber + ` 番茄`"
+              width="33.16vw"
+            ></info-item>
+
+            <info-item
+              title="当月工作用时"
+              :value="value.totalTime + `小时`"
+              width="33.16vw"
+            ></info-item>
+
+            <info-item
+              title="当月用时占比"
+              :value="value.percent * 100 + `%`"
+              width="33.16vw"
+            ></info-item>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
@@ -213,6 +262,18 @@ export default defineComponent({
       ref([])
     );
 
+    // 月数据：将用于列表展示
+    const planMonthStatData: Ref<{
+      month: string;
+      color: string;
+      value: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[];
+    }[]> = inject(Store.planMonthStatData, ref([]));
+
     watch(planTotalStatDataIndex, newValue => {
       if (planTreeCarousel.value !== null) {
         planTreeCarousel.value.setActiveItem(newValue);
@@ -243,7 +304,8 @@ export default defineComponent({
       totalStatData,
       planTreeCarousel,
       averageDailyStatData,
-      plan10000HoursPrediction
+      plan10000HoursPrediction,
+      planMonthStatData
     };
   }
 });
@@ -277,6 +339,16 @@ export default defineComponent({
   display flex
   flex-direction column
   background #F5F5F5
+}
+.month-container {
+  width 100%
+  height 5.55vh
+  display flex
+  align-items center
+  justify-content center
+  font-size 1.8vh
+  color white
+  font-weight bold
 }
 .el-carousel__item h3 {
   color #475669

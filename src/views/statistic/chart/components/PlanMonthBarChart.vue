@@ -113,6 +113,25 @@ export default defineComponent({
       }
     });
 
+    // 月数据：将用于列表展示
+    const planMonthStatData: Ref<{
+      month: string;
+      color: string;
+      value: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[];
+    }[]> = inject(Store.planMonthStatData, ref([]));
+
+    watch(statDateList, newVal => {
+      planMonthStatData.value = StatPagePlanAbilityTarget.getMonthStatData(
+        newVal,
+        "plan"
+      );
+    });
+
     watchEffect(() => {
       StatPagePlanAbilityTarget.initMonthBarChart(
         id,

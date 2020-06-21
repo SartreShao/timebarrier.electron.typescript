@@ -551,10 +551,16 @@ export default {
   getMonthStatData: function(
     statDateList: readonly StatDate[],
     type: "plan" | "ability" | "target"
-  ): Map<
-    string,
-    { totalTime: number; totalTomatoNumber: number; percent: number }
-  >[] {
+  ): {
+    month: string;
+    color: string;
+    value: {
+      totalTime: number;
+      totalTomatoNumber: number;
+      percent: number;
+      name: string;
+    }[];
+  }[] {
     const result: Map<
       string,
       { totalTime: number; totalTomatoNumber: number; percent: number }
@@ -587,14 +593,18 @@ export default {
             totalTomatoNumber: map ? map.totalTomatoNumber : 0,
             percent: map ? map.percent : 0
           };
-          currentLoopMonthMap.set(name, value);
+          if (totalTime !== 0) {
+            currentLoopMonthMap.set(name, value);
+          }
         } else {
           const value = {
             totalTime: totalTime,
             totalTomatoNumber: 0,
             percent: 0
           };
-          currentLoopMonthMap.set(name, value);
+          if (totalTime !== 0) {
+            currentLoopMonthMap.set(name, value);
+          }
         }
       });
     });
@@ -609,14 +619,18 @@ export default {
             totalTomatoNumber: totalTomatoNumber,
             percent: map ? map.percent : 0
           };
-          currentLoopMonthMap.set(name, value);
+          if (totalTomatoNumber !== 0) {
+            currentLoopMonthMap.set(name, value);
+          }
         } else {
           const value = {
             totalTime: 0,
             totalTomatoNumber: totalTomatoNumber,
             percent: 0
           };
-          currentLoopMonthMap.set(name, value);
+          if (totalTomatoNumber !== 0) {
+            currentLoopMonthMap.set(name, value);
+          }
         }
       });
     });
@@ -638,7 +652,83 @@ export default {
       });
     });
 
-    return result;
+    const resultList: {
+      totalTime: number;
+      totalTomatoNumber: number;
+      percent: number;
+      name: string;
+    }[][] = [];
+    result.forEach((map, index) => {
+      const list: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[] = [];
+      map.forEach((value, name) => {
+        list.push({
+          totalTime: value.totalTime,
+          totalTomatoNumber: value.totalTomatoNumber,
+          percent: value.percent,
+          name: name
+        });
+      });
+      resultList.push(list);
+    });
+
+    const finalResult: {
+      month: string;
+      color: string;
+      value: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[];
+    }[] = [];
+
+    resultList.forEach((item, month) => {
+      if (item.length !== 0) {
+        finalResult.push({
+          month: UI.numberToMonth(month + 1) + `月份`,
+          color: getMonthColor(month + 1),
+          value: item.sort((a, b) => b.totalTime - a.totalTime)
+        });
+      }
+    });
+
+    function getMonthColor(month: number) {
+      switch (month) {
+        case 1:
+          return "#91A8D0";
+        case 2:
+          return "#5F4B8B";
+        case 3:
+          return "#D94F70";
+        case 4:
+          return "#00BCAE";
+        case 5:
+          return "#F0C05A";
+        case 6:
+          return "#FF9D00";
+        case 7:
+          return "#FF7993";
+        case 8:
+          return "#CE0057";
+        case 9:
+          return "#59596F";
+        case 10:
+          return "#396051";
+        case 11:
+          return "#1B3C79";
+        case 12:
+          return "#1A2634";
+        default:
+          return "请输入 1-12 范围内的数字";
+      }
+    }
+
+    return _.reverse(finalResult);
   },
   /**
    * 获取矩形树图的数据，并且按照 chartMode 进行降序排列；

@@ -92,6 +92,8 @@ const planTotalStatDataIndex = Symbol();
 const planAverageDailyStatData = Symbol();
 // 计划 10000 小时预测数据
 const plan10000HoursPrediction = Symbol();
+// 计划的月数据
+const planMonthStatData = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -257,6 +259,21 @@ function useProvider() {
   provide(planTotalStatDataIndex, ref<number>(0));
   provide(planAverageDailyStatData, ref([]));
   provide(plan10000HoursPrediction, ref([]));
+  provide(
+    planMonthStatData,
+    ref<
+      {
+        month: string;
+        color: string;
+        value: {
+          totalTime: number;
+          totalTomatoNumber: number;
+          percent: number;
+          name: string;
+        }[];
+      }[]
+    >([])
+  );
 }
 
 export default {
@@ -302,5 +319,6 @@ export default {
   planTotalStatData,
   planTotalStatDataIndex,
   planAverageDailyStatData,
-  plan10000HoursPrediction
+  plan10000HoursPrediction,
+  planMonthStatData
 };
