@@ -39,7 +39,7 @@
             data-name="椭圆 105"
             transform="translate(45 406)"
             fill="none"
-            :stroke="color ? color : `#222a36`"
+            :stroke="color ? color : `$fontColor`"
             stroke-width="3"
             opacity="0.395"
           >
@@ -51,7 +51,7 @@
             data-name="椭圆 106"
             transform="translate(45 406)"
             fill="none"
-            :stroke="color ? color : `#222a36`"
+            :stroke="color ? color : `$fontColor`"
             stroke-width="3"
             :stroke-dasharray="percentFormat"
           >
@@ -86,12 +86,14 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+$fontColor = #222a36
+$background = white
 .plan-item-container {
   width 100%
   position relative
   display flex
   flex-direction column
-  background white
+  background $background
 }
 .name {
   width 52.13vw
@@ -104,7 +106,7 @@ export default defineComponent({
   line-height 1.43
   letter-spacing normal
   text-align left
-  color #222a36
+  color $fontColor
 }
 .percent {
   height 2.62vh
@@ -116,7 +118,7 @@ export default defineComponent({
   line-height 1.46
   letter-spacing normal
   text-align left
-  color #222a36
+  color $fontColor
   margin-top 0.67vh
   margin-left 19.47vw
   margin-bottom 2.32vh
@@ -134,7 +136,7 @@ export default defineComponent({
   line-height 1.45
   letter-spacing normal
   text-align right
-  color #222a36
+  color $fontColor
 }
 .tomato {
   position absolute
@@ -149,7 +151,7 @@ export default defineComponent({
   line-height 1.45
   letter-spacing normal
   text-align right
-  color #222a36
+  color $fontColor
 }
 .line-container {
   position absolute
@@ -161,7 +163,7 @@ export default defineComponent({
   .line {
     position absolute
     height 100%
-    background #222a36
+    background $fontColor
     width 0.26vw
     opacity 0.06
     left 0
