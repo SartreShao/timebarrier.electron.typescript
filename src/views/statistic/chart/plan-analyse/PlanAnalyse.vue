@@ -148,34 +148,14 @@
           <!-- 占位 -->
           <div style="height:0.15vh"></div>
 
-          <info-item
-            :title="item.month + `计划`"
-            :value="`No.` + (index + 1) + `：` + value.name"
-            width="100vw"
-          ></info-item>
-
-          <!-- 占位 -->
-          <div style="height:0.15vh"></div>
-
-          <div class="horizontal-container">
-            <info-item
-              title="当月番茄数"
-              :value="value.totalTomatoNumber + ` 番茄`"
-              width="33.16vw"
-            ></info-item>
-
-            <info-item
-              title="当月工作用时"
-              :value="value.totalTime + `小时`"
-              width="33.16vw"
-            ></info-item>
-
-            <info-item
-              title="当月用时占比"
-              :value="value.percent * 100 + `%`"
-              width="33.16vw"
-            ></info-item>
-          </div>
+          <month-item
+            :name="value.name"
+            :tomatoNumber="value.totalTomatoNumber"
+            :currentTime="value.totalTime"
+            :percent="value.percent"
+            mode="simple"
+            :color="colormap[index % colormap.length]"
+          ></month-item>
         </div>
       </div>
     </div>
@@ -210,6 +190,7 @@ import PlanRectangularTree from "../components/PlanRectangularTree.vue";
 import PlanLineChart from "../components/PlanLineChart.vue";
 import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
 import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
+import MonthItem from "../components/MonthItem.vue";
 import { Carousel } from "element-ui/types/element-ui";
 export default defineComponent({
   components: {
@@ -217,7 +198,8 @@ export default defineComponent({
     PlanLineChart,
     InfoItem,
     PlanTotalLineChart,
-    PlanMonthBarChart
+    PlanMonthBarChart,
+    MonthItem
   },
   setup(props, context) {
     // 外部注入的番茄列表
@@ -274,6 +256,8 @@ export default defineComponent({
       }[];
     }[]> = inject(Store.planMonthStatData, ref([]));
 
+    const colormap: string[] = inject(Store.colormap, []);
+
     watch(planTotalStatDataIndex, newValue => {
       if (planTreeCarousel.value !== null) {
         planTreeCarousel.value.setActiveItem(newValue);
@@ -305,7 +289,8 @@ export default defineComponent({
       planTreeCarousel,
       averageDailyStatData,
       plan10000HoursPrediction,
-      planMonthStatData
+      planMonthStatData,
+      colormap
     };
   }
 });
