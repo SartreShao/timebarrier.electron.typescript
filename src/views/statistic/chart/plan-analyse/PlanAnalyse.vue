@@ -131,75 +131,77 @@
     <plan-month-bar-chart></plan-month-bar-chart>
 
     <!--分月展示的数据 -->
-    <div v-for="(item, index) in planMonthStatData" :key="index">
-      <div class="vertical-container">
-        <!-- 占位 -->
-        <div style="height:0.15vh"></div>
-
-        <div
-          class="month-container"
-          :style="{ background: item.color }"
-          @click="item.isShow = !item.isShow"
-        >
-          {{ item.month }}｜完成 {{ item.value.length }} 项计划
-
-          <svg
-            v-if="item.isShow === true"
-            class="icon-downward"
-            xmlns="http://www.w3.org/2000/svg"
-            width="17.598"
-            height="8.653"
-            viewBox="0 0 17.598 8.653"
-          >
-            <path
-              id="路径_409"
-              data-name="路径 409"
-              d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
-              transform="translate(-258.133 -428.8)"
-              fill="#fff"
-              opacity="0.5"
-            />
-          </svg>
-
-          <svg
-            v-else
-            class="icon-leftward"
-            xmlns="http://www.w3.org/2000/svg"
-            width="8.653"
-            height="17.598"
-            viewBox="0 0 8.653 17.598"
-          >
-            <path
-              id="路径_410"
-              data-name="路径 410"
-              d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
-              transform="translate(437.453 -258.133) rotate(90)"
-              fill="#fff"
-              opacity="0.5"
-            />
-          </svg>
-        </div>
-
-        <div
-          class="vertical-container"
-          v-for="(value, index) in item.value"
-          :key="index"
-        >
+    <transition-group type="transition" name="flip-list">
+      <div v-for="(item, index) in planMonthStatData" :key="index">
+        <div class="vertical-container">
           <!-- 占位 -->
-          <div style="height:0.15vh" v-if="item.isShow"></div>
+          <div style="height:0.15vh"></div>
 
-          <month-item
-            v-if="item.isShow"
-            :name="value.name"
-            :tomatoNumber="value.totalTomatoNumber"
-            :currentTime="value.totalTime"
-            :percent="value.percent"
-            mode="simple"
-            :color="colormap[index % colormap.length]"
-          ></month-item>
+          <div
+            class="month-container"
+            :style="{ background: item.color }"
+            @click="item.isShow = !item.isShow"
+          >
+            {{ item.month }}｜完成 {{ item.value.length }} 项计划
+
+            <svg
+              v-if="item.isShow === true"
+              class="icon-downward"
+              xmlns="http://www.w3.org/2000/svg"
+              width="17.598"
+              height="8.653"
+              viewBox="0 0 17.598 8.653"
+            >
+              <path
+                id="路径_409"
+                data-name="路径 409"
+                d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+                transform="translate(-258.133 -428.8)"
+                fill="#fff"
+                opacity="0.5"
+              />
+            </svg>
+
+            <svg
+              v-else
+              class="icon-leftward"
+              xmlns="http://www.w3.org/2000/svg"
+              width="8.653"
+              height="17.598"
+              viewBox="0 0 8.653 17.598"
+            >
+              <path
+                id="路径_410"
+                data-name="路径 410"
+                d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+                transform="translate(437.453 -258.133) rotate(90)"
+                fill="#fff"
+                opacity="0.5"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="vertical-container"
+            v-for="(value, index) in item.value"
+            :key="index"
+          >
+            <!-- 占位 -->
+            <div style="height:0.15vh" v-if="item.isShow"></div>
+
+            <month-item
+              v-if="item.isShow"
+              :name="value.name"
+              :tomatoNumber="value.totalTomatoNumber"
+              :currentTime="value.totalTime"
+              :percent="value.percent"
+              mode="simple"
+              :color="colormap[index % colormap.length]"
+            ></month-item>
+          </div>
         </div>
       </div>
-    </div>
+    </transition-group>
     <!-- 占位 -->
     <div style="height:15vh"></div>
   </div>
