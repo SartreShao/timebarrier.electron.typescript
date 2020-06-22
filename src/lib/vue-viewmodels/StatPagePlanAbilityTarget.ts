@@ -554,6 +554,7 @@ export default {
   ): {
     month: string;
     color: string;
+    isShow: boolean;
     value: {
       totalTime: number;
       totalTomatoNumber: number;
@@ -679,6 +680,7 @@ export default {
     const finalResult: {
       month: string;
       color: string;
+      isShow: boolean;
       value: {
         totalTime: number;
         totalTomatoNumber: number;
@@ -691,6 +693,7 @@ export default {
       if (item.length !== 0) {
         finalResult.push({
           month: UI.numberToMonth(month + 1) + `月份`,
+          isShow: false,
           color: getMonthColor(month + 1),
           value: item.sort((a, b) => b.totalTime - a.totalTime)
         });

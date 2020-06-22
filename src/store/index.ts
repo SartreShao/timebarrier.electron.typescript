@@ -265,6 +265,7 @@ function useProvider() {
       {
         month: string;
         color: string;
+        isShow: boolean;
         value: {
           totalTime: number;
           totalTomatoNumber: number;

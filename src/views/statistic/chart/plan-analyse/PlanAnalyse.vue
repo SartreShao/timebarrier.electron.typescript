@@ -136,8 +136,48 @@
         <!-- 占位 -->
         <div style="height:0.15vh"></div>
 
-        <div class="month-container" :style="{ background: item.color }">
+        <div
+          class="month-container"
+          :style="{ background: item.color }"
+          @click="item.isShow = !item.isShow"
+        >
           {{ item.month }}｜完成 {{ item.value.length }} 项计划
+
+          <svg
+            v-if="item.isShow === true"
+            class="icon-downward"
+            xmlns="http://www.w3.org/2000/svg"
+            width="17.598"
+            height="8.653"
+            viewBox="0 0 17.598 8.653"
+          >
+            <path
+              id="路径_409"
+              data-name="路径 409"
+              d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+              transform="translate(-258.133 -428.8)"
+              fill="#fff"
+              opacity="0.5"
+            />
+          </svg>
+
+          <svg
+            v-else
+            class="icon-leftward"
+            xmlns="http://www.w3.org/2000/svg"
+            width="8.653"
+            height="17.598"
+            viewBox="0 0 8.653 17.598"
+          >
+            <path
+              id="路径_410"
+              data-name="路径 410"
+              d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+              transform="translate(437.453 -258.133) rotate(90)"
+              fill="#fff"
+              opacity="0.5"
+            />
+          </svg>
         </div>
 
         <div
@@ -146,9 +186,10 @@
           :key="index"
         >
           <!-- 占位 -->
-          <div style="height:0.15vh"></div>
+          <div style="height:0.15vh" v-if="item.isShow"></div>
 
           <month-item
+            v-if="item.isShow"
             :name="value.name"
             :tomatoNumber="value.totalTomatoNumber"
             :currentTime="value.totalTime"
@@ -192,6 +233,8 @@ import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
 import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
 import MonthItem from "../components/MonthItem.vue";
 import { Carousel } from "element-ui/types/element-ui";
+import icon_downward from "@/assets/icon_downward.svg";
+import icon_leftward from "@/assets/icon_leftward.svg";
 export default defineComponent({
   components: {
     PlanRectangularTree,
@@ -248,6 +291,7 @@ export default defineComponent({
     const planMonthStatData: Ref<{
       month: string;
       color: string;
+      isShow: boolean;
       value: {
         totalTime: number;
         totalTomatoNumber: number;
@@ -290,7 +334,8 @@ export default defineComponent({
       averageDailyStatData,
       plan10000HoursPrediction,
       planMonthStatData,
-      colormap
+      colormap,
+      assets: { icon_downward, icon_leftward }
     };
   }
 });
@@ -326,6 +371,8 @@ export default defineComponent({
   background #F5F5F5
 }
 .month-container {
+  cursor pointer
+  position relative
   width 100%
   height 5.55vh
   display flex
@@ -334,6 +381,28 @@ export default defineComponent({
   font-size 1.8vh
   color white
   font-weight bold
+  .icon-downward {
+    position absolute
+    width 2.35vw
+    height 0.65vh
+    opacity 1
+    right 5.52vw
+    top 0
+    bottom 0
+    margin-top auto
+    margin-bottom auto
+  }
+  .icon-leftward {
+    position absolute
+    width 1.16vw
+    height 1.32vh
+    right 6.12vw
+    opacity 1
+    top 0
+    bottom 0
+    margin-top auto
+    margin-bottom auto
+  }
 }
 .el-carousel__item h3 {
   color #475669

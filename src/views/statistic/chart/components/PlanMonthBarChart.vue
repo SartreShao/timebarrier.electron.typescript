@@ -117,6 +117,7 @@ export default defineComponent({
     const planMonthStatData: Ref<{
       month: string;
       color: string;
+      isShow: boolean;
       value: {
         totalTime: number;
         totalTomatoNumber: number;
