@@ -97,16 +97,16 @@ export default defineComponent({
       prediction: string;
     }[]> = inject(Store.plan10000HoursPrediction, ref([]));
 
-    watch(lineChartData, newValue => {
+    watch(statDateList, newValue => {
       plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
-        newValue as Map<string, number[][]>,
+        newValue,
         dateRange.value[0].getTime()
       );
     });
 
     watch(dateRange, newValue => {
       plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
-        lineChartData.value as Map<string, number[][]>,
+        statDateList.value,
         newValue[0].getTime()
       );
     });

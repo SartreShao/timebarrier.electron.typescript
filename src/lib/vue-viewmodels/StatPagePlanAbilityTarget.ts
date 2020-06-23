@@ -195,7 +195,7 @@ export default {
    * 获取 10000 小时定律达成时间
    */
   map10000HoursPrediction: function(
-    totalStatData: Map<string, number[][]>,
+    statDateList: readonly StatDate[],
     startTimeStamp: number
   ): {
     name: string;
@@ -203,6 +203,7 @@ export default {
     k?: number;
   }[] {
     const result: { name: string; prediction: string; k: number }[] = [];
+    const totalStatData = this.mapTotalStatData(statDateList, "plan", "time");
     totalStatData.forEach((data, name) => {
       const expression = StatPage.getLinearRegressionExpression(data, "time");
       const k = StatPage.getLinearRegressionSlop(expression);
