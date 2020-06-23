@@ -1,6 +1,6 @@
 <template>
   <div class="line-chart-container">
-    <h1>计划每日趋势图</h1>
+    <h1>每日趋势图</h1>
     <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg

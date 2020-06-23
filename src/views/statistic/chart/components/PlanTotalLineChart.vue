@@ -1,6 +1,6 @@
 <template>
   <div class="total-line-chart-container">
-    <h1>计划每日趋势图</h1>
+    <h1>整体涨势图</h1>
     <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
@@ -67,7 +67,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapForChart, []);
+    const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
     // 折线图的数据
     const lineChartData = computed(() =>
@@ -142,7 +142,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        false
+        true
       );
     });
 
@@ -153,7 +153,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        false
+        true
       );
     });
 
@@ -164,7 +164,7 @@ export default defineComponent({
         chartMode.value,
         colormap,
         true,
-        false
+        true
       );
     });
 

@@ -1,6 +1,6 @@
 <template>
   <div class="rectangular-tree-container">
-    <h1>计划矩形树图</h1>
+    <h1>时间分配比重图</h1>
     <h2>
       {{ rectangularTreeTip.percent }}% 的{{
         chartMode === "tomato" ? "番茄" : "时间"
