@@ -50,12 +50,7 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <el-carousel
-      indicator-position="none"
-      :autoplay="false"
-      height="15.75vh"
-      ref="planTreeCarousel"
-    >
+    <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
       <el-carousel-item
         v-for="(item, index) in averageDailyStatData"
         :key="index"
@@ -99,12 +94,7 @@
     <div style="height:0.15vh"></div>
 
     <!-- 一万小时预测列表 -->
-    <el-carousel
-      indicator-position="none"
-      :autoplay="false"
-      height="15.75vh"
-      ref="planTreeCarousel"
-    >
+    <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
       <el-carousel-item
         v-for="(item, index) in plan10000HoursPrediction"
         :key="index"

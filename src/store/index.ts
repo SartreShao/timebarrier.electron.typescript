@@ -44,6 +44,8 @@ const colormap = Symbol();
 const colormapForChart = Symbol();
 // 色彩表：pantone 年度代表色
 const colormapPantone = Symbol();
+// 色彩表
+const colormapForTreeChart = Symbol();
 // 等级规则
 const levelRuleList = Symbol();
 // 能力列表
@@ -196,6 +198,13 @@ function useProvider() {
     "#45B5AA",
     "#91A8D0"
   ]);
+  provide(colormapForTreeChart, [
+    "#F9385E",
+    "#319BF7",
+    "#5F4B8B",
+    "#00BCAE",
+    "#F0C05A"
+  ]);
   provide(levelRuleList, ref<AV.Object[]>([]));
   provide(abilityList, ref<AV.Object[]>([]));
   provide(
@@ -307,6 +316,7 @@ export default {
   planStatStatusMode,
   colormapForChart,
   colormapPantone,
+  colormapForTreeChart,
   abilityStatStatusMode,
   tomatoList,
   tomatoListWithDateRange,

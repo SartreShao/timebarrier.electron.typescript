@@ -73,7 +73,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapPantone, []);
+    const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
     const statList = computed(() =>
       StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
