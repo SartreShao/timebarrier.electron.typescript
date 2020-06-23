@@ -67,7 +67,7 @@ export default defineComponent({
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapForChart, []);
+    const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
     // 折线图的数据
     const lineChartData = computed(() =>

@@ -463,8 +463,18 @@ export default {
     });
 
     series.sort((a, b) => {
-      return b.data[b.data.length - 1][1] - a.data[a.data.length - 1][1];
+      return total(b.data) - total(a.data);
     });
+
+    console.log("series", series);
+
+    function total(data: number[][]) {
+      let total = 0;
+      data.forEach(item => {
+        total += item[1];
+      });
+      return total;
+    }
 
     // // See https://github.com/ecomfe/echarts-stat
     // var linearRegression = ecStat.regression("linear", data, 0);
