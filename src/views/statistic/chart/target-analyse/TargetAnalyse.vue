@@ -1,10 +1,12 @@
 <template>
   <div class="container">
+    <!-- 树图 -->
     <rectangular-tree type="target"></rectangular-tree>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 树图列表 -->
     <el-carousel
       indicator-position="none"
       :autoplay="false"
@@ -45,11 +47,13 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 日均图 -->
     <daily-line-chart type="target"></daily-line-chart>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
+    <!-- 日均图列表 -->
     <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
       <el-carousel-item
         v-for="(item, index) in averageDailyStatData"
