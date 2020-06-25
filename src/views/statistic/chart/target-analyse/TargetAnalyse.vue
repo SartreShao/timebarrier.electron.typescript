@@ -49,6 +49,44 @@
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
+
+    <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
+      <el-carousel-item
+        v-for="(item, index) in averageDailyStatData"
+        :key="index"
+      >
+        <div class="vertical-container">
+          <info-item
+            title="目标名称"
+            :value="`No.` + (index + 1) + `：` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <!-- 横向 -->
+          <div class="horizontal-container">
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.averageDailyTomatoNumber + ` 番茄`"
+              title="每日平均番茄"
+              width="49.87vw"
+            ></info-item>
+
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.averageDailyTime + ` 小时`"
+              title="每日平均工作时长"
+              width="49.87vw"
+            ></info-item>
+          </div>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
   </div>
 </template>
 
@@ -69,7 +107,6 @@ import AV from "leancloud-storage";
 import { Carousel } from "element-ui/types/element-ui";
 import InfoItem from "../components/InfoItem.vue";
 import DailyLineChart from "../components/DailyLineChart.vue";
-
 
 export default defineComponent({
   components: {
@@ -110,9 +147,17 @@ export default defineComponent({
       }
     });
 
+    // 线性图用于展示列表的数据
+    const averageDailyStatData: Ref<{
+      name: string;
+      averageDailyTomatoNumber: number;
+      averageDailyTime: number;
+    }[]> = inject(Store.averageDailyStatData, ref([]));
+
     return {
       treeTotalStatData,
-      treeCarousel
+      treeCarousel,
+      averageDailyStatData
     };
   }
 });
