@@ -123,7 +123,6 @@
       </el-carousel-item>
     </el-carousel>
 
-
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
@@ -145,7 +144,7 @@
             }"
             @click="item.isShow = !item.isShow"
           >
-            {{ item.month }}｜完成 {{ item.value.length }} 项目标
+            {{ item.month }}｜完成 {{ item.value.length }} 项能力
 
             <svg
               v-if="item.isShow === true"
@@ -288,7 +287,7 @@ export default defineComponent({
       prediction: string;
     }[]> = inject(Store.tenThousandHoursPrediction, ref([]));
 
-// 本年的番茄列表
+    // 本年的番茄列表
     const thisYearTomatoList: Ref<AV.Object[]> = inject(
       Store.thisYearTomatoList,
       ref([])
