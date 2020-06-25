@@ -129,7 +129,10 @@
 
           <div
             class="month-container"
-            :style="{ background: item.color }"
+            :style="{
+              background: item.isShow ? item.color : `#fff`,
+              color: item.isShow ? `#fff` : `#222a36`
+            }"
             @click="item.isShow = !item.isShow"
           >
             {{ item.month }}｜完成 {{ item.value.length }} 项计划

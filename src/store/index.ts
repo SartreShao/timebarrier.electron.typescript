@@ -203,7 +203,14 @@ function useProvider() {
     "#319BF7",
     "#5F4B8B",
     "#00BCAE",
-    "#F0C05A"
+    "#F0C05A",
+    "#1B3C79",
+    "#1A2634",
+    "#5F4B8B",
+    "#F0C05A",
+    "#D94F70",
+    "#45B5AA",
+    "#91A8D0"
   ]);
   provide(levelRuleList, ref<AV.Object[]>([]));
   provide(abilityList, ref<AV.Object[]>([]));
