@@ -856,6 +856,60 @@ export default {
           percent: ((maxTime / totalTime) * 100).toFixed(2)
         };
   },
+
+  /**
+   * 获取连续工作的数据
+   */
+  getContinuousWorkData: function(
+    statDateList: readonly StatDate[],
+    type: "plan" | "target" | "ability"
+  ) {
+    const lineChartData = this.mapLineChartData(statDateList, type, "tomato");
+
+    // 连续工作的天数，string：名称；number：连续工作的天数
+    const map: Map<string, number> = new Map();
+
+    lineChartData.forEach((value, name) => {
+      const continuousWorksDays: number[][] = [];
+      let tempArray: number[] = [];
+      value.forEach(item => {
+        if (item[1] !== 0) {
+          tempArray.push(item[1]);
+        } else {
+          continuousWorksDays.push(tempArray);
+          tempArray = [];
+        }
+      });
+
+      if (tempArray.length !== 0) {
+        continuousWorksDays.push(tempArray);
+      }
+      console.log(name, continuousWorksDays);
+
+      map.set(name, maxChildrenArray(continuousWorksDays));
+    });
+
+    let result: { name: string; value: number } = { name: "", value: 0 };
+    map.forEach((value, name) => {
+      if (value >= result.value) {
+        result = { name, value };
+      }
+    });
+
+    console.log("map", map);
+
+    return result;
+
+    function maxChildrenArray(array: number[][]) {
+      let total = 0;
+      array.forEach(item => {
+        if (item.length > total) {
+          total = item.length;
+        }
+      });
+      return total;
+    }
+  },
   /**
    * 获取 Ability 用于矩形树图
    */

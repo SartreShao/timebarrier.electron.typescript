@@ -1,7 +1,9 @@
 <template>
   <div class="line-chart-container">
     <h1>每日趋势图</h1>
-    <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2>
+    <!-- <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2> -->
+    <h2>最长 {{ tip.value }} 天连续执行</h2>
+    <h3>{{ tip.name }}</h3>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -92,6 +94,13 @@ export default defineComponent({
       StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
     );
 
+    const tip = computed(() =>
+      StatPagePlanAbilityTarget.getContinuousWorkData(
+        statDateList.value,
+        "plan"
+      )
+    );
+
     watch(statList, newValue => {
       averageDailyStatData.value = StatPagePlanAbilityTarget.getAverageDailyStatData(
         newValue as Map<string, AV.Object>,
@@ -158,7 +167,8 @@ export default defineComponent({
       id,
       chartMode,
       click_changeChartMode,
-      averageDailyStatData
+      averageDailyStatData,
+      tip
     };
   }
 });
@@ -167,7 +177,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .line-chart-container {
   width 100%
-  height 46.19vh
+  height 48.66vh
   background white
   display flex
   flex-direction column
