@@ -93,7 +93,7 @@ const treeTotalStatDataIndex = Symbol();
 // 线性图的数据：用于列表展示
 const averageDailyStatData = Symbol();
 // 计划 10000 小时预测数据
-const plan10000HoursPrediction = Symbol();
+const tenThousandHoursPrediction = Symbol();
 // 计划的月数据
 const planMonthStatData = Symbol();
 
@@ -274,7 +274,7 @@ function useProvider() {
   );
   provide(treeTotalStatDataIndex, ref<number>(0));
   provide(averageDailyStatData, ref([]));
-  provide(plan10000HoursPrediction, ref([]));
+  provide(tenThousandHoursPrediction, ref([]));
   provide(
     planMonthStatData,
     ref<
@@ -337,6 +337,6 @@ export default {
   treeTotalStatData,
   treeTotalStatDataIndex,
   averageDailyStatData,
-  plan10000HoursPrediction,
+  tenThousandHoursPrediction,
   planMonthStatData
 };

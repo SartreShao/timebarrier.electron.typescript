@@ -1,7 +1,12 @@
 <template>
   <div class="total-line-chart-container">
     <h1>整体涨势图</h1>
-    <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2>
+    <h2>
+      期间共{{ type === "plan" ? `执行` : type === "ability" ? `训练` : `构建`
+      }}{{
+        type === "plan" ? `计划：` : type === "ability" ? `能力：` : `目标：`
+      }}：{{ averageDailyStatData.length }} 项
+    </h2>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -50,6 +55,9 @@ import { ChartMode } from "@/lib/types/vue-viewmodels";
 import StatPagePlanAbilityTarget from "@/lib/vue-viewmodels/StatPagePlanAbilityTarget";
 
 export default defineComponent({
+  props: {
+    type: String
+  },
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
@@ -73,7 +81,7 @@ export default defineComponent({
     const lineChartData = computed(() =>
       StatPagePlanAbilityTarget.mapTotalStatData(
         statDateList.value,
-        "plan",
+        props.type as string,
         chartMode.value
       )
     );
@@ -86,28 +94,40 @@ export default defineComponent({
       name: string;
       averageDailyTomatoNumber: number;
       averageDailyTime: number;
-    }[]> = inject(Store.planAverageDailyStatData, ref([]));
+    }[]> = inject(Store.averageDailyStatData, ref([]));
 
-    const statList = computed(() =>
-      StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
-    );
+    const statList = computed(() => {
+      if (props.type === "plan") {
+        return StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value);
+      } else if (props.type === "ability") {
+        return StatPagePlanAbilityTarget.fetchStatAbilityList(
+          statDateList.value
+        );
+      } else {
+        return StatPagePlanAbilityTarget.fetchStatTargetList(
+          statDateList.value
+        );
+      }
+    });
 
-    const plan10000HoursPrediction: Ref<{
+    const tenThousandHoursPrediction: Ref<{
       name: string;
       prediction: string;
-    }[]> = inject(Store.plan10000HoursPrediction, ref([]));
+    }[]> = inject(Store.tenThousandHoursPrediction, ref([]));
 
     watch(statDateList, newValue => {
-      plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
+      tenThousandHoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
         newValue,
-        dateRange.value[0].getTime()
+        dateRange.value[0].getTime(),
+        props.type as string
       );
     });
 
     watch(dateRange, newValue => {
-      plan10000HoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
+      tenThousandHoursPrediction.value = StatPagePlanAbilityTarget.map10000HoursPrediction(
         statDateList.value,
-        newValue[0].getTime()
+        newValue[0].getTime(),
+        props.type as string
       );
     });
 

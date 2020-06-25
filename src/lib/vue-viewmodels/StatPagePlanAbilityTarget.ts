@@ -125,7 +125,7 @@ export default {
    */
   mapTotalStatData: function(
     statDateList: readonly StatDate[],
-    type: "plan" | "target" | "ability",
+    type: string,
     chartMode: ChartMode
   ) {
     const statDateListAsc = _.reverse(_.cloneDeep(statDateList));
@@ -196,14 +196,15 @@ export default {
    */
   map10000HoursPrediction: function(
     statDateList: readonly StatDate[],
-    startTimeStamp: number
+    startTimeStamp: number,
+    type: string
   ): {
     name: string;
     prediction: string;
     k?: number;
   }[] {
     const result: { name: string; prediction: string; k: number }[] = [];
-    const totalStatData = this.mapTotalStatData(statDateList, "plan", "time");
+    const totalStatData = this.mapTotalStatData(statDateList, type, "time");
     totalStatData.forEach((data, name) => {
       const expression = StatPage.getLinearRegressionExpression(data, "time");
       const k = StatPage.getLinearRegressionSlop(expression);

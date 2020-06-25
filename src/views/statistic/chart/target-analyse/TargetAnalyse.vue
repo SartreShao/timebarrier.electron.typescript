@@ -91,6 +91,37 @@
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
+
+    <!-- 整体涨势图 -->
+    <total-line-chart type="target"></total-line-chart>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 整体涨势图列表：一万小时预测 -->
+    <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
+      <el-carousel-item
+        v-for="(item, index) in tenThousandHoursPrediction"
+        :key="index"
+      >
+        <div class="vertical-container">
+          <info-item
+            title="计划名称"
+            :value="`No.` + (index + 1) + `：` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <info-item
+            title="「10,000 小时定律」达成日期预测"
+            :value="item.prediction"
+            width="100vw"
+          ></info-item>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
@@ -111,12 +142,14 @@ import AV from "leancloud-storage";
 import { Carousel } from "element-ui/types/element-ui";
 import InfoItem from "../components/InfoItem.vue";
 import DailyLineChart from "../components/DailyLineChart.vue";
+import TotalLineChart from "../components/TotalLineChart.vue";
 
 export default defineComponent({
   components: {
     RectangularTree,
     DailyLineChart,
-    InfoItem
+    InfoItem,
+    TotalLineChart
   },
   setup(props, context) {
     // 外部注入的番茄列表
@@ -158,10 +191,17 @@ export default defineComponent({
       averageDailyTime: number;
     }[]> = inject(Store.averageDailyStatData, ref([]));
 
+    // 一万小时预测数据
+    const tenThousandHoursPrediction: Ref<{
+      name: string;
+      prediction: string;
+    }[]> = inject(Store.tenThousandHoursPrediction, ref([]));
+
     return {
       treeTotalStatData,
       treeCarousel,
-      averageDailyStatData
+      averageDailyStatData,
+      tenThousandHoursPrediction
     };
   }
 });

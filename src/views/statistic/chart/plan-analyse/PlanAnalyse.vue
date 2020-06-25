@@ -92,15 +92,16 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <plan-total-line-chart></plan-total-line-chart>
+    <!-- 整体涨势图 -->
+    <total-line-chart type="plan"></total-line-chart>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <!-- 一万小时预测列表 -->
+    <!-- 整体涨势图列表：一万小时预测 -->
     <el-carousel indicator-position="none" :autoplay="false" height="15.75vh">
       <el-carousel-item
-        v-for="(item, index) in plan10000HoursPrediction"
+        v-for="(item, index) in tenThousandHoursPrediction"
         :key="index"
       >
         <div class="vertical-container">
@@ -121,6 +122,9 @@
         </div>
       </el-carousel-item>
     </el-carousel>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
 
     <plan-month-bar-chart></plan-month-bar-chart>
 
@@ -228,7 +232,7 @@ import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import RectangularTree from "../components/RectangularTree.vue";
 import DailyLineChart from "../components/DailyLineChart.vue";
-import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
+import TotalLineChart from "../components/TotalLineChart.vue";
 import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
 import MonthItem from "../components/MonthItem.vue";
 import { Carousel } from "element-ui/types/element-ui";
@@ -239,7 +243,7 @@ export default defineComponent({
     RectangularTree,
     DailyLineChart,
     InfoItem,
-    PlanTotalLineChart,
+    TotalLineChart,
     PlanMonthBarChart,
     MonthItem
   },
@@ -284,10 +288,10 @@ export default defineComponent({
     }[]> = inject(Store.averageDailyStatData, ref([]));
 
     // 一万小时预测数据
-    const plan10000HoursPrediction: Ref<{
+    const tenThousandHoursPrediction: Ref<{
       name: string;
       prediction: string;
-    }[]> = inject(Store.plan10000HoursPrediction, ref([]));
+    }[]> = inject(Store.tenThousandHoursPrediction, ref([]));
 
     // 本年的番茄列表
     const thisYearTomatoList: Ref<AV.Object[]> = inject(
@@ -334,7 +338,7 @@ export default defineComponent({
       treeTotalStatData,
       treeCarousel,
       averageDailyStatData,
-      plan10000HoursPrediction,
+      tenThousandHoursPrediction,
       planMonthStatData,
       colormap,
       assets: { icon_downward, icon_leftward }
