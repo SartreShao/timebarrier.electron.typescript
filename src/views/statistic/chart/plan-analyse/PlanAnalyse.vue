@@ -127,11 +127,11 @@
     <div style="height:0.15vh"></div>
 
     <!-- 分月数据 -->
-    <month-bar-chart></month-bar-chart>
+    <month-bar-chart type="plan"></month-bar-chart>
 
-    <!--分月展示的数据 -->
+    <!--分月数据列表 -->
     <transition-group type="transition" name="flip-list">
-      <div v-for="(item, index) in planMonthStatData" :key="index">
+      <div v-for="(item, index) in monthStatData" :key="index">
         <div class="vertical-container">
           <!-- 占位 -->
           <div style="height:0.15vh"></div>
@@ -300,7 +300,7 @@ export default defineComponent({
     );
 
     // 月数据：将用于列表展示
-    const planMonthStatData: Ref<{
+    const monthStatData: Ref<{
       month: string;
       color: string;
       isShow: boolean;
@@ -310,7 +310,7 @@ export default defineComponent({
         percent: number;
         name: string;
       }[];
-    }[]> = inject(Store.planMonthStatData, ref([]));
+    }[]> = inject(Store.monthStatData, ref([]));
 
     const colormap: string[] = inject(Store.colormap, []);
 
@@ -339,7 +339,7 @@ export default defineComponent({
       treeCarousel,
       averageDailyStatData,
       tenThousandHoursPrediction,
-      planMonthStatData,
+      monthStatData,
       colormap,
       assets: { icon_downward, icon_leftward }
     };

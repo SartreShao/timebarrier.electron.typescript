@@ -48,6 +48,7 @@ import { UI } from "@/lib/vue-utils";
 import StatPagePlanAbilityTarget from "../../../../lib/vue-viewmodels/StatPagePlanAbilityTarget";
 
 export default defineComponent({
+  props: { type: String },
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
@@ -74,7 +75,7 @@ export default defineComponent({
       StatPagePlanAbilityTarget.mapMonthStatData(
         statDateList.value,
         chartMode.value,
-        "plan"
+        props.type as string
       )
     );
 
@@ -114,7 +115,7 @@ export default defineComponent({
     });
 
     // 月数据：将用于列表展示
-    const planMonthStatData: Ref<{
+    const monthStatData: Ref<{
       month: string;
       color: string;
       isShow: boolean;
@@ -124,12 +125,12 @@ export default defineComponent({
         percent: number;
         name: string;
       }[];
-    }[]> = inject(Store.planMonthStatData, ref([]));
+    }[]> = inject(Store.monthStatData, ref([]));
 
     watch(statDateList, newVal => {
-      planMonthStatData.value = StatPagePlanAbilityTarget.getMonthStatData(
+      monthStatData.value = StatPagePlanAbilityTarget.getMonthStatData(
         newVal,
-        "plan"
+        props.type as string
       );
     });
 

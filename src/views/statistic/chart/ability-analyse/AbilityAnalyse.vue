@@ -122,6 +122,91 @@
         </div>
       </el-carousel-item>
     </el-carousel>
+
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <!-- 分月数据 -->
+    <month-bar-chart type="target"></month-bar-chart>
+
+    <!--分月数据列表 -->
+    <transition-group type="transition" name="flip-list">
+      <div v-for="(item, index) in monthStatData" :key="index">
+        <div class="vertical-container">
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <div
+            class="month-container"
+            :style="{
+              background: item.isShow ? item.color : `#fff`,
+              color: item.isShow ? `#fff` : `#222a36`
+            }"
+            @click="item.isShow = !item.isShow"
+          >
+            {{ item.month }}｜完成 {{ item.value.length }} 项目标
+
+            <svg
+              v-if="item.isShow === true"
+              class="icon-downward"
+              xmlns="http://www.w3.org/2000/svg"
+              width="17.598"
+              height="8.653"
+              viewBox="0 0 17.598 8.653"
+            >
+              <path
+                id="路径_409"
+                data-name="路径 409"
+                d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+                transform="translate(-258.133 -428.8)"
+                fill="#fff"
+                opacity="0.5"
+              />
+            </svg>
+
+            <svg
+              v-else
+              class="icon-leftward"
+              xmlns="http://www.w3.org/2000/svg"
+              width="8.653"
+              height="17.598"
+              viewBox="0 0 8.653 17.598"
+            >
+              <path
+                id="路径_410"
+                data-name="路径 410"
+                d="M266.787,437.453a.534.534,0,0,1-.436-.145l-8-7.272a.72.72,0,0,1,1.018-1.018l7.563,6.835,7.563-6.835a.72.72,0,0,1,1.018,1.018l-8,7.272A1.946,1.946,0,0,1,266.787,437.453Z"
+                transform="translate(437.453 -258.133) rotate(90)"
+                fill="#fff"
+                opacity="0.5"
+              />
+            </svg>
+          </div>
+
+          <div
+            class="vertical-container"
+            v-for="(value, index) in item.value"
+            :key="index"
+          >
+            <!-- 占位 -->
+            <div style="height:0.15vh" v-if="item.isShow"></div>
+
+            <month-item
+              v-if="item.isShow"
+              :name="value.name"
+              :tomatoNumber="value.totalTomatoNumber"
+              :currentTime="value.totalTime"
+              :percent="value.percent"
+              mode="simple"
+              :color="colormap[index % colormap.length]"
+            ></month-item>
+          </div>
+        </div>
+      </div>
+    </transition-group>
+    <!-- 占位 -->
+    <div style="height:15vh"></div>
   </div>
 </template>
 
@@ -143,13 +228,19 @@ import { Carousel } from "element-ui/types/element-ui";
 import InfoItem from "../components/InfoItem.vue";
 import DailyLineChart from "../components/DailyLineChart.vue";
 import TotalLineChart from "../components/TotalLineChart.vue";
+import MonthBarChart from "../components/MonthBarChart.vue";
+import MonthItem from "../components/MonthItem.vue";
+import { StatPage } from "@/lib/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: {
     RectangularTree,
     DailyLineChart,
     InfoItem,
-    TotalLineChart
+    TotalLineChart,
+    MonthBarChart,
+    MonthItem
   },
   setup(props, context) {
     // 外部注入的番茄列表
@@ -197,11 +288,54 @@ export default defineComponent({
       prediction: string;
     }[]> = inject(Store.tenThousandHoursPrediction, ref([]));
 
+// 本年的番茄列表
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
+      ref([])
+    );
+
+    // 月数据：将用于列表展示
+    const monthStatData: Ref<{
+      month: string;
+      color: string;
+      isShow: boolean;
+      value: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[];
+    }[]> = inject(Store.monthStatData, ref([]));
+
+    const colormap: string[] = inject(Store.colormap, []);
+
+    onMounted(() => {
+      if (dateRange.value.length === 2) {
+        const startTime = dateRange.value[0];
+        const endTime = dateRange.value[1];
+        StatPage.initTomatoListWithDateRange(
+          context.root,
+          tomatoList,
+          startTime,
+          endTime
+        );
+      }
+
+      StatPage.initTomatoListWithDateRange(
+        context.root,
+        thisYearTomatoList,
+        new Date(UI.getYearStartTimestamp(new Date().getTime())),
+        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+      );
+    });
+
     return {
       treeTotalStatData,
       treeCarousel,
       averageDailyStatData,
-      tenThousandHoursPrediction
+      tenThousandHoursPrediction,
+      monthStatData,
+      colormap
     };
   }
 });

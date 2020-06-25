@@ -95,7 +95,7 @@ const averageDailyStatData = Symbol();
 // 计划 10000 小时预测数据
 const tenThousandHoursPrediction = Symbol();
 // 计划的月数据
-const planMonthStatData = Symbol();
+const monthStatData = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -276,7 +276,7 @@ function useProvider() {
   provide(averageDailyStatData, ref([]));
   provide(tenThousandHoursPrediction, ref([]));
   provide(
-    planMonthStatData,
+    monthStatData,
     ref<
       {
         month: string;
@@ -338,5 +338,5 @@ export default {
   treeTotalStatDataIndex,
   averageDailyStatData,
   tenThousandHoursPrediction,
-  planMonthStatData
+  monthStatData
 };

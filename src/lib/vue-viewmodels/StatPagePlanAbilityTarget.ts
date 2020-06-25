@@ -225,7 +225,7 @@ export default {
   mapMonthStatData: (
     statDateList: readonly StatDate[],
     chartMode: ChartMode,
-    type: "plan" | "ability" | "target"
+    type: string
   ): Map<string, number[]> => {
     const map: Map<string, number[]> = new Map();
     statDateList.forEach(statDate => {
@@ -562,7 +562,7 @@ export default {
    */
   getMonthStatData: function(
     statDateList: readonly StatDate[],
-    type: "plan" | "ability" | "target"
+    type: string
   ): {
     month: string;
     color: string;
