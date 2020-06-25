@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <plan-rectangular-tree></plan-rectangular-tree>
+    <rectangular-tree type="plan"></rectangular-tree>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
@@ -222,7 +222,7 @@ import AV from "leancloud-storage";
 import { StatPage } from "@/lib/vue-viewmodels";
 import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
-import PlanRectangularTree from "../components/PlanRectangularTree.vue";
+import RectangularTree from "../components/RectangularTree.vue";
 import PlanLineChart from "../components/PlanLineChart.vue";
 import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
 import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
@@ -232,7 +232,7 @@ import icon_downward from "@/assets/icon_downward.svg";
 import icon_leftward from "@/assets/icon_leftward.svg";
 export default defineComponent({
   components: {
-    PlanRectangularTree,
+    RectangularTree,
     PlanLineChart,
     InfoItem,
     PlanTotalLineChart,
@@ -253,7 +253,7 @@ export default defineComponent({
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
-    }[]> = inject(Store.planTotalStatData, ref([]));
+    }[]> = inject(Store.treeTotalStatData, ref([]));
 
     // 用于指示计划
     const planTotalStatDataIndex: Ref<number> = inject(

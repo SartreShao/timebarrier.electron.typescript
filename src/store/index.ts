@@ -87,7 +87,7 @@ const bestMonthInYear = Symbol();
 // 今年的番茄列表：为了月统计用
 const thisYearTomatoList = Symbol();
 // 树图的数据：用于列表展示
-const planTotalStatData = Symbol();
+const treeTotalStatData = Symbol();
 // 当前点击了什么数据
 const planTotalStatDataIndex = Symbol();
 // 线性图的数据：用于列表展示
@@ -263,7 +263,7 @@ function useProvider() {
   provide(bestMonthInYear, ref(""));
   provide(thisYearTomatoList, ref<AV.Object[]>([]));
   provide(
-    planTotalStatData,
+    treeTotalStatData,
     ref<
       {
         name: string;
@@ -334,7 +334,7 @@ export default {
   bestDayInWeek,
   bestMonthInYear,
   thisYearTomatoList,
-  planTotalStatData,
+  treeTotalStatData,
   planTotalStatDataIndex,
   planAverageDailyStatData,
   plan10000HoursPrediction,

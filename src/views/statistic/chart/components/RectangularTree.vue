@@ -56,6 +56,9 @@ import { ChartMode } from "@/lib/types/vue-viewmodels";
 import StatPagePlanAbilityTarget from "@/lib/vue-viewmodels/StatPagePlanAbilityTarget";
 
 export default defineComponent({
+  props: {
+    type: String
+  },
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
@@ -75,10 +78,22 @@ export default defineComponent({
     // 颜色表
     const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
-    const statList = computed(() =>
-      StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
-    );
+    // 用于矩形树图的数据
+    const statList = computed(() => {
+      if (props.type === "plan") {
+        return StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value);
+      } else if (props.type === "ability") {
+        return StatPagePlanAbilityTarget.fetchStatAbilityList(
+          statDateList.value
+        );
+      } else {
+        return StatPagePlanAbilityTarget.fetchStatTargetList(
+          statDateList.value
+        );
+      }
+    });
 
+    // 最终用于初始化图表的数据
     const rectangularTreeData = computed(() =>
       StatPagePlanAbilityTarget.mapRectangularTreeData(
         statList.value as Map<string, AV.Object>,
@@ -91,7 +106,7 @@ export default defineComponent({
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
-    }[]> = inject(Store.planTotalStatData, ref([]));
+    }[]> = inject(Store.treeTotalStatData, ref([]));
 
     // Tip
     const rectangularTreeTip = computed(() =>
