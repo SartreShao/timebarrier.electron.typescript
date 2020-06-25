@@ -72,7 +72,7 @@ export default {
    */
   mapLineChartData: (
     statDateList: readonly StatDate[],
-    type: "plan" | "target" | "ability",
+    type: string,
     chartMode: ChartMode
   ): Map<string, number[][]> => {
     const map: Map<string, number[][]> = new Map();
@@ -862,7 +862,7 @@ export default {
    */
   getContinuousWorkData: function(
     statDateList: readonly StatDate[],
-    type: "plan" | "target" | "ability"
+    type: string
   ) {
     const lineChartData = this.mapLineChartData(statDateList, type, "tomato");
 

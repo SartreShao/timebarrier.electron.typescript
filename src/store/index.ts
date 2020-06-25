@@ -91,7 +91,7 @@ const treeTotalStatData = Symbol();
 // 树图当前点击
 const treeTotalStatDataIndex = Symbol();
 // 线性图的数据：用于列表展示
-const planAverageDailyStatData = Symbol();
+const averageDailyStatData = Symbol();
 // 计划 10000 小时预测数据
 const plan10000HoursPrediction = Symbol();
 // 计划的月数据
@@ -273,7 +273,7 @@ function useProvider() {
     >([])
   );
   provide(treeTotalStatDataIndex, ref<number>(0));
-  provide(planAverageDailyStatData, ref([]));
+  provide(averageDailyStatData, ref([]));
   provide(plan10000HoursPrediction, ref([]));
   provide(
     planMonthStatData,
@@ -336,7 +336,7 @@ export default {
   thisYearTomatoList,
   treeTotalStatData,
   treeTotalStatDataIndex,
-  planAverageDailyStatData,
+  averageDailyStatData,
   plan10000HoursPrediction,
   planMonthStatData
 };

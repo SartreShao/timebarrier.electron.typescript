@@ -1,9 +1,15 @@
 <template>
   <div class="line-chart-container">
     <h1>每日趋势图</h1>
-    <!-- <h2>期间共执行计划：{{ averageDailyStatData.length }} 项</h2> -->
-    <h2>最长 {{ tip.value }} 天连续执行</h2>
-    <h3>{{ tip.name }}</h3>
+    <h2>
+      最长 {{ tip.value }} 天连续{{
+        type === "plan" ? `执行` : type === "ability" ? `训练` : `构建`
+      }}
+    </h2>
+    <h3>
+      {{ type === "plan" ? `计划：` : type === "ability" ? `能力：` : `目标：`
+      }}{{ tip.name }}
+    </h3>
     <div class="change-date-container" @click="click_changeChartMode">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -52,6 +58,9 @@ import { ChartMode } from "@/lib/types/vue-viewmodels";
 import StatPagePlanAbilityTarget from "@/lib/vue-viewmodels/StatPagePlanAbilityTarget";
 
 export default defineComponent({
+  props: {
+    type: String
+  },
   setup(props, context) {
     // 随机的 id，用于给 ScatterDiagram 绑定图表
     const id = String(_.random(0, Number.MAX_VALUE, true));
@@ -75,7 +84,7 @@ export default defineComponent({
     const lineChartData = computed(() =>
       StatPagePlanAbilityTarget.mapLineChartData(
         statDateList.value,
-        "plan",
+        props.type as string,
         chartMode.value
       )
     );
@@ -88,16 +97,27 @@ export default defineComponent({
       name: string;
       averageDailyTomatoNumber: number;
       averageDailyTime: number;
-    }[]> = inject(Store.planAverageDailyStatData, ref([]));
+    }[]> = inject(Store.averageDailyStatData, ref([]));
 
-    const statList = computed(() =>
-      StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value)
-    );
+    // 用于矩形树图的数据
+    const statList = computed(() => {
+      if (props.type === "plan") {
+        return StatPagePlanAbilityTarget.fetchStatPlanList(statDateList.value);
+      } else if (props.type === "ability") {
+        return StatPagePlanAbilityTarget.fetchStatAbilityList(
+          statDateList.value
+        );
+      } else {
+        return StatPagePlanAbilityTarget.fetchStatTargetList(
+          statDateList.value
+        );
+      }
+    });
 
     const tip = computed(() =>
       StatPagePlanAbilityTarget.getContinuousWorkData(
         statDateList.value,
-        "plan"
+        props.type as string
       )
     );
 

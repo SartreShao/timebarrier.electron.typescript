@@ -41,6 +41,14 @@
         </div>
       </el-carousel-item>
     </el-carousel>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <daily-line-chart type="target"></daily-line-chart>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
   </div>
 </template>
 
@@ -60,10 +68,13 @@ import Store from "@/store";
 import AV from "leancloud-storage";
 import { Carousel } from "element-ui/types/element-ui";
 import InfoItem from "../components/InfoItem.vue";
+import DailyLineChart from "../components/DailyLineChart.vue";
+
 
 export default defineComponent({
   components: {
     RectangularTree,
+    DailyLineChart,
     InfoItem
   },
   setup(props, context) {

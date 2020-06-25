@@ -45,7 +45,7 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <plan-line-chart></plan-line-chart>
+    <daily-line-chart type="plan"></daily-line-chart>
 
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
@@ -223,7 +223,7 @@ import { StatPage } from "@/lib/vue-viewmodels";
 import { TwoChronotype } from "../../../../lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 import RectangularTree from "../components/RectangularTree.vue";
-import PlanLineChart from "../components/PlanLineChart.vue";
+import DailyLineChart from "../components/DailyLineChart.vue";
 import PlanTotalLineChart from "../components/PlanTotalLineChart.vue";
 import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
 import MonthItem from "../components/MonthItem.vue";
@@ -233,7 +233,7 @@ import icon_leftward from "@/assets/icon_leftward.svg";
 export default defineComponent({
   components: {
     RectangularTree,
-    PlanLineChart,
+    DailyLineChart,
     InfoItem,
     PlanTotalLineChart,
     PlanMonthBarChart,
@@ -277,7 +277,7 @@ export default defineComponent({
       name: string;
       averageDailyTomatoNumber: number;
       averageDailyTime: number;
-    }[]> = inject(Store.planAverageDailyStatData, ref([]));
+    }[]> = inject(Store.averageDailyStatData, ref([]));
 
     // 一万小时预测数据
     const plan10000HoursPrediction: Ref<{
