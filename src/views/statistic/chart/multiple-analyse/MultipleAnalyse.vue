@@ -337,7 +337,7 @@ import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
 import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
 import PeriodBarChart from "../components/PeriodBarChart.vue";
 import WeekBarChart from "../components/WeekBarChart.vue";
-import MonthBarChart from "../components/MonthBarChart.vue";
+import MonthBarChart from "../components/TomatoMonthBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";

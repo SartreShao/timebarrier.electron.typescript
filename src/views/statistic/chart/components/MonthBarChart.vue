@@ -45,6 +45,7 @@ import _ from "lodash";
 import AV from "leancloud-storage";
 import Store from "@/store";
 import { UI } from "@/lib/vue-utils";
+import StatPagePlanAbilityTarget from "../../../../lib/vue-viewmodels/StatPagePlanAbilityTarget";
 
 export default defineComponent({
   setup(props, context) {
@@ -62,19 +63,19 @@ export default defineComponent({
       StatPage.mapStatDate(thisYearTomatoList.value)
     );
 
-    watchEffect(() => {
-      console.log("全年数据", statDateList.value);
-    });
-
     // 表示图表中显示的是时间，还是番茄
     const chartMode: Ref<ChartMode> = ref("tomato");
 
     // 颜色表
-    const colormap: string[] = inject(Store.colormapPantone, []);
+    const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
     // 周中数据
     const monthStatDate = computed(() =>
-      StatPage.getMonthStatData(statDateList.value, chartMode.value)
+      StatPagePlanAbilityTarget.mapMonthStatData(
+        statDateList.value,
+        chartMode.value,
+        "plan"
+      )
     );
 
     // 提示语
@@ -82,13 +83,6 @@ export default defineComponent({
 
     // 最佳月份
     const bestMonthInYear: Ref<string> = inject(Store.bestMonthInYear, ref(""));
-
-    watchEffect(() => {
-      bestMonthInYear.value = StatPage.getBestMonth(
-        monthStatDate.value,
-        chartMode.value
-      );
-    });
 
     // 点击事件：点击更改图标模式
     const click_changeChartMode = () => {
@@ -119,10 +113,30 @@ export default defineComponent({
       }
     });
 
+    // 月数据：将用于列表展示
+    const planMonthStatData: Ref<{
+      month: string;
+      color: string;
+      isShow: boolean;
+      value: {
+        totalTime: number;
+        totalTomatoNumber: number;
+        percent: number;
+        name: string;
+      }[];
+    }[]> = inject(Store.planMonthStatData, ref([]));
+
+    watch(statDateList, newVal => {
+      planMonthStatData.value = StatPagePlanAbilityTarget.getMonthStatData(
+        newVal,
+        "plan"
+      );
+    });
+
     watchEffect(() => {
-      StatPage.initMonthBarChart(
+      StatPagePlanAbilityTarget.initMonthBarChart(
         id,
-        monthStatDate.value,
+        monthStatDate.value as Map<string, number[]>,
         chartMode.value,
         colormap,
         labelShow
@@ -130,9 +144,9 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      StatPage.initMonthBarChart(
+      StatPagePlanAbilityTarget.initMonthBarChart(
         id,
-        monthStatDate.value,
+        monthStatDate.value as Map<string, number[]>,
         chartMode.value,
         colormap,
         labelShow
@@ -140,9 +154,9 @@ export default defineComponent({
     });
 
     onUpdated(() => {
-      StatPage.initMonthBarChart(
+      StatPagePlanAbilityTarget.initMonthBarChart(
         id,
-        monthStatDate.value,
+        monthStatDate.value as Map<string, number[]>,
         chartMode.value,
         colormap,
         labelShow
@@ -162,7 +176,7 @@ export default defineComponent({
 <style lang="stylus" scoped>
 .month-bar-chart-container {
   width 100%
-  height 42.19vh
+  height 46.19vh
   background white
   display flex
   flex-direction column
@@ -219,7 +233,7 @@ export default defineComponent({
   .scatter-diagram {
     margin-top -6vh
     width 100vw
-    height 38vh
+    height 41vh
   }
 }
 </style>

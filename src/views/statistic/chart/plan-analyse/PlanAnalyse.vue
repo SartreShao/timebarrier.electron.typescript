@@ -126,7 +126,8 @@
     <!-- 占位 -->
     <div style="height:0.15vh"></div>
 
-    <plan-month-bar-chart></plan-month-bar-chart>
+    <!-- 分月数据 -->
+    <month-bar-chart></month-bar-chart>
 
     <!--分月展示的数据 -->
     <transition-group type="transition" name="flip-list">
@@ -223,7 +224,6 @@ import AverageScatterDiagram from "../components/AverageScatterDiagram.vue";
 import TotalScatterDiagram from "../components/TotalScatterDiagram.vue";
 import PeriodBarChart from "../components/PeriodBarChart.vue";
 import WeekBarChart from "../components/WeekBarChart.vue";
-import MonthBarChart from "../components/MonthBarChart.vue";
 import InfoItem from "../components/InfoItem.vue";
 import Store from "@/store";
 import AV from "leancloud-storage";
@@ -233,7 +233,7 @@ import { UI } from "@/lib/vue-utils";
 import RectangularTree from "../components/RectangularTree.vue";
 import DailyLineChart from "../components/DailyLineChart.vue";
 import TotalLineChart from "../components/TotalLineChart.vue";
-import PlanMonthBarChart from "../components/PlanMonthBarChart.vue";
+import MonthBarChart from "../components/MonthBarChart.vue";
 import MonthItem from "../components/MonthItem.vue";
 import { Carousel } from "element-ui/types/element-ui";
 import icon_downward from "@/assets/icon_downward.svg";
@@ -244,7 +244,7 @@ export default defineComponent({
     DailyLineChart,
     InfoItem,
     TotalLineChart,
-    PlanMonthBarChart,
+    MonthBarChart,
     MonthItem
   },
   setup(props, context) {
