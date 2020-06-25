@@ -1,16 +1,108 @@
 <template>
   <div class="container">
     <rectangular-tree type="target"></rectangular-tree>
+
+    <!-- 占位 -->
+    <div style="height:0.15vh"></div>
+
+    <el-carousel
+      indicator-position="none"
+      :autoplay="false"
+      height="15.75vh"
+      ref="treeCarousel"
+    >
+      <el-carousel-item v-for="(item, index) in treeTotalStatData" :key="index">
+        <div class="vertical-container">
+          <info-item
+            title="能力名称"
+            :value="`No.` + (index + 1) + `：` + item.name"
+            width="100vw"
+          ></info-item>
+
+          <!-- 占位 -->
+          <div style="height:0.15vh"></div>
+
+          <!-- 横向 -->
+          <div class="horizontal-container">
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.totalTomatoNumber + ` 番茄`"
+              title="总番茄个数"
+              width="49.87vw"
+            ></info-item>
+
+            <!-- 每日平均用时 -->
+            <info-item
+              :value="item.totalTime + ` 小时`"
+              title="总工作时长"
+              width="49.87vw"
+            ></info-item>
+          </div>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  inject,
+  Ref,
+  computed,
+  watchEffect,
+  onMounted,
+  watch
+} from "@vue/composition-api";
 import RectangularTree from "../components/RectangularTree.vue";
+import Store from "@/store";
+import AV from "leancloud-storage";
+import { Carousel } from "element-ui/types/element-ui";
+import InfoItem from "../components/InfoItem.vue";
 
 export default defineComponent({
   components: {
-    RectangularTree
+    RectangularTree,
+    InfoItem
+  },
+  setup(props, context) {
+    // 外部注入的番茄列表
+    const tomatoList: Ref<AV.Object[]> = inject(
+      Store.tomatoListWithDateRange,
+      ref([])
+    );
+
+    // 用户选择的日期范围
+    const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
+
+    // 用于树图的列表数据
+    const treeTotalStatData: Ref<{
+      name: string;
+      totalTomatoNumber: number;
+      totalTime: number;
+    }[]> = inject(Store.treeTotalStatData, ref([]));
+
+    // 树图实例
+    const treeCarousel: Ref<Carousel | null> = ref(null);
+
+    // 树图目前用户点的位置
+    const treeTotalStatDataIndex: Ref<number> = inject(
+      Store.treeTotalStatDataIndex,
+      ref(0)
+    );
+
+    // 观察树图数据
+    watch(treeTotalStatDataIndex, newValue => {
+      if (treeCarousel.value !== null) {
+        treeCarousel.value.setActiveItem(newValue);
+      }
+    });
+
+    return {
+      treeTotalStatData,
+      treeCarousel
+    };
   }
 });
 </script>

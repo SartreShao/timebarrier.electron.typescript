@@ -9,9 +9,9 @@
       indicator-position="none"
       :autoplay="false"
       height="15.75vh"
-      ref="planTreeCarousel"
+      ref="treeCarousel"
     >
-      <el-carousel-item v-for="(item, index) in totalStatData" :key="index">
+      <el-carousel-item v-for="(item, index) in treeTotalStatData" :key="index">
         <div class="vertical-container">
           <info-item
             title="计划名称"
@@ -249,17 +249,28 @@ export default defineComponent({
     // 用户选择的日期范围
     const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
 
-    const totalStatData: Ref<{
+    // 用于树图的列表数据
+    const treeTotalStatData: Ref<{
       name: string;
       totalTomatoNumber: number;
       totalTime: number;
     }[]> = inject(Store.treeTotalStatData, ref([]));
 
-    // 用于指示计划
-    const planTotalStatDataIndex: Ref<number> = inject(
-      Store.planTotalStatDataIndex,
+    // 树图实例
+    const treeCarousel: Ref<Carousel | null> = ref(null);
+
+    // 树图目前用户点的位置
+    const treeTotalStatDataIndex: Ref<number> = inject(
+      Store.treeTotalStatDataIndex,
       ref(0)
     );
+
+    // 观察树图数据
+    watch(treeTotalStatDataIndex, newValue => {
+      if (treeCarousel.value !== null) {
+        treeCarousel.value.setActiveItem(newValue);
+      }
+    });
 
     // 线性图用于展示列表的数据
     const averageDailyStatData: Ref<{
@@ -273,8 +284,6 @@ export default defineComponent({
       name: string;
       prediction: string;
     }[]> = inject(Store.plan10000HoursPrediction, ref([]));
-
-    const planTreeCarousel: Ref<Carousel | null> = ref(null);
 
     // 本年的番茄列表
     const thisYearTomatoList: Ref<AV.Object[]> = inject(
@@ -297,12 +306,6 @@ export default defineComponent({
 
     const colormap: string[] = inject(Store.colormap, []);
 
-    watch(planTotalStatDataIndex, newValue => {
-      if (planTreeCarousel.value !== null) {
-        planTreeCarousel.value.setActiveItem(newValue);
-      }
-    });
-
     onMounted(() => {
       if (dateRange.value.length === 2) {
         const startTime = dateRange.value[0];
@@ -324,8 +327,8 @@ export default defineComponent({
     });
 
     return {
-      totalStatData,
-      planTreeCarousel,
+      treeTotalStatData,
+      treeCarousel,
       averageDailyStatData,
       plan10000HoursPrediction,
       planMonthStatData,

@@ -88,8 +88,8 @@ const bestMonthInYear = Symbol();
 const thisYearTomatoList = Symbol();
 // 树图的数据：用于列表展示
 const treeTotalStatData = Symbol();
-// 当前点击了什么数据
-const planTotalStatDataIndex = Symbol();
+// 树图当前点击
+const treeTotalStatDataIndex = Symbol();
 // 线性图的数据：用于列表展示
 const planAverageDailyStatData = Symbol();
 // 计划 10000 小时预测数据
@@ -272,7 +272,7 @@ function useProvider() {
       }[]
     >([])
   );
-  provide(planTotalStatDataIndex, ref<number>(0));
+  provide(treeTotalStatDataIndex, ref<number>(0));
   provide(planAverageDailyStatData, ref([]));
   provide(plan10000HoursPrediction, ref([]));
   provide(
@@ -335,7 +335,7 @@ export default {
   bestMonthInYear,
   thisYearTomatoList,
   treeTotalStatData,
-  planTotalStatDataIndex,
+  treeTotalStatDataIndex,
   planAverageDailyStatData,
   plan10000HoursPrediction,
   planMonthStatData
