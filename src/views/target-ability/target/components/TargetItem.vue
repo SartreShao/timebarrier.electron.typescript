@@ -75,7 +75,13 @@
               ) +
               " 天"
             : ""
+        }}｜累计
+        {{
+          target.attributes.totalTime
+            ? (target.attributes.totalTime / (3600 * 1000)).toFixed(1)
+            : 0
         }}
+        小时
       </div>
       <div class="target-name">{{ target.attributes.name }}</div>
       <div class="target-ability-container">
