@@ -10,8 +10,13 @@
       <!-- tomatoNumber 系列 -->
       <div class="tomato-container">
         Level {{ ability.attributes.levelNumber }} · 累计
-        {{ ability.attributes.tomatoNumber }} 个番茄 ·
-        {{ ability.attributes.levelPercent * 100 }}%
+        {{ ability.attributes.tomatoNumber }} 个番茄 /
+        {{
+          ability.attributes.totalTime / (3600 * 1000)
+            ? (ability.attributes.totalTime / (3600 * 1000)).toFixed(1)
+            : 0
+        }}
+        个小时· {{ ability.attributes.levelPercent * 100 }}%
       </div>
 
       <!-- Ability 名称 -->
