@@ -76,16 +76,19 @@
                 />
               </div>
               <div class="plan-detail-container">
-                <span v-if="item.attributes.abilityListOfPlan.length !== 0">{{
-                  "提升" +
-                    item.attributes.abilityListOfPlan[0].attributes.name +
-                    " · 已累计 " +
-                    item.attributes.tomatoNumber / 2 +
-                    " 个小时"
+                <span>{{
+                  "累计执行: " +
+                    (
+                      (item.attributes.totalTime
+                        ? item.attributes.totalTime
+                        : 0) /
+                      (3600 * 1000)
+                    ).toFixed(1) +
+                    " 小时 / " +
+                    item.attributes.tomatoNumber +
+                    " 个番茄"
                 }}</span>
-                <span v-else>{{
-                  "已累计 " + item.attributes.tomatoNumber / 2 + " 个小时"
-                }}</span>
+
                 <div>
                   {{
                     `${item.attributes.todayTomatoNumber} / ${item.attributes.target} 个番茄`
