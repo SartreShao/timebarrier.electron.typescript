@@ -198,7 +198,7 @@ export default {
             break;
           }
           case "completed": {
-            query.equalTo("isFinished", true).descending("createdAt");
+            query.equalTo("isFinished", true).descending("updatedAt");
             break;
           }
         }
