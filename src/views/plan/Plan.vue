@@ -76,7 +76,7 @@
                 />
               </div>
               <div class="plan-detail-container">
-                <span>{{
+                <span v-if="item.attributes.tomatoNumber !== 0">{{
                   "累计执行: " +
                     (
                       (item.attributes.totalTime
@@ -84,10 +84,12 @@
                         : 0) /
                       (3600 * 1000)
                     ).toFixed(1) +
-                    " 小时 / " +
+                    " 小时 · " +
                     item.attributes.tomatoNumber +
                     " 个番茄"
                 }}</span>
+
+                <span v-else>尚未开始训练</span>
 
                 <div>
                   {{
@@ -106,7 +108,22 @@
         v-darked-when-click
         @click="click_completedPlanListButton"
       >
-        已完成 · {{ completedPlanList.length }}
+        <svg
+          class="icon-completed"
+          xmlns="http://www.w3.org/2000/svg"
+          width="22.725"
+          height="15.15"
+          viewBox="0 0 22.725 15.15"
+        >
+          <path
+            id="路径_619"
+            data-name="路径 619"
+            d="M36.141,17.465c.456-.415.817-.727,1.161-1.058q4.921-4.741,9.838-9.488c.793-.768,1.621-1.154,2.591-.35.813.671.692,1.6-.32,2.582Q43.6,14.776,37.762,20.389c-1.219,1.17-1.881,1.178-3.079.037-2.111-2.017-4.2-4.059-6.312-6.073-.8-.759-1.2-1.559-.374-2.5.7-.787,1.668-.671,2.681.3,1.812,1.741,3.605,3.5,5.461,5.308Z"
+            transform="translate(-27.539 -6.124)"
+            fill="#222a36"
+          />
+        </svg>
+        <span>已完成· {{ completedPlanList.length }}</span>
       </div>
     </main>
 
@@ -960,16 +977,23 @@ export default defineComponent({
       cursor pointer
       margin-top 3.75vh
       margin-bottom 3.75vh
-      width 30.27vw
-      height 5.17vh
+      width 32vw
+      height 4.87vh
       border-radius 3.15vh
-      background-color #e8e8e8
+      background-color white
       display flex
-      justify-content center
       align-items center
-      font-size 1.95vh
-      color #D1D1D1
+      justify-content center
+      font-size 1.72vh
+      color #222A36
       letter-spacing 0.03vw
+      .icon-completed {
+        width 3.03vw
+        height 1.14vh
+      }
+      span {
+        margin-left 3vw
+      }
     }
   }
 }
