@@ -1,5 +1,9 @@
 <template>
-  <div class="target-item-container" v-splash-when-click>
+  <div
+    class="target-item-container"
+    v-splash-when-click
+    @click="$emit('click')"
+  >
     <!-- 完成目标 -->
     <div class="finished-button-container">
       <!-- 点击「取消完成目标」 -->

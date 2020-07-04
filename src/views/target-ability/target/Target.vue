@@ -17,7 +17,7 @@
           v-for="target in unSubjectiveTargetList"
           :key="target.id"
           :id="target.id"
-          v-longclick="() => click_editTargetButton(target)"
+          @click="click_editTargetButton(target)"
           v-splash-when-click
           :target="target"
         ></target-item>
@@ -42,7 +42,7 @@
           <!-- 目标目录 -->
           <target-subject-item
             v-splash-when-click
-            v-longclick="() => click_editTargetSubjectButton(targetSubject)"
+            @click="() => click_editTargetSubjectButton(targetSubject)"
             :isShow.sync="targetSubject.attributes.showSubjectList"
             :name="targetSubject.attributes.name"
             :length="targetSubject.attributes.targetListOfTargetSubject.length"
@@ -65,7 +65,7 @@
                     .targetListOfTargetSubject"
                   :key="target.id"
                   :id="target.id"
-                  v-longclick="() => click_editTargetButton(target)"
+                  @click="click_editTargetButton(target)"
                   v-splash-when-click
                   :target="target"
                 ></target-item>
@@ -89,7 +89,7 @@
         v-for="target in completedTargetList"
         :key="target.id"
         :id="target.id"
-        v-longclick="() => click_editTargetButton(target)"
+        @click="click_editTargetButton(target)"
         v-splash-when-click
         :target="target"
       ></target-item>

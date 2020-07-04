@@ -14,7 +14,7 @@
           v-for="ability in abilityList"
           :key="ability.id"
           :ability="ability"
-          v-longclick="() => click_abilityItem(ability)"
+          @click="click_abilityItem(ability)"
         ></ability-item>
       </transition-group>
     </draggable>

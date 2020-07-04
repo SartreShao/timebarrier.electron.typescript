@@ -1,5 +1,5 @@
 <template>
-  <div class="ability-item-container">
+  <div class="ability-item-container" @click="$emit('click')">
     <!-- 升级进度条 -->
     <aside
       v-bind:style="{ width: widthPercent, background: backgroundColor }"
@@ -97,6 +97,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .ability-item-container {
+  cursor pointer
   width 91.2vw
   border-radius 1.57vh
   box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
