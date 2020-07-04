@@ -148,16 +148,17 @@ export default {
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
   ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在完成计划");
     try {
-      // 获取传入参数
-      const user = Api.getCurrentUser();
-
-      // 如果未登录，提示用户请先登录
-      if (user === null) {
-        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
-        return;
-      }
-
       // 尝试完成 Plan
       await Api.completePlan(planId);
       // 刷新计划列表
@@ -171,6 +172,8 @@ export default {
 
       completedPlanList.value = await Api.fetchPlanList(user, "completed");
 
+      UI.hideLoading(loadingInstance);
+
       UI.showNotification(
         vue.$notify,
         "计划完成",
@@ -178,6 +181,8 @@ export default {
         "success"
       );
     } catch (error) {
+      UI.hideLoading(loadingInstance);
+
       UI.showNotification(
         vue.$notify,
         "完成计划失败",
@@ -203,16 +208,17 @@ export default {
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
   ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在恢复计划");
     try {
-      // 获取传入参数
-      const user = Api.getCurrentUser();
-
-      // 如果未登录，提示用户请先登录
-      if (user === null) {
-        UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
-        return;
-      }
-
       // 尝试完成 Plan
       await Api.cancelCompletePlan(planId);
       // 刷新计划列表
@@ -225,10 +231,15 @@ export default {
       }
 
       completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, "恢复计划成功", "", "success");
     } catch (error) {
+      UI.hideLoading(loadingInstance);
+
       UI.showNotification(
         vue.$notify,
-        "取消完成计划失败",
+        "恢复计划失败",
         `失败原因：${error.message}`,
         "error"
       );
