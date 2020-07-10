@@ -1,27 +1,43 @@
 <template>
   <div>
     <footer>
-      <img
-        class="icon1"
-        :src="
-          currentTab === 'plan' ? assets.icon_plan_selected : assets.icon_plan
-        "
-        alt="icon_plan_selected"
-        @click="click_planTab"
-      />
+      <!-- TAB 1 -->
+      <div class="icon1-background" @click="click_planTab">
+        <img
+          class="icon1"
+          :src="
+            currentTab === 'plan' ? assets.icon_plan_selected : assets.icon_plan
+          "
+          alt="icon_plan_selected"
+        />
+        <span
+          class="tab-text"
+          :style="{ color: currentTab === 'plan' ? '#222a36' : '#9A9A9A' }"
+          >计划</span
+        >
+      </div>
 
-      <img
-        class="icon2"
-        :src="
-          currentTab === 'target-ability'
-            ? assets.icon_target_ability_selected
-            : assets.icon_target_ability
-        "
-        alt="icon_target_ability"
-        @click="click_targetAbilityTab"
-      />
+      <!-- TAB 2 -->
+      <div class="icon2-background" @click="click_targetAbilityTab">
+        <img
+          class="icon2"
+          :src="
+            currentTab === 'target-ability'
+              ? assets.icon_target_ability_selected
+              : assets.icon_target_ability
+          "
+          alt="icon_target_ability"
+        />
+        <span
+          class="tab-text"
+          :style="{
+            color: currentTab === 'target-ability' ? '#222a36' : '#9A9A9A'
+          }"
+          >目标&能力</span
+        >
+      </div>
 
-      <div @click="click_tomatoClockButton">
+      <div class="tomato-button" @click="click_tomatoClockButton">
         <img
           :src="assets.icon_play"
           alt="icon_play"
@@ -40,23 +56,37 @@
         }}</span>
       </div>
 
-      <img
-        class="icon3"
-        :src="
-          currentTab === 'statistic'
-            ? assets.icon_statistic_selected
-            : assets.icon_statistic
-        "
-        alt="icon_statistic"
-        @click="click_statisticTab"
-      />
+      <!-- TAB 3 -->
+      <div class="icon3-background" @click="click_statisticTab">
+        <img
+          class="icon3"
+          :src="
+            currentTab === 'statistic'
+              ? assets.icon_statistic_selected
+              : assets.icon_statistic
+          "
+          alt="icon_statistic"
+        />
+        <span
+          class="tab-text"
+          :style="{ color: currentTab === 'statistic' ? '#222a36' : '#9A9A9A' }"
+          >统计</span
+        >
+      </div>
 
-      <img
-        class="icon4"
-        :src="currentTab === 'me' ? assets.icon_me_selected : assets.icon_me"
-        alt="icon_me"
-        @click="click_meTab"
-      />
+      <!-- TAB 4 -->
+      <div class="icon4-background" @click="click_meTab">
+        <img
+          class="icon4"
+          :src="currentTab === 'me' ? assets.icon_me_selected : assets.icon_me"
+          alt="icon_me"
+        />
+        <span
+          class="tab-text"
+          :style="{ color: currentTab === 'me' ? '#222a36' : '#9A9A9A' }"
+          >我的</span
+        >
+      </div>
     </footer>
 
     <!-- 提交番茄的抽屉菜单 -->
@@ -428,32 +458,204 @@ footer {
   height 6.82vh
   position fixed
   bottom 0
-  justify-content space-between
   display flex
   align-items center
-  .icon1 {
-    margin-left 8.93vw
-    width 3.8vw
+  .icon1-background {
     cursor pointer
+    width 14.67vw
+    height 6.22vh
+    border-radius 1.05vh
+    background-color #fff
+    display flex
+    justify-content center
+    flex-direction column
+    align-items center
+    margin-left 3.47vw
+    margin-right 2.27vw
+    transition all 0.2s linear
+    &:hover {
+      background-color #F4F4F8
+    }
+    .tab-text {
+      transition all 0.2s linear
+      opacity 0
+      display block
+      height 0vh
+      font-size 0vh
+      margin-top 0vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      color #9A9A9A
+    }
+    &:hover .tab-text {
+      transition all 0.2s linear
+      opacity 1
+      display block
+      height 1.87vh
+      font-size 1.27vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      margin-top 0.67vh
+      color #9A9A9A
+    }
+  }
+  .icon2-background {
+    cursor pointer
+    width 14.67vw
+    height 6.22vh
+    border-radius 1.05vh
+    background-color #fff
+    display flex
+    justify-content center
+    flex-direction column
+    align-items center
+    transition all 0.2s linear
+    &:hover {
+      background-color #F4F4F8
+    }
+    .tab-text {
+      transition all 0.2s linear
+      opacity 0
+      display block
+      height 0vh
+      font-size 0vh
+      margin-top 0vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      color #9A9A9A
+    }
+    &:hover .tab-text {
+      transition all 0.2s linear
+      opacity 1
+      display block
+      height 1.87vh
+      font-size 1.27vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      margin-top 0.67vh
+      color #9A9A9A
+    }
+  }
+  .icon3-background {
+    cursor pointer
+    width 14.67vw
+    height 6.22vh
+    border-radius 1.05vh
+    background-color #fff
+    display flex
+    justify-content center
+    flex-direction column
+    align-items center
+    transition all 0.2s linear
+    &:hover {
+      background-color #F4F4F8
+    }
+    .tab-text {
+      transition all 0.2s linear
+      opacity 0
+      display block
+      height 0vh
+      font-size 0vh
+      margin-top 0vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      color #9A9A9A
+    }
+    &:hover .tab-text {
+      transition all 0.2s linear
+      opacity 1
+      display block
+      height 1.87vh
+      font-size 1.27vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      margin-top 0.67vh
+      color #9A9A9A
+    }
+  }
+  .icon4-background {
+    cursor pointer
+    width 14.67vw
+    height 6.22vh
+    border-radius 1.05vh
+    background-color #fff
+    display flex
+    justify-content center
+    flex-direction column
+    align-items center
+    margin-right 3.47vw
+    margin-left 2.27vw
+    transition all 0.2s linear
+    &:hover {
+      background-color #F4F4F8
+    }
+    .tab-text {
+      transition all 0.2s linear
+      opacity 0
+      display block
+      height 0vh
+      font-size 0vh
+      margin-top 0vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      color #9A9A9A
+    }
+    &:hover .tab-text {
+      transition all 0.2s linear
+      opacity 1
+      display block
+      height 1.87vh
+      font-size 1.27vh
+      font-weight bold
+      font-stretch normal
+      font-style normal
+      letter-spacing 0.01vh
+      text-align center
+      margin-top 0.67vh
+      color #9A9A9A
+    }
+  }
+  .icon1 {
+    width 3.8vw
     height 2.25vh
   }
   .icon2 {
-    width 4.27vw
+    width 3.99vw
     cursor pointer
-    height 2.4vh
+    height 2.25vh
   }
   .icon3 {
-    width 4.41vw
-    height 2.48vh
+    width 3.99vw
     cursor pointer
+    height 2.25vh
   }
   .icon4 {
-    width 3.67vw
-    height 2.48vh
-    margin-right 8.87vw
+    width 3.33vw
+    height 2.25vh
     cursor pointer
   }
-  div {
+  .tomato-button {
     cursor pointer
     width 14.4vw
     height 4.87vh
@@ -462,6 +664,8 @@ footer {
     display flex
     align-items center
     justify-content center
+    margin-left 7.73vw
+    margin-right 7.73vw
     img {
       width 2.68vw
       height 1.93vh
