@@ -108,6 +108,13 @@ header {
   display flex
   align-items center
   justify-content center
+  background #fff
+  border-radius 1.05vh
+  transition all 0.2s linear
+  &:hover {
+    background #f4f4f8
+    border-radius 1.05vh
+  }
 }
 .icon-back {
   width 1.92vw
@@ -126,6 +133,13 @@ header {
   display flex
   align-items center
   justify-content center
+  background #fff
+  border-radius 1.05vh
+  transition all 0.2s linear
+  &:hover {
+    background #f4f4f8
+    border-radius 1.05vh
+  }
 }
 .icon-home {
   width 1.96vh
