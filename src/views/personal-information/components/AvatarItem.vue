@@ -96,11 +96,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "@vue/composition-api";
+import { defineComponent, ref, Ref, onMounted } from "@vue/composition-api";
 import { PersonalInformation } from "@/lib/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     const avatarUrl: Ref<string> = ref("");
+
+    onMounted(() => {
+      PersonalInformation.fetchAvatar(context.root, avatarUrl);
+    });
 
     const input: Ref<HTMLInputElement | null> = ref(null);
 
@@ -108,7 +112,8 @@ export default defineComponent({
       PersonalInformation.uploadAvatar(
         context.root,
         e,
-        input.value as HTMLInputElement
+        input.value as HTMLInputElement,
+        avatarUrl
       );
     };
 

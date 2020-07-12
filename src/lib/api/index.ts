@@ -1868,7 +1868,7 @@ export default {
   /**
    * 上传头像
    */
-  uploadAvatar: async (user: AV.User, file: File) =>
+  uploadAvatar: async (user: AV.User, file: File): Promise<AV.User> =>
     new Promise(async (resolve, reject) => {
       try {
         await user.set("avatar", new AV.File("avatar", file)).save();
