@@ -13,7 +13,9 @@
         description="shaolizhi@tipchou.com"
       ></me-personal-info>
 
-      <div class="button">编辑个人资料</div>
+      <div class="button" @click="click_editPersonalInformation">
+        编辑个人资料
+      </div>
     </section>
 
     <!-- 睡眠、清醒与用时习惯 -->
@@ -95,12 +97,19 @@ import { Router } from "@/lib/vue-utils";
 export default defineComponent({
   components: { TopBar, BottomBar, MeOption, MePersonalInfo },
   setup(props, context) {
+    // 编辑设置
     const click_settingOption = () => {
       Router.push(context.root.$router, "/setting");
     };
 
+    // 编辑个人资料
+    const click_editPersonalInformation = () => {
+      Router.push(context.root.$router, "/personal-information");
+    };
+
     return {
       click_settingOption,
+      click_editPersonalInformation,
       assets: {
         icon_sleep,
         icon_achievement,

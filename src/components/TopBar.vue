@@ -14,7 +14,7 @@
       <div class="back" v-if="!isCurrentPageHome" @click="click_backButton">
         <img :src="assets.icon_back" alt="icon_back" class="icon-back" />
       </div>
-      <div class="home" v-if="!isCurrentPageHome">
+      <div class="home" v-if="!isCurrentPageHome" @click="click_homeButton">
         <img :src="assets.icon_home" alt="icon_home" class="icon-home" />
       </div>
       <h1>时间壁垒</h1>
@@ -39,8 +39,14 @@ export default defineComponent({
       Router.back(context.root.$router);
     };
 
+    // 点击事件：主页按钮
+    const click_homeButton = () => {
+      Router.replace(context.root.$router, "/plan");
+    };
+
     return {
       click_backButton,
+      click_homeButton,
       isCurrentPageHome,
       assets: { icon_logo, icon_home, icon_back }
     };

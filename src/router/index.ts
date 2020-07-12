@@ -141,6 +141,12 @@ const routes = [
     path: "/setting",
     name: "setting",
     component: () => import("../views/setting/Setting.vue")
+  },
+  {
+    path: "/personal-information",
+    name: "personal-information",
+    component: () =>
+      import("../views/personal-information/PersonalInformation.vue")
   }
 ];
 
