@@ -1,5 +1,12 @@
 <template>
   <div class="avatar-container">
+    <input
+      class="input-image"
+      type="file"
+      accept="image/*"
+      @change="upload_avatar"
+      ref="input"
+    />
     <span>头像</span>
     <img class="avatar" v-if="avatarUrl" :src="avatarUrl" alt="avatar" />
     <svg
@@ -90,11 +97,22 @@
 
 <script lang="ts">
 import { defineComponent, ref, Ref } from "@vue/composition-api";
+import { PersonalInformation } from "@/lib/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     const avatarUrl: Ref<string> = ref("");
 
-    return { avatarUrl };
+    const input: Ref<HTMLInputElement | null> = ref(null);
+
+    const upload_avatar = (e: Event) => {
+      PersonalInformation.uploadAvatar(
+        context.root,
+        e,
+        input.value as HTMLInputElement
+      );
+    };
+
+    return { avatarUrl, upload_avatar, input };
   }
 });
 </script>
@@ -107,6 +125,14 @@ export default defineComponent({
   display flex
   align-items center
   cursor pointer
+  position relative
+  .input-image {
+    cursor pointer
+    position absolute
+    width 100%
+    height 100%
+    opacity 0
+  }
   span {
     font-size 2.25vh
     font-weight normal

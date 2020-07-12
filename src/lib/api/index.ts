@@ -1864,5 +1864,21 @@ export default {
         reject(error);
       }
     });
-  }
+  },
+  /**
+   * 上传头像
+   */
+  uploadAvatar: async (user: AV.User, file: File) =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await user.set("avatar", new AV.File("avatar", file)).save();
+        const avatar = user.attributes.avatar;
+        await user.set("avatarUrl", avatar.attributes.url).save();
+        Log.success("uploadAvatar", user);
+        resolve(user);
+      } catch (error) {
+        Log.error("uploadAvatar", error);
+        reject(error);
+      }
+    })
 };

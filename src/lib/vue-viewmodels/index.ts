@@ -8,6 +8,7 @@ import AbilityPage from "./AbilityPage";
 import SettingPage from "./SettingPage";
 import StatPage from "./StatPage";
 import StatTomatoPage from "./StatTomatoPage";
+import PersonalInformation from "./PersonalInformation";
 
 export {
   SplashPage,
@@ -19,5 +20,6 @@ export {
   AbilityPage,
   SettingPage,
   StatPage,
-  StatTomatoPage
+  StatTomatoPage,
+  PersonalInformation
 };
