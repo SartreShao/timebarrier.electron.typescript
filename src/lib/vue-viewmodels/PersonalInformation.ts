@@ -71,7 +71,7 @@ export default {
   /**
    * 获取头像 Url
    */
-  fetchAvatar: (vue: ElementVue, avatarUrl: Ref<string>) => {
+  fetchAvatar: async (vue: ElementVue, avatarUrl: Ref<string>) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
 
@@ -80,6 +80,8 @@ export default {
       UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
       return;
     }
+
+    await user.fetch();
 
     avatarUrl.value = user.attributes.avatarUrl;
   }

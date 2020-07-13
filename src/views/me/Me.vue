@@ -128,7 +128,6 @@ export default defineComponent({
   display flex
   flex-direction column
   background #F5F5F5
-  cursor pointer
 }
 .header-container {
   margin-top 7.51vh
