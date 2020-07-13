@@ -7,13 +7,17 @@
     <section class="header-container">
       <me-personal-info
         class="personal-info"
-        avatar-url="https://timebarrier.file.hearfresh.cn/4a90b2f4ea0c8130d78f/avatar.png"
+        :avatar-url="avatarUrl"
         :isVip="true"
         name="邵励治"
         description="shaolizhi@tipchou.com"
       ></me-personal-info>
 
-      <div class="button" @click="click_editPersonalInformation">
+      <div
+        v-darked-when-click
+        class="button"
+        @click="click_editPersonalInformation"
+      >
         编辑个人资料
       </div>
     </section>
@@ -82,8 +86,8 @@
     <bottom-bar></bottom-bar>
   </div>
 </template>
-<script>
-import { defineComponent } from "@vue/composition-api";
+<script lang="ts">
+import { defineComponent, Ref, ref, onMounted } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import BottomBar from "../../components/BottomBar.vue";
 import MeOption from "./components/MeOption.vue";
@@ -94,9 +98,18 @@ import icon_morning from "../../assets/icon_morning.svg";
 import icon_bar from "../../assets/icon_bar.svg";
 import icon_me_setting from "../../assets/icon_me_setting.svg";
 import { Router } from "@/lib/vue-utils";
+import { PersonalInformation, Me } from "@/lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar, BottomBar, MeOption, MePersonalInfo },
   setup(props, context) {
+    const avatarUrl: Ref<string> = ref("");
+
+    Me.updateCurrentUser(context.root, avatarUrl);
+
+    onMounted(() => {
+      Me.showUserInformation(context.root, avatarUrl);
+    });
+
     // 编辑设置
     const click_settingOption = () => {
       Router.push(context.root.$router, "/setting");
@@ -108,6 +121,7 @@ export default defineComponent({
     };
 
     return {
+      avatarUrl,
       click_settingOption,
       click_editPersonalInformation,
       assets: {

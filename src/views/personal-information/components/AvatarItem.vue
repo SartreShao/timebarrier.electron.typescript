@@ -97,10 +97,12 @@
 
 <script lang="ts">
 import { defineComponent, ref, Ref, onMounted } from "@vue/composition-api";
-import { PersonalInformation } from "@/lib/vue-viewmodels";
+import { PersonalInformation, Me } from "@/lib/vue-viewmodels";
 export default defineComponent({
   setup(props, context) {
     const avatarUrl: Ref<string> = ref("");
+
+    PersonalInformation.getAvatar(context.root, avatarUrl);
 
     onMounted(() => {
       PersonalInformation.fetchAvatar(context.root, avatarUrl);

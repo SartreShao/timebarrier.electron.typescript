@@ -9,6 +9,7 @@ import SettingPage from "./SettingPage";
 import StatPage from "./StatPage";
 import StatTomatoPage from "./StatTomatoPage";
 import PersonalInformation from "./PersonalInformation";
+import Me from "./Me";
 
 export {
   SplashPage,
@@ -21,5 +22,6 @@ export {
   SettingPage,
   StatPage,
   StatTomatoPage,
-  PersonalInformation
+  PersonalInformation,
+  Me
 };
