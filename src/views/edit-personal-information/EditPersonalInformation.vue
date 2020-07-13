@@ -13,7 +13,12 @@
     <div class="top-line"></div>
 
     <!-- 输入框 -->
-    <input class="input" type="text" v-model="input" placeholder="输入" />
+    <input
+      class="input"
+      type="text"
+      v-model="input"
+      :placeholder="`请输入` + name"
+    />
 
     <!-- 分割线 -->
     <div class="bottom-line"></div>
@@ -21,7 +26,16 @@
     <!-- 副标题 -->
     <span class="sub-title">设置后，点击完成按钮保存。</span>
 
-    <div class="button">完成</div>
+    <div
+      class="button"
+      :style="{
+        background: input.length === 0 ? `#F1F2F3` : `#222A36`,
+        color: input.length === 0 ? `#C0C1C2` : `#ffffff`
+      }"
+      v-darked-when-click
+    >
+      完成
+    </div>
   </div>
 </template>
 
@@ -89,26 +103,19 @@ export default defineComponent({
   width 84.67vw
   height 3.37vh
   font-size 2.32vh
-  font-weight normal
-  font-stretch normal
-  font-style normal
-  line-height 1.45
   letter-spacing 0.02vh
   text-align left
   color #222a36
   &::placeholder {
     font-size 2.32vh
-    font-weight normal
-    font-stretch normal
-    font-style normal
-    line-height 1.45
     letter-spacing 0.02vh
     text-align left
+    opacity 0.5
   }
 }
 .sub-title {
   width 84.67vw
-  margin-top 0.71vh
+  margin-top 1vh
   opacity 0.4
   font-size 1.95vh
   font-weight normal
@@ -120,6 +127,7 @@ export default defineComponent({
   color #808182
 }
 .button {
+  transition all 0.2s linear
   cursor pointer
   margin-top 9.75vh
   display flex
@@ -132,7 +140,7 @@ export default defineComponent({
   font-size 2.25vh
   font-weight normal
   font-stretch normal
-  font-style normal
+  font-style bold
   letter-spacing 0.02vh
   text-align left
   color #c0c1c2
