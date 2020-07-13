@@ -27,6 +27,7 @@
     "echarts-stat": "^1.1.1",
     "element-ui": "^2.13.0",
     "gsap": "^3.2.6",
+    "image-conversion": "^2.1.1",
     "leancloud-storage": "^4.5.0",
     "lodash": "^4.17.15",
     "vue": "^2.6.10",
