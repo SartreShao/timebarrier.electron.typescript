@@ -10,7 +10,11 @@
     <avatar-item style="margin-top:2.32vh;margin-bottom:2.32vh;"></avatar-item>
 
     <!-- 名字 -->
-    <info-item title="名字" content="邵励治"></info-item>
+    <info-item
+      title="名字"
+      content="邵励治"
+      @click="click_editNameButton"
+    ></info-item>
 
     <!-- 邮箱 -->
     <info-item
@@ -47,9 +51,21 @@ import { defineComponent } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import AvatarItem from "./components/AvatarItem.vue";
 import InfoItem from "./components/InfoItem.vue";
+import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
-  components: { TopBar, AvatarItem, InfoItem }
+  components: { TopBar, AvatarItem, InfoItem },
+  setup(props, context) {
+    const click_editNameButton = () => {
+      console.log("shit");
+      Router.pushWithParams(context.root.$router, "edit-personal-information", {
+        name: "名字",
+        currentValue: "邵励治",
+        maxLength: "12"
+      });
+    };
+    return { click_editNameButton };
+  }
 });
 </script>
 

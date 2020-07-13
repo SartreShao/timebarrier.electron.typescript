@@ -13,6 +13,7 @@ import {
   LoadingServiceOptions
 } from "element-ui/types/loading";
 import * as _ from "lodash";
+import { Dictionary } from "vue-router/types/router";
 
 const isDev = true;
 
@@ -35,6 +36,20 @@ const Router = {
       await router.push(location);
     } catch (error) {
       console.log("push router:", location, error);
+    }
+  },
+  pushWithParams: async (
+    router: VueRouter,
+    name: string,
+    params: Dictionary<string>
+  ) => {
+    try {
+      if (router.currentRoute.name === name) {
+        return;
+      }
+      await router.push({ name: name, params: params });
+    } catch (error) {
+      console.log("pushWithParams router:", name, "params:", params, error);
     }
   },
   back: async (router: VueRouter) => {

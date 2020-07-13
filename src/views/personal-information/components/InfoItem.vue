@@ -1,5 +1,5 @@
 <template>
-  <div class="info-container">
+  <div class="info-container" @click="$emit('click')">
     <span class="title">{{ title }}</span>
     <span class="content">{{ content }}</span>
     <svg

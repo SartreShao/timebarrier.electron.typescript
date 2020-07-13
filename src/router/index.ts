@@ -147,6 +147,13 @@ const routes = [
     name: "personal-information",
     component: () =>
       import("../views/personal-information/PersonalInformation.vue")
+  },
+  {
+    path: "/edit-personal-information",
+    name: "edit-personal-information",
+    component: () =>
+      import("../views/edit-personal-information/EditPersonalInformation.vue"),
+    props: true
   }
 ];
 
