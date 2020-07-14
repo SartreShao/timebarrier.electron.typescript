@@ -24,7 +24,9 @@
 
     <!-- 主要界面 -->
     <main>
-      <router-view />
+      <transition name="fade">
+        <router-view />
+      </transition>
     </main>
 
     <!-- 抽屉菜单：创建目标或目录 -->
@@ -1537,6 +1539,12 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition opacity 0.1s
+}
+.fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
+  opacity 0
+}
 .container {
   display flex
   flex-direction column
