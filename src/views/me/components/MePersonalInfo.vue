@@ -162,6 +162,8 @@ export default defineComponent({
     letter-spacing 0.02vh
     text-align left
     color #222a36
+    opacity 0.7
+    margin-top 0.5vh
   }
 }
 </style>
