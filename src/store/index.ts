@@ -96,6 +96,8 @@ const averageDailyStatData = Symbol();
 const tenThousandHoursPrediction = Symbol();
 // 计划的月数据
 const monthStatData = Symbol();
+// 选择日期的提示语：如「15 日」、「30 日」、「180 日」
+const dateTip = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -291,6 +293,7 @@ function useProvider() {
       }[]
     >([])
   );
+  provide(dateTip, ref("15 日"));
 }
 
 export default {
@@ -338,5 +341,6 @@ export default {
   treeTotalStatDataIndex,
   averageDailyStatData,
   tenThousandHoursPrediction,
-  monthStatData
+  monthStatData,
+  dateTip
 };

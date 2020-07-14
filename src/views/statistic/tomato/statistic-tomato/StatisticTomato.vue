@@ -100,10 +100,9 @@ export default defineComponent({
       StatPage.loadMore(context.root, tomatoList);
     };
 
-    onMounted(() => {
-      StatPage.initTomatoList(context.root, tomatoList);
-      StatPage.initDailyTomatoList(context.root, dailyPlanList);
-    });
+    // onMounted(() => {
+    //   StatPage.initDailyTomatoList(context.root, dailyPlanList);
+    // });
 
     return {
       tomatoStatStatusMode,

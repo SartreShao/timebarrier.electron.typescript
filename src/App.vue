@@ -18,7 +18,12 @@ import {
 } from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
-import { PlanPage, TargetPage, AbilityPage } from "./lib/vue-viewmodels";
+import {
+  PlanPage,
+  TargetPage,
+  AbilityPage,
+  StatPage
+} from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
 
 export default defineComponent({
@@ -117,6 +122,38 @@ export default defineComponent({
     );
 
     AbilityPage.init(context.root, abilityList, levelRuleList);
+
+    // Statistic
+    // 用户选择的日期范围
+    const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
+
+    // 选择日期的提示语：如「15 日」、「30 日」、「180 日」
+    const dateTip: Ref<string> = inject(Store.dateTip, ref("15 日"));
+
+    // 番茄列表：带日期范围
+    const tomatoListWithDateRange = inject(
+      Store.tomatoListWithDateRange,
+      ref([])
+    );
+
+    watch(dateRange, value => {
+      if (value.length === 2) {
+        const startTime = value[0];
+        const endTime = value[1];
+        dateTip.value = StatPage.getDateTip(startTime, endTime);
+        StatPage.initTomatoListWithDateRange(
+          context.root,
+          tomatoListWithDateRange,
+          startTime,
+          endTime
+        );
+      }
+    });
+
+    // StatisticTomato
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    StatPage.initTomatoList(context.root, tomatoList);
   }
 });
 </script>

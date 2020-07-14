@@ -108,21 +108,7 @@ export default defineComponent({
     // 用户选择的日期范围
     const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
 
-    const dateTip: Ref<string> = ref("15 日");
-
-    watchEffect(() => {
-      if (dateRange.value.length === 2) {
-        const startTime = dateRange.value[0];
-        const endTime = dateRange.value[1];
-        dateTip.value = StatPage.getDateTip(startTime, endTime);
-        StatPage.initTomatoListWithDateRange(
-          context.root,
-          tomatoListWithDateRange,
-          startTime,
-          endTime
-        );
-      }
-    });
+    const dateTip: Ref<string> = inject(Store.dateTip, ref("15 日"));
 
     const pickerOptions = {
       shortcuts: [

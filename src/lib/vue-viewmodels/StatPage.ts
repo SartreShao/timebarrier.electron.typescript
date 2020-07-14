@@ -29,6 +29,7 @@ export default {
       UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
       return;
     }
+    console.log("shit!!!");
 
     const loadingInstance = UI.showLoading(vue.$loading, "正在获取番茄列表");
 
