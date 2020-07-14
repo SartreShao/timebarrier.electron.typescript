@@ -1880,5 +1880,24 @@ export default {
         Log.error("uploadAvatar", error);
         reject(error);
       }
+    }),
+
+  /**
+   * 更新用户信息
+   */
+  updateUser: async (
+    user: AV.User,
+    key: String,
+    value: any
+  ): Promise<AV.User> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        await user.set(key, value).save();
+        Log.success("updateUser", user);
+        resolve(user);
+      } catch (error) {
+        Log.error("updateUser", error);
+        reject(error);
+      }
     })
 };
