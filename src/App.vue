@@ -22,7 +22,8 @@ import {
   PlanPage,
   TargetPage,
   AbilityPage,
-  StatPage
+  StatPage,
+  App
 } from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
 import { UI } from "./lib/vue-utils";
@@ -81,13 +82,6 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
-    PlanPage.init(
-      context.root,
-      temporaryPlanList,
-      dailyPlanList,
-      completedPlanList
-    );
-
     // Target
     // 未分组的「目标」的列表
     const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
@@ -107,13 +101,6 @@ export default defineComponent({
       ref([])
     );
 
-    TargetPage.init(
-      context.root,
-      unSubjectiveTargetList,
-      completedTargetList,
-      targetSubjectList
-    );
-
     // Ability
     // 能力列表
     const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
@@ -123,8 +110,6 @@ export default defineComponent({
       Store.levelRuleList,
       ref([])
     );
-
-    AbilityPage.init(context.root, abilityList, levelRuleList);
 
     // Statistic
     // 用户选择的日期范围
@@ -156,14 +141,15 @@ export default defineComponent({
     // StatisticTomato、StatisticTarget、StatisticPlan、StatisticAbility
     const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
 
-    StatPage.initTomatoList(context.root, tomatoList);
-
     // MultipleAnalyse
     // 总时间
-    const totalTime = inject(Store.totalTime, ref("0 小时"));
+    const totalTime: Ref<string> = inject(Store.totalTime, ref("0 小时"));
 
     // 总番茄
-    const totalTomatoNumber = inject(Store.totalTomatoNumber, ref("0 番茄"));
+    const totalTomatoNumber: Ref<string> = inject(
+      Store.totalTomatoNumber,
+      ref("0 番茄")
+    );
 
     // 本年的番茄列表
     const thisYearTomatoList: Ref<AV.Object[]> = inject(
@@ -171,17 +157,20 @@ export default defineComponent({
       ref([])
     );
 
-    StatPage.fetchTotalTomatoAndTime(
+    App.fetchAppData(
       context.root,
+      temporaryPlanList,
+      dailyPlanList,
+      completedPlanList,
+      unSubjectiveTargetList,
+      targetSubjectList,
+      completedTargetList,
+      abilityList,
+      levelRuleList,
+      tomatoList,
       totalTomatoNumber,
-      totalTime
-    );
-
-    StatPage.initTomatoListWithDateRange(
-      context.root,
-      thisYearTomatoList,
-      new Date(UI.getYearStartTimestamp(new Date().getTime())),
-      new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+      totalTime,
+      thisYearTomatoList
     );
   }
 });

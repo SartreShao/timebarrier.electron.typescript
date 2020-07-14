@@ -11,6 +11,7 @@ import StatTomatoPage from "./StatTomatoPage";
 import PersonalInformation from "./PersonalInformation";
 import Me from "./Me";
 import EditPersonalInformation from "./EditPersonalInformation";
+import App from "./App";
 
 export {
   SplashPage,
@@ -25,5 +26,6 @@ export {
   StatTomatoPage,
   PersonalInformation,
   Me,
-  EditPersonalInformation
+  EditPersonalInformation,
+  App
 };
