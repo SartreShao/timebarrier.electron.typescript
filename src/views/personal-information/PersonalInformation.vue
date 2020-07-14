@@ -42,6 +42,7 @@
       title="个人签名"
       :content="signature"
       style="margin-top:4.57vh"
+      @click="click_editSignature"
     ></info-item>
   </div>
 </template>
@@ -79,7 +80,17 @@ export default defineComponent({
         attributeKey: "nickName"
       });
     };
-    return { click_editNameButton, nickName, signature };
+
+    // 点击编辑个人签名
+    const click_editSignature = () => {
+      Router.pushWithParams(context.root.$router, "edit-personal-information", {
+        name: "个人签名",
+        currentValue: signature.value,
+        attributeKey: "signature"
+      });
+    };
+
+    return { click_editNameButton, click_editSignature, nickName, signature };
   }
 });
 </script>
