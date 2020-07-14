@@ -109,6 +109,59 @@ export default {
 
     avatarUrl.value = user.attributes.avatarUrl;
   },
+  /**
+   * 获取用户信息，但是请求网络
+   */
+  fetchUserInformation: async (
+    vue: ElementVue,
+    nickName: Ref<string>,
+    signature: Ref<string>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    try {
+      await user.fetch();
+      nickName.value = user.attributes.nickName;
+      signature.value = user.attributes.signature;
+    } catch (error) {
+      UI.showNotification(
+        vue.$notify,
+        "网络连接失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  /**
+   * 获取用户信息，但是不请求网络
+   */
+  getUserInformation: async (
+    vue: ElementVue,
+    nickName: Ref<string>,
+    signature: Ref<string>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    nickName.value = user.attributes.nickName;
+    signature.value = user.attributes.signature;
+  },
+  /**
+   * 获取头像信息，但是不请求网络
+   */
   getAvatar: async (vue: ElementVue, avatarUrl: Ref<string>) => {
     // 获取传入参数
     const user = Api.getCurrentUser();

@@ -12,7 +12,7 @@
     <!-- 名字 -->
     <info-item
       title="名字"
-      content="邵励治"
+      :content="nickName"
       @click="click_editNameButton"
     ></info-item>
 
@@ -40,31 +40,46 @@
     <!-- 手机号 -->
     <info-item
       title="个人签名"
-      content="存在先于本质"
+      :content="signature"
       style="margin-top:4.57vh"
     ></info-item>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, ref, Ref, onMounted } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import AvatarItem from "./components/AvatarItem.vue";
 import InfoItem from "./components/InfoItem.vue";
 import { Router } from "@/lib/vue-utils";
+import { PersonalInformation } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopBar, AvatarItem, InfoItem },
   setup(props, context) {
+    // 昵称
+    const nickName: Ref<string> = ref("");
+
+    // 个性签名
+    const signature: Ref<string> = ref("");
+
+    // 获取用户信息（请求网络）
+    PersonalInformation.fetchUserInformation(context.root, nickName, signature);
+
+    onMounted(() => {
+      // 获取用户信息（不请求网络）
+      PersonalInformation.getUserInformation(context.root, nickName, signature);
+    });
+
+    // 点击编辑姓名
     const click_editNameButton = () => {
-      console.log("shit");
       Router.pushWithParams(context.root.$router, "edit-personal-information", {
         name: "名字",
         currentValue: "邵励治",
         maxLength: "12"
       });
     };
-    return { click_editNameButton };
+    return { click_editNameButton, nickName, signature };
   }
 });
 </script>

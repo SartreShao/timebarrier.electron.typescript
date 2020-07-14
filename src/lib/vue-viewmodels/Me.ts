@@ -7,7 +7,12 @@ export default {
   /**
    * 请求网络，更新缓存中的用户信息
    */
-  updateCurrentUser: async (vue: ElementVue, avatarUrl: Ref<string>) => {
+  updateUserInformation: async (
+    vue: ElementVue,
+    avatarUrl: Ref<string>,
+    nickName: Ref<string>,
+    signature: Ref<string>
+  ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
 
@@ -20,6 +25,8 @@ export default {
     try {
       await user.fetch();
       avatarUrl.value = user.attributes.avatarUrl;
+      nickName.value = user.attributes.nickName;
+      signature.value = user.attributes.signature;
     } catch (error) {
       UI.showNotification(
         vue.$notify,
@@ -32,7 +39,12 @@ export default {
   /**
    * 不请求网络，但是会重新加载缓存中的用户信息
    */
-  showUserInformation: async (vue: ElementVue, avatarUrl: Ref<string>) => {
+  showUserInformation: async (
+    vue: ElementVue,
+    avatarUrl: Ref<string>,
+    nickName: Ref<string>,
+    signature: Ref<string>
+  ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
 
@@ -43,5 +55,7 @@ export default {
     }
 
     avatarUrl.value = user.attributes.avatarUrl;
+    nickName.value = user.attributes.nickName;
+    signature.value = user.attributes.signature;
   }
 };

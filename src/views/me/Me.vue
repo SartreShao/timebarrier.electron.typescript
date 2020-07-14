@@ -9,8 +9,8 @@
         class="personal-info"
         :avatar-url="avatarUrl"
         :isVip="true"
-        name="邵励治"
-        description="shaolizhi@tipchou.com"
+        :name="nickName"
+        :description="signature"
       ></me-personal-info>
 
       <div
@@ -102,12 +102,21 @@ import { PersonalInformation, Me } from "@/lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar, BottomBar, MeOption, MePersonalInfo },
   setup(props, context) {
+    // 头像
     const avatarUrl: Ref<string> = ref("");
 
-    Me.updateCurrentUser(context.root, avatarUrl);
+    // 昵称
+    const nickName: Ref<string> = ref("");
+
+    // 个性签名
+    const signature: Ref<string> = ref("");
+
+    // 刷新 currentUser，并为 avatarUrl, nickName, signature 赋值
+    Me.updateUserInformation(context.root, avatarUrl, nickName, signature);
 
     onMounted(() => {
-      Me.showUserInformation(context.root, avatarUrl);
+      // 不刷新 currentUser，并为 avatarUrl, nickName, signature 赋值
+      Me.showUserInformation(context.root, avatarUrl, nickName, signature);
     });
 
     // 编辑设置
@@ -122,6 +131,8 @@ export default defineComponent({
 
     return {
       avatarUrl,
+      nickName,
+      signature,
       click_settingOption,
       click_editPersonalInformation,
       assets: {

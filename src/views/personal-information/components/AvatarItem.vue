@@ -102,10 +102,10 @@ export default defineComponent({
   setup(props, context) {
     const avatarUrl: Ref<string> = ref("");
 
-    PersonalInformation.getAvatar(context.root, avatarUrl);
+    PersonalInformation.fetchAvatar(context.root, avatarUrl);
 
     onMounted(() => {
-      PersonalInformation.fetchAvatar(context.root, avatarUrl);
+      PersonalInformation.getAvatar(context.root, avatarUrl);
     });
 
     const input: Ref<HTMLInputElement | null> = ref(null);

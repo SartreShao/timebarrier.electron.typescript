@@ -24,7 +24,9 @@
     <div class="bottom-line"></div>
 
     <!-- 副标题 -->
-    <span class="sub-title">设置后，点击完成按钮保存。</span>
+    <span class="sub-title" @click="click_saveButton"
+      >设置后，点击完成按钮保存。</span
+    >
 
     <div
       class="button"
@@ -51,9 +53,14 @@ export default defineComponent({
     maxLength: String
   },
   setup(props, context) {
+    // 用户输入内容
     const input: Ref<string> = ref("");
 
+    // 初始化用户输入内容
     input.value = props.currentValue === undefined ? "" : props.currentValue;
+
+    // 点击事件：点击保存按钮
+    const click_saveButton = () => {};
 
     return {
       input
