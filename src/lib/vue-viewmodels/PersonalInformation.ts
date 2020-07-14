@@ -115,7 +115,8 @@ export default {
   fetchUserInformation: async (
     vue: ElementVue,
     nickName: Ref<string>,
-    signature: Ref<string>
+    signature: Ref<string>,
+    mobilePhoneNumber: Ref<string>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -130,6 +131,7 @@ export default {
       await user.fetch();
       nickName.value = user.attributes.nickName;
       signature.value = user.attributes.signature;
+      mobilePhoneNumber.value = user.attributes.mobilePhoneNumber;
     } catch (error) {
       UI.showNotification(
         vue.$notify,
@@ -145,7 +147,8 @@ export default {
   getUserInformation: async (
     vue: ElementVue,
     nickName: Ref<string>,
-    signature: Ref<string>
+    signature: Ref<string>,
+    mobilePhoneNumber: Ref<string>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -158,6 +161,7 @@ export default {
 
     nickName.value = user.attributes.nickName;
     signature.value = user.attributes.signature;
+    mobilePhoneNumber.value = user.attributes.mobilePhoneNumber;
   },
   /**
    * 获取头像信息，但是不请求网络

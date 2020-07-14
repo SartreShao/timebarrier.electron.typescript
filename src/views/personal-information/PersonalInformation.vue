@@ -20,24 +20,24 @@
     <info-item
       title="邮箱"
       content="shaolizhi@tipchou.com"
-      style="margin-top:0.15vh"
+      style="margin-top:0.15vh;opacity:0.3;"
     ></info-item>
 
     <!-- 邮箱 -->
     <info-item
       title="绑定微信号"
       content="login950518"
-      style="margin-top:0.15vh"
+      style="margin-top:0.15vh;opacity:0.3;"
     ></info-item>
 
     <!-- 手机号 -->
     <info-item
       title="绑定手机号"
-      content="13501287916"
-      style="margin-top:0.15vh"
+      :content="mobilePhoneNumber"
+      style="margin-top:0.15vh;"
     ></info-item>
 
-    <!-- 手机号 -->
+    <!-- 个人签名 -->
     <info-item
       title="个人签名"
       :content="signature"
@@ -64,12 +64,25 @@ export default defineComponent({
     // 个性签名
     const signature: Ref<string> = ref("");
 
+    // 手机号
+    const mobilePhoneNumber: Ref<string> = ref("");
+
     // 获取用户信息（请求网络）
-    PersonalInformation.fetchUserInformation(context.root, nickName, signature);
+    PersonalInformation.fetchUserInformation(
+      context.root,
+      nickName,
+      signature,
+      mobilePhoneNumber
+    );
 
     onMounted(() => {
       // 获取用户信息（不请求网络）
-      PersonalInformation.getUserInformation(context.root, nickName, signature);
+      PersonalInformation.getUserInformation(
+        context.root,
+        nickName,
+        signature,
+        mobilePhoneNumber
+      );
     });
 
     // 点击编辑姓名
@@ -90,7 +103,13 @@ export default defineComponent({
       });
     };
 
-    return { click_editNameButton, click_editSignature, nickName, signature };
+    return {
+      click_editNameButton,
+      click_editSignature,
+      nickName,
+      signature,
+      mobilePhoneNumber
+    };
   }
 });
 </script>
