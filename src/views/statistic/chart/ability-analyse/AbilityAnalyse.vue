@@ -243,7 +243,7 @@ export default defineComponent({
   },
   setup(props, context) {
     // 外部注入的番茄列表
-    const tomatoList: Ref<AV.Object[]> = inject(
+    const tomatoListWithDateRange: Ref<AV.Object[]> = inject(
       Store.tomatoListWithDateRange,
       ref([])
     );
@@ -307,26 +307,6 @@ export default defineComponent({
     }[]> = inject(Store.monthStatData, ref([]));
 
     const colormap: string[] = inject(Store.colormap, []);
-
-    onMounted(() => {
-      if (dateRange.value.length === 2) {
-        const startTime = dateRange.value[0];
-        const endTime = dateRange.value[1];
-        StatPage.initTomatoListWithDateRange(
-          context.root,
-          tomatoList,
-          startTime,
-          endTime
-        );
-      }
-
-      StatPage.initTomatoListWithDateRange(
-        context.root,
-        thisYearTomatoList,
-        new Date(UI.getYearStartTimestamp(new Date().getTime())),
-        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
-      );
-    });
 
     return {
       treeTotalStatData,
