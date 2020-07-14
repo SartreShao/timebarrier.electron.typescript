@@ -356,7 +356,7 @@ export default defineComponent({
   },
   setup(props, context) {
     // 外部注入的番茄列表
-    const tomatoList: Ref<AV.Object[]> = inject(
+    const tomatoListWithDateRange: Ref<AV.Object[]> = inject(
       Store.tomatoListWithDateRange,
       ref([])
     );
@@ -368,7 +368,9 @@ export default defineComponent({
     );
 
     // 真正使用的数据，由番茄列表映射而来（用户选择）
-    const statDateList = computed(() => StatPage.mapStatDate(tomatoList.value));
+    const statDateList = computed(() =>
+      StatPage.mapStatDate(tomatoListWithDateRange.value)
+    );
 
     // 真正使用的数据，由番茄列表映射而来（本年）
     const thisYearStatDateList = computed(() =>
@@ -377,12 +379,12 @@ export default defineComponent({
 
     // 二类时型分析
     const twoChronotype = computed(() =>
-      StatPage.getTwoChronotype(tomatoList.value)
+      StatPage.getTwoChronotype(tomatoListWithDateRange.value)
     );
 
     // 四类时型分析
     const fourChronotype = computed(() =>
-      StatPage.getFourChronotype(tomatoList.value)
+      StatPage.getFourChronotype(tomatoListWithDateRange.value)
     );
 
     // 时型分析
@@ -414,7 +416,7 @@ export default defineComponent({
     // 每日平均番茄
     const averageDailyTomato = computed(() =>
       StatPage.getAverageDailyTomato(
-        tomatoList.value.length,
+        tomatoListWithDateRange.value.length,
         dateRange.value[0],
         dateRange.value[1]
       )
@@ -554,10 +556,10 @@ export default defineComponent({
     );
 
     // 整体时间
-    const totalTime = ref("0 小时");
+    const totalTime = inject(Store.totalTime, ref("0 小时"));
 
     // 整体番茄
-    const totalTomatoNumber = ref("0 番茄");
+    const totalTomatoNumber = inject(Store.totalTomatoNumber, ref("0 番茄"));
 
     // 一万小时定律
     const tenThousandHourDate = computed(() =>
@@ -637,32 +639,6 @@ export default defineComponent({
     const mongthAverageWorkingTime = computed(() =>
       StatPage.getMonthAverageWorkingTime(thisYearStatDateList.value)
     );
-
-    onMounted(() => {
-      if (dateRange.value.length === 2) {
-        const startTime = dateRange.value[0];
-        const endTime = dateRange.value[1];
-        StatPage.initTomatoListWithDateRange(
-          context.root,
-          tomatoList,
-          startTime,
-          endTime
-        );
-      }
-
-      StatPage.fetchTotalTomatoAndTime(
-        context.root,
-        totalTomatoNumber,
-        totalTime
-      );
-
-      StatPage.initTomatoListWithDateRange(
-        context.root,
-        thisYearTomatoList,
-        new Date(UI.getYearStartTimestamp(new Date().getTime())),
-        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
-      );
-    });
 
     return {
       averageLinearRegressionExpression,

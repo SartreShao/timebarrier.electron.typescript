@@ -25,6 +25,7 @@ import {
   StatPage
 } from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
+import { UI } from "./lib/vue-utils";
 
 export default defineComponent({
   setup(props, context) {
@@ -150,10 +151,36 @@ export default defineComponent({
       }
     });
 
-    // StatisticTomato
+    // StatisticTomato、StatisticTarget、StatisticPlan、StatisticAbility
     const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
 
     StatPage.initTomatoList(context.root, tomatoList);
+
+    // MultipleAnalyse
+    // 总时间
+    const totalTime = inject(Store.totalTime, ref("0 小时"));
+
+    // 总番茄
+    const totalTomatoNumber = inject(Store.totalTomatoNumber, ref("0 番茄"));
+
+    // 本年的番茄列表
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
+      ref([])
+    );
+
+    StatPage.fetchTotalTomatoAndTime(
+      context.root,
+      totalTomatoNumber,
+      totalTime
+    );
+
+    StatPage.initTomatoListWithDateRange(
+      context.root,
+      thisYearTomatoList,
+      new Date(UI.getYearStartTimestamp(new Date().getTime())),
+      new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+    );
   }
 });
 </script>

@@ -98,6 +98,10 @@ const tenThousandHoursPrediction = Symbol();
 const monthStatData = Symbol();
 // 选择日期的提示语：如「15 日」、「30 日」、「180 日」
 const dateTip = Symbol();
+// 总时间
+const totalTime = Symbol();
+// 总整体番茄
+const totalTomatoNumber = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -294,6 +298,8 @@ function useProvider() {
     >([])
   );
   provide(dateTip, ref("15 日"));
+  provide(totalTime, ref("0 小时"));
+  provide(totalTomatoNumber, ref("0 番茄"));
 }
 
 export default {
@@ -342,5 +348,7 @@ export default {
   averageDailyStatData,
   tenThousandHoursPrediction,
   monthStatData,
-  dateTip
+  dateTip,
+  totalTime,
+  totalTomatoNumber
 };
