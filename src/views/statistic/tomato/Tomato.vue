@@ -5,7 +5,9 @@
       style="margin-top:0.15vh;"
     ></tb-select>
     <main>
-      <router-view />
+      <transition name="fade">
+        <router-view />
+      </transition>
     </main>
   </div>
 </template>
@@ -56,6 +58,12 @@ export default defineComponent({
 </script>
 
 <style lang="stylus" scoped>
+.fade-enter-active, .fade-leave-active {
+  transition opacity 0.2s
+}
+.fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
+  opacity 0
+}
 .container {
   width 100%
 }

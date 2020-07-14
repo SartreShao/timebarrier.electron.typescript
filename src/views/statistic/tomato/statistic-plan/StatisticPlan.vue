@@ -72,10 +72,6 @@ export default defineComponent({
       StatPage.loadMore(context.root, tomatoList);
     };
 
-    onMounted(() => {
-      StatPage.initTomatoList(context.root, tomatoList);
-    });
-
     return {
       planStatStatusMode,
       colormap,
