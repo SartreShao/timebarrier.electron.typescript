@@ -18,6 +18,9 @@ import {
 } from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
+import { PlanPage } from "./lib/vue-viewmodels";
+import AV from "leancloud-storage";
+
 export default defineComponent({
   setup(props, context) {
     // 提供依赖注入
@@ -48,6 +51,34 @@ export default defineComponent({
           }
         }
       }
+    );
+
+    // 下面请求数据
+    // Plan
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 请求方法
+    PlanPage.init(
+      context.root,
+      temporaryPlanList,
+      dailyPlanList,
+      completedPlanList
     );
   }
 });

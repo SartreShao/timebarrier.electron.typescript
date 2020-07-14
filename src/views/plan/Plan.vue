@@ -689,15 +689,7 @@ export default defineComponent({
       PlanPage.changePlanListOrder(dailyPlanList);
     };
 
-    // 生命周期：初始化
-    onMounted(() => {
-      PlanPage.init(
-        context.root,
-        temporaryPlanList,
-        dailyPlanList,
-        completedPlanList
-      );
-    });
+
 
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
