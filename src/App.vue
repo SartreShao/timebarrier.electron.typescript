@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="fade">
+      <router-view />
+    </transition>
   </div>
 </template>
 <script lang="ts">
@@ -56,6 +58,29 @@ export default defineComponent({
   flex-shrink 0
   -webkit-tap-highlight-color rgba(0, 0, 0, 0) /* 点击高亮的颜色 */
   // overflow-x hidden
+}
+.fade-enter-active, .fade-leave-active {
+  transition opacity 0.1s
+}
+.fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
+  opacity 0
+}
+.bounce-enter-active {
+  animation bounce-in 0.5s
+}
+.bounce-leave-active {
+  animation bounce-in 0.5s reverse
+}
+@keyframes bounce-in {
+  0% {
+    transform scale(0)
+  }
+  50% {
+    transform scale(1.5)
+  }
+  100% {
+    transform scale(1)
+  }
 }
 #app {
   width 100%
