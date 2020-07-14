@@ -10,9 +10,7 @@
         :avatar-url="avatarUrl"
         :isVip="true"
         :name="nickName.length === 0 ? `陌生人` : nickName"
-        :description="
-          signature.length === 0 ? `点击它⬇编辑资料哦` : signature
-        "
+        :description="signature.length === 0 ? `点击它⬇编辑资料哦` : signature"
       ></me-personal-info>
 
       <div

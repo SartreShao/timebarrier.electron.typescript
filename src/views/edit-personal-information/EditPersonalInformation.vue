@@ -17,6 +17,7 @@
       class="input"
       type="text"
       v-model="input"
+      maxlength="18"
       :placeholder="`请输入` + (name === undefined ? `` : name)"
     />
 
