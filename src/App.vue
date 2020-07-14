@@ -18,7 +18,7 @@ import {
 } from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
-import { PlanPage, TargetPage } from "./lib/vue-viewmodels";
+import { PlanPage, TargetPage, AbilityPage } from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
 
 export default defineComponent({
@@ -73,7 +73,6 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
-    // 请求方法
     PlanPage.init(
       context.root,
       temporaryPlanList,
@@ -106,6 +105,18 @@ export default defineComponent({
       completedTargetList,
       targetSubjectList
     );
+
+    // Ability
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
+    AbilityPage.init(context.root, abilityList, levelRuleList);
   }
 });
 </script>

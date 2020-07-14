@@ -119,12 +119,6 @@ export default defineComponent({
       AbilityPage.changeAbilityListOrder(abilityList.value);
     };
 
-    // 生命周期：初始化
-    onMounted(() => {
-      console.log("levelRuleList", levelRuleList);
-      AbilityPage.init(context.root, abilityList, levelRuleList);
-    });
-
     return {
       abilityList,
       draggableOptions,
