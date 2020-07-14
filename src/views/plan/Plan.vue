@@ -689,8 +689,6 @@ export default defineComponent({
       PlanPage.changePlanListOrder(dailyPlanList);
     };
 
-
-
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
 

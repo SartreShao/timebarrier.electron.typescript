@@ -278,16 +278,6 @@ export default defineComponent({
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
 
-    // 生命周期：初始化
-    onMounted(() => {
-      TargetPage.init(
-        context.root,
-        unSubjectiveTargetList,
-        completedTargetList,
-        targetSubjectList
-      );
-    });
-
     return {
       click_editTargetButton,
       click_createTargetButton,

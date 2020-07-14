@@ -18,7 +18,7 @@ import {
 } from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
-import { PlanPage } from "./lib/vue-viewmodels";
+import { PlanPage, TargetPage } from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
 
 export default defineComponent({
@@ -79,6 +79,32 @@ export default defineComponent({
       temporaryPlanList,
       dailyPlanList,
       completedPlanList
+    );
+
+    // Target
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
+
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
+    );
+
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
+    );
+
+    TargetPage.init(
+      context.root,
+      unSubjectiveTargetList,
+      completedTargetList,
+      targetSubjectList
     );
   }
 });
