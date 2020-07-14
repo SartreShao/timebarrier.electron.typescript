@@ -22,6 +22,7 @@ export default {
     // 如果 input 中没有内容，提示请输入内容
     if (input.value.length === 0) {
       UI.showNotification(vue.$notify, "请输入" + name, "", "warning");
+      return;
     }
 
     const loadingInstance = UI.showLoading(vue.$loading, "正在更新" + name);
