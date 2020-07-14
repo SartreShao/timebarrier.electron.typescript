@@ -1887,12 +1887,12 @@ export default {
    */
   updateUser: async (
     user: AV.User,
-    key: String,
-    value: any
+    attributeKey: String,
+    attributeValue: any
   ): Promise<AV.User> =>
     new Promise(async (resolve, reject) => {
       try {
-        await user.set(key, value).save();
+        await user.set(attributeKey, attributeValue).save();
         Log.success("updateUser", user);
         resolve(user);
       } catch (error) {

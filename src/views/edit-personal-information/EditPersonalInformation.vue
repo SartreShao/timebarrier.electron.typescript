@@ -17,19 +17,18 @@
       class="input"
       type="text"
       v-model="input"
-      :placeholder="`请输入` + name"
+      :placeholder="`请输入` + (name === undefined ? `` : name)"
     />
 
     <!-- 分割线 -->
     <div class="bottom-line"></div>
 
     <!-- 副标题 -->
-    <span class="sub-title" @click="click_saveButton"
-      >设置后，点击完成按钮保存。</span
-    >
+    <span class="sub-title">设置后，点击完成按钮保存。</span>
 
     <div
       class="button"
+      @click="click_saveButton"
       :style="{
         background: input.length === 0 ? `#F1F2F3` : `#222A36`,
         color: input.length === 0 ? `#C0C1C2` : `#ffffff`
@@ -44,13 +43,14 @@
 <script lang="ts">
 import { defineComponent, ref, Ref } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
+import { EditPersonalInformation } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopBar },
   props: {
     name: String,
     currentValue: String,
-    maxLength: String
+    attributeKey: String
   },
   setup(props, context) {
     // 用户输入内容
@@ -60,10 +60,19 @@ export default defineComponent({
     input.value = props.currentValue === undefined ? "" : props.currentValue;
 
     // 点击事件：点击保存按钮
-    const click_saveButton = () => {};
+    const click_saveButton = () => {
+      console.log("shit");
+      EditPersonalInformation.savePersonalInformation(
+        context.root,
+        input,
+        props.name as string,
+        props.attributeKey as string
+      );
+    };
 
     return {
-      input
+      input,
+      click_saveButton
     };
   }
 });

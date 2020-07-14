@@ -75,8 +75,8 @@ export default defineComponent({
     const click_editNameButton = () => {
       Router.pushWithParams(context.root.$router, "edit-personal-information", {
         name: "名字",
-        currentValue: "邵励治",
-        maxLength: "12"
+        currentValue: nickName.value,
+        attributeKey: "nickName"
       });
     };
     return { click_editNameButton, nickName, signature };

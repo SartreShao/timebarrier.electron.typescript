@@ -1,15 +1,14 @@
 import { ElementVue } from "../types/vue-viewmodels";
 import { Ref } from "@vue/composition-api";
-import { UI } from "../vue-utils";
+import { UI, Router } from "../vue-utils";
 import Api from "@/lib/api";
-import { trace } from "console";
 
 export default {
   savePersonalInformation: async (
     vue: ElementVue,
     input: Ref<string>,
     name: String,
-    key: String
+    attributeKey: String
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -29,9 +28,20 @@ export default {
 
     try {
       // 如果 input 中有内容，则更新信息
-      await Api.updateUser(user, key, input.value);
+      await Api.updateUser(user, attributeKey, input.value);
 
-      // 完成更新
-    } catch (error) {}
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, name + "更新成功", "", "success");
+
+      Router.back(vue.$router);
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "网络连接失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
   }
 };
