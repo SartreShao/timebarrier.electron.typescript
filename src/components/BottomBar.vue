@@ -336,6 +336,29 @@ export default defineComponent({
       );
     };
 
+    const tomatoList: Ref<AV.Object[]> = inject(Store.tomatoList, ref([]));
+
+    const totalTime: Ref<string> = inject(Store.totalTime, ref("0 小时"));
+
+    const totalTomatoNumber: Ref<string> = inject(
+      Store.totalTomatoNumber,
+      ref("0 番茄")
+    );
+
+    const thisYearTomatoList: Ref<AV.Object[]> = inject(
+      Store.thisYearTomatoList,
+      ref([])
+    );
+
+    // 番茄列表：带日期范围
+    const tomatoListWithDateRange: Ref<AV.Object[]> = inject(
+      Store.tomatoListWithDateRange,
+      ref([])
+    );
+
+    // 用户选择的日期范围
+    const dateRange: Ref<Date[]> = inject(Store.dateRange, ref([]));
+
     // 点击事件：点击提交番茄
     const click_commitTomatoButton = () => {
       TomatoTimerPage.commitTomato(
@@ -350,6 +373,12 @@ export default defineComponent({
         dailyPlanList,
         completedPlanList,
         tomatoStartTime,
+        tomatoList,
+        totalTomatoNumber,
+        totalTime,
+        thisYearTomatoList,
+        dateRange,
+        tomatoListWithDateRange,
         colormap
       );
     };
@@ -388,6 +417,12 @@ export default defineComponent({
         dailyPlanList,
         completedPlanList,
         tomatoStartTime,
+        tomatoList,
+        totalTomatoNumber,
+        totalTime,
+        thisYearTomatoList,
+        dateRange,
+        tomatoListWithDateRange,
         colormap
       );
     };

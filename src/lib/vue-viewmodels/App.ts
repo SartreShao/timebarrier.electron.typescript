@@ -57,10 +57,10 @@ export default {
     await StatPage.initTomatoList(vue, tomatoList);
 
     // 请求用户完成的总番茄数
-    StatPage.fetchTotalTomatoAndTime(vue, totalTomatoNumber, totalTime);
+    await StatPage.fetchTotalTomatoAndTime(vue, totalTomatoNumber, totalTime);
 
     // 本年的番茄列表
-    StatPage.initTomatoListWithDateRange(
+    await StatPage.initTomatoListWithDateRange(
       vue,
       thisYearTomatoList,
       new Date(UI.getYearStartTimestamp(new Date().getTime())),

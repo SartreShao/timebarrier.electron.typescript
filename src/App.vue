@@ -119,7 +119,7 @@ export default defineComponent({
     const dateTip: Ref<string> = inject(Store.dateTip, ref("15 日"));
 
     // 番茄列表：带日期范围
-    const tomatoListWithDateRange = inject(
+    const tomatoListWithDateRange: Ref<AV.Object[]> = inject(
       Store.tomatoListWithDateRange,
       ref([])
     );

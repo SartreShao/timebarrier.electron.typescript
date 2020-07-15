@@ -3,6 +3,7 @@ import { Ref } from "@vue/composition-api";
 import { UI } from "@/lib/vue-utils";
 import Api from "@/lib/api";
 import { ElementVue, TomatoCloudStatus } from "@/lib/types/vue-viewmodels";
+import StatPage from "./StatPage";
 /**
  * 番茄计时器页
  */
@@ -279,6 +280,12 @@ export default {
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>,
     tomatoStartTime: Ref<Date>,
+    tomatoList: Ref<AV.Object[]>,
+    totalTomatoNumber: Ref<string>,
+    totalTime: Ref<string>,
+    thisYearTomatoList: Ref<AV.Object[]>,
+    dateRange: Ref<Date[]>,
+    tomatoListWithDateRange: Ref<AV.Object[]>,
     colormap: string[]
   ) => {
     // 获取传入参数
@@ -366,6 +373,29 @@ export default {
 
       // 获取已完成计划列表
       completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 请求番茄列表
+      await StatPage.initTomatoList(vue, tomatoList);
+
+      // 请求用户完成的总番茄数
+      await StatPage.fetchTotalTomatoAndTime(vue, totalTomatoNumber, totalTime);
+
+      // 本年的番茄列表
+      await StatPage.initTomatoListWithDateRange(
+        vue,
+        thisYearTomatoList,
+        new Date(UI.getYearStartTimestamp(new Date().getTime())),
+        new Date(UI.getTodayStartTimestamp(new Date().getTime()))
+      );
+
+      const startTime = dateRange.value[0];
+      const endTime = dateRange.value[1];
+      StatPage.initTomatoListWithDateRange(
+        vue,
+        tomatoListWithDateRange,
+        startTime,
+        endTime
+      );
     } catch (error) {
       UI.hideLoading(loadingInstance);
       UI.showNotification(
