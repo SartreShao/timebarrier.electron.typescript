@@ -5,12 +5,17 @@
     <div style="height:1vh"></div>
     <!-- 标题与刷新按钮 -->
     <section class="title">
-      <img
-        :src="assets.icon_logo"
-        alt="icon_logo"
-        v-if="isCurrentPageHome"
-        class="icon-logo"
-      />
+      <div class="refresh">
+        <img
+          :src="assets.icon_logo"
+          alt="icon_logo"
+          v-if="isCurrentPageHome"
+          class="icon-logo"
+        />
+
+        <span class="refresh-tip">刷新数据</span>
+      </div>
+
       <div class="back" v-if="!isCurrentPageHome" @click="click_backButton">
         <img :src="assets.icon_back" alt="icon_back" class="icon-back" />
       </div>
@@ -88,17 +93,67 @@ header {
       text-align center
       color $title-font-color
     }
-    .icon-logo {
-      cursor pointer
-      top 0
-      bottom 0
-      margin-top auto
-      margin-bottom auto
-      left 6.06vw
-      position absolute
-      width 2.89vh
-      height 2.89vh
-    }
+  }
+}
+.refresh {
+  cursor pointer
+  position absolute
+  left 1.73vw
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  width 21.07vw
+  height 4.27vh
+  border-radius 1.05vh
+  background-color #fff
+  display flex
+  align-items center
+  transition all 0.2s linear
+  &:hover {
+    background-color #F4F4F8
+  }
+  .icon-logo {
+    transition all 0.2s linear
+    cursor pointer
+    margin-left 4.29vw
+    width 2.89vh
+    height 2.89vh
+  }
+  &:hover .icon-logo {
+    transition all 0.2s linear
+    cursor pointer
+    margin-left 2.99vw
+    width 1.51vh
+    height 1.51vh
+  }
+  .refresh-tip {
+    transition all 0.2s linear
+    opacity 0
+    cursor pointer
+    font-size 0vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.42
+    letter-spacing 0.01vh
+    text-align center
+    color #9a9a9a
+    margin-left 1.99vw
+  }
+  &:hover .refresh-tip {
+    transition all 0.2s linear
+    opacity 1
+    cursor pointer
+    font-size 1.42vh
+    font-weight 500
+    font-stretch normal
+    font-style normal
+    line-height 1.42
+    letter-spacing 0.01vh
+    text-align center
+    color #9a9a9a
+    margin-left 1.99vw
   }
 }
 .back {
