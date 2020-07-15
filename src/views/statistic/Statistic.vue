@@ -40,9 +40,6 @@
       >
       </el-date-picker>
     </div>
-
-    <!-- 底边栏 -->
-    <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">
@@ -55,7 +52,6 @@ import {
   watchEffect
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
-import BottomBar from "../../components/BottomBar.vue";
 import TabView from "../../components/TabView.vue";
 import icon_transition from "@/assets/icon_transition.svg";
 import icon_date_select from "@/assets/icon_date_select.svg";
@@ -251,7 +247,7 @@ export default defineComponent({
       assets: { icon_transition, icon_date_select }
     };
   },
-  components: { TopBar, BottomBar, TabView }
+  components: { TopBar, TabView }
 });
 </script>
 <style lang="stylus" scoped>

@@ -406,7 +406,6 @@
         </div>
       </div>
     </el-drawer>
-    <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">

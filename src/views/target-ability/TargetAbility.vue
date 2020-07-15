@@ -943,9 +943,6 @@
         </div>
       </div>
     </tb-drawer>
-
-    <!-- 底边栏 -->
-    <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">
@@ -958,7 +955,6 @@ import {
   watch
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
-import BottomBar from "../../components/BottomBar.vue";
 import Target from "./target/Target.vue";
 import Ability from "./ability/Ability.vue";
 import {
@@ -982,7 +978,7 @@ import {
 } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { TopBar, BottomBar, Target, Ability, TbDrawer, TbInput },
+  components: { TopBar, Target, Ability, TbDrawer, TbInput },
   setup(props, context) {
     // 色彩表
     const colormap: string[] = inject(Store.colormap, []);

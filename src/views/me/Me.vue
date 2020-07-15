@@ -81,15 +81,11 @@
       icon-height="2.60vh"
       icon-margin-left="4.41vw"
     ></me-option>
-
-    <!-- 底边栏 -->
-    <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, Ref, ref, onMounted } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
-import BottomBar from "../../components/BottomBar.vue";
 import MeOption from "./components/MeOption.vue";
 import MePersonalInfo from "./components/MePersonalInfo.vue";
 import icon_sleep from "../../assets/icon_sleep.svg";
@@ -100,7 +96,7 @@ import icon_me_setting from "../../assets/icon_me_setting.svg";
 import { Router } from "@/lib/vue-utils";
 import { PersonalInformation, Me } from "@/lib/vue-viewmodels";
 export default defineComponent({
-  components: { TopBar, BottomBar, MeOption, MePersonalInfo },
+  components: { TopBar, MeOption, MePersonalInfo },
   setup(props, context) {
     // 头像
     const avatarUrl: Ref<string> = ref("");

@@ -3,10 +3,13 @@
     <transition name="fade">
       <router-view />
     </transition>
+    <bottom-bar></bottom-bar>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
+import BottomBar from "./components/BottomBar.vue";
+
 import {
   defineComponent,
   inject,
@@ -29,6 +32,7 @@ import AV from "leancloud-storage";
 import { UI } from "./lib/vue-utils";
 
 export default defineComponent({
+  components: { BottomBar },
   setup(props, context) {
     // 提供依赖注入
     Store.useProvider();
