@@ -44,6 +44,14 @@ export default {
     tomatoStartTime: Ref<Date>,
     input_tomatoDescription?: Ref<string>
   ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
     switch (tomatoCloudStatus.value) {
       case "prepared": {
         // 传入数据检测
@@ -97,6 +105,51 @@ export default {
           input_tomatoName.value = "";
           if (input_tomatoDescription !== undefined) {
             input_tomatoDescription.value = "";
+          }
+
+          // 如果计划列表为空，则先请求下计划列表
+          if (temporaryPlanList.value.length === 0) {
+            const loadingInstance = UI.showLoading(
+              vue.$loading,
+              "正在请求临时计划列表"
+            );
+            try {
+              // 获取临时计划列表
+              temporaryPlanList.value = await Api.fetchPlanList(
+                user,
+                "temporary"
+              );
+              UI.hideLoading(loadingInstance);
+            } catch (error) {
+              UI.hideLoading(loadingInstance);
+              UI.showNotification(
+                vue.$notify,
+                "网络连接错误",
+                `错误原因：${error.message}`,
+                "error"
+              );
+            }
+          }
+
+          // 如果每日计划列表为空，则再请求下每日计划列表
+          if (dailyPlanList.value.length === 0) {
+            const loadingInstance = UI.showLoading(
+              vue.$loading,
+              "正在请求每日计划列表"
+            );
+            try {
+              // 获取临时计划列表
+              dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+              UI.hideLoading(loadingInstance);
+            } catch (error) {
+              UI.hideLoading(loadingInstance);
+              UI.showNotification(
+                vue.$notify,
+                "网络连接错误",
+                `错误原因：${error.message}`,
+                "error"
+              );
+            }
           }
 
           // 遍历 temporaryPlanList
