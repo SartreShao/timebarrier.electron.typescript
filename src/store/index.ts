@@ -102,6 +102,8 @@ const dateTip = Symbol();
 const totalTime = Symbol();
 // 总整体番茄
 const totalTomatoNumber = Symbol();
+// 是否登录成功
+const isLoginSuccess = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -300,6 +302,7 @@ function useProvider() {
   provide(dateTip, ref("15 日"));
   provide(totalTime, ref("0 小时"));
   provide(totalTomatoNumber, ref("0 番茄"));
+  provide(isLoginSuccess, ref(false));
 }
 
 export default {
@@ -350,5 +353,6 @@ export default {
   monthStatData,
   dateTip,
   totalTime,
-  totalTomatoNumber
+  totalTomatoNumber,
+  isLoginSuccess
 };

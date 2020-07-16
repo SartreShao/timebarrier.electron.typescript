@@ -3,7 +3,7 @@
     <transition name="fade">
       <router-view />
     </transition>
-    <bottom-bar></bottom-bar>
+    <bottom-bar v-if="isCurrentPageHome"></bottom-bar>
   </div>
 </template>
 <script lang="ts">
@@ -30,6 +30,7 @@ import {
 } from "./lib/vue-viewmodels";
 import AV from "leancloud-storage";
 import { UI } from "./lib/vue-utils";
+import Api from "@/lib/api";
 
 export default defineComponent({
   components: { BottomBar },
@@ -129,7 +130,7 @@ export default defineComponent({
     );
 
     watch(dateRange, value => {
-      if (value.length === 2) {
+      if (value.length === 2 && Api.isLoggedIn()) {
         const startTime = value[0];
         const endTime = value[1];
         dateTip.value = StatPage.getDateTip(startTime, endTime);
@@ -161,21 +162,45 @@ export default defineComponent({
       ref([])
     );
 
-    App.fetchAppData(
-      context.root,
-      temporaryPlanList,
-      dailyPlanList,
-      completedPlanList,
-      unSubjectiveTargetList,
-      targetSubjectList,
-      completedTargetList,
-      abilityList,
-      levelRuleList,
-      tomatoList,
-      totalTomatoNumber,
-      totalTime,
-      thisYearTomatoList
+    // 是否登录成功
+    const isLoginSuccess: Ref<boolean> = inject(
+      Store.isLoginSuccess,
+      ref(false)
     );
+
+    watch(isLoginSuccess, () => {
+      if (Api.isLoggedIn()) {
+        App.fetchAppData(
+          context.root,
+          temporaryPlanList,
+          dailyPlanList,
+          completedPlanList,
+          unSubjectiveTargetList,
+          targetSubjectList,
+          completedTargetList,
+          abilityList,
+          levelRuleList,
+          tomatoList,
+          totalTomatoNumber,
+          totalTime,
+          thisYearTomatoList
+        );
+
+        const startTime = dateRange.value[0];
+        const endTime = dateRange.value[1];
+        dateTip.value = StatPage.getDateTip(startTime, endTime);
+        StatPage.initTomatoListWithDateRange(
+          context.root,
+          tomatoListWithDateRange,
+          startTime,
+          endTime
+        );
+      }
+    });
+
+    return {
+      isCurrentPageHome
+    };
   }
 });
 </script>

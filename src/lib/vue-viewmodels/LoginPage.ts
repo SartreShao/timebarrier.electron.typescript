@@ -19,7 +19,8 @@ export default {
     vue: ElementVue,
     phoneNumber: string,
     verificationCode: string,
-    indexLocation: RawLocation
+    indexLocation: RawLocation,
+    isLoginSuccess: Ref<boolean>
   ) => {
     // 检查计算属性是否符合要求
     if (!Check.isPhoneNumber(phoneNumber)) {
@@ -45,6 +46,8 @@ export default {
 
       // 登录成功后跳转到对应路由
       Router.replace(vue.$router, indexLocation);
+
+      isLoginSuccess.value = !isLoginSuccess.value;
     } catch (error) {
       // 登录失败=》隐藏 loading=》
       UI.hideLoading(loadingInstance);

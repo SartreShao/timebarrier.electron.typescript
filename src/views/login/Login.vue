@@ -75,8 +75,9 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, Ref } from "@vue/composition-api";
+import { ref, defineComponent, Ref, inject } from "@vue/composition-api";
 import { LoginPage } from "../../lib/vue-viewmodels";
+import Store from "@/store";
 
 export default defineComponent({
   setup(props, context) {
@@ -88,6 +89,12 @@ export default defineComponent({
     const input_phoneNumber: Ref<string> = ref("");
     // 用户输入：验证码
     const input_verificationCode: Ref<string> = ref("");
+    // 是否登录成功
+    const isLoginSuccess: Ref<boolean> = inject(
+      Store.isLoginSuccess,
+      ref(false)
+    );
+
     // 点击事件：发送验证码
     const click_sendVerificationCodeButton = () => {
       LoginPage.sendVerificationCode(
@@ -103,7 +110,8 @@ export default defineComponent({
         context.root,
         input_phoneNumber.value,
         input_verificationCode.value,
-        "plan"
+        "plan",
+        isLoginSuccess
       );
     };
     return {
