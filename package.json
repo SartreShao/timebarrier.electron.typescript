@@ -16,6 +16,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@babel/compat-data": "^7.10.5",
     "@leancloud/adapter-types": "^1.0.1",
     "@types/echarts": "^4.6.0",
     "@types/gsap": "^1.20.2",
