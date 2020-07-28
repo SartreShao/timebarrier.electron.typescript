@@ -44,7 +44,7 @@ jobs:
       - name: build windows app
         if: matrix.os == 'windows-2019'
         run: |
-          GH_TOKEN=bef0b46667d2b13f885561e2f3762873af59f71c npm run electron:build-win
+          npm run electron:build-win
 
       - name: build mac app
         if: matrix.os == 'macos-10.15'
