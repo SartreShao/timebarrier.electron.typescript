@@ -23,6 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-2019, macos-10.15]
+        fail-fast: false
 
     # create steps
     steps:
@@ -43,12 +44,12 @@ jobs:
       - name: build windows app
         if: matrix.os == 'windows-2019'
         run: |
-          npm run electron:build-win
+          GH_TOKEN=bef0b46667d2b13f885561e2f3762873af59f71c npm run electron:build-win
 
       - name: build mac app
         if: matrix.os == 'macos-10.15'
         run: |
-          npm run electron:build
+          GH_TOKEN=bef0b46667d2b13f885561e2f3762873af59f71c npm run electron:build
 
       # step5: cleanup artifacts in dist_electron
       - name: cleanup artifacts
