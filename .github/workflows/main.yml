@@ -45,12 +45,16 @@ jobs:
         if: matrix.os == 'windows-2019'
         run: |
           npm run electron:build-win
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build mac app
         if: matrix.os == 'macos-10.15'
         run: |
-          GH_TOKEN=bef0b46667d2b13f885561e2f3762873af59f71c npm run electron:build
-
+          npm run electron:build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       # step5: cleanup artifacts in dist_electron
       - name: cleanup artifacts
         run: |
