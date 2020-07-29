@@ -46,14 +46,14 @@ jobs:
         run: |
           npm run electron:build-win
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: bef0b46667d2b13f885561e2f3762873af59f71c
 
       - name: build mac app
         if: matrix.os == 'macos-10.15'
         run: |
           npm run electron:build
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: bef0b46667d2b13f885561e2f3762873af59f71c
 
       # step5: cleanup artifacts in dist_electron
       - name: cleanup artifacts for windows
@@ -61,7 +61,7 @@ jobs:
         run: |
           npx rimraf "dist_electron/!(*.exe)"
 
-      - name: cleanup artifacts for macos
+      - name: cleanup artifacts for macosZ
         if: matrix.os == 'macos-10.15'
         run: |
           npx rimraf "dist_electron/!(*.dmg)"
