@@ -17,6 +17,7 @@ export default {
    * */
   login: async (
     vue: ElementVue,
+    countryCode: string,
     phoneNumber: string,
     verificationCode: string,
     indexLocation: RawLocation,
@@ -38,7 +39,11 @@ export default {
 
     try {
       // 尝试登录
-      await Api.loginWithVerificationCode(phoneNumber, verificationCode);
+      await Api.loginWithVerificationCode(
+        countryCode,
+        phoneNumber,
+        verificationCode
+      );
 
       // 登录成功=》隐藏 loading=》显示登录成功通知
       UI.hideLoading(loadingInstance);
@@ -66,6 +71,7 @@ export default {
     vue: ElementVue,
     interval: Ref<NodeJS.Timeout | null>,
     countDown: Ref<number>,
+    countryCode: string,
     phoneNumber: string
   ) => {
     // 检查手机号是否符合要求
@@ -80,7 +86,7 @@ export default {
 
       // 尝试发送验证码
       try {
-        await Api.sendSmsVerifyCode(phoneNumber);
+        await Api.sendSmsVerifyCode(countryCode, phoneNumber);
 
         // 验证码发送成功
         UI.hideLoading(loadingInstance);

@@ -51,13 +51,14 @@ export default {
    * @returns { AV.User | Error }
    */
   loginWithVerificationCode: (
+    countryCode: string,
     phoneNumber: string,
     verificationCode: string
   ): Promise<AV.User> =>
     new Promise(async (resolve, reject) => {
       try {
         const user = await AV.User.signUpOrlogInWithMobilePhone(
-          phoneNumber,
+          "+" + countryCode + phoneNumber,
           verificationCode
         );
         Log.success("loginWithVerificationCode", user);
@@ -73,10 +74,10 @@ export default {
    * @param phoneNumber 手机号
    * @returns { undefined | Error }
    */
-  sendSmsVerifyCode: (phoneNumber: string) =>
+  sendSmsVerifyCode: (countryCode: string, phoneNumber: string) =>
     new Promise(async (resolve, reject) => {
       try {
-        await AV.Cloud.requestSmsCode(phoneNumber);
+        await AV.Cloud.requestSmsCode("+" + countryCode + phoneNumber);
         Log.success("sendSmsVerifyCode");
         resolve();
       } catch (error) {

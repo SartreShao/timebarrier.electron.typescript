@@ -80,8 +80,9 @@ const Check = {
    * @param value 传入手机号
    */
   isPhoneNumber(value: string) {
-    const regex = /^0?1[3|4|5|6|7|8][0-9]\d{8}$/;
-    return regex.test(value);
+    // const regex = /^0?1[3|4|5|6|7|8][0-9]\d{8}$/;
+    // return regex.test(value);
+    return value.length > 0;
   },
   /**
    * 检查是否为验证码：六位纯数字
