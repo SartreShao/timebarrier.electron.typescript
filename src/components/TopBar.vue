@@ -3,6 +3,7 @@
   <header>
     <!-- 状态栏占位 -->
     <div style="height:1vh"></div>
+
     <!-- 标题与刷新按钮 -->
     <section class="title">
       <div class="refresh" @click="click_refreshDataButton">
@@ -180,6 +181,7 @@ $top-bar-height = 6.52vh
 $title-font-size = 2.62vh
 // 标题字体颜色
 $title-font-color = #222A36
+
 // 顶边栏的容器
 header {
   width 100%
@@ -188,6 +190,7 @@ header {
   background $bacground-color
   position fixed
   top 0
+
   // 标题和按钮的容器
   section.title {
     height $top-bar-height
@@ -196,6 +199,7 @@ header {
     align-items center
     background $bacground-color
     position relative
+
     h1 {
       font-size $title-font-size
       font-weight bold
@@ -207,6 +211,7 @@ header {
     }
   }
 }
+
 .refresh {
   cursor pointer
   position absolute
@@ -222,9 +227,11 @@ header {
   display flex
   align-items center
   transition all 0.2s linear
+
   &:hover {
     background-color #F4F4F8
   }
+
   .icon-logo {
     transition all 0.2s linear
     cursor pointer
@@ -232,6 +239,7 @@ header {
     width 2.89vh
     height 2.89vh
   }
+
   &:hover .icon-logo {
     transition all 0.2s linear
     cursor pointer
@@ -239,6 +247,7 @@ header {
     width 1.51vh
     height 1.51vh
   }
+
   .refresh-tip {
     transition all 0.2s linear
     opacity 0
@@ -253,6 +262,7 @@ header {
     color #9a9a9a
     margin-left 1.99vw
   }
+
   &:hover .refresh-tip {
     transition all 0.2s linear
     opacity 1
@@ -268,6 +278,7 @@ header {
     margin-left 1.99vw
   }
 }
+
 .back {
   cursor pointer
   position absolute
@@ -284,15 +295,18 @@ header {
   background #fff
   border-radius 1.05vh
   transition all 0.2s linear
+
   &:hover {
     background #f4f4f8
     border-radius 1.05vh
   }
 }
+
 .icon-back {
   width 1.92vw
   height 1.82vh
 }
+
 .home {
   cursor pointer
   position absolute
@@ -309,11 +323,13 @@ header {
   background #fff
   border-radius 1.05vh
   transition all 0.2s linear
+
   &:hover {
     background #f4f4f8
     border-radius 1.05vh
   }
 }
+
 .icon-home {
   width 1.96vh
   height 1.94vh
