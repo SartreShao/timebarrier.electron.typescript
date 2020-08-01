@@ -9,8 +9,16 @@
         class="personal-info"
         :avatar-url="avatarUrl"
         :isVip="true"
-        :name="nickName.length === 0 ? `陌生人` : nickName"
-        :description="signature.length === 0 ? `点击它⬇编辑资料哦` : signature"
+        :name="
+          nickName ? (nickName.length === 0 ? `陌生人` : nickName) : `陌生人`
+        "
+        :description="
+          signature
+            ? signature.length === 0
+              ? `还未填写个性签名`
+              : signature
+            : `还未填写个性签名`
+        "
       ></me-personal-info>
 
       <div
@@ -150,6 +158,7 @@ export default defineComponent({
   flex-direction column
   background #F5F5F5
 }
+
 .header-container {
   margin-top 7.51vh
   height 32.83vh
@@ -159,19 +168,24 @@ export default defineComponent({
   flex-direction column
   align-items center
 }
+
 .icon-sleep {
   margin-top 3.45vh
 }
+
 .icon-regular {
   margin-top 0.15vh
 }
+
 .icon-setting {
   cursor pointer
   margin-top 2.02vh
 }
+
 .personal-info {
   margin-top 3.45vh
 }
+
 .button {
   cursor pointer
   width 60.53vw
