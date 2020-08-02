@@ -13,6 +13,7 @@ const Target = AV.Object.extend("Target");
 const AbilityTarget = AV.Object.extend("AbilityTarget");
 const LevelRule = AV.Object.extend("LevelRule");
 const TargetPlan = AV.Object.extend("TargetPlan");
+const Global = AV.Object.extend("Global");
 
 export default {
   init: () => {
@@ -1898,6 +1899,22 @@ export default {
         resolve(user);
       } catch (error) {
         Log.error("updateUser", error);
+        reject(error);
+      }
+    }),
+  /**
+   * 获取 closedBeta 的值
+   */
+  isClosedBeta: async (): Promise<boolean> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        const isClosedBeta = await new AV.Query(Global)
+          .equalTo("name", "closedBeta")
+          .find();
+        Log.success("isClosedBeta", isClosedBeta[0].attributes.value);
+        resolve(Boolean(isClosedBeta[0].attributes.value));
+      } catch (error) {
+        Log.error("isClosedBeta", error);
         reject(error);
       }
     })

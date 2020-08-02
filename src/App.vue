@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <transition name="fade">
-      <router-view />
+      <check-is-closed-beta v-if="!isClosedBeta"></check-is-closed-beta>
+      <router-view v-else />
     </transition>
-    <bottom-bar v-if="isCurrentPageHome"></bottom-bar>
-    <check-is-closed-beta></check-is-closed-beta>
+    <bottom-bar v-if="isCurrentPageHome && isClosedBeta"></bottom-bar>
   </div>
 </template>
 <script lang="ts">
@@ -52,6 +52,10 @@ export default defineComponent({
       Store.isCurrentPageHome,
       ref(false)
     );
+
+    const isClosedBeta: Ref<boolean> = ref(true);
+
+    App.isClosedBeta(isClosedBeta);
 
     watch(
       () => context.root.$route,
@@ -201,7 +205,8 @@ export default defineComponent({
     });
 
     return {
-      isCurrentPageHome
+      isCurrentPageHome,
+      isClosedBeta
     };
   }
 });

@@ -3,6 +3,7 @@ import AV from "leancloud-storage";
 import { PlanPage, TargetPage, AbilityPage, StatPage } from ".";
 import { ElementVue } from "../types/vue-viewmodels";
 import { UI } from "../vue-utils";
+import Api from "@/lib/api";
 
 export default {
   /**
@@ -66,5 +67,9 @@ export default {
       new Date(UI.getYearStartTimestamp(new Date().getTime())),
       new Date(UI.getTodayStartTimestamp(new Date().getTime()))
     );
+  },
+  isClosedBeta: async (isClosedBeta: Ref<boolean>) => {
+    isClosedBeta.value = await Api.isClosedBeta();
+    console.log("fuck", isClosedBeta.value);
   }
 };
