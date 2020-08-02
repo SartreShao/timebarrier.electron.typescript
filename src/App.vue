@@ -4,11 +4,13 @@
       <router-view />
     </transition>
     <bottom-bar v-if="isCurrentPageHome"></bottom-bar>
+    <check-is-closed-beta></check-is-closed-beta>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import BottomBar from "./components/BottomBar.vue";
+import CheckIsClosedBeta from "./components/CheckIsClosedBeta.vue";
 
 import {
   defineComponent,
@@ -33,7 +35,7 @@ import { UI } from "./lib/vue-utils";
 import Api from "@/lib/api";
 
 export default defineComponent({
-  components: { BottomBar },
+  components: { BottomBar, CheckIsClosedBeta },
   setup(props, context) {
     // 提供依赖注入
     Store.useProvider();
@@ -206,42 +208,53 @@ export default defineComponent({
 </script>
 <style lang="stylus">
 @import './public/public.stylus'
+
 * {
   flex-shrink 0
   -webkit-tap-highlight-color rgba(0, 0, 0, 0) /* 点击高亮的颜色 */
   // overflow-x hidden
 }
+
 .fade-enter-active, .fade-leave-active {
   transition opacity 0.1s
 }
+
 .fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
   opacity 0
 }
+
 .bounce-enter-active {
   animation bounce-in 0.5s
 }
+
 .bounce-leave-active {
   animation bounce-in 0.5s reverse
 }
+
 @keyframes bounce-in {
   0% {
     transform scale(0)
   }
+
   50% {
     transform scale(1.5)
   }
+
   100% {
     transform scale(1)
   }
 }
+
 #app {
   width 100%
   height 100%
 }
+
 input {
   outline none
   -webkit-appearance none /* 去除系统默认的样式 */
 }
+
 body, h1, h2, h3, h4, h5, h6 {
   margin 0
   margin-block-start 0
@@ -249,43 +262,55 @@ body, h1, h2, h3, h4, h5, h6 {
   margin-inline-start 0
   margin-inline-end 0
 }
+
 ::-webkit-scrollbar {
   display none
 }
+
 .el-message-box {
   width 85% !important
   max-width 420px
 }
+
 .el-button--primary {
   background-color #222A36 !important
   border-color #222A36 !important
 }
+
 .el-drawer__header {
   margin-bottom 3.9vh !important
 }
+
 .draggable-drag {
 }
+
 .draggable-ghost {
   opacity 0
 }
+
 .draggable-chosen {
   box-shadow 0.75vh 0.75vh 0.37vh -0.07vh rgba(0, 0, 0, 0.05)
 }
+
 // 日期选择器
 .el-date-range-picker__content {
   float none !important
 }
+
 .el-picker-panel__sidebar {
   width 90px !important
 }
+
 .el-picker-panel [slot=sidebar]+.el-picker-panel__body, .el-picker-panel__sidebar+.el-picker-panel__body {
   margin-left 88px !important
 }
+
 .el-date-range-picker__content {
   width 43.42% !important
   padding-bottom 0 !important
   padding-top 1.5vh !important
 }
+
 .el-picker-panel__shortcut {
   font-size 12px !important
 }
