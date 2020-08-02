@@ -3,7 +3,7 @@
     <section class="section">
       <h1 class="h-1">您使用的是内测版本</h1>
       <h2 class="h-2">当前内测已经结束，请下载正式版 APP</h2>
-      <div class="button">点击下载</div>
+      <a class="button" href="http://timebarrier.web.hearfresh.cn/">点击下载</a>
     </section>
   </div>
 </template>
