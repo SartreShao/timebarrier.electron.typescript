@@ -7,7 +7,7 @@
     <section class="new-plan-input-container">
       <input
         type="text"
-        placeholder="点击添加一个临时计划"
+        placeholder="快速添加一个临时计划"
         @keyup.enter="keyUpEnter_planInputBox"
         v-model="input_planName"
       />
@@ -104,6 +104,11 @@
 
       <!-- 「已完成」按钮 -->
       <div
+        v-if="
+          dailyPlanList.length !== 0 ||
+            temporaryPlanList.length !== 0 ||
+            completedPlanList.length !== 0
+        "
         class="completed-container"
         v-darked-when-click
         @click="click_completedPlanListButton"
@@ -743,6 +748,7 @@ export default defineComponent({
   display flex
   flex-direction column
   background #f0f1f3
+
   // 「创建新计划」输入框包含者
   section.new-plan-input-container {
     display flex
@@ -755,6 +761,7 @@ export default defineComponent({
     right 0
     margin-left auto
     margin-right auto
+
     // 输入框
     input {
       opacity 0.54
@@ -762,12 +769,13 @@ export default defineComponent({
       padding 0px
       width 92.67vw
       height 3.9vh
-      background-color #e9e9e9
+      background-color #F5F5F5
       border-radius 1.95vh
       border none
       text-align center
       font-size 2.02vh
       color #222a36
+
       // 输入框 placeholder
       &::-webkit-input-placeholder {
         opacity 0.6
@@ -777,10 +785,11 @@ export default defineComponent({
         font-style normal
         letter-spacing 0.03vw
         text-align center
-        color #959595
+        color #222A36
       }
     }
   }
+
   main {
     position fixed
     top 12.77vh
@@ -791,12 +800,14 @@ export default defineComponent({
     display flex
     flex-direction column
     align-items center
+
     section.temporary {
       flex-shrink 0
       margin-bottom 1.57vh
       width 95.73vw
       display flex
       flex-direction column
+
       div.item-container {
         user-select none
         cursor pointer
@@ -807,6 +818,7 @@ export default defineComponent({
         align-items center
         position relative
         margin-bottom 0.52vh
+
         h2 {
           font-size 2.02vh
           font-weight 500
@@ -818,12 +830,14 @@ export default defineComponent({
           margin-left 4.67vw
           margin-right 3.27vw
         }
+
         div.placeholder {
           width 0.13vw
           height 2.92vh
           background #707070
           opacity 0.4
         }
+
         h3 {
           font-size 2.02vh
           font-weight 500
@@ -838,6 +852,7 @@ export default defineComponent({
           text-overflow ellipsis
           white-space nowrap
         }
+
         div.finished-button {
           cursor pointer
           width 2.7vh
@@ -851,11 +866,13 @@ export default defineComponent({
         }
       }
     }
+
     section.daily {
       flex-shrink 0
       width 95.73vw
       display flex
       flex-direction column
+
       .item-container {
         user-select none
         cursor pointer
@@ -864,6 +881,7 @@ export default defineComponent({
         flex-shrink 0
         background white
         margin-bottom 1vh
+
         .plan-container {
           display flex
           flex-direction row cursor pointer
@@ -874,6 +892,7 @@ export default defineComponent({
           align-items center
           position relative
           border-bottom dashed 1px #D5D5D5
+
           h2 {
             font-size 2.02vh
             font-weight 500
@@ -885,12 +904,14 @@ export default defineComponent({
             margin-left 4.67vw
             margin-right 3.27vw
           }
+
           div.placeholder {
             width 0.13vw
             height 2.92vh
             background #707070
             opacity 0.4
           }
+
           h3 {
             font-size 2.02vh
             font-weight 500
@@ -905,6 +926,7 @@ export default defineComponent({
             text-overflow ellipsis
             white-space nowrap
           }
+
           img.start-button {
             cursor pointer
             width 2.7vh
@@ -916,12 +938,14 @@ export default defineComponent({
             border solid 0.15vw #959595
           }
         }
+
         .plan-detail-container {
           width 95.73vw
           height 4.27vh
           box-shadow 0 3px 6px 0 rgba(0, 0, 0, 0.01)
           background-color #ffffff
           position relative
+
           span {
             height 2.4vh
             opacity 0.4
@@ -940,6 +964,7 @@ export default defineComponent({
             margin-bottom auto
             position absolute
           }
+
           div {
             height 2.4vh
             opacity 0.4
@@ -961,6 +986,7 @@ export default defineComponent({
         }
       }
     }
+
     div.completed-container {
       flex-shrink 0
       cursor pointer
@@ -976,37 +1002,45 @@ export default defineComponent({
       font-size 1.72vh
       color #222A36
       letter-spacing 0.03vw
+
       .icon-completed {
         width 3.03vw
         height 1.14vh
       }
+
       span {
         margin-left 3vw
       }
     }
   }
 }
+
 .container .item-container-drag {
   opacity 0
 }
+
 .flip-list-move {
   transition transform 0.5s
 }
+
 .ghost {
   box-shadow 10px 10px 5px -1px rgba(0, 0, 0, 0.14)
   opacity 0.7
 }
+
 .finished-plan-container >>> .el-drawer__body {
   display flex
   flex-direction column
   overflow scroll
   align-items center
+
   section.finished {
     flex-shrink 0
     margin-bottom 1.57vh
     width 95.73vw
     display flex
     flex-direction column
+
     .item-container {
       cursor pointer
       user-select none
@@ -1017,6 +1051,7 @@ export default defineComponent({
       align-items center
       position relative
       margin-bottom 0.52vh
+
       h2 {
         font-size 2.02vh
         font-weight 500
@@ -1028,11 +1063,13 @@ export default defineComponent({
         margin-left 4.67vw
         margin-right 3.27vw
       }
+
       div.placeholder {
         width 0.13vw
         height 2.92vh
         background #707070
       }
+
       h3 {
         font-size 2.02vh
         font-weight 500
@@ -1047,6 +1084,7 @@ export default defineComponent({
         text-overflow ellipsis
         white-space nowrap
       }
+
       img.cancel-finished-button {
         cursor pointer
         width 2.7vh
@@ -1057,36 +1095,42 @@ export default defineComponent({
     }
   }
 }
+
 .finished-plan-container >>> .el-drawer__header {
   span {
     &:focus {
       outline 0
     }
   }
+
   i {
     &:focus {
       outline 0
     }
   }
 }
+
 .edit-plan-container >>> .el-drawer__body {
   display flex
   flex-direction column
   overflow scroll
   align-items center
 }
+
 .edit-plan-container >>> .el-drawer__header {
   span {
     &:focus {
       outline 0
     }
   }
+
   i {
     &:focus {
       outline 0
     }
   }
 }
+
 .input-plan-name {
   outline none
   -webkit-appearance none /* 去除系统默认的样式 */
@@ -1104,6 +1148,7 @@ export default defineComponent({
   letter-spacing 0.21px
   text-align left
   color #363636
+
   &::-webkit-input-placeholder {
     font-size 1.95vh
     font-weight normal
@@ -1115,6 +1160,7 @@ export default defineComponent({
     color #969294
   }
 }
+
 .input-plan-target {
   outline none
   -webkit-appearance none /* 去除系统默认的样式 */
@@ -1134,6 +1180,7 @@ export default defineComponent({
   color #363636
   margin-top 2.4vh
 }
+
 .input-plan-target::-webkit-input-placeholder {
   font-size 1.95vh
   font-weight normal
@@ -1144,9 +1191,11 @@ export default defineComponent({
   text-align left
   color #969294
 }
+
 .opacity40 {
   opacity 0.4
 }
+
 .input-plan-type >>> .el-input__inner {
   width 89.6vw
   height 6.9vh
@@ -1164,6 +1213,7 @@ export default defineComponent({
   text-align left
   color #363636
 }
+
 .input-plan-type >>> .el-input__inner::-webkit-input-placeholder {
   font-size 1.95vh
   font-weight normal
@@ -1174,6 +1224,7 @@ export default defineComponent({
   text-align left
   color #969294
 }
+
 .add-plan-related {
   width 89.6vw
   height 6.9vh
@@ -1184,12 +1235,14 @@ export default defineComponent({
   align-items center
   cursor pointer
   padding-left 3.92vw
+
   img {
     width 1.92vh
     height 1.92vh
     margin-right 2.8vw
     opacity 0.5
   }
+
   span {
     opacity 0.5
     font-size 1.95vh
@@ -1202,6 +1255,7 @@ export default defineComponent({
     color #636971
   }
 }
+
 .input-plan-description {
   outline none
   -webkit-appearance none /* 去除系统默认的样式 */
@@ -1224,6 +1278,7 @@ export default defineComponent({
   text-align left
   color #363636
 }
+
 .input-plan-description::-webkit-input-placeholder {
   font-size 1.95vh
   font-weight normal
@@ -1234,11 +1289,13 @@ export default defineComponent({
   text-align left
   color #969294
 }
+
 .radio-container {
   display flex
   margin-top 2.4vh
   width 89.6vw
   justify-content space-between
+
   div {
     cursor pointer
     width 42.93vw
@@ -1247,6 +1304,7 @@ export default defineComponent({
     background-color #f4f4f8
     display flex
     align-items center
+
     span {
       opacity 0.3
       font-size 2.02vh
@@ -1259,6 +1317,7 @@ export default defineComponent({
       color #222a36
       margin-left 4.8vw
     }
+
     img {
       width 2.1vh
       height 2.1vh
@@ -1266,6 +1325,7 @@ export default defineComponent({
     }
   }
 }
+
 .button-container {
   position fixed
   bottom 0
@@ -1277,6 +1337,7 @@ export default defineComponent({
   justify-content space-between
   align-items center
 }
+
 .delete-button {
   width 46.8vw
   height 6.82vh
@@ -1296,6 +1357,7 @@ export default defineComponent({
   margin-left 2.13vw
   cursor pointer
 }
+
 .save-button {
   width 46.8vw
   height 6.82vh
@@ -1315,24 +1377,28 @@ export default defineComponent({
   margin-right 2.13vw
   cursor pointer
 }
+
 .related-ability-container >>> .el-drawer__body {
   display flex
   flex-direction column
   overflow scroll
   align-items center
 }
+
 .related-ability-container >>> .el-drawer__header {
   span {
     &:focus {
       outline 0
     }
   }
+
   i {
     &:focus {
       outline 0
     }
   }
 }
+
 .input-ability-name {
   outline none
   -webkit-appearance none /* 去除系统默认的样式 */
@@ -1353,6 +1419,7 @@ export default defineComponent({
   text-align left
   color #363636
 }
+
 .input-ability-name::-webkit-input-placeholder {
   font-size 1.95vh
   font-weight normal
@@ -1363,11 +1430,13 @@ export default defineComponent({
   text-align left
   color #969294
 }
+
 .input-ability-name-container {
   position relative
   width 89.6vw
   height 6.9vh
 }
+
 .input-ability-name-container img {
   position absolute
   right 5.93vw
@@ -1378,6 +1447,7 @@ export default defineComponent({
   width 3.27vw
   height 1.3vh
 }
+
 .ability-container {
   margin-top 2.4vh
   width 100%
@@ -1385,6 +1455,7 @@ export default defineComponent({
   flex-direction column
   align-items center
 }
+
 .ability-item {
   cursor pointer
   width 89.6vw
@@ -1397,6 +1468,7 @@ export default defineComponent({
   align-items center
   margin-bottom 1.5vh
 }
+
 .ability-item span {
   font-size 1.95vh
   font-weight normal
@@ -1408,6 +1480,7 @@ export default defineComponent({
   color #969294
   margin-left 4.8vw
 }
+
 .ability-item img {
   height 2.7vh
   width 2.7vh

@@ -27,8 +27,6 @@ function createWindow() {
     height: 691,
     minWidth: 375,
     minHeight: 691,
-    // maxWidth: 375,
-    // maxHeight: 691,
     webPreferences: {
       nodeIntegration: true,
       backgroundThrottling: false
