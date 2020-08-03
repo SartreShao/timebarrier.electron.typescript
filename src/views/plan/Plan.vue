@@ -143,7 +143,10 @@
       <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
-    <create-plan class="create-plan"></create-plan>
+    <create-plan
+      class="create-plan"
+      @click="click_createPlanButton"
+    ></create-plan>
 
     <!-- 抽屉菜单：已完成的番茄 -->
     <el-drawer
@@ -698,6 +701,11 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：点击创建计划按钮
+    const click_createPlanButton = () => {
+      console.log("click_createPlanButton");
+    };
+
     // 当用户拖动「临时计划」列表完毕时，执行
     const dragend_templayPlanItem = (event: any) => {
       PlanPage.changePlanListOrder(temporaryPlanList);
@@ -741,6 +749,7 @@ export default defineComponent({
       click_saveAbility,
       click_saveTarget,
       click_startTomatoButton,
+      click_createPlanButton,
       dragend_templayPlanItem,
       dragend_dailyPlanItem,
       draggableOptions,

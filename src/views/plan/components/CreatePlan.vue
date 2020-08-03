@@ -29,7 +29,7 @@
       </svg>
 
       <!-- 创建 Plan 的按钮 -->
-      <div class="click-button" @click="emit(`click`)">
+      <div class="click-button" @click="$emit('click')">
         <svg
           class="add-icon"
           id="组_1328"
