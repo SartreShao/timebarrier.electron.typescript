@@ -143,6 +143,8 @@
       <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
+    <create-plan class="create-plan"></create-plan>
+
     <!-- 抽屉菜单：已完成的番茄 -->
     <el-drawer
       class="finished-plan-container"
@@ -452,9 +454,10 @@ import {
 } from "@/lib/types/vue-viewmodels";
 import Draggable from "vuedraggable";
 import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
+import CreatePlan from "./components/CreatePlan.vue";
 
 export default defineComponent({
-  components: { BottomBar, TopBar, Draggable, PlanNoviceTutorial },
+  components: { BottomBar, TopBar, Draggable, PlanNoviceTutorial, CreatePlan },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_planName: Ref<string> = ref("");
@@ -1500,5 +1503,12 @@ export default defineComponent({
   border-radius 50%
   border solid 0.07vh #d5d5d5
   margin-right 5.87vw
+}
+
+.create-plan {
+  position fixed
+  bottom 8.17vh
+  left 0
+  right 0
 }
 </style>
