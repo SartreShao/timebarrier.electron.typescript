@@ -159,6 +159,11 @@ const routes = [
     path: "/choose-plan-type",
     name: "choose-plan-type",
     component: () => import("../views/create-plan/ChoosePlanType.vue")
+  },
+  {
+    path: "/create-temporary-plan",
+    name: "create-temporary-plan",
+    component: () => import("../views/create-plan/CreateTemporaryPlan.vue")
   }
 ];
 

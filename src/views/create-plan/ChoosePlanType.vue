@@ -5,7 +5,7 @@
 
     <!-- 主要容器 -->
     <section class="section">
-      <div class="container container-1">
+      <div class="container container-1" @click="click_temporaryPlanButton">
         <h1 class="h-1">创建一个「临时计划」</h1>
         <h2 class="h-2">例如：帮妈妈买菜、完成语文作业、参加同学聚会</h2>
         <svg
@@ -98,9 +98,18 @@
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
-
+import { Router } from "@/lib/vue-utils";
 export default defineComponent({
-  components: { TopBar }
+  components: { TopBar },
+  setup(props, context) {
+    const click_temporaryPlanButton = () => {
+      Router.push(context.root.$router, "/create-temporary-plan");
+    };
+
+    return {
+      click_temporaryPlanButton
+    };
+  }
 });
 </script>
 
