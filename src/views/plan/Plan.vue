@@ -14,7 +14,13 @@
     </section>
 
     <!-- 主界面 -->
-    <main>
+    <main
+      v-if="
+        temporaryPlanList.length !== 0 ||
+          dailyPlanList.length !== 0 ||
+          completedPlanList.length !== 0
+      "
+    >
       <div style="height:2.1vh;flex-shrink:0"></div>
       <!-- 临时计划列表 -->
       <section class="temporary" v-if="temporaryPlanList.length !== 0">
@@ -130,6 +136,11 @@
         </svg>
         <span>已完成· {{ completedPlanList.length }}</span>
       </div>
+    </main>
+
+    <!-- 新手提示 -->
+    <main v-else>
+      <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
     <!-- 抽屉菜单：已完成的番茄 -->
@@ -440,9 +451,10 @@ import {
   TomatoCloudStatus
 } from "@/lib/types/vue-viewmodels";
 import Draggable from "vuedraggable";
+import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
 
 export default defineComponent({
-  components: { BottomBar, TopBar, Draggable },
+  components: { BottomBar, TopBar, Draggable, PlanNoviceTutorial },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_planName: Ref<string> = ref("");
