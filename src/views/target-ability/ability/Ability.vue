@@ -137,6 +137,7 @@ export default defineComponent({
 .flip-list-move {
   transition transform 0.5s
 }
+
 .container {
   height 100%
   width 100%
@@ -147,10 +148,13 @@ export default defineComponent({
   flex-direction column
   align-items center
 }
+
 .ability-item {
   margin-bottom 1.57vh
 }
+
 .create-ability-container {
+  background white
   z-index 999
   cursor pointer
   width 7.5vh
@@ -164,6 +168,7 @@ export default defineComponent({
   border-radius 50%
   right 5.07vw
   bottom 3vh + 6.82vh
+
   img {
     cursor pointer
     width 2.05vh
