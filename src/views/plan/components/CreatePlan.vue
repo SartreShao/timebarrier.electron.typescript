@@ -9,6 +9,11 @@
         width="148"
         height="148"
         viewBox="0 0 148 148"
+        v-if="
+          dailyPlanList.length === 0 &&
+            temporaryPlanList.length === 0 &&
+            completedPlanList.length === 0
+        "
       >
         <g
           id="椭圆_129"
@@ -24,7 +29,7 @@
       </svg>
 
       <!-- 创建 Plan 的按钮 -->
-      <div class="click-button">
+      <div class="click-button" @click="emit(`click`)">
         <svg
           class="add-icon"
           id="组_1328"
@@ -58,6 +63,11 @@
 
     <!-- 右箭头 -->
     <svg
+      v-if="
+        dailyPlanList.length === 0 &&
+          temporaryPlanList.length === 0 &&
+          completedPlanList.length === 0
+      "
       class="right-arrow"
       xmlns="http://www.w3.org/2000/svg"
       width="26.281"
@@ -87,13 +97,51 @@
     </svg>
 
     <!-- 提示语句 -->
-    <div class="tip">点击它，创建您的第一个计划</div>
+    <div
+      class="tip"
+      v-if="
+        dailyPlanList.length === 0 &&
+          temporaryPlanList.length === 0 &&
+          completedPlanList.length === 0
+      "
+    >
+      点击它，创建您的第一个计划
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
+import { defineComponent, Ref, inject, ref } from "@vue/composition-api";
+import Store from "@/store";
+import AV from "leancloud-storage";
+
+export default defineComponent({
+  setup(props, context) {
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    return {
+      temporaryPlanList,
+      dailyPlanList,
+      completedPlanList
+    };
+  }
+});
 </script>
 
 <style lang="stylus" scoped>
