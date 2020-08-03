@@ -154,6 +154,11 @@ const routes = [
     component: () =>
       import("../views/edit-personal-information/EditPersonalInformation.vue"),
     props: true
+  },
+  {
+    path: "/choose-plan-type",
+    name: "choose-plan-type",
+    component: () => import("../views/create-plan/ChoosePlanType.vue")
   }
 ];
 

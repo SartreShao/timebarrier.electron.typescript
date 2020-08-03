@@ -1,6 +1,6 @@
 import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
-import { UI } from "@/lib/vue-utils";
+import { UI, Router } from "@/lib/vue-utils";
 import {
   ElementVue,
   PlanType,
@@ -756,5 +756,9 @@ export default {
       }
     });
     input_editingPlan.targetList = list;
+  },
+
+  openChoosePlanTypePage: (vue: ElementVue) => {
+    Router.push(vue.$router, "choose-plan-type");
   }
 };

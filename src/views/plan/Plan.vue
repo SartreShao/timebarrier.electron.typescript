@@ -143,10 +143,10 @@
       <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
-    <create-plan
+    <create-plan-button
       class="create-plan"
       @click="click_createPlanButton"
-    ></create-plan>
+    ></create-plan-button>
 
     <!-- 抽屉菜单：已完成的番茄 -->
     <el-drawer
@@ -457,10 +457,16 @@ import {
 } from "@/lib/types/vue-viewmodels";
 import Draggable from "vuedraggable";
 import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
-import CreatePlan from "./components/CreatePlan.vue";
+import CreatePlanButton from "./components/CreatePlanButton.vue";
 
 export default defineComponent({
-  components: { BottomBar, TopBar, Draggable, PlanNoviceTutorial, CreatePlan },
+  components: {
+    BottomBar,
+    TopBar,
+    Draggable,
+    PlanNoviceTutorial,
+    CreatePlanButton
+  },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
     const input_planName: Ref<string> = ref("");
@@ -703,7 +709,7 @@ export default defineComponent({
 
     // 点击事件：点击创建计划按钮
     const click_createPlanButton = () => {
-      console.log("click_createPlanButton");
+      PlanPage.openChoosePlanTypePage(context.root);
     };
 
     // 当用户拖动「临时计划」列表完毕时，执行
