@@ -14,7 +14,11 @@
       <section class="section section-1">
         <h1 class="h-1">Step 1：计划名称——您计划做什么事？</h1>
         <div class="input-container">
-          <input type="text" placeholder="请输入计划名称（必填）" />
+          <input
+            class="input"
+            type="text"
+            placeholder="请输入计划名称（必填）"
+          />
         </div>
         <h2 class="h-2">例如：帮妈妈买菜、完成语文作业、参加同学聚会</h2>
       </section>
@@ -130,5 +134,23 @@ export default defineComponent({
   font-size 1.87vh
   padding-left 5.47vw
   box-sizing border-box
+}
+
+.input {
+  width 100%
+  height 100%
+  outline none
+  border none
+  border-radius 0.67vh
+  color #222A36
+  font-size 1.87vh
+  padding-left 5.47vw
+  box-sizing border-box
+
+  &::-webkit-input-placeholder {
+    color #222A36
+    font-size 1.87vh
+    color #222A36
+  }
 }
 </style>
