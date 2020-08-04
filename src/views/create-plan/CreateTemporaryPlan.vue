@@ -28,7 +28,7 @@
         <h1 class="h-1">Step 2：关联能力——完成计划会提升您的什么能力？</h1>
         <div class="button">点击关联能力（选填）</div>
         <h2 class="h-2">
-          例如：帮妈妈买菜——并不提升什么能力<br />
+          例如：帮妈妈买菜——提升「生活能力」<br />
           完成语文作业——提升「语文能力」or「文学能力」<br />
           参加同学聚会——提升「社交能力」
         </h2>
@@ -122,6 +122,7 @@ export default defineComponent({
 }
 
 .button {
+  cursor pointer
   width 88.8vw
   height 6.22vh
   background white
