@@ -45,7 +45,9 @@
         <h1 class="h-1" style="color:#222A36">
           Step 2：在「能力列表」中「选择」需要关联能力
         </h1>
-        <h2 class="h-2" style="color:#222A36">选择完成后，返回上级即可保存</h2>
+        <h2 class="h-2" style="color:#222A36;font-weight:lighter">
+          选择完成后，点击右下角「对勾」保存
+        </h2>
 
         <place-holder
           v-if="input_abilityListOfPlan.length === 0"
