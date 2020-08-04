@@ -60,6 +60,8 @@
         ></item>
       </section>
     </main>
+
+    <create-button></create-button>
   </div>
 </template>
 
@@ -78,9 +80,10 @@ import Item from "./components/Item.vue";
 import AV from "leancloud-storage";
 import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "@/store";
+import CreateButton from "./components/CreateButton.vue";
 
 export default defineComponent({
-  components: { TopBar, TopTips, PlaceHolder, Item },
+  components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
   setup(props, context) {
     // 用户输入：创建的「能力」的名称
     const input_abilityName: Ref<string> = ref("");
@@ -142,6 +145,7 @@ export default defineComponent({
 
 .section-2 {
   background white
+  margin-bottom 13vh
 }
 
 .h-1 {
