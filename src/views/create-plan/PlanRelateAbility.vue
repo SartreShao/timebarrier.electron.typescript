@@ -48,8 +48,16 @@
         <h2 class="h-2" style="color:#222A36">选择完成后，返回上级即可保存</h2>
 
         <place-holder
+          v-if="input_abilityListOfPlan.length === 0"
           tip="您还没有创建「能力」，创建后才可以关联哦"
         ></place-holder>
+
+        <item
+          v-for="ability in input_abilityListOfPlan"
+          :key="ability.id"
+          :data="ability"
+          :background-color="ability.attributes.color"
+        ></item>
       </section>
     </main>
   </div>
@@ -66,12 +74,13 @@ import {
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import PlaceHolder from "./components/PlaceHolder.vue";
+import Item from "./components/Item.vue";
 import AV from "leancloud-storage";
 import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "@/store";
 
 export default defineComponent({
-  components: { TopBar, TopTips, PlaceHolder },
+  components: { TopBar, TopTips, PlaceHolder, Item },
   setup(props, context) {
     // 用户输入：创建的「能力」的名称
     const input_abilityName: Ref<string> = ref("");
@@ -110,7 +119,9 @@ export default defineComponent({
 
     return {
       input_abilityName,
-      keyUpEnter_abilityInputBox
+      keyUpEnter_abilityInputBox,
+      input_abilityListOfPlan,
+      colormap
     };
   }
 });
