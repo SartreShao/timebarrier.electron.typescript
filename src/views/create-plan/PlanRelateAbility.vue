@@ -20,6 +20,21 @@
             placeholder="创建新能力"
             v-model="input_abilityName"
           />
+
+          <svg
+            class="enter-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="17.787"
+            height="15.563"
+            viewBox="0 0 17.787 15.563"
+          >
+            <path
+              id="路径_778"
+              data-name="路径 778"
+              d="M72.452,124.893H63.558v4.447l-6.67-5.558,6.67-5.558v4.447h8.893v-8.893h2.223v11.117Z"
+              transform="translate(-56.888 -113.777)"
+            />
+          </svg>
         </div>
         <h2 class="h-2">例如：英语能力、运动能力、编程能力</h2>
       </section>
@@ -93,6 +108,7 @@ export default defineComponent({
 }
 
 .input-container {
+  position relative
   width 88.8vw
   height 6.22vh
   background white
@@ -112,6 +128,7 @@ export default defineComponent({
   color #222A36
   font-size 1.87vh
   padding-left 5.47vw
+  padding-right 9vw
   box-sizing border-box
 
   &::-webkit-input-placeholder {
@@ -120,5 +137,16 @@ export default defineComponent({
     font-size 1.87vh
     color #222A36
   }
+}
+
+.enter-icon {
+  position absolute
+  width 2.37vw
+  height 1.17vh
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  right 5.57vw
 }
 </style>
