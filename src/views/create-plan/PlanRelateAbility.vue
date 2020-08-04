@@ -67,7 +67,7 @@
       </section>
     </main>
 
-    <create-button></create-button>
+    <create-button @click="click_saveRelatedAbility"></create-button>
   </div>
 </template>
 
@@ -77,7 +77,8 @@ import {
   Ref,
   ref,
   inject,
-  onMounted
+  onMounted,
+  reactive
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
@@ -87,6 +88,8 @@ import AV from "leancloud-storage";
 import { PlanPage } from "@/lib/vue-viewmodels";
 import Store from "@/store";
 import CreateButton from "./components/CreateButton.vue";
+import { InputPlanType } from "@/lib/types/vue-viewmodels";
+import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
@@ -111,6 +114,21 @@ export default defineComponent({
 
     const colormapForTreeChart = inject(Store.colormapForTreeChart, []);
 
+    // 正在创建的计划
+    const input_creatingPlan: InputPlanType = inject(
+      Store.input_creatingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false
+      })
+    );
+
     // 在能力输入框回车：创建能力
     const keyUpEnter_abilityInputBox = () => {
       PlanPage.createAbility(
@@ -126,8 +144,21 @@ export default defineComponent({
 
     // 选择能力
     const click_abilityItem = (ability: AV.Object) => {
-      console.log("shit");
       PlanPage.selectAbilityToCommit(ability);
+    };
+
+    // 保存已关联的能力列表
+    const click_saveRelatedAbility = () => {
+      input_creatingPlan.abilityList = [];
+      input_abilityListOfPlan.value.forEach(ability => {
+        if (ability.attributes.selected === true) {
+          input_creatingPlan.abilityList.push({
+            id: ability.id as string,
+            name: ability.attributes.name
+          });
+        }
+      });
+      Router.back(context.root.$router);
     };
 
     onMounted(() => {
@@ -140,7 +171,8 @@ export default defineComponent({
       input_abilityListOfPlan,
       colormap,
       colormapForTreeChart,
-      click_abilityItem
+      click_abilityItem,
+      click_saveRelatedAbility
     };
   }
 });
