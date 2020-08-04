@@ -164,6 +164,11 @@ const routes = [
     path: "/create-temporary-plan",
     name: "create-temporary-plan",
     component: () => import("../views/create-plan/CreateTemporaryPlan.vue")
+  },
+  {
+    path: "/plan-relate-ability",
+    name: "plan-relate-ability",
+    component: () => import("../views/create-plan/PlanRelateAbility.vue")
   }
 ];
 

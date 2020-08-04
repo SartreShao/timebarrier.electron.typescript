@@ -44,7 +44,20 @@ export default defineComponent({
     const homePagePathList: string[] = [
       "/plan",
       "/target-ability",
-      "/statistic/",
+      "/target-ability/target",
+      "/target-ability/ability",
+      "/statistic",
+      "/statistic/tomato",
+      "/statistic/tomato/statistic-tomato",
+      "/statistic/tomato/statistic-plan",
+      "/statistic/tomato/statistic-target",
+      "/statistic/tomato/statistic-ability",
+      "/statistic/chart",
+      "/statistic/chart/multiple-analyse",
+      "/statistic/chart/tomato-analyse",
+      "/statistic/chart/plan-analyse",
+      "/statistic/chart/target-analyse",
+      "/statistic/chart/ability-analyse",
       "/me"
     ];
 
@@ -61,7 +74,7 @@ export default defineComponent({
       () => context.root.$route,
       (to, from) => {
         for (let homePagePath of homePagePathList) {
-          if (_.startsWith(to.fullPath, homePagePath)) {
+          if (to.fullPath === homePagePath) {
             isCurrentPageHome.value = true;
             break;
           } else {

@@ -18,6 +18,7 @@
             class="input"
             type="text"
             placeholder="请输入计划名称（必填）"
+            v-model="input_planName"
           />
         </div>
         <h2 class="h-2">例如：帮妈妈买菜、完成语文作业、参加同学聚会</h2>
@@ -26,7 +27,9 @@
       <!-- 关联能力 -->
       <section class="section section-2">
         <h1 class="h-1">Step 2：关联能力——完成计划会提升您的什么能力？</h1>
-        <div class="button">点击关联能力（选填）</div>
+        <div class="button" @click="click_relateAbility">
+          点击关联能力（选填）
+        </div>
         <h2 class="h-2">
           例如：帮妈妈买菜——提升「生活能力」<br />
           完成语文作业——提升「语文能力」or「文学能力」<br />
@@ -75,13 +78,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, ref, Ref } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
-
+import { Router } from "@/lib/vue-utils";
 export default defineComponent({
   components: { TopBar, TopTips },
-  setup(props, context) {}
+  setup(props, context) {
+    // 用户输入的计划名称
+    const input_planName: Ref<string> = ref("");
+
+    // 点击关联能力
+    const click_relateAbility = () => {
+      Router.push(context.root.$router, "/plan-relate-ability");
+    };
+
+    // 点击关联目标
+    const click_realteTarget = () => {
+      Router.push(context.root.$router, "plan-relate-target");
+    };
+
+    return {
+      input_planName,
+      click_relateAbility
+    };
+  }
 });
 </script>
 
