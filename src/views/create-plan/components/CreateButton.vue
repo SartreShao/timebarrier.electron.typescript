@@ -29,7 +29,7 @@ export default defineComponent({});
   cursor pointer
   height 7.5vh
   width 7.5vh
-  box-shadow 0 -0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
+  box-shadow 0 0.22vh 0.44vh 0 rgba(0, 0, 0, 0.16)
   display flex
   align-items center
   justify-content center

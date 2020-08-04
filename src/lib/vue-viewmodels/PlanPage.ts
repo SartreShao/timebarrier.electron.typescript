@@ -784,9 +784,9 @@ export default {
     ability.attributes.selected = !ability.attributes.selected;
 
     // 下面的纯粹是因为前面选择了后不刷新
-    const temp = ability.attributes.name;
-    ability.attributes.name = "";
-    ability.attributes.name = temp;
+    // const temp = ability.attributes.name;
+    // ability.attributes.name = "";
+    // ability.attributes.name = temp;
   },
   selectTargetToComit: (target: { attributes: { selected: boolean } }) => {
     target.attributes.selected = !target.attributes.selected;

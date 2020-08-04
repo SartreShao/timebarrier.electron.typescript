@@ -45,7 +45,7 @@
         <h1 class="h-1" style="color:#222A36">
           Step 2：在「能力列表」中「选择」需要关联能力
         </h1>
-        <h2 class="h-2" style="color:#222A36;font-weight:lighter">
+        <h2 class="h-2" style="color:#222A36;font-weight:lighter;">
           选择完成后，点击右下角「对勾」保存
         </h2>
 
@@ -55,10 +55,14 @@
         ></place-holder>
 
         <item
-          v-for="ability in input_abilityListOfPlan"
+          v-for="(ability, index) in input_abilityListOfPlan"
           :key="ability.id"
           :data="ability"
           :background-color="ability.attributes.color"
+          :button-color="
+            colormapForTreeChart[index % colormapForTreeChart.length]
+          "
+          @click="click_abilityItem(ability)"
         ></item>
       </section>
     </main>
@@ -105,6 +109,8 @@ export default defineComponent({
     // 颜色表
     const colormap = inject(Store.colormap, []);
 
+    const colormapForTreeChart = inject(Store.colormapForTreeChart, []);
+
     // 在能力输入框回车：创建能力
     const keyUpEnter_abilityInputBox = () => {
       PlanPage.createAbility(
@@ -118,6 +124,12 @@ export default defineComponent({
       );
     };
 
+    // 选择能力
+    const click_abilityItem = (ability: AV.Object) => {
+      console.log("shit");
+      PlanPage.selectAbilityToCommit(ability);
+    };
+
     onMounted(() => {
       PlanPage.initRelatedAbility(context.root, input_abilityListOfPlan, null);
     });
@@ -126,7 +138,9 @@ export default defineComponent({
       input_abilityName,
       keyUpEnter_abilityInputBox,
       input_abilityListOfPlan,
-      colormap
+      colormap,
+      colormapForTreeChart,
+      click_abilityItem
     };
   }
 });
