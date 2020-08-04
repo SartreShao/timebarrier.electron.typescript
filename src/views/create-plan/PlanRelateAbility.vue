@@ -19,6 +19,7 @@
             type="text"
             placeholder="创建新能力"
             v-model="input_abilityName"
+            @keyup.enter="keyUpEnter_abilityInputBox"
           />
 
           <svg
@@ -55,17 +56,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from "@vue/composition-api";
+import { defineComponent, Ref, ref, inject } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import PlaceHolder from "./components/PlaceHolder.vue";
+import AV from "leancloud-storage";
+import { PlanPage } from "@/lib/vue-viewmodels";
+import Store from "@/store";
 
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder },
   setup(props, context) {
+    // 用户输入：创建的「能力」的名称
     const input_abilityName: Ref<string> = ref("");
+
+    // 用户输入：需要关联到计划的能力列表
+    const input_abilityListOfPlan: Ref<AV.Object[]> = ref([]);
+
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
+    // 颜色表
+    const colormap = inject(Store.colormap, []);
+
+    // 在能力输入框回车：创建能力
+    const keyUpEnter_abilityInputBox = () => {
+      PlanPage.createAbility(
+        context.root,
+        input_abilityName,
+        input_abilityListOfPlan,
+        input_editingPlan,
+        abilityList,
+        levelRuleList,
+        colormap
+      );
+    };
+
     return {
-      input_abilityName
+      input_abilityName,
+      keyUpEnter_abilityInputBox
     };
   }
 });

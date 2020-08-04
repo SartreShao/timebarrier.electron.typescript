@@ -553,7 +553,7 @@ export default {
     vue: ElementVue,
     input_abilityName: Ref<string>,
     input_abilityListOfPlan: Ref<AV.Object[]>,
-    input_editingPlan: InputPlanType,
+    input_editingPlan: InputPlanType | null,
     abilityList: Ref<AV.Object[]>,
     levelRuleList: Ref<AV.Object[]>,
     colormap: string[]
@@ -575,8 +575,9 @@ export default {
 
     // 尝试请求带有 selected 属性的 Ability
     const loadingInstance = UI.showLoading(vue.$loading, "正在创建能力...");
+
     try {
-      // 创建计划
+      // 创建 Ability
       await Api.createAbility(
         input_abilityName.value,
         user,
@@ -586,30 +587,22 @@ export default {
         colormap
       );
 
-      // 刷新能力列表
-      if (input_editingPlan.id !== undefined) {
-        try {
+      // 刷新 Ability 列表
+      if (input_editingPlan === null) {
+        input_abilityListOfPlan.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true
+        );
+      }
+
+      // 刷新 Ability 列表，并带上 Plan Select
+      else {
+        if (input_editingPlan.id !== undefined) {
           input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
             input_editingPlan.id
           );
-          UI.hideLoading(loadingInstance);
-        } catch (error) {
-          UI.hideLoading(loadingInstance);
-          UI.showNotification(
-            vue.$notify,
-            "网络出错",
-            `错误原因：${error.message}`,
-            "error"
-          );
         }
-      } else {
-        UI.hideLoading(loadingInstance);
-        UI.showNotification(
-          vue.$notify,
-          "数据出错",
-          "错误原因：input_editingPlan.id is undefined",
-          "error"
-        );
       }
 
       // 尝试获取能力列表
@@ -622,8 +615,11 @@ export default {
         true
       );
 
+      // 清空输入框
       input_abilityName.value = "";
+      UI.hideLoading(loadingInstance);
     } catch (error) {
+      UI.hideLoading(loadingInstance);
       UI.showNotification(
         vue.$notify,
         "创建能力失败",
