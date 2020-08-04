@@ -554,6 +554,8 @@ export default {
     input_abilityName: Ref<string>,
     input_abilityListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType,
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>,
     colormap: string[]
   ) => {
     // 获取传入参数
@@ -572,7 +574,7 @@ export default {
     }
 
     // 尝试请求带有 selected 属性的 Ability
-    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的能力");
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建能力...");
     try {
       // 创建计划
       await Api.createAbility(
@@ -610,11 +612,21 @@ export default {
         );
       }
 
+      // 尝试获取能力列表
+      abilityList.value = await Api.fetchAbilityList(
+        user,
+        false,
+        true,
+        levelRuleList.value,
+        true,
+        true
+      );
+
       input_abilityName.value = "";
     } catch (error) {
       UI.showNotification(
         vue.$notify,
-        "创建计划失败",
+        "创建能力失败",
         `失败原因：${error.message}`,
         "error"
       );

@@ -549,6 +549,15 @@ export default defineComponent({
     // 颜色表
     const colormap = inject(Store.colormap, []);
 
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
@@ -567,6 +576,8 @@ export default defineComponent({
         input_abilityName,
         input_abilityListOfPlan,
         input_editingPlan,
+        abilityList,
+        levelRuleList,
         colormap
       );
     };
