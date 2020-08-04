@@ -503,6 +503,55 @@ export default {
       );
     }
   },
+  initRelatedAbility: async (
+    vue: ElementVue,
+    input_abilityListOfPlan: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 尝试请求带有 selected 属性的 Ability
+    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的能力");
+
+    try {
+      // 刷新 Ability 列表
+      if (input_editingPlan === null) {
+        input_abilityListOfPlan.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true
+        );
+        UI.hideLoading(loadingInstance);
+      }
+
+      // 刷新 Ability 列表，并带上 Plan Select
+      else {
+        if (input_editingPlan.id === undefined) {
+          return;
+        }
+
+        input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
+          input_editingPlan.id
+        );
+        UI.hideLoading(loadingInstance);
+      }
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "网络出错",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+  },
   /**
    * 用户点击「关联相关目标」
    */

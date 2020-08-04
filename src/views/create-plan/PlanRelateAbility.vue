@@ -56,7 +56,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, inject } from "@vue/composition-api";
+import {
+  defineComponent,
+  Ref,
+  ref,
+  inject,
+  onMounted
+} from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import PlaceHolder from "./components/PlaceHolder.vue";
@@ -91,12 +97,16 @@ export default defineComponent({
         context.root,
         input_abilityName,
         input_abilityListOfPlan,
-        input_editingPlan,
+        null,
         abilityList,
         levelRuleList,
         colormap
       );
     };
+
+    onMounted(() => {
+      PlanPage.initRelatedAbility(context.root, input_abilityListOfPlan, null);
+    });
 
     return {
       input_abilityName,
