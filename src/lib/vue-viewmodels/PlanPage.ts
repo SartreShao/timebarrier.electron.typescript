@@ -638,6 +638,9 @@ export default {
     input_targetName: Ref<string>,
     input_targetListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
     colormap: string[]
   ) => {
     // 获取传入参数
@@ -680,6 +683,22 @@ export default {
           input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
             input_editingPlan.id
           );
+
+          // 尝试获取目标列表
+          unSubjectiveTargetList.value = await Api.fetchTargetList(
+            user,
+            "unsubjective"
+          );
+
+          // 尝试获取已完成的目标列表
+          completedTargetList.value = await Api.fetchTargetList(
+            user,
+            "completed"
+          );
+
+          // 尝试获取目标类别列表
+          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
           UI.hideLoading(loadingInstance);
         } catch (error) {
           UI.hideLoading(loadingInstance);

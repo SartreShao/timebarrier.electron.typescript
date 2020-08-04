@@ -558,6 +558,24 @@ export default defineComponent({
       ref([])
     );
 
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
+
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
+    );
+
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
+    );
+
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
       PlanPage.createPlan(
@@ -589,6 +607,9 @@ export default defineComponent({
         input_targetName,
         input_targetListOfPlan,
         input_editingPlan,
+        unSubjectiveTargetList,
+        completedTargetList,
+        targetSubjectList,
         colormap
       );
     };

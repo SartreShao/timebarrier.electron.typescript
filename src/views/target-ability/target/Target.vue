@@ -265,7 +265,6 @@ export default defineComponent({
 
     // 点击事件：将已完成的 Target 拉回来
     const click_unfinishedTargetButton = (target: AV.Object) => {
-      console.log("un");
       TargetPage.unFinishedTarget(
         context.root,
         target,
