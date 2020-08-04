@@ -266,7 +266,12 @@ export default {
   createPlan: (
     name: string,
     type: PlanType,
-    user: AV.User
+    user: AV.User,
+    target?: number,
+    isActived?: boolean,
+    isFinished?: boolean,
+    abilityIdList?: string[],
+    targetIdList?: string[]
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -277,10 +282,40 @@ export default {
           .set("user", user)
           .set("order", 0);
 
-        if (type === "daily") {
-          plan.set("target", 2);
+        if (target !== undefined) {
+          plan.set("target", target);
         }
+
+        if (isActived !== undefined) {
+          plan.set("isActived", isActived);
+        }
+
+        if (isFinished !== undefined) {
+          plan.set("isFinished", isFinished);
+        }
+
         await plan.save();
+
+        // 保存中间表：AbilityPlan
+        if (abilityIdList !== undefined) {
+          const abilityPlanList = abilityIdList.map(abilityId => {
+            return new AbilityPlan()
+              .set("plan", plan)
+              .set("ability", AV.Object.createWithoutData(Ability, abilityId));
+          });
+          await AV.Object.saveAll(abilityPlanList);
+        }
+
+        // 保存中间表：TargetPlan
+        if (targetIdList !== undefined) {
+          const targetPlanList = targetIdList.map(targetId => {
+            return new TargetPlan()
+              .set("plan", plan)
+              .set("target", AV.Object.createWithoutData(Target, targetId));
+          });
+          await AV.Object.saveAll(targetPlanList);
+        }
+
         Log.success("createPlan", plan);
         resolve(plan);
       } catch (error) {

@@ -75,7 +75,7 @@ export default {
    * @param temporaryPlanList 临时计划的列表，用于创建 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于创建 Plan 后更新列表数据
    */
-  createPlan: async (
+  createPlanQuickly: async (
     vue: ElementVue,
     name: Ref<string>,
     type: PlanType,

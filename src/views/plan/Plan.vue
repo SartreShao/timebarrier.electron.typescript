@@ -578,7 +578,7 @@ export default defineComponent({
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
-      PlanPage.createPlan(
+      PlanPage.createPlanQuickly(
         context.root,
         input_planName,
         "temporary",
