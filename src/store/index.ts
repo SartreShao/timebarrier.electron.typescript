@@ -4,7 +4,8 @@ import AV from "leancloud-storage";
 import {
   TomatoCloudStatus,
   StatStatusMode,
-  TomatoStatStatusMode
+  TomatoStatStatusMode,
+  InputPlanType
 } from "@/lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 
@@ -104,6 +105,8 @@ const totalTime = Symbol();
 const totalTomatoNumber = Symbol();
 // 是否登录成功
 const isLoginSuccess = Symbol();
+// 临时变量：正在创建的计划
+const input_creatingPlan = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -303,6 +306,19 @@ function useProvider() {
   provide(totalTime, ref("0 小时"));
   provide(totalTomatoNumber, ref("0 番茄"));
   provide(isLoginSuccess, ref(false));
+  provide(
+    input_creatingPlan,
+    reactive<InputPlanType>({
+      id: undefined,
+      name: "",
+      abilityList: [],
+      targetList: [],
+      type: "temporary",
+      target: "",
+      isActived: false,
+      isFinished: false
+    })
+  );
 }
 
 export default {
@@ -354,5 +370,6 @@ export default {
   dateTip,
   totalTime,
   totalTomatoNumber,
-  isLoginSuccess
+  isLoginSuccess,
+  input_creatingPlan
 };

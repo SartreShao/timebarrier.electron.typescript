@@ -18,7 +18,7 @@
             class="input"
             type="text"
             placeholder="请输入计划名称（必填）"
-            v-model="input_planName"
+            v-model="input_creatingPlan.name"
           />
         </div>
         <h2 class="h-2">例如：帮妈妈买菜、完成语文作业、参加同学聚会</h2>
@@ -56,22 +56,62 @@
       </section>
     </main>
 
-    <create-button></create-button>
+    <create-button @click="click_createPlanButton"></create-button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  Ref,
+  reactive,
+  inject
+} from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import { Router } from "@/lib/vue-utils";
 import CreateButton from "./components/CreateButton.vue";
+import { InputPlanType } from "@/lib/types/vue-viewmodels";
+import Store from "@/store";
+import { PlanPage } from "@/lib/vue-viewmodels";
+import AV from "leancloud-storage";
 
 export default defineComponent({
   components: { TopBar, TopTips, CreateButton },
   setup(props, context) {
-    // 用户输入的计划名称
-    const input_planName: Ref<string> = ref("");
+    // 正在创建的计划
+    const input_creatingPlan: InputPlanType = inject(
+      Store.input_creatingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false
+      })
+    );
+
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
 
     // 点击关联能力
     const click_relateAbility = () => {
@@ -83,9 +123,21 @@ export default defineComponent({
       Router.push(context.root.$router, "plan-relate-target");
     };
 
+    // 点击事件：创建计划
+    const click_createPlanButton = () => {
+      PlanPage.createPlan(
+        context.root,
+        input_creatingPlan,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
+      );
+    };
+
     return {
-      input_planName,
-      click_relateAbility
+      input_creatingPlan,
+      click_relateAbility,
+      click_createPlanButton
     };
   }
 });

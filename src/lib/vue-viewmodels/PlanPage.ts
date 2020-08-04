@@ -131,6 +131,75 @@ export default {
       );
     }
   },
+
+  /**
+   * 创建计划
+   */
+  createPlan: async (
+    vue: ElementVue,
+    input_creatingPlan: InputPlanType,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 如果没有定义每日目标，则不允许保存为「每日计划」
+    if (input_creatingPlan.type === "daily") {
+      if (input_creatingPlan.target === undefined) {
+        UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
+        return;
+      }
+
+      if (parseInt(input_creatingPlan.target) < 0) {
+        UI.showNotification(vue.$notify, "每日目标数不可为负数", "", "warning");
+        input_creatingPlan.target = "0";
+        return;
+      }
+    }
+
+    // 显示进度条
+    const loadingInstance = UI.showLoading(vue.$loading, "正在保存您的计划...");
+
+    // 尝试保存 Plan
+    try {
+      await Api.createPlan(
+        input_creatingPlan.name,
+        input_creatingPlan.type,
+        user,
+        input_creatingPlan.target.length === 0
+          ? undefined
+          : Number(input_creatingPlan.target),
+        input_creatingPlan.isActived,
+        input_creatingPlan.isFinished,
+        input_creatingPlan.abilityList.map(ability => ability.id),
+        input_creatingPlan.targetList.map(target => target.id)
+      );
+
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 保存成功
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(vue.$notify, "计划保存成功", "", "success");
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "计划保存失败",
+        `错误原因：${error.message},`,
+        "error"
+      );
+    }
+  },
   /**
    * 完成计划
    *

@@ -96,13 +96,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, inject, reactive } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import { Router } from "@/lib/vue-utils";
+import Store from "@/store";
+import { InputPlanType } from "@/lib/types/vue-viewmodels";
 export default defineComponent({
   components: { TopBar },
   setup(props, context) {
+    // 正在创建的计划
+    const input_creatingPlan: InputPlanType = inject(
+      Store.input_creatingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false
+      })
+    );
+
+    // 点击事件：创建临时计划
     const click_temporaryPlanButton = () => {
+      input_creatingPlan.id = undefined;
+      input_creatingPlan.name = "";
+      input_creatingPlan.abilityList = [];
+      input_creatingPlan.targetList = [];
+      input_creatingPlan.type = "temporary";
+      input_creatingPlan.target = "";
+      input_creatingPlan.isActived = true;
+      input_creatingPlan.isFinished = false;
       Router.push(context.root.$router, "/create-temporary-plan");
     };
 
