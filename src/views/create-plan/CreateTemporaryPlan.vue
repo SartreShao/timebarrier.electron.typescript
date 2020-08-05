@@ -27,8 +27,21 @@
       <!-- 关联能力 -->
       <section class="section section-2">
         <h1 class="h-1">Step 2：关联能力——完成计划会提升您的什么能力？</h1>
-        <div class="button" @click="click_relateAbility">
+        <div
+          class="button"
+          @click="click_relateAbility"
+          v-if="input_creatingPlan.abilityList.length === 0"
+        >
           点击关联能力（选填）
+        </div>
+
+        <div class="button" @click="click_relateAbility" v-else>
+          <span>{{
+            "相关能力：" +
+              input_creatingPlan.abilityList
+                .map(ability => ability.name)
+                .join("、")
+          }}</span>
         </div>
         <h2 class="h-2">
           例如：帮妈妈买菜——提升「生活能力」<br />
@@ -246,6 +259,13 @@ export default defineComponent({
   font-size 1.87vh
   padding-left 5.47vw
   box-sizing border-box
+
+  span {
+    width 100%
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+  }
 }
 
 .input {
@@ -263,6 +283,7 @@ export default defineComponent({
     color #222A36
     font-size 1.87vh
     color #222A36
+    opacity 0.3
   }
 }
 </style>
