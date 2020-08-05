@@ -165,6 +165,12 @@ export default {
       }
     }
 
+    // 输入检测
+    if (input_creatingPlan.name.length === 0) {
+      UI.showNotification(vue.$notify, "请输入计划名称", "", "warning");
+      return;
+    }
+
     // 显示进度条
     const loadingInstance = UI.showLoading(vue.$loading, "正在保存您的计划...");
 
