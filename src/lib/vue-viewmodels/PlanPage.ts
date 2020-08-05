@@ -752,6 +752,7 @@ export default {
     input_abilityName: Ref<string>,
     input_abilityListOfPlan: Ref<AV.Object[]>,
     input_editingPlan: InputPlanType | null,
+    input_creatingPlan: InputPlanType | null,
     abilityList: Ref<AV.Object[]>,
     levelRuleList: Ref<AV.Object[]>,
     colormap: string[]
@@ -785,22 +786,58 @@ export default {
         colormap
       );
 
-      // 刷新 Ability 列表
-      if (input_editingPlan === null) {
+      // 当前在创建计划
+      if (input_editingPlan === null && input_creatingPlan !== null) {
         input_abilityListOfPlan.value = await Api.fetchAbilityList(
           user,
           false,
           true
         );
+        input_creatingPlan.abilityList.forEach(input_ability => {
+          input_abilityListOfPlan.value.forEach(ability => {
+            if (input_ability.id === ability.id) {
+              ability.attributes.selected = true;
+            }
+          });
+        });
+        UI.hideLoading(loadingInstance);
       }
+      // 当前在编辑计划
+      else if (input_editingPlan !== null && input_creatingPlan === null) {
+        if (input_editingPlan.id === undefined) {
+          return;
+        }
 
-      // 刷新 Ability 列表，并带上 Plan Select
-      else {
-        if (input_editingPlan.id !== undefined) {
+        if (input_editingPlan.abilityList.length !== 0) {
+          input_abilityListOfPlan.value = await Api.fetchAbilityList(
+            user,
+            false,
+            true
+          );
+          input_editingPlan.abilityList.forEach(input_ability => {
+            input_abilityListOfPlan.value.forEach(ability => {
+              if (input_ability.id === ability.id) {
+                ability.attributes.selected = true;
+              }
+            });
+          });
+        } else {
           input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
             input_editingPlan.id
           );
         }
+
+        UI.hideLoading(loadingInstance);
+      }
+      // 出问题了
+      else {
+        Log.error(
+          "vm: PlaPage's initRelatedAbility",
+          new Error(
+            "please select input_editingPlan or input_creatingPlan to input"
+          )
+        );
+        return;
       }
 
       // 尝试获取能力列表
