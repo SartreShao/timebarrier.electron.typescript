@@ -53,7 +53,9 @@
       <!-- 关联目标 -->
       <section class="section section-3">
         <h1 class="h-1">Step 3：关联目标——完成计划会有助于实现什么目标？</h1>
-        <div class="button">点击关联目标（选填）</div>
+        <div class="button" @click="click_relateTarget">
+          点击关联目标（选填）
+        </div>
         <h2 class="h-2">
           例如：帮妈妈买菜——有助于「让妈妈感到幸福」目标<br />
           完成语文作业——有助于「成为一名优秀的作家」目标<br />
@@ -161,7 +163,7 @@ export default defineComponent({
     };
 
     // 点击关联目标
-    const click_realteTarget = () => {
+    const click_relateTarget = () => {
       Router.push(context.root.$router, "plan-relate-target");
     };
 
@@ -184,6 +186,7 @@ export default defineComponent({
     return {
       input_creatingPlan,
       click_relateAbility,
+      click_relateTarget,
       click_createPlanButton
     };
   }

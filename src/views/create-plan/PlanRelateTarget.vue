@@ -6,20 +6,20 @@
     <main style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;">
       <!-- 主要页面 -->
       <top-tips
-        title="为「计划」关联「能力」"
-        sub-title="完成计划会提升您的什么能力？"
+        title="为「计划」关联「目标」"
+        sub-title="完成计划会有助与您实现什么目标？"
       ></top-tips>
 
       <!-- 创建能力 -->
       <section class="section section-1">
-        <h1 class="h-1">Step 1：您可以创建一个新能力</h1>
+        <h1 class="h-1">Step 1：您可以创建一个新目标</h1>
         <div class="input-container">
           <input
             class="input"
             type="text"
-            placeholder="创建新能力"
-            v-model="input_abilityName"
-            @keyup.enter="keyUpEnter_abilityInputBox"
+            placeholder="创建新目标"
+            v-model="input_targetName"
+            @keyup.enter="keyUpEnter_targetInputBox"
           />
 
           <svg
@@ -37,37 +37,39 @@
             />
           </svg>
         </div>
-        <h2 class="h-2">例如：英语能力、运动能力、编程能力</h2>
+        <h2 class="h-2">
+          例如：拥有强健的身体、阅读 100 本书、成为优秀的前端工程师
+        </h2>
       </section>
 
       <!-- 能力列表 -->
       <section class="section section-2">
         <h1 class="h-1" style="color:#222A36">
-          Step 2：在「能力列表」中「选择」需要关联的能力
+          Step 2：在「目标列表」中「选择」需要关联的目标
         </h1>
         <h2 class="h-2" style="color:#222A36;font-weight:lighter;">
           选择完成后，点击右下角「对勾」保存
         </h2>
 
         <place-holder
-          v-if="input_abilityListOfPlan.length === 0"
-          tip="您还没有创建「能力」，创建后才可以关联哦"
+          v-if="input_targetListOfPlan.length === 0"
+          tip="您还没有创建「目标」，创建后才可以关联哦"
         ></place-holder>
 
         <item
-          v-for="(ability, index) in input_abilityListOfPlan"
-          :key="ability.id"
-          :data="ability"
-          :background-color="ability.attributes.color"
+          v-for="(target, index) in input_targetListOfPlan"
+          :key="target.id"
+          :data="target"
+          :background-color="target.attributes.color"
           :button-color="
             colormapForTreeChart[index % colormapForTreeChart.length]
           "
-          @click="click_abilityItem(ability)"
+          @click="click_targetItem(target)"
         ></item>
       </section>
     </main>
 
-    <create-button @click="click_saveRelatedAbility"></create-button>
+    <create-button @click="click_saveRelatedTarget"></create-button>
   </div>
 </template>
 
@@ -95,10 +97,10 @@ export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
   setup(props, context) {
     // 用户输入：创建的「能力」的名称
-    const input_abilityName: Ref<string> = ref("");
+    const input_targetName: Ref<string> = ref("");
 
     // 用户输入：需要关联到计划的能力列表
-    const input_abilityListOfPlan: Ref<AV.Object[]> = ref([]);
+    const input_targetListOfPlan: Ref<AV.Object[]> = ref([]);
 
     // 能力列表
     const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
@@ -130,11 +132,11 @@ export default defineComponent({
     );
 
     // 在能力输入框回车：创建能力
-    const keyUpEnter_abilityInputBox = () => {
+    const keyUpEnter_targetInputBox = () => {
       PlanPage.createAbility(
         context.root,
-        input_abilityName,
-        input_abilityListOfPlan,
+        input_targetName,
+        input_targetListOfPlan,
         null,
         abilityList,
         levelRuleList,
@@ -143,18 +145,18 @@ export default defineComponent({
     };
 
     // 选择能力
-    const click_abilityItem = (ability: AV.Object) => {
-      PlanPage.selectAbilityToCommit(ability);
+    const click_targetItem = (target: AV.Object) => {
+      PlanPage.selectAbilityToCommit(target);
     };
 
     // 保存已关联的能力列表
-    const click_saveRelatedAbility = () => {
+    const click_saveRelatedTarget = () => {
       input_creatingPlan.abilityList = [];
-      input_abilityListOfPlan.value.forEach(ability => {
-        if (ability.attributes.selected === true) {
+      input_targetListOfPlan.value.forEach(target => {
+        if (target.attributes.selected === true) {
           input_creatingPlan.abilityList.push({
-            id: ability.id as string,
-            name: ability.attributes.name
+            id: target.id as string,
+            name: target.attributes.name
           });
         }
       });
@@ -162,17 +164,17 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      PlanPage.initRelatedAbility(context.root, input_abilityListOfPlan, null);
+      PlanPage.initRelatedAbility(context.root, input_targetListOfPlan, null);
     });
 
     return {
-      input_abilityName,
-      keyUpEnter_abilityInputBox,
-      input_abilityListOfPlan,
+      input_targetName,
+      keyUpEnter_targetInputBox,
+      input_targetListOfPlan,
       colormap,
       colormapForTreeChart,
-      click_abilityItem,
-      click_saveRelatedAbility
+      click_targetItem,
+      click_saveRelatedTarget
     };
   }
 });
@@ -188,7 +190,7 @@ export default defineComponent({
 }
 
 .section-1 {
-  background #F9385E
+  background #552FB9
 }
 
 .section-2 {
