@@ -140,7 +140,12 @@ export default {
     input_creatingPlan: InputPlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    completedPlanList: Ref<AV.Object[]>,
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -192,6 +197,39 @@ export default {
       temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
       dailyPlanList.value = await Api.fetchPlanList(user, "daily");
       completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 如果添加了目标列表，则刷新目标列表
+      if (input_creatingPlan.targetList.length !== 0) {
+        // 尝试获取目标列表
+        unSubjectiveTargetList.value = await Api.fetchTargetList(
+          user,
+          "unsubjective"
+        );
+        // 尝试获取已完成的目标列表
+        completedTargetList.value = await Api.fetchTargetList(
+          user,
+          "completed"
+        );
+        // 尝试获取目标类别列表
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+      }
+
+      // 如果添加了能力列表，则刷新能力列表
+      if (input_creatingPlan.abilityList.length !== 0) {
+        if (levelRuleList.value.length === 0) {
+          levelRuleList.value = await Api.fetchLevelRuleList();
+        }
+
+        // 尝试获取能力列表
+        abilityList.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true,
+          levelRuleList.value,
+          true,
+          true
+        );
+      }
 
       // 保存成功
       UI.hideLoading(loadingInstance);

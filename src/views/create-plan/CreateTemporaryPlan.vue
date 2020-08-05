@@ -113,6 +113,35 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
+    // Target
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
+
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
+    );
+
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
+    );
+
+    // Ability
+    // 能力列表
+    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+
+    // 能力等级列表
+    const levelRuleList: Ref<AV.Object[]> = inject(
+      Store.levelRuleList,
+      ref([])
+    );
+
     // 点击关联能力
     const click_relateAbility = () => {
       Router.push(context.root.$router, "/plan-relate-ability");
@@ -130,7 +159,12 @@ export default defineComponent({
         input_creatingPlan,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        abilityList,
+        levelRuleList,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
       );
     };
 
