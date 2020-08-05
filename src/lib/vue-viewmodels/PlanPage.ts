@@ -619,6 +619,9 @@ export default {
       );
     }
   },
+  /**
+   * 初始化：关联能力页面
+   */
   initRelatedAbility: async (
     vue: ElementVue,
     input_abilityListOfPlan: Ref<AV.Object[]>,
@@ -683,6 +686,85 @@ export default {
       }
       // 出问题了
       else {
+        Log.error(
+          "vm: PlaPage's initRelatedAbility",
+          new Error(
+            "please select input_editingPlan or input_creatingPlan to input"
+          )
+        );
+        return;
+      }
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "网络出错",
+        `错误原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  initRelatedTarget: async (
+    vue: ElementVue,
+    input_targetListOfPlan: Ref<AV.Object[]>,
+    input_editingPlan: InputPlanType | null,
+    input_creatingPlan: InputPlanType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 尝试请求带有 selected 属性的 Ability
+    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的目标");
+
+    try {
+      // 当前在创建计划
+      if (input_editingPlan === null && input_creatingPlan !== null) {
+        input_targetListOfPlan.value = await Api.fetchTargetList(
+          user,
+          "uncompleted"
+        );
+
+        input_creatingPlan.targetList.forEach(input_target => {
+          input_targetListOfPlan.value.forEach(target => {
+            if (input_target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
+        UI.hideLoading(loadingInstance);
+      }
+      // 当前在编辑计划
+      else if (input_editingPlan !== null && input_creatingPlan === null) {
+        if (input_editingPlan.id === undefined) {
+          return;
+        }
+
+        if (input_editingPlan.targetList.length !== 0) {
+          input_targetListOfPlan.value = await Api.fetchTargetList(
+            user,
+            "uncompleted"
+          );
+          input_editingPlan.targetList.forEach(input_target => {
+            input_targetListOfPlan.value.forEach(target => {
+              if (input_target.id === target.id) {
+                target.attributes.selected = true;
+              }
+            });
+          });
+        } else {
+          input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
+            input_editingPlan.id
+          );
+        }
+
+        UI.hideLoading(loadingInstance);
+      } else {
         Log.error(
           "vm: PlaPage's initRelatedAbility",
           new Error(
@@ -832,7 +914,7 @@ export default {
       // 出问题了
       else {
         Log.error(
-          "vm: PlaPage's initRelatedAbility",
+          "vm: PlaPage's createAbility",
           new Error(
             "please select input_editingPlan or input_creatingPlan to input"
           )
@@ -868,7 +950,8 @@ export default {
     vue: ElementVue,
     input_targetName: Ref<string>,
     input_targetListOfPlan: Ref<AV.Object[]>,
-    input_editingPlan: InputPlanType,
+    input_editingPlan: InputPlanType | null,
+    input_creatingPlan: InputPlanType | null,
     unSubjectiveTargetList: Ref<AV.Object[]>,
     completedTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>,
@@ -890,7 +973,7 @@ export default {
     }
 
     // 尝试请求带有 selected 属性的 Target
-    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的目标");
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建目标...");
 
     try {
       // 创建目标
@@ -908,49 +991,72 @@ export default {
         colormap
       );
 
-      // 刷新目标列表
-      if (input_editingPlan.id !== undefined) {
-        try {
+      // 当前在创建计划
+      if (input_editingPlan === null && input_creatingPlan !== null) {
+        input_targetListOfPlan.value = await Api.fetchTargetList(
+          user,
+          "uncompleted"
+        );
+
+        input_creatingPlan.targetList.forEach(input_target => {
+          input_targetListOfPlan.value.forEach(target => {
+            if (input_target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
+        UI.hideLoading(loadingInstance);
+      }
+      // 当前在编辑计划
+      else if (input_editingPlan !== null && input_creatingPlan === null) {
+        if (input_editingPlan.id === undefined) {
+          return;
+        }
+
+        if (input_editingPlan.targetList.length !== 0) {
+          input_targetListOfPlan.value = await Api.fetchTargetList(
+            user,
+            "uncompleted"
+          );
+          input_editingPlan.targetList.forEach(input_target => {
+            input_targetListOfPlan.value.forEach(target => {
+              if (input_target.id === target.id) {
+                target.attributes.selected = true;
+              }
+            });
+          });
+        } else {
           input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
             input_editingPlan.id
           );
-
-          // 尝试获取目标列表
-          unSubjectiveTargetList.value = await Api.fetchTargetList(
-            user,
-            "unsubjective"
-          );
-
-          // 尝试获取已完成的目标列表
-          completedTargetList.value = await Api.fetchTargetList(
-            user,
-            "completed"
-          );
-
-          // 尝试获取目标类别列表
-          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
-
-          UI.hideLoading(loadingInstance);
-        } catch (error) {
-          UI.hideLoading(loadingInstance);
-          UI.showNotification(
-            vue.$notify,
-            "网络出错",
-            `错误原因：${error.message}`,
-            "error"
-          );
         }
-      } else {
+
         UI.hideLoading(loadingInstance);
-        UI.showNotification(
-          vue.$notify,
-          "数据出错",
-          "错误原因：input_editingPlan.id is undefined",
-          "error"
+      } else {
+        Log.error(
+          "vm: PlaPage's initRelatedAbility",
+          new Error(
+            "please select input_editingPlan or input_creatingPlan to input"
+          )
         );
+        return;
       }
 
+      // 尝试获取目标列表
+      unSubjectiveTargetList.value = await Api.fetchTargetList(
+        user,
+        "unsubjective"
+      );
+
+      // 尝试获取已完成的目标列表
+      completedTargetList.value = await Api.fetchTargetList(user, "completed");
+
+      // 尝试获取目标类别列表
+      targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
       input_targetName.value = "";
+
+      UI.hideLoading(loadingInstance);
     } catch (error) {
       UI.showNotification(
         vue.$notify,
@@ -964,15 +1070,8 @@ export default {
   /**
    * @TO-FIX
    */
-  selectAbilityToCommit: (ability: {
-    attributes: { selected: boolean; name: string };
-  }) => {
+  selectAbilityToCommit: (ability: { attributes: { selected: boolean } }) => {
     ability.attributes.selected = !ability.attributes.selected;
-
-    // 下面的纯粹是因为前面选择了后不刷新
-    // const temp = ability.attributes.name;
-    // ability.attributes.name = "";
-    // ability.attributes.name = temp;
   },
   selectTargetToComit: (target: { attributes: { selected: boolean } }) => {
     target.attributes.selected = !target.attributes.selected;

@@ -10,7 +10,7 @@
         sub-title="完成计划会有助与您实现什么目标？"
       ></top-tips>
 
-      <!-- 创建能力 -->
+      <!-- 创建目标 -->
       <section class="section section-1">
         <h1 class="h-1">Step 1：您可以创建一个新目标</h1>
         <div class="input-container">
@@ -42,7 +42,7 @@
         </h2>
       </section>
 
-      <!-- 能力列表 -->
+      <!-- 目标列表 -->
       <section class="section section-2">
         <h1 class="h-1" style="color:#222A36">
           Step 2：在「目标列表」中「选择」需要关联的目标
@@ -96,18 +96,28 @@ import { Router } from "@/lib/vue-utils";
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
   setup(props, context) {
-    // 用户输入：创建的「能力」的名称
+    // 用户输入：创建的「目标」的名称
     const input_targetName: Ref<string> = ref("");
 
-    // 用户输入：需要关联到计划的能力列表
+    // 用户输入：需要关联到计划的目标列表
     const input_targetListOfPlan: Ref<AV.Object[]> = ref([]);
 
-    // 能力列表
-    const abilityList: Ref<AV.Object[]> = inject(Store.abilityList, ref([]));
+    // Target
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
+    );
 
-    // 能力等级列表
-    const levelRuleList: Ref<AV.Object[]> = inject(
-      Store.levelRuleList,
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
+    );
+
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
       ref([])
     );
 
@@ -131,30 +141,32 @@ export default defineComponent({
       })
     );
 
-    // 在能力输入框回车：创建能力
+    // 在目标输入框回车：创建目标
     const keyUpEnter_targetInputBox = () => {
-      PlanPage.createAbility(
+      PlanPage.createTarget(
         context.root,
         input_targetName,
         input_targetListOfPlan,
         null,
-        abilityList,
-        levelRuleList,
+        input_creatingPlan,
+        unSubjectiveTargetList,
+        completedTargetList,
+        targetSubjectList,
         colormap
       );
     };
 
-    // 选择能力
+    // 选择目标
     const click_targetItem = (target: AV.Object) => {
-      PlanPage.selectAbilityToCommit(target);
+      PlanPage.selectTargetToComit(target);
     };
 
-    // 保存已关联的能力列表
+    // 保存已关联的目标列表
     const click_saveRelatedTarget = () => {
-      input_creatingPlan.abilityList = [];
+      input_creatingPlan.targetList = [];
       input_targetListOfPlan.value.forEach(target => {
         if (target.attributes.selected === true) {
-          input_creatingPlan.abilityList.push({
+          input_creatingPlan.targetList.push({
             id: target.id as string,
             name: target.attributes.name
           });
@@ -164,7 +176,12 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      PlanPage.initRelatedAbility(context.root, input_targetListOfPlan, null);
+      PlanPage.initRelatedTarget(
+        context.root,
+        input_targetListOfPlan,
+        null,
+        input_creatingPlan
+      );
     });
 
     return {

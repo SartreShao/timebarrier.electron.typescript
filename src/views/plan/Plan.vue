@@ -594,6 +594,7 @@ export default defineComponent({
         input_abilityName,
         input_abilityListOfPlan,
         input_editingPlan,
+        null,
         abilityList,
         levelRuleList,
         colormap

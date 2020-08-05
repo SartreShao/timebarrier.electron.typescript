@@ -53,8 +53,21 @@
       <!-- 关联目标 -->
       <section class="section section-3">
         <h1 class="h-1">Step 3：关联目标——完成计划会有助于实现什么目标？</h1>
-        <div class="button" @click="click_relateTarget">
+        <div
+          class="button"
+          @click="click_relateTarget"
+          v-if="input_creatingPlan.targetList.length === 0"
+        >
           点击关联目标（选填）
+        </div>
+
+        <div class="button" @click="click_relateTarget" v-else>
+          <span>{{
+            "相关目标：" +
+              input_creatingPlan.targetList
+                .map(target => target.name)
+                .join("、")
+          }}</span>
         </div>
         <h2 class="h-2">
           例如：帮妈妈买菜——有助于「让妈妈感到幸福」目标<br />

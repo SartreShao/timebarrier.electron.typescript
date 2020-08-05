@@ -1042,7 +1042,7 @@ export default {
    */
   fetchTargetList: (
     user: AV.User,
-    targetType: "completed" | "unsubjective"
+    targetType: "completed" | "unsubjective" | "uncompleted"
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -1057,10 +1057,16 @@ export default {
         } else if (targetType === "unsubjective") {
           targetListQuery.equalTo("targetSubject", null);
           targetListQuery.equalTo("isFinished", false);
+        } else if (targetType === "uncompleted") {
+          targetListQuery.equalTo("isFinished", false);
         }
 
         // 获取 targetList
         const targetList = await targetListQuery.find();
+
+        targetList.forEach(target => {
+          target.attributes.selected = false;
+        });
 
         // 获取 abilityTargetList
         const abilityTargetList = await new AV.Query(AbilityTarget)
