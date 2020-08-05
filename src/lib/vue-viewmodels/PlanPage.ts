@@ -1,6 +1,6 @@
 import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
-import { UI, Router } from "@/lib/vue-utils";
+import { UI, Router, Log } from "@/lib/vue-utils";
 import {
   ElementVue,
   PlanType,
@@ -622,7 +622,8 @@ export default {
   initRelatedAbility: async (
     vue: ElementVue,
     input_abilityListOfPlan: Ref<AV.Object[]>,
-    input_editingPlan: InputPlanType | null
+    input_editingPlan: InputPlanType | null,
+    input_creatingPlan: InputPlanType | null
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -637,26 +638,58 @@ export default {
     const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的能力");
 
     try {
-      // 刷新 Ability 列表
-      if (input_editingPlan === null) {
+      // 当前在创建计划
+      if (input_editingPlan === null && input_creatingPlan !== null) {
         input_abilityListOfPlan.value = await Api.fetchAbilityList(
           user,
           false,
           true
         );
+        input_creatingPlan.abilityList.forEach(input_ability => {
+          input_abilityListOfPlan.value.forEach(ability => {
+            if (input_ability.id === ability.id) {
+              ability.attributes.selected = true;
+            }
+          });
+        });
         UI.hideLoading(loadingInstance);
       }
-
-      // 刷新 Ability 列表，并带上 Plan Select
-      else {
+      // 当前在编辑计划
+      else if (input_editingPlan !== null && input_creatingPlan === null) {
         if (input_editingPlan.id === undefined) {
           return;
         }
 
-        input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
-          input_editingPlan.id
-        );
+        if (input_editingPlan.abilityList.length !== 0) {
+          input_abilityListOfPlan.value = await Api.fetchAbilityList(
+            user,
+            false,
+            true
+          );
+          input_editingPlan.abilityList.forEach(input_ability => {
+            input_abilityListOfPlan.value.forEach(ability => {
+              if (input_ability.id === ability.id) {
+                ability.attributes.selected = true;
+              }
+            });
+          });
+        } else {
+          input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
+            input_editingPlan.id
+          );
+        }
+
         UI.hideLoading(loadingInstance);
+      }
+      // 出问题了
+      else {
+        Log.error(
+          "vm: PlaPage's initRelatedAbility",
+          new Error(
+            "please select input_editingPlan or input_creatingPlan to input"
+          )
+        );
+        return;
       }
     } catch (error) {
       UI.hideLoading(loadingInstance);

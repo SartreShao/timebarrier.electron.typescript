@@ -162,7 +162,12 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      PlanPage.initRelatedAbility(context.root, input_abilityListOfPlan, null);
+      PlanPage.initRelatedAbility(
+        context.root,
+        input_abilityListOfPlan,
+        null,
+        input_creatingPlan
+      );
     });
 
     return {
