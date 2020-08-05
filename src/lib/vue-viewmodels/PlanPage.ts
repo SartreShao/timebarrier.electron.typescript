@@ -195,7 +195,10 @@ export default {
 
       // 保存成功
       UI.hideLoading(loadingInstance);
-      UI.showNotification(vue.$notify, "计划保存成功", "", "success");
+      UI.showNotification(vue.$notify, "计划创建成功", "", "success");
+
+      // 返回计划页面
+      Router.replace(vue.$router, "/plan");
     } catch (error) {
       UI.hideLoading(loadingInstance);
       UI.showNotification(

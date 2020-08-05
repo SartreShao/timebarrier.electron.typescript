@@ -126,7 +126,7 @@ export default defineComponent({
       input_creatingPlan.abilityList = [];
       input_creatingPlan.targetList = [];
       input_creatingPlan.type = "temporary";
-      input_creatingPlan.target = "";
+      input_creatingPlan.target = "0";
       input_creatingPlan.isActived = true;
       input_creatingPlan.isFinished = false;
       Router.push(context.root.$router, "/create-temporary-plan");
