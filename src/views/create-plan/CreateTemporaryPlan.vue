@@ -216,11 +216,11 @@ export default defineComponent({
 }
 
 .section-1 {
-  background #22272C
+  background #F9385E
 }
 
 .section-2 {
-  background #F9385E
+  background #22272C
 }
 
 .section-3 {
