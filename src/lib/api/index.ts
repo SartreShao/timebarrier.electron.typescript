@@ -271,7 +271,8 @@ export default {
     isActived?: boolean,
     isFinished?: boolean,
     abilityIdList?: string[],
-    targetIdList?: string[]
+    targetIdList?: string[],
+    deadline?: Date
   ): Promise<AV.Object> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -292,6 +293,10 @@ export default {
 
         if (isFinished !== undefined) {
           plan.set("isFinished", isFinished);
+        }
+
+        if (deadline !== undefined) {
+          plan.set("deadline", deadline);
         }
 
         await plan.save();

@@ -191,7 +191,8 @@ export default {
         input_creatingPlan.isActived,
         input_creatingPlan.isFinished,
         input_creatingPlan.abilityList.map(ability => ability.id),
-        input_creatingPlan.targetList.map(target => target.id)
+        input_creatingPlan.targetList.map(target => target.id),
+        new Date(input_creatingPlan.deadline)
       );
 
       temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
