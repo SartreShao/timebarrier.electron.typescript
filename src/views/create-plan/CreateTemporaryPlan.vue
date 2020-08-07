@@ -24,9 +24,28 @@
         <h2 class="h-2">例如：帮妈妈买菜、完成语文作业、参加同学聚会</h2>
       </section>
 
+      <!-- 截止日期 -->
+      <section class="section section-4">
+        <h1 class="h-1">Step 2：计划截止日期——最晚什么时候完成计划？</h1>
+        <div class="button">
+          <span v-if="input_creatingPlan.deadline.length === 0">
+            请选择一个日期（选填）
+          </span>
+
+          <span v-else>{{ planDeadLineFormat }}</span>
+          <el-date-picker
+            class="date-picker"
+            v-model="input_creatingPlan.deadline"
+            type="date"
+          >
+          </el-date-picker>
+        </div>
+        <h2 class="h-2">例如：2020 年 1 月 1 日</h2>
+      </section>
+
       <!-- 关联能力 -->
       <section class="section section-2">
-        <h1 class="h-1">Step 2：关联能力——完成计划会提升您的什么能力？</h1>
+        <h1 class="h-1">Step 3：关联能力——完成计划会提升您的什么能力？</h1>
         <div
           class="button"
           @click="click_relateAbility"
@@ -52,7 +71,7 @@
 
       <!-- 关联目标 -->
       <section class="section section-3">
-        <h1 class="h-1">Step 3：关联目标——完成计划会有助于实现什么目标？</h1>
+        <h1 class="h-1">Step 4：关联目标——完成计划会有助于实现什么目标？</h1>
         <div
           class="button"
           @click="click_relateTarget"
@@ -74,25 +93,6 @@
           完成语文作业——有助于「成为一名优秀的作家」目标<br />
           参加同学聚会——有助于「成为中国卡戴珊」目标
         </h2>
-      </section>
-
-      <!-- 截止日期 -->
-      <section class="section section-4">
-        <h1 class="h-1">Step 4：计划截止日期——最晚什么时候完成计划？</h1>
-        <div class="button">
-          <span v-if="input_creatingPlan.deadline.length === 0">
-            请选择一个日期（选填）
-          </span>
-
-          <span v-else>{{ planDeadLineFormat }}</span>
-          <el-date-picker
-            class="date-picker"
-            v-model="input_creatingPlan.deadline"
-            type="date"
-          >
-          </el-date-picker>
-        </div>
-        <h2 class="h-2">例如：2020 年 1 月 1 日</h2>
       </section>
     </main>
 
@@ -247,7 +247,7 @@ export default defineComponent({
 }
 
 .section-4 {
-  background #240083
+  background #45B5AA
 }
 
 .h-1 {
