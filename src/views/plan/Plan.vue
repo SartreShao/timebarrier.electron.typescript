@@ -31,23 +31,13 @@
           @end="dragend_templayPlanItem"
         >
           <transition-group type="transition" name="flip-list">
-            <div
-              v-splash-when-click
-              class="item-container"
-              :id="item.id"
+            <temporary-plan-item
               v-for="(item, index) in temporaryPlanList"
               :key="item.id"
-              @click="click_editPlanButton(item, index)"
-              :title="item.attributes.name"
-            >
-              <h2 style="pointer-events:none;">临时计划</h2>
-              <div class="placeholder" style="pointer-events:none;"></div>
-              <h3 style="pointer-events:none;">{{ item.attributes.name }}</h3>
-              <div
-                class="finished-button"
-                @click.stop="click_completePlanButton(item)"
-              ></div>
-            </div>
+              :plan="item"
+              @edit-plan="click_editPlanButton(item, index)"
+              @finish-plan="click_completePlanButton(item)"
+            ></temporary-plan-item>
           </transition-group>
         </draggable>
       </section>
@@ -458,6 +448,7 @@ import {
 import Draggable from "vuedraggable";
 import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
 import CreatePlanButton from "./components/CreatePlanButton.vue";
+import TemporaryPlanItem from "./components/TemporaryPlanItem.vue";
 
 export default defineComponent({
   components: {
@@ -465,7 +456,8 @@ export default defineComponent({
     TopBar,
     Draggable,
     PlanNoviceTutorial,
-    CreatePlanButton
+    CreatePlanButton,
+    TemporaryPlanItem
   },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
