@@ -50,49 +50,13 @@
           @end="dragend_dailyPlanItem"
         >
           <transition-group type="transition" name="flip-list">
-            <div
-              :id="item.id"
-              class="item-container"
+            <daily-plan-item
               v-for="(item, index) in dailyPlanList"
               v-bind:key="item.id"
-              @click="click_editPlanButton(item, index)"
-              v-splash-when-click
-              :title="item.attributes.name"
-            >
-              <div class="plan-container">
-                <h2>每日计划</h2>
-                <div class="placeholder"></div>
-                <h3>{{ item.attributes.name }}</h3>
-                <img
-                  @click.stop="click_startTomatoButton(item)"
-                  class="start-button"
-                  :src="assets.icon_start"
-                  alt="icon_start"
-                />
-              </div>
-              <div class="plan-detail-container">
-                <span v-if="item.attributes.tomatoNumber !== 0">{{
-                  "累计执行: " +
-                    (
-                      (item.attributes.totalTime
-                        ? item.attributes.totalTime
-                        : 0) /
-                      (3600 * 1000)
-                    ).toFixed(1) +
-                    " 小时 · " +
-                    item.attributes.tomatoNumber +
-                    " 个番茄"
-                }}</span>
-
-                <span v-else>尚未开始训练</span>
-
-                <div>
-                  {{
-                    `${item.attributes.todayTomatoNumber} / ${item.attributes.target} 个番茄`
-                  }}
-                </div>
-              </div>
-            </div>
+              @edit-plan="click_editPlanButton(item, index)"
+              @start-tomato="click_startTomatoButton(item)"
+              :plan="item"
+            ></daily-plan-item>
           </transition-group>
         </draggable>
       </section>
@@ -448,6 +412,7 @@ import Draggable from "vuedraggable";
 import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
 import CreatePlanButton from "./components/CreatePlanButton.vue";
 import TemporaryPlanItem from "./components/TemporaryPlanItem.vue";
+import DailyPlanItem from "./components/DailyPlanItem.vue";
 
 export default defineComponent({
   components: {
@@ -456,7 +421,8 @@ export default defineComponent({
     Draggable,
     PlanNoviceTutorial,
     CreatePlanButton,
-    TemporaryPlanItem
+    TemporaryPlanItem,
+    DailyPlanItem
   },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
