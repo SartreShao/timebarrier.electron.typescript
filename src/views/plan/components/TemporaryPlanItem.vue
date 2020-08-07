@@ -12,20 +12,44 @@
     </h3>
     <div class="finished-button" @click.stop="$emit('finish-plan')"></div>
 
-    <div class="deadline">
-      剩余 10 天
+    <div class="deadline" v-if="plan.attributes.deadline !== undefined">
+      {{ tip }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent, computed, Ref } from "@vue/composition-api";
 import AV from "leancloud-storage";
+import { UI } from "@/lib/vue-utils";
 export default defineComponent({
   props: {
     plan: AV.Object
   },
-  setup(props, context) {}
+  setup(props, context) {
+    const tip: Ref<string> = computed(() => {
+      if (props.plan === undefined) {
+        return "";
+      }
+      const deadline: Date = props.plan.attributes.deadline;
+      const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
+      if (deadline === undefined) {
+        return "";
+      }
+      const result = (deadline.getTime() - todayStartTime) / (1000 * 3600 * 24);
+      if (result > 1) {
+        return `剩余 ${parseInt(String(result))} 天`;
+      } else if (result >= 0) {
+        return `今日截止`;
+      } else {
+        return `过期 ${parseInt(String(-result)) + 1} 天`;
+      }
+    });
+
+    return {
+      tip
+    };
+  }
 });
 </script>
 
