@@ -21,6 +21,8 @@
           completedPlanList.length !== 0
       "
     >
+      <div style="height:2.1vh;flex-shrink:0"></div>
+
       <!-- 临时计划列表 -->
       <section class="temporary" v-if="temporaryPlanList.length !== 0">
         <draggable
@@ -829,7 +831,6 @@ export default defineComponent({
       width 95.73vw
       display flex
       flex-direction column
-      margin-top 2.1vh
 
       div.item-container {
         user-select none
