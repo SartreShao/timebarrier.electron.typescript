@@ -76,10 +76,22 @@
         </h2>
       </section>
 
-      <!-- 关联目标 -->
+      <!-- 截止日期 -->
       <section class="section section-4">
         <h1 class="h-1">Step 4：计划截止日期——最晚什么时候完成计划？</h1>
-        <div class="button">请选择一个日期（选填）</div>
+        <div class="button">
+          <span v-if="input_planDeadLine.length === 0">
+            请选择一个日期（选填）
+          </span>
+
+          <span v-else>{{ planDeadLineFormat }}</span>
+          <el-date-picker
+            class="date-picker"
+            v-model="input_planDeadLine"
+            type="date"
+          >
+          </el-date-picker>
+        </div>
         <h2 class="h-2">例如：2020 年 1 月 1 日</h2>
       </section>
     </main>
@@ -94,11 +106,12 @@ import {
   ref,
   Ref,
   reactive,
-  inject
+  inject,
+  computed
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
-import { Router } from "@/lib/vue-utils";
+import { Router, UI } from "@/lib/vue-utils";
 import CreateButton from "./components/CreateButton.vue";
 import { InputPlanType } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
@@ -196,11 +209,19 @@ export default defineComponent({
       );
     };
 
+    const input_planDeadLine = ref("");
+
+    const planDeadLineFormat = computed(() => {
+      return UI.dateToYearMonthDay(new Date(input_planDeadLine.value));
+    });
+
     return {
       input_creatingPlan,
       click_relateAbility,
       click_relateTarget,
-      click_createPlanButton
+      click_createPlanButton,
+      input_planDeadLine,
+      planDeadLineFormat
     };
   }
 });
@@ -275,6 +296,7 @@ export default defineComponent({
   font-size 1.87vh
   padding-left 5.47vw
   box-sizing border-box
+  position relative
 
   span {
     width 100%
@@ -282,6 +304,17 @@ export default defineComponent({
     text-overflow ellipsis
     overflow hidden
   }
+}
+
+.date-picker {
+  position absolute
+  width 100%
+  height 100%
+  top 0
+  bottom 0
+  right 0
+  left 0
+  opacity 0
 }
 
 .input {
