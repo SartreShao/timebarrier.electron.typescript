@@ -34,7 +34,7 @@
         </svg>
       </div>
 
-      <div class="container container-2">
+      <div class="container container-2" @click="click_dailyPlanButton">
         <h1 class="h-1">创建一个「每日计划」</h1>
         <h2 class="h-2">例如：阅读一小时、撰写我的小说《xxx》、慢跑半小时</h2>
         <svg
@@ -134,8 +134,23 @@ export default defineComponent({
       Router.push(context.root.$router, "/create-temporary-plan");
     };
 
+    // 点击事件：创建每日计划
+    const click_dailyPlanButton = () => {
+      input_creatingPlan.id = undefined;
+      input_creatingPlan.name = "";
+      input_creatingPlan.abilityList = [];
+      input_creatingPlan.targetList = [];
+      input_creatingPlan.type = "daily";
+      input_creatingPlan.target = "";
+      input_creatingPlan.isActived = true;
+      input_creatingPlan.isFinished = false;
+      input_creatingPlan.deadline = "";
+      Router.push(context.root.$router, "/create-daily-plan");
+    };
+
     return {
-      click_temporaryPlanButton
+      click_temporaryPlanButton,
+      click_dailyPlanButton
     };
   }
 });
