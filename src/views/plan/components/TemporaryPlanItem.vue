@@ -1,6 +1,5 @@
 <template>
   <div
-    v-splash-when-click
     class="temporary-plan-container"
     :id="plan.id"
     @click="$emit('edit-plan')"
@@ -12,6 +11,10 @@
       {{ plan.attributes.name }}
     </h3>
     <div class="finished-button" @click.stop="$emit('finish-plan')"></div>
+
+    <div class="deadline">
+      剩余 10 天
+    </div>
   </div>
 </template>
 
@@ -21,7 +24,8 @@ import AV from "leancloud-storage";
 export default defineComponent({
   props: {
     plan: AV.Object
-  }
+  },
+  setup(props, context) {}
 });
 </script>
 
@@ -36,6 +40,22 @@ export default defineComponent({
   align-items center
   position relative
   margin-bottom 0.52vh
+}
+
+.deadline {
+  position absolute
+  right -0.67vw
+  top -0.37vh
+  display flex
+  justify-content center
+  align-items center
+  background #F9385E
+  height 2.17vh
+  width 13.6vw
+  font-size 1.27vh
+  color white
+  font-weight bold
+  line-height 1.87vh
 }
 
 .h-2 {
