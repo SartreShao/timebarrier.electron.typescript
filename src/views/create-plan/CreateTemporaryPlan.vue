@@ -3,8 +3,9 @@
     <!-- 顶边栏 -->
     <top-bar></top-bar>
 
+    <!-- 主要页面 -->
     <main style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;">
-      <!-- 主要页面 -->
+      <!-- 顶部提示语 -->
       <top-tips
         title="创建一个「临时计划」"
         sub-title="计划赶不上变化，临时计划帮我们应对变化"
