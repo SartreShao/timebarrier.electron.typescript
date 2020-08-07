@@ -486,7 +486,8 @@ export default defineComponent({
       type: "temporary",
       target: "",
       isActived: false,
-      isFinished: false
+      isFinished: false,
+      deadline: ""
     });
 
     // 用户输入：需要关联到计划的能力列表

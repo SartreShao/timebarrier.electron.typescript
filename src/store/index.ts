@@ -316,7 +316,8 @@ function useProvider() {
       type: "temporary",
       target: "",
       isActived: false,
-      isFinished: false
+      isFinished: false,
+      deadline: ""
     })
   );
 }

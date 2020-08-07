@@ -25,6 +25,7 @@ export type InputPlanType = {
   isActived: boolean;
   isFinished: boolean;
   target: string;
+  deadline: string;
 };
 
 // 输入目标的类别

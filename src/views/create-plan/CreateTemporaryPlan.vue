@@ -80,14 +80,14 @@
       <section class="section section-4">
         <h1 class="h-1">Step 4：计划截止日期——最晚什么时候完成计划？</h1>
         <div class="button">
-          <span v-if="input_planDeadLine.length === 0">
+          <span v-if="input_creatingPlan.deadline.length === 0">
             请选择一个日期（选填）
           </span>
 
           <span v-else>{{ planDeadLineFormat }}</span>
           <el-date-picker
             class="date-picker"
-            v-model="input_planDeadLine"
+            v-model="input_creatingPlan.deadline"
             type="date"
           >
           </el-date-picker>
@@ -132,7 +132,8 @@ export default defineComponent({
         type: "temporary",
         target: "",
         isActived: false,
-        isFinished: false
+        isFinished: false,
+        deadline: ""
       })
     );
 
@@ -209,10 +210,8 @@ export default defineComponent({
       );
     };
 
-    const input_planDeadLine = ref("");
-
     const planDeadLineFormat = computed(() => {
-      return UI.dateToYearMonthDay(new Date(input_planDeadLine.value));
+      return UI.dateToYearMonthDay(new Date(input_creatingPlan.deadline));
     });
 
     return {
@@ -220,7 +219,6 @@ export default defineComponent({
       click_relateAbility,
       click_relateTarget,
       click_createPlanButton,
-      input_planDeadLine,
       planDeadLineFormat
     };
   }

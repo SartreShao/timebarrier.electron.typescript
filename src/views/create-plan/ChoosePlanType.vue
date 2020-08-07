@@ -115,7 +115,8 @@ export default defineComponent({
         type: "temporary",
         target: "",
         isActived: false,
-        isFinished: false
+        isFinished: false,
+        deadline: ""
       })
     );
 
@@ -129,6 +130,7 @@ export default defineComponent({
       input_creatingPlan.target = "0";
       input_creatingPlan.isActived = true;
       input_creatingPlan.isFinished = false;
+      input_creatingPlan.deadline = "";
       Router.push(context.root.$router, "/create-temporary-plan");
     };
 
