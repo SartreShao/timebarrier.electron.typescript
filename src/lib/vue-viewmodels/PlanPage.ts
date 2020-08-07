@@ -192,7 +192,9 @@ export default {
         input_creatingPlan.isFinished,
         input_creatingPlan.abilityList.map(ability => ability.id),
         input_creatingPlan.targetList.map(target => target.id),
-        new Date(input_creatingPlan.deadline)
+        new Date(
+          new Date(input_creatingPlan.deadline).getTime() + 3600 * 1000 * 24 - 1
+        )
       );
 
       temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
