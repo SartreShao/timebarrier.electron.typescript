@@ -12,14 +12,18 @@
     </h3>
     <div class="finished-button" @click.stop="$emit('finish-plan')"></div>
 
-    <div class="deadline" v-if="plan.attributes.deadline !== undefined">
+    <div
+      class="deadline"
+      v-if="plan.attributes.deadline !== undefined"
+      :style="{ background: color }"
+    >
       {{ tip }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, Ref } from "@vue/composition-api";
+import { defineComponent, computed, Ref, ref } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { UI } from "@/lib/vue-utils";
 export default defineComponent({
@@ -27,6 +31,7 @@ export default defineComponent({
     plan: AV.Object
   },
   setup(props, context) {
+    // 截止日期的文字
     const tip: Ref<string> = computed(() => {
       if (props.plan === undefined) {
         return "";
@@ -46,8 +51,29 @@ export default defineComponent({
       }
     });
 
+    // 截止日期的颜色
+    const color: Ref<string> = computed(() => {
+      if (props.plan === undefined) {
+        return "";
+      }
+      const deadline: Date = props.plan.attributes.deadline;
+      const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
+      if (deadline === undefined) {
+        return "";
+      }
+      const result = (deadline.getTime() - todayStartTime) / (1000 * 3600 * 24);
+      if (result > 1) {
+        return `#F9385E`;
+      } else if (result >= 0) {
+        return `#FF9300`;
+      } else {
+        return `#99A8B8`;
+      }
+    });
+
     return {
-      tip
+      tip,
+      color
     };
   }
 });
