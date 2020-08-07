@@ -234,7 +234,7 @@ export default defineComponent({
 }
 
 .section-1 {
-  background #F9385E
+  background #D94F70
 }
 
 .section-2 {
@@ -242,7 +242,7 @@ export default defineComponent({
 }
 
 .section-3 {
-  background #552FB9
+  background #5F4B8B
 }
 
 .section-4 {
