@@ -137,7 +137,8 @@ export default defineComponent({
         type: "temporary",
         target: "",
         isActived: false,
-        isFinished: false
+        isFinished: false,
+        deadline: ""
       })
     );
 
@@ -207,7 +208,7 @@ export default defineComponent({
 }
 
 .section-1 {
-  background #552FB9
+  background #5F4B8B
 }
 
 .section-2 {
