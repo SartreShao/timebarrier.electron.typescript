@@ -367,7 +367,7 @@ export default {
   },
 
   /**
-   * 打开创建「临时计划」页
+   * 打开创建「临时计划」页，并初始化数据
    */
   openCreateTemporaryPlanPage: (
     vue: ElementVue,
@@ -388,7 +388,7 @@ export default {
     Router.push(vue.$router, "/create-temporary-plan");
   },
   /**
-   * 打开创建「每日计划」页
+   * 打开创建「每日计划」页，并初始化数据
    */
   openCreateDailyPlanPage: (
     vue: ElementVue,
@@ -407,6 +407,36 @@ export default {
 
     // 跳转页面
     Router.push(vue.$router, "/create-daily-plan");
+  },
+  /**
+   * 打开编辑计划页面
+   */
+  openEditPlanPage: async (
+    vue: ElementVue,
+    input_editingPlan: InputPlanType,
+    plan: AV.Object
+  ) => {
+    // 初始化用户输入数据
+    input_editingPlan.id = plan.id;
+    input_editingPlan.name = plan.attributes.name;
+    input_editingPlan.type = plan.attributes.type;
+    input_editingPlan.target = plan.attributes.target;
+    input_editingPlan.isActived = plan.attributes.isActived;
+    input_editingPlan.isFinished = plan.attributes.isFinished;
+    input_editingPlan.deadline = plan.attributes.deadline;
+    input_editingPlan.abilityList = plan.attributes.abilityListOfPlan.map(
+      (ability: AV.Object) => {
+        return { id: ability.id, name: ability.attributes.name };
+      }
+    );
+    input_editingPlan.targetList = plan.attributes.targetListOfPlan.map(
+      (target: AV.Object) => {
+        return { id: target.id, name: target.attributes.name };
+      }
+    );
+
+    // 跳转页面
+    Router.push(vue.$router, "/edit-plan");
   },
   /**
    * 编辑计划
