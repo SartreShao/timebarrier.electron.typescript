@@ -179,6 +179,11 @@ const routes = [
     path: "/plan-relate-target",
     name: "plan-relate-target",
     component: () => import("../views/create-plan/PlanRelateTarget.vue")
+  },
+  {
+    path: "/edit-plan",
+    name: "edit-plan",
+    component: () => import("../views/edit-plan/EditPlan.vue")
   }
 ];
 

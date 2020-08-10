@@ -36,7 +36,7 @@
               v-for="(item, index) in temporaryPlanList"
               :key="item.id"
               :plan="item"
-              @edit-plan="click_editPlanButton(item, index)"
+              @edit-plan="click_planItem(item, index)"
               @finish-plan="click_completePlanButton(item)"
             ></temporary-plan-item>
           </transition-group>
@@ -55,7 +55,7 @@
             <daily-plan-item
               v-for="(item, index) in dailyPlanList"
               v-bind:key="item.id"
-              @edit-plan="click_editPlanButton(item, index)"
+              @edit-plan="click_planItem(item, index)"
               @start-tomato="click_startTomatoButton(item)"
               :plan="item"
             ></daily-plan-item>
@@ -118,7 +118,7 @@
           class="item-container"
           v-for="(item, index) in completedPlanList"
           v-bind:key="item.id"
-          @click="click_editPlanButton(item, index)"
+          @click="click_planItem(item, index)"
           :title="item.attributes.name"
         >
           <h2>
@@ -387,6 +387,7 @@
       :isShow="isPlanBottomMenuShow"
       @click-cancel="isPlanBottomMenuShow = false"
       @click-background="isPlanBottomMenuShow = false"
+      @click-edit="click_editPlan"
     ></plan-bottom-menu>
   </div>
 </template>
@@ -616,10 +617,18 @@ export default defineComponent({
       isCompletedPlanDrawerDisplayed.value = true;
     };
 
+    // 点击事件：点击「计划」条目：弹出菜单
+    const click_planItem = (plan: AV.Object, index: number) => {
+      PlanPage.openPlanBottomMenu(
+        isPlanBottomMenuShow,
+        input_editingPlan,
+        plan
+      );
+    };
+
     // 点击事件：点击「编辑计划」按钮
-    const click_editPlanButton = (plan: AV.Object, index: number) => {
-      isPlanBottomMenuShow.value = true;
-      // PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
+    const click_editPlan = (plan: AV.Object) => {
+      PlanPage.openEditPlanPage(context.root);
     };
 
     // 点击事件：点击「保存计划」按钮
@@ -747,7 +756,8 @@ export default defineComponent({
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
-      click_editPlanButton,
+      click_planItem,
+      click_editPlan,
       click_savePlanButton,
       click_deletePlanButton,
       click_relatedAbilityButton,

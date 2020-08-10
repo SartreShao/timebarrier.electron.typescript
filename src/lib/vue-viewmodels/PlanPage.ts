@@ -411,11 +411,21 @@ export default {
   /**
    * 打开编辑计划页面
    */
-  openEditPlanPage: async (
-    vue: ElementVue,
+  openEditPlanPage: (vue: ElementVue) => {
+    // 跳转页面
+    Router.push(vue.$router, "/edit-plan");
+  },
+  /**
+   * 打开底边菜单，并初始化 input_editingPlan 的数据
+   */
+  openPlanBottomMenu: (
+    isPlanBottomMenuShow: Ref<boolean>,
     input_editingPlan: InputPlanType,
     plan: AV.Object
   ) => {
+    // 打开底边菜单
+    isPlanBottomMenuShow.value = true;
+
     // 初始化用户输入数据
     input_editingPlan.id = plan.id;
     input_editingPlan.name = plan.attributes.name;
@@ -434,9 +444,6 @@ export default {
         return { id: target.id, name: target.attributes.name };
       }
     );
-
-    // 跳转页面
-    Router.push(vue.$router, "/edit-plan");
   },
   /**
    * 编辑计划
