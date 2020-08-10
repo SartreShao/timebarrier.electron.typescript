@@ -36,7 +36,7 @@ export default {
     thisYearTomatoList: Ref<AV.Object[]>
   ) => {
     // 请求计划列表
-    await PlanPage.init(
+    await PlanPage.fetchPlanList(
       vue,
       temporaryPlanList,
       dailyPlanList,

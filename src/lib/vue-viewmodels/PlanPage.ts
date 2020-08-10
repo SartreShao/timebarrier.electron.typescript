@@ -13,13 +13,13 @@ import Api from "@/lib/api";
  */
 export default {
   /**
-   * 初始化计划列表
+   * 请求计划列表
    * @remark 时间壁垒专用函数
    * @param temporaryPlanList 临时计划列表，如果不需要刷新，请传入 null
    * @param dailyPlanList 每日计划列表，如果不需要刷新，请传入 null
    * @param completedPlanList 已完成的计划列表，如果不需要刷新，请传入 null
    */
-  init: async (
+  fetchPlanList: async (
     vue: ElementVue,
     temporaryPlanList: Ref<AV.Object[]> | null,
     dailyPlanList: Ref<AV.Object[]> | null,
