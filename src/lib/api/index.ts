@@ -381,11 +381,13 @@ export default {
     isActived: boolean,
     isFinished: boolean,
     abilityIdList: string[],
-    targetIdList: string[]
+    targetIdList: string[],
+    deadline?: Date
   ) =>
     new Promise(async (resolve, reject) => {
       try {
         const plan = await new AV.Query(Plan).get(planId);
+
         await plan
           .set("name", name)
           .set("target", target)
@@ -393,6 +395,10 @@ export default {
           .set("isActived", isActived)
           .set("isFinished", isFinished)
           .save();
+
+        if (deadline !== undefined) {
+          plan.set("deadline", deadline);
+        }
 
         // 删除所有的相关的中间表：AbilityPlan
         const abilityPlanList = await new AV.Query(AbilityPlan)

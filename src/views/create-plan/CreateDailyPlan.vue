@@ -179,12 +179,16 @@ export default defineComponent({
 
     // 点击关联能力
     const click_relateAbility = () => {
-      Router.push(context.root.$router, "/plan-relate-ability");
+      Router.pushWithParams(context.root.$router, "plan-relate-ability", {
+        isCreatePlan: true
+      });
     };
 
     // 点击关联目标
     const click_relateTarget = () => {
-      Router.push(context.root.$router, "plan-relate-target");
+      Router.pushWithParams(context.root.$router, "plan-relate-target", {
+        isCreatePlan: true
+      });
     };
 
     // 点击事件：创建计划

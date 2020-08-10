@@ -635,16 +635,7 @@ export default defineComponent({
     };
 
     // 点击事件：点击「保存计划」按钮
-    const click_savePlanButton = () => {
-      PlanPage.savePlan(
-        context.root,
-        isPlanEditorDrawerDisplayed,
-        input_editingPlan,
-        temporaryPlanList,
-        dailyPlanList,
-        completedPlanList
-      );
-    };
+    const click_savePlanButton = () => {};
 
     // 点击事件：点击「删除计划」按钮
     const click_deletePlanButton = () => {

@@ -217,7 +217,7 @@ export default defineComponent({
 
     // 点击事件：创建计划
     const click_createPlanButton = () => {
-      PlanPage.createPlan(
+      PlanPage.savePlan(
         context.root,
         input_editingPlan,
         temporaryPlanList,

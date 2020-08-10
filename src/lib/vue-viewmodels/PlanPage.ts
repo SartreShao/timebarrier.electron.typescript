@@ -494,11 +494,14 @@ export default {
    */
   savePlan: async (
     vue: ElementVue,
-    isPlanEditorDrawerDisplayed: Ref<boolean>,
     input_editingPlan: InputPlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    abilityList: Ref<AV.Object[]>,
+    levelRuleList: Ref<AV.Object[]>,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -509,7 +512,7 @@ export default {
       return;
     }
 
-    // 如果没有定义每日目标，则不允许保存为「每日计划」
+    // 输入检测：如果没有定义每日目标，则不允许保存为「每日计划」
     if (input_editingPlan.type === "daily") {
       if (input_editingPlan.target === undefined) {
         UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
@@ -521,6 +524,12 @@ export default {
         input_editingPlan.target = "0";
         return;
       }
+    }
+
+    // 输入检测：是否输入计划名称
+    if (input_editingPlan.name.length === 0) {
+      UI.showNotification(vue.$notify, "请输入计划名称", "", "warning");
+      return;
     }
 
     if (input_editingPlan.id !== undefined) {
@@ -540,18 +549,54 @@ export default {
           input_editingPlan.isActived,
           input_editingPlan.isFinished,
           input_editingPlan.abilityList.map(ability => ability.id),
-          input_editingPlan.targetList.map(target => target.id)
+          input_editingPlan.targetList.map(target => target.id),
+          new Date(
+            new Date(input_editingPlan.deadline).getTime() +
+              3600 * 1000 * 24 -
+              1
+          )
         );
 
-        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
-        completedPlanList.value = await Api.fetchPlanList(user, "completed");
+        // 刷新计划列表
+        if (input_editingPlan.type === "daily") {
+          dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+        } else if (input_editingPlan.type === "temporary") {
+          temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+        }
+
+        // 尝试获取目标列表
+        unSubjectiveTargetList.value = await Api.fetchTargetList(
+          user,
+          "unsubjective"
+        );
+        // 尝试获取已完成的目标列表
+        completedTargetList.value = await Api.fetchTargetList(
+          user,
+          "completed"
+        );
+        // 尝试获取目标类别列表
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+        if (levelRuleList.value.length === 0) {
+          levelRuleList.value = await Api.fetchLevelRuleList();
+        }
+
+        // 尝试获取能力列表
+        abilityList.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true,
+          levelRuleList.value,
+          true,
+          true
+        );
 
         // 保存成功
         UI.hideLoading(loadingInstance);
         UI.showNotification(vue.$notify, "计划保存成功", "", "success");
-        // 关闭窗口
-        isPlanEditorDrawerDisplayed.value = false;
+
+        // 返回计划页面
+        Router.replace(vue.$router, "/plan");
       } catch (error) {
         UI.hideLoading(loadingInstance);
         UI.showNotification(
