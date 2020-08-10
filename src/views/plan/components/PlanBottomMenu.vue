@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="$emit('click-background')"
     class="background"
     :style="{
       background: isShow ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
@@ -11,7 +12,7 @@
       <div class="item">编辑计划</div>
       <div class="item">转变为「未激活」状态</div>
       <div class="item item-4">删除计划</div>
-      <div class="item" @click="$emit('click')">取消</div>
+      <div class="item" @click="$emit('click-cancel')">取消</div>
     </section>
   </div>
 </template>
@@ -36,7 +37,7 @@ export default defineComponent({
   left 0
   right 0
   background rgba(0, 0, 0, 0.5)
-  transition all 0.2s ease
+  transition all 0s ease
 }
 
 .section {
@@ -50,7 +51,7 @@ export default defineComponent({
   background #F6F7F8
   display flex
   flex-direction column
-  transition all 0.5s ease
+  transition all 0.4s ease
 }
 
 .item {

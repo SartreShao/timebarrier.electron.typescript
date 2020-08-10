@@ -94,7 +94,7 @@
     </main>
 
     <!-- 新手提示 -->
-    <main v-else @click="click_fuck">
+    <main v-else>
       <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
@@ -385,7 +385,8 @@
 
     <plan-bottom-menu
       :isShow="isPlanBottomMenuShow"
-      @click="isPlanBottomMenuShow = !isPlanBottomMenuShow"
+      @click-cancel="isPlanBottomMenuShow = false"
+      @click-background="isPlanBottomMenuShow = false"
     ></plan-bottom-menu>
   </div>
 </template>
@@ -543,12 +544,8 @@ export default defineComponent({
       ref([])
     );
 
-    const isPlanBottomMenuShow = ref(true);
-
-    const click_fuck = () => {
-      console.log("shit");
-      isPlanBottomMenuShow.value = !isPlanBottomMenuShow.value;
-    };
+    // 是否显示底部的菜单
+    const isPlanBottomMenuShow = ref(false);
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
@@ -625,7 +622,8 @@ export default defineComponent({
 
     // 点击事件：点击「编辑计划」按钮
     const click_editPlanButton = (plan: AV.Object, index: number) => {
-      PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
+      isPlanBottomMenuShow.value = true;
+      // PlanPage.editPlan(isPlanEditorDrawerDisplayed, input_editingPlan, plan);
     };
 
     // 点击事件：点击「保存计划」按钮
@@ -768,7 +766,6 @@ export default defineComponent({
       dragend_dailyPlanItem,
       draggableOptions,
       isPlanBottomMenuShow,
-      click_fuck,
       assets: {
         icon_finished,
         icon_logo,
