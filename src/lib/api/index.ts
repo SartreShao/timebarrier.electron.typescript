@@ -336,8 +336,7 @@ export default {
   completePlan: (plan: AV.Object) =>
     new Promise(async (resolve, reject) => {
       try {
-        plan.set("isFinished", true);
-        await plan.save();
+        await plan.set("isFinished", true).save();
         Log.success("completePlan", plan);
         resolve(plan);
       } catch (error) {
@@ -351,10 +350,9 @@ export default {
    * @remark 时间壁垒专用函数
    * @param planId 需要被取消标记为「完成」的 Plan 的 objectId
    */
-  cancelCompletePlan: (planId: string) =>
+  cancelCompletePlan: (plan: AV.Object) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query(Plan).get(planId);
         await plan.set("isFinished", false).save();
         Log.success("cancelCompletePlan", plan);
         resolve(plan);
