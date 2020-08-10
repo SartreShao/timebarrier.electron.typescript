@@ -34,7 +34,7 @@
         <div class="input-container">
           <input
             class="input"
-            type="text"
+            type="number"
             placeholder="请输入一个番茄数（必填）"
             v-model="input_creatingPlan.target"
           />

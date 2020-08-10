@@ -158,7 +158,7 @@ export default {
 
     // 如果没有定义每日目标，则不允许保存为「每日计划」
     if (input_creatingPlan.type === "daily") {
-      if (input_creatingPlan.target === undefined) {
+      if (input_creatingPlan.target === "") {
         UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
         return;
       }
