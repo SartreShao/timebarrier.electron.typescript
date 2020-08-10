@@ -333,10 +333,9 @@ export default {
    * @remark 时间壁垒专用函数
    * @param planId 需要被标记为「完成」的 Plan 的 objectId
    */
-  completePlan: (planId: string) =>
+  completePlan: (plan: AV.Object) =>
     new Promise(async (resolve, reject) => {
       try {
-        const plan = await new AV.Query(Plan).get(planId);
         plan.set("isFinished", true);
         await plan.save();
         Log.success("completePlan", plan);

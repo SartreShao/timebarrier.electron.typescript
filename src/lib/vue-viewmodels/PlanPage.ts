@@ -256,8 +256,7 @@ export default {
    */
   completePlan: async (
     vue: ElementVue,
-    planId: string,
-    type: PlanType,
+    plan: AV.Object,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
     completedPlanList: Ref<AV.Object[]>
@@ -274,12 +273,12 @@ export default {
     const loadingInstance = UI.showLoading(vue.$loading, "正在完成计划");
     try {
       // 尝试完成 Plan
-      await Api.completePlan(planId);
+      await Api.completePlan(plan);
       // 刷新计划列表
-      if (type === "temporary") {
+      if (plan.attributes.type === "temporary") {
         // 更新临时计划
         temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      } else if (type === "daily") {
+      } else if (plan.attributes.type === "daily") {
         // 更新每日计划列表
         dailyPlanList.value = await Api.fetchPlanList(user, "daily");
       }

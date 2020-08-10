@@ -590,8 +590,7 @@ export default defineComponent({
       if (plan.id !== undefined) {
         PlanPage.completePlan(
           context.root,
-          plan.id,
-          plan.attributes.type,
+          plan,
           temporaryPlanList,
           dailyPlanList,
           completedPlanList
