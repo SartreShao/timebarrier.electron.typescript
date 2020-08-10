@@ -382,6 +382,8 @@
         </div>
       </div>
     </el-drawer>
+
+    <plan-bottom-menu></plan-bottom-menu>
   </div>
 </template>
 <script lang="ts">
@@ -415,6 +417,7 @@ import PlanNoviceTutorial from "./components/PlanNoviceTutorial.vue";
 import CreatePlanButton from "./components/CreatePlanButton.vue";
 import TemporaryPlanItem from "./components/TemporaryPlanItem.vue";
 import DailyPlanItem from "./components/DailyPlanItem.vue";
+import PlanBottomMenu from "./components/PlanBottomMenu.vue";
 
 export default defineComponent({
   components: {
@@ -424,7 +427,8 @@ export default defineComponent({
     PlanNoviceTutorial,
     CreatePlanButton,
     TemporaryPlanItem,
-    DailyPlanItem
+    DailyPlanItem,
+    PlanBottomMenu
   },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
