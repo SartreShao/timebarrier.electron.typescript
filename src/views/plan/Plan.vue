@@ -446,17 +446,20 @@ export default defineComponent({
     const input_targetName: Ref<string> = ref("");
 
     // 用户输入：当前编辑的「计划」
-    const input_editingPlan: InputPlanType = reactive({
-      id: undefined,
-      name: "",
-      abilityList: [],
-      targetList: [],
-      type: "temporary",
-      target: "",
-      isActived: false,
-      isFinished: false,
-      deadline: ""
-    });
+    const input_editingPlan: InputPlanType = inject(
+      Store.input_editingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false,
+        deadline: ""
+      })
+    );
 
     // 用户输入：需要关联到计划的能力列表
     const input_abilityListOfPlan: Ref<AV.Object[]> = ref([]);

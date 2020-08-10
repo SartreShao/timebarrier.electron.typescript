@@ -95,6 +95,9 @@ import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
+  props: {
+    isCreatePlan: Boolean
+  },
   setup(props, context) {
     // 用户输入：创建的「目标」的名称
     const input_targetName: Ref<string> = ref("");
@@ -142,19 +145,49 @@ export default defineComponent({
       })
     );
 
+    // 用户输入：当前编辑的「计划」
+    const input_editingPlan: InputPlanType = inject(
+      Store.input_editingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false,
+        deadline: ""
+      })
+    );
+
     // 在目标输入框回车：创建目标
     const keyUpEnter_targetInputBox = () => {
-      PlanPage.createTarget(
-        context.root,
-        input_targetName,
-        input_targetListOfPlan,
-        null,
-        input_creatingPlan,
-        unSubjectiveTargetList,
-        completedTargetList,
-        targetSubjectList,
-        colormap
-      );
+      if (props.isCreatePlan === true) {
+        PlanPage.createTarget(
+          context.root,
+          input_targetName,
+          input_targetListOfPlan,
+          null,
+          input_creatingPlan,
+          unSubjectiveTargetList,
+          completedTargetList,
+          targetSubjectList,
+          colormap
+        );
+      } else {
+        PlanPage.createTarget(
+          context.root,
+          input_targetName,
+          input_targetListOfPlan,
+          input_editingPlan,
+          null,
+          unSubjectiveTargetList,
+          completedTargetList,
+          targetSubjectList,
+          colormap
+        );
+      }
     };
 
     // 选择目标
@@ -164,25 +197,47 @@ export default defineComponent({
 
     // 保存已关联的目标列表
     const click_saveRelatedTarget = () => {
-      input_creatingPlan.targetList = [];
-      input_targetListOfPlan.value.forEach(target => {
-        if (target.attributes.selected === true) {
-          input_creatingPlan.targetList.push({
-            id: target.id as string,
-            name: target.attributes.name
-          });
-        }
-      });
-      Router.back(context.root.$router);
+      if (props.isCreatePlan) {
+        input_creatingPlan.targetList = [];
+        input_targetListOfPlan.value.forEach(target => {
+          if (target.attributes.selected === true) {
+            input_creatingPlan.targetList.push({
+              id: target.id as string,
+              name: target.attributes.name
+            });
+          }
+        });
+        Router.back(context.root.$router);
+      } else {
+        input_editingPlan.targetList = [];
+        input_targetListOfPlan.value.forEach(target => {
+          if (target.attributes.selected === true) {
+            input_editingPlan.targetList.push({
+              id: target.id as string,
+              name: target.attributes.name
+            });
+          }
+        });
+        Router.back(context.root.$router);
+      }
     };
 
     onMounted(() => {
-      PlanPage.initRelatedTarget(
-        context.root,
-        input_targetListOfPlan,
-        null,
-        input_creatingPlan
-      );
+      if (props.isCreatePlan) {
+        PlanPage.initRelatedTarget(
+          context.root,
+          input_targetListOfPlan,
+          null,
+          input_creatingPlan
+        );
+      } else {
+        PlanPage.initRelatedTarget(
+          context.root,
+          input_targetListOfPlan,
+          input_editingPlan,
+          null
+        );
+      }
     });
 
     return {

@@ -107,6 +107,8 @@ const totalTomatoNumber = Symbol();
 const isLoginSuccess = Symbol();
 // 临时变量：正在创建的计划
 const input_creatingPlan = Symbol();
+// 临时变量：正在编辑的计划
+const input_editingPlan = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -320,6 +322,20 @@ function useProvider() {
       deadline: ""
     })
   );
+  provide(
+    input_editingPlan,
+    reactive<InputPlanType>({
+      id: undefined,
+      name: "",
+      abilityList: [],
+      targetList: [],
+      type: "temporary",
+      target: "",
+      isActived: false,
+      isFinished: false,
+      deadline: ""
+    })
+  );
 }
 
 export default {
@@ -372,5 +388,6 @@ export default {
   totalTime,
   totalTomatoNumber,
   isLoginSuccess,
-  input_creatingPlan
+  input_creatingPlan,
+  input_editingPlan
 };

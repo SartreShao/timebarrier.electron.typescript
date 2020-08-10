@@ -93,6 +93,9 @@ import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
+  props: {
+    isCreatePlan: Boolean
+  },
   setup(props, context) {
     // 用户输入：创建的「能力」的名称
     const input_abilityName: Ref<string> = ref("");
@@ -130,18 +133,47 @@ export default defineComponent({
       })
     );
 
+    // 用户输入：当前编辑的「计划」
+    const input_editingPlan: InputPlanType = inject(
+      Store.input_editingPlan,
+      reactive({
+        id: undefined,
+        name: "",
+        abilityList: [],
+        targetList: [],
+        type: "temporary",
+        target: "",
+        isActived: false,
+        isFinished: false,
+        deadline: ""
+      })
+    );
+
     // 在能力输入框回车：创建能力
     const keyUpEnter_abilityInputBox = () => {
-      PlanPage.createAbility(
-        context.root,
-        input_abilityName,
-        input_abilityListOfPlan,
-        null,
-        input_creatingPlan,
-        abilityList,
-        levelRuleList,
-        colormap
-      );
+      if (props.isCreatePlan === true) {
+        PlanPage.createAbility(
+          context.root,
+          input_abilityName,
+          input_abilityListOfPlan,
+          null,
+          input_creatingPlan,
+          abilityList,
+          levelRuleList,
+          colormap
+        );
+      } else {
+        PlanPage.createAbility(
+          context.root,
+          input_abilityName,
+          input_abilityListOfPlan,
+          input_editingPlan,
+          null,
+          abilityList,
+          levelRuleList,
+          colormap
+        );
+      }
     };
 
     // 选择能力
@@ -151,25 +183,47 @@ export default defineComponent({
 
     // 保存已关联的能力列表
     const click_saveRelatedAbility = () => {
-      input_creatingPlan.abilityList = [];
-      input_abilityListOfPlan.value.forEach(ability => {
-        if (ability.attributes.selected === true) {
-          input_creatingPlan.abilityList.push({
-            id: ability.id as string,
-            name: ability.attributes.name
-          });
-        }
-      });
-      Router.back(context.root.$router);
+      if (props.isCreatePlan) {
+        input_creatingPlan.abilityList = [];
+        input_abilityListOfPlan.value.forEach(ability => {
+          if (ability.attributes.selected === true) {
+            input_creatingPlan.abilityList.push({
+              id: ability.id as string,
+              name: ability.attributes.name
+            });
+          }
+        });
+        Router.back(context.root.$router);
+      } else {
+        input_editingPlan.abilityList = [];
+        input_abilityListOfPlan.value.forEach(ability => {
+          if (ability.attributes.selected === true) {
+            input_editingPlan.abilityList.push({
+              id: ability.id as string,
+              name: ability.attributes.name
+            });
+          }
+        });
+        Router.back(context.root.$router);
+      }
     };
 
     onMounted(() => {
-      PlanPage.initRelatedAbility(
-        context.root,
-        input_abilityListOfPlan,
-        null,
-        input_creatingPlan
-      );
+      if (props.isCreatePlan) {
+        PlanPage.initRelatedAbility(
+          context.root,
+          input_abilityListOfPlan,
+          null,
+          input_creatingPlan
+        );
+      } else {
+        PlanPage.initRelatedAbility(
+          context.root,
+          input_abilityListOfPlan,
+          input_editingPlan,
+          null
+        );
+      }
     });
 
     return {

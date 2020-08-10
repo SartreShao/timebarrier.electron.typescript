@@ -430,10 +430,14 @@ export default {
     input_editingPlan.id = plan.id;
     input_editingPlan.name = plan.attributes.name;
     input_editingPlan.type = plan.attributes.type;
-    input_editingPlan.target = plan.attributes.target;
+    input_editingPlan.target = plan.attributes.target
+      ? plan.attributes.target
+      : "";
     input_editingPlan.isActived = plan.attributes.isActived;
     input_editingPlan.isFinished = plan.attributes.isFinished;
-    input_editingPlan.deadline = plan.attributes.deadline;
+    input_editingPlan.deadline = plan.attributes.deadline
+      ? plan.attributes.deadline
+      : "";
     input_editingPlan.abilityList = plan.attributes.abilityListOfPlan.map(
       (ability: AV.Object) => {
         return { id: ability.id, name: ability.attributes.name };
@@ -744,6 +748,13 @@ export default {
       // 当前在编辑计划
       else if (input_editingPlan !== null && input_creatingPlan === null) {
         if (input_editingPlan.id === undefined) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingPlan.id === undefined",
+            "error"
+          );
           return;
         }
 
@@ -826,6 +837,13 @@ export default {
       // 当前在编辑计划
       else if (input_editingPlan !== null && input_creatingPlan === null) {
         if (input_editingPlan.id === undefined) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingPlan.id === undefined",
+            "error"
+          );
           return;
         }
 

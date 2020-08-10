@@ -41,7 +41,7 @@ const Router = {
   pushWithParams: async (
     router: VueRouter,
     name: string,
-    params: Dictionary<string>
+    params: Dictionary<string | boolean>
   ) => {
     try {
       if (router.currentRoute.name === name) {
