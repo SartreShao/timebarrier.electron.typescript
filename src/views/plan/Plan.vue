@@ -94,7 +94,7 @@
     </main>
 
     <!-- 新手提示 -->
-    <main v-else>
+    <main v-else @click="click_fuck">
       <plan-novice-tutorial style="margin-top:10.36vh"></plan-novice-tutorial>
     </main>
 
@@ -383,7 +383,10 @@
       </div>
     </el-drawer>
 
-    <plan-bottom-menu></plan-bottom-menu>
+    <plan-bottom-menu
+      :isShow="isPlanBottomMenuShow"
+      @click="isPlanBottomMenuShow = !isPlanBottomMenuShow"
+    ></plan-bottom-menu>
   </div>
 </template>
 <script lang="ts">
@@ -539,6 +542,13 @@ export default defineComponent({
       Store.completedTargetList,
       ref([])
     );
+
+    const isPlanBottomMenuShow = ref(true);
+
+    const click_fuck = () => {
+      console.log("shit");
+      isPlanBottomMenuShow.value = !isPlanBottomMenuShow.value;
+    };
 
     // 在计划输入框回车：创建计划
     const keyUpEnter_planInputBox = () => {
@@ -757,6 +767,8 @@ export default defineComponent({
       dragend_templayPlanItem,
       dragend_dailyPlanItem,
       draggableOptions,
+      isPlanBottomMenuShow,
+      click_fuck,
       assets: {
         icon_finished,
         icon_logo,

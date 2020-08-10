@@ -1,18 +1,28 @@
 <template>
-  <div class="background">
-    <section class="section">
+  <div
+    class="background"
+    :style="{
+      background: isShow ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
+      height: isShow ? '100%' : '0'
+    }"
+  >
+    <section class="section" :style="{ height: isShow ? '39.58vh' : `0` }">
       <div class="item item-1">查看子任务：22 / 30</div>
       <div class="item">编辑计划</div>
       <div class="item">转变为「未激活」状态</div>
       <div class="item item-4">删除计划</div>
-      <div class="item">取消</div>
+      <div class="item" @click="$emit('click')">取消</div>
     </section>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-export default defineComponent({});
+export default defineComponent({
+  props: {
+    isShow: Boolean
+  }
+});
 </script>
 
 <style lang="stylus" scoped>
@@ -26,6 +36,7 @@ export default defineComponent({});
   left 0
   right 0
   background rgba(0, 0, 0, 0.5)
+  transition all 0.2s ease
 }
 
 .section {
@@ -39,6 +50,7 @@ export default defineComponent({});
   background #F6F7F8
   display flex
   flex-direction column
+  transition all 0.5s ease
 }
 
 .item {
