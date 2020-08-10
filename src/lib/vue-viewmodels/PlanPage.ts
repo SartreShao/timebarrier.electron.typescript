@@ -75,12 +75,10 @@ export default {
    * @param temporaryPlanList 临时计划的列表，用于创建 Plan 后更新列表数据
    * @param dailyPlanList 每日计划的列表，用于创建 Plan 后更新列表数据
    */
-  createPlanQuickly: async (
+  quicklyCreateTemporaryPlan: async (
     vue: ElementVue,
     name: Ref<string>,
-    type: PlanType,
-    temporaryPlanList: Ref<AV.Object[]>,
-    dailyPlanList: Ref<AV.Object[]>
+    temporaryPlanList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -100,17 +98,12 @@ export default {
 
     try {
       // 创建计划
-      await Api.createPlan(name.value, type, user);
+      await Api.createPlan(name.value, "temporary", user);
 
-      // 刷新计划列表
-      if (type === "temporary") {
-        // 更新临时计划
-        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      } else if (type === "daily") {
-        // 更新每日计划列表
-        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
-      }
+      // 更新临时计划
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
 
+      // 清空输入框
       name.value = "";
 
       UI.hideLoading(loadingInstance);

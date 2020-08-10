@@ -279,7 +279,6 @@ export default {
         const plan = new Plan()
           .set("name", name)
           .set("type", type)
-          .set("isFinished", false)
           .set("user", user)
           .set("order", 0);
 
