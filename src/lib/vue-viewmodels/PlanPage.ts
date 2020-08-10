@@ -67,7 +67,7 @@ export default {
     }
   },
   /**
-   * 创建临时计划
+   * 快速创建临时计划
    *
    * @param vue 传入绑定 Element 后（通过 Vue.use()）的 setup(props, context) 中的 context.root 即可
    * @param name 计划名称
@@ -133,7 +133,6 @@ export default {
     input_creatingPlan: InputPlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>,
     abilityList: Ref<AV.Object[]>,
     levelRuleList: Ref<AV.Object[]>,
     unSubjectiveTargetList: Ref<AV.Object[]>,
@@ -149,7 +148,7 @@ export default {
       return;
     }
 
-    // 如果没有定义每日目标，则不允许保存为「每日计划」
+    // 输入检测：如果没有定义每日目标，则不允许保存为「每日计划」
     if (input_creatingPlan.type === "daily") {
       if (input_creatingPlan.target === "") {
         UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
@@ -163,7 +162,7 @@ export default {
       }
     }
 
-    // 输入检测
+    // 输入检测：是否输入计划名称
     if (input_creatingPlan.name.length === 0) {
       UI.showNotification(vue.$notify, "请输入计划名称", "", "warning");
       return;
@@ -190,9 +189,12 @@ export default {
         )
       );
 
-      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
-      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+      // 刷新计划列表
+      if (input_creatingPlan.type === "daily") {
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      } else if (input_creatingPlan.type === "temporary") {
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      }
 
       // 如果添加了目标列表，则刷新目标列表
       if (input_creatingPlan.targetList.length !== 0) {

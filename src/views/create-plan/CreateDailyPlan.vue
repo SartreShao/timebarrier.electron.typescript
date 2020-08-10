@@ -148,12 +148,6 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
-    // 服务器拉取的数据：已完成计划的列表
-    const completedPlanList: Ref<AV.Object[]> = inject(
-      Store.completedPlanList,
-      ref<AV.Object[]>([])
-    );
-
     // Target
     // 未分组的「目标」的列表
     const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
@@ -200,7 +194,6 @@ export default defineComponent({
         input_creatingPlan,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList,
         abilityList,
         levelRuleList,
         unSubjectiveTargetList,
