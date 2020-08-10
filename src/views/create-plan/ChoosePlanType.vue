@@ -101,6 +101,7 @@ import TopBar from "../../components/TopBar.vue";
 import { Router } from "@/lib/vue-utils";
 import Store from "@/store";
 import { InputPlanType } from "@/lib/types/vue-viewmodels";
+import { PlanPage } from "@/lib/vue-viewmodels";
 export default defineComponent({
   components: { TopBar },
   setup(props, context) {
@@ -122,30 +123,12 @@ export default defineComponent({
 
     // 点击事件：创建临时计划
     const click_temporaryPlanButton = () => {
-      input_creatingPlan.id = undefined;
-      input_creatingPlan.name = "";
-      input_creatingPlan.abilityList = [];
-      input_creatingPlan.targetList = [];
-      input_creatingPlan.type = "temporary";
-      input_creatingPlan.target = "0";
-      input_creatingPlan.isActived = true;
-      input_creatingPlan.isFinished = false;
-      input_creatingPlan.deadline = "";
-      Router.push(context.root.$router, "/create-temporary-plan");
+      PlanPage.openCreateTemporaryPlanPage(context.root, input_creatingPlan);
     };
 
     // 点击事件：创建每日计划
     const click_dailyPlanButton = () => {
-      input_creatingPlan.id = undefined;
-      input_creatingPlan.name = "";
-      input_creatingPlan.abilityList = [];
-      input_creatingPlan.targetList = [];
-      input_creatingPlan.type = "daily";
-      input_creatingPlan.target = "";
-      input_creatingPlan.isActived = true;
-      input_creatingPlan.isFinished = false;
-      input_creatingPlan.deadline = "";
-      Router.push(context.root.$router, "/create-daily-plan");
+      PlanPage.openCreateDailyPlanPage(context.root, input_creatingPlan);
     };
 
     return {

@@ -358,6 +358,56 @@ export default {
       );
     }
   },
+
+  /**
+   * 打开选择计划类别页
+   */
+  openChoosePlanTypePage: (vue: ElementVue) => {
+    Router.push(vue.$router, "choose-plan-type");
+  },
+
+  /**
+   * 打开创建「临时计划」页
+   */
+  openCreateTemporaryPlanPage: (
+    vue: ElementVue,
+    input_creatingPlan: InputPlanType
+  ) => {
+    // 初始化用户输入数据
+    input_creatingPlan.id = undefined;
+    input_creatingPlan.name = "";
+    input_creatingPlan.abilityList = [];
+    input_creatingPlan.targetList = [];
+    input_creatingPlan.type = "temporary";
+    input_creatingPlan.target = "0";
+    input_creatingPlan.isActived = true;
+    input_creatingPlan.isFinished = false;
+    input_creatingPlan.deadline = "";
+
+    // 跳转页面
+    Router.push(vue.$router, "/create-temporary-plan");
+  },
+  /**
+   * 打开创建「每日计划」页
+   */
+  openCreateDailyPlanPage: (
+    vue: ElementVue,
+    input_creatingPlan: InputPlanType
+  ) => {
+    // 初始化用户输入数据
+    input_creatingPlan.id = undefined;
+    input_creatingPlan.name = "";
+    input_creatingPlan.abilityList = [];
+    input_creatingPlan.targetList = [];
+    input_creatingPlan.type = "daily";
+    input_creatingPlan.target = "";
+    input_creatingPlan.isActived = true;
+    input_creatingPlan.isFinished = false;
+    input_creatingPlan.deadline = "";
+
+    // 跳转页面
+    Router.push(vue.$router, "/create-daily-plan");
+  },
   /**
    * 编辑计划
    *
@@ -1114,9 +1164,5 @@ export default {
       }
     });
     input_editingPlan.targetList = list;
-  },
-
-  openChoosePlanTypePage: (vue: ElementVue) => {
-    Router.push(vue.$router, "choose-plan-type");
   }
 };
