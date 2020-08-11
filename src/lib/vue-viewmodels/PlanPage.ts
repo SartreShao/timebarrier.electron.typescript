@@ -889,24 +889,18 @@ export default {
           return;
         }
 
-        if (input_editingPlan.targetList.length !== 0) {
-          input_targetListOfPlan.value = await Api.fetchTargetList(
-            user,
-            "uncompleted"
-          );
-          input_editingPlan.targetList.forEach(input_target => {
-            input_targetListOfPlan.value.forEach(target => {
-              if (input_target.id === target.id) {
-                target.attributes.selected = true;
-              }
-            });
-          });
-        } else {
-          input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
-            input_editingPlan.id
-          );
-        }
+        input_targetListOfPlan.value = await Api.fetchTargetList(
+          user,
+          "uncompleted"
+        );
 
+        input_editingPlan.targetList.forEach(input_target => {
+          input_targetListOfPlan.value.forEach(target => {
+            if (input_target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
         UI.hideLoading(loadingInstance);
       } else {
         Log.error(
@@ -1150,24 +1144,18 @@ export default {
           return;
         }
 
-        if (input_editingPlan.targetList.length !== 0) {
-          input_targetListOfPlan.value = await Api.fetchTargetList(
-            user,
-            "uncompleted"
-          );
-          input_editingPlan.targetList.forEach(input_target => {
-            input_targetListOfPlan.value.forEach(target => {
-              if (input_target.id === target.id) {
-                target.attributes.selected = true;
-              }
-            });
-          });
-        } else {
-          input_targetListOfPlan.value = await Api.fetchTargetListWithPlanSelect(
-            input_editingPlan.id
-          );
-        }
+        input_targetListOfPlan.value = await Api.fetchTargetList(
+          user,
+          "uncompleted"
+        );
 
+        input_editingPlan.targetList.forEach(input_target => {
+          input_targetListOfPlan.value.forEach(target => {
+            if (input_target.id === target.id) {
+              target.attributes.selected = true;
+            }
+          });
+        });
         UI.hideLoading(loadingInstance);
       } else {
         Log.error(
