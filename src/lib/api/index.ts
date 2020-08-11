@@ -390,15 +390,12 @@ export default {
 
         await plan
           .set("name", name)
-          .set("target", target)
           .set("type", type)
+          .set("target", type === "daily" ? target : undefined)
+          .set("deadline", type === "temporary" ? deadline : undefined)
           .set("isActived", isActived)
           .set("isFinished", isFinished)
           .save();
-
-        if (deadline !== undefined) {
-          plan.set("deadline", deadline);
-        }
 
         // 删除所有的相关的中间表：AbilityPlan
         const abilityPlanList = await new AV.Query(AbilityPlan)

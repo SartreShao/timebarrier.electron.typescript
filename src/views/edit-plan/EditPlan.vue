@@ -215,7 +215,7 @@ export default defineComponent({
       });
     };
 
-    // 点击事件：创建计划
+    // 点击事件：保存计划
     const click_createPlanButton = () => {
       PlanPage.savePlan(
         context.root,

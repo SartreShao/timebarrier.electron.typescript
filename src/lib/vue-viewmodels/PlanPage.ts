@@ -433,11 +433,11 @@ export default {
     input_editingPlan.target = plan.attributes.target
       ? plan.attributes.target
       : "";
-    input_editingPlan.isActived = plan.attributes.isActived;
-    input_editingPlan.isFinished = plan.attributes.isFinished;
     input_editingPlan.deadline = plan.attributes.deadline
       ? plan.attributes.deadline
       : "";
+    input_editingPlan.isActived = plan.attributes.isActived;
+    input_editingPlan.isFinished = plan.attributes.isFinished;
     input_editingPlan.abilityList = plan.attributes.abilityListOfPlan.map(
       (ability: AV.Object) => {
         return { id: ability.id, name: ability.attributes.name };
@@ -512,6 +512,12 @@ export default {
       return;
     }
 
+    // 输入检测：是否输入计划名称
+    if (input_editingPlan.name.length === 0) {
+      UI.showNotification(vue.$notify, "请输入计划名称", "", "warning");
+      return;
+    }
+
     // 输入检测：如果没有定义每日目标，则不允许保存为「每日计划」
     if (input_editingPlan.type === "daily") {
       if (input_editingPlan.target === undefined) {
@@ -524,12 +530,6 @@ export default {
         input_editingPlan.target = "0";
         return;
       }
-    }
-
-    // 输入检测：是否输入计划名称
-    if (input_editingPlan.name.length === 0) {
-      UI.showNotification(vue.$notify, "请输入计划名称", "", "warning");
-      return;
     }
 
     if (input_editingPlan.id !== undefined) {
