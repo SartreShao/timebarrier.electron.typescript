@@ -19,6 +19,11 @@
       </transition-group>
     </draggable>
 
+    <ability-novice-tutorial
+      v-if="abilityList.length === 0"
+      style="margin-top:7.72vh"
+    ></ability-novice-tutorial>
+
     <!-- 创建 Ability 的按钮 -->
     <div class="create-ability-container" @click="click_createAbilityButton">
       <img :src="assets.icon_plus" alt="icon_plus" />
@@ -45,6 +50,8 @@ import TbInput from "@/lib/components/TbInput.vue";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import { InputAbilityType } from "@/lib/types/vue-viewmodels";
 import icon_plus from "@/assets/icon_plus.svg";
+import AbilityNoviceTutorial from "./components/AbilityNoviceTutorial.vue";
+
 export default defineComponent({
   setup(props, context) {
     // 能力列表
@@ -129,7 +136,13 @@ export default defineComponent({
       assets: { icon_plus }
     };
   },
-  components: { draggable, AbilityItem, TbInput, TbDrawer }
+  components: {
+    draggable,
+    AbilityItem,
+    TbInput,
+    TbDrawer,
+    AbilityNoviceTutorial
+  }
 });
 </script>
 
@@ -141,7 +154,7 @@ export default defineComponent({
 .container {
   height 100%
   width 100%
-  background #F5F5F5
+  background #F4F4F8
   overscroll-behavior none
   overflow scroll
   display flex

@@ -383,6 +383,7 @@
       </div>
     </el-drawer>
 
+    <!-- Plan 的底边菜单 -->
     <plan-bottom-menu
       :isShow="isPlanBottomMenuShow"
       @click-cancel="isPlanBottomMenuShow = false"
