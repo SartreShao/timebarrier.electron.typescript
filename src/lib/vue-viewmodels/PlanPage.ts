@@ -669,7 +669,6 @@ export default {
           // 保存成功
           UI.hideLoading(loadingInstance);
           UI.showNotification(vue.$notify, "计划删除成功", "", "success");
-
         } catch (error) {
           UI.hideLoading(loadingInstance);
           UI.showNotification(

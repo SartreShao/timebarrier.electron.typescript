@@ -806,7 +806,7 @@ export default defineComponent({
       padding 0px
       width 92.67vw
       height 3.9vh
-      background-color #F5F5F5
+      background-color #F4F4F8
       border-radius 1.95vh
       border none
       text-align center
@@ -833,7 +833,7 @@ export default defineComponent({
     height 80.41vh
     overflow scroll
     width 100%
-    background #F5F5F5
+    background #F4F4F8
     display flex
     flex-direction column
     align-items center
