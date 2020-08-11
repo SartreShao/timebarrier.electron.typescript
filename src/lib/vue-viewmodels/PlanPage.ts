@@ -628,7 +628,6 @@ export default {
    */
   deletePlan: async (
     vue: ElementVue,
-    isPlanEditorDrawerDisplayed: Ref<boolean>,
     input_editingPlan: InputPlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
@@ -671,8 +670,6 @@ export default {
           UI.hideLoading(loadingInstance);
           UI.showNotification(vue.$notify, "计划删除成功", "", "success");
 
-          // 关闭窗口
-          isPlanEditorDrawerDisplayed.value = false;
         } catch (error) {
           UI.hideLoading(loadingInstance);
           UI.showNotification(

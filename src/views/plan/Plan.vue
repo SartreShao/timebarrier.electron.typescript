@@ -388,6 +388,7 @@
       @click-cancel="isPlanBottomMenuShow = false"
       @click-background="isPlanBottomMenuShow = false"
       @click-edit="click_editPlan"
+      @click-delete="click_deletePlanButton"
     ></plan-bottom-menu>
   </div>
 </template>
@@ -641,7 +642,6 @@ export default defineComponent({
     const click_deletePlanButton = () => {
       PlanPage.deletePlan(
         context.root,
-        isPlanEditorDrawerDisplayed,
         input_editingPlan,
         temporaryPlanList,
         dailyPlanList,

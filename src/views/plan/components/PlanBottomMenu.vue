@@ -11,7 +11,7 @@
       <div class="item item-1">查看子任务：22 / 30</div>
       <div class="item" @click="$emit('click-edit')">编辑计划</div>
       <div class="item">转变为「未激活」状态</div>
-      <div class="item item-4">删除计划</div>
+      <div class="item item-4" @click="$emit('click-delete')">删除计划</div>
       <div class="item" @click="$emit('click-cancel')">取消</div>
     </section>
   </div>
