@@ -326,7 +326,7 @@
         <div class="item item-2">
           <div>
             我们在<span>「执行计划」</span>时会提升相应的能力<br />
-            将<span>「能力」</span>绑定到<span>「计划」</span>，即可执行开始<span
+            将<span>「能力」</span>关联到<span>「计划」</span>，即可执行开始<span
               >能力训练</span
             >
           </div>
