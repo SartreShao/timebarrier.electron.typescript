@@ -803,25 +803,22 @@ export default {
           return;
         }
 
-        if (input_editingPlan.abilityList.length !== 0) {
-          input_abilityListOfPlan.value = await Api.fetchAbilityList(
-            user,
-            false,
-            true
-          );
-          input_editingPlan.abilityList.forEach(input_ability => {
-            input_abilityListOfPlan.value.forEach(ability => {
-              if (input_ability.id === ability.id) {
-                ability.attributes.selected = true;
-              }
-            });
-          });
-        } else {
-          input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
-            input_editingPlan.id
-          );
+        if (input_editingPlan.id === undefined) {
+          return;
         }
 
+        input_abilityListOfPlan.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true
+        );
+        input_editingPlan.abilityList.forEach(input_ability => {
+          input_abilityListOfPlan.value.forEach(ability => {
+            if (input_ability.id === ability.id) {
+              ability.attributes.selected = true;
+            }
+          });
+        });
         UI.hideLoading(loadingInstance);
       }
       // 出问题了
@@ -1037,25 +1034,18 @@ export default {
           return;
         }
 
-        if (input_editingPlan.abilityList.length !== 0) {
-          input_abilityListOfPlan.value = await Api.fetchAbilityList(
-            user,
-            false,
-            true
-          );
-          input_editingPlan.abilityList.forEach(input_ability => {
-            input_abilityListOfPlan.value.forEach(ability => {
-              if (input_ability.id === ability.id) {
-                ability.attributes.selected = true;
-              }
-            });
+        input_abilityListOfPlan.value = await Api.fetchAbilityList(
+          user,
+          false,
+          true
+        );
+        input_editingPlan.abilityList.forEach(input_ability => {
+          input_abilityListOfPlan.value.forEach(ability => {
+            if (input_ability.id === ability.id) {
+              ability.attributes.selected = true;
+            }
           });
-        } else {
-          input_abilityListOfPlan.value = await Api.fetchAbilityListWithPlanSelect(
-            input_editingPlan.id
-          );
-        }
-
+        });
         UI.hideLoading(loadingInstance);
       }
       // 出问题了
