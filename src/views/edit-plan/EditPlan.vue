@@ -11,9 +11,40 @@
         sub-title="我们可以在这里对计划的属性进行修改"
       ></top-tips>
 
+      <!-- 计划类型 -->
+      <section class="section section-5">
+        <h1 class="h-1">Step 1：计划类型——「临时计划」or「每日计划」？</h1>
+        <div class="button">
+          <span>
+            {{
+              input_editingPlan.type === "temporary" ? "临时计划" : "每日计划"
+            }}
+          </span>
+
+          <el-select
+            class="date-picker"
+            date-picker
+            v-model="input_editingPlan.type"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in playTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </div>
+        <h2 class="h-2">
+          「临时计划」可以设置「截止日期」<br />
+          「每日计划」可以设置「每日目标」与添加「子计划」
+        </h2>
+      </section>
+
       <!-- 计划名称 -->
       <section class="section section-1">
-        <h1 class="h-1">计划名称——您希望制定什么训练计划？</h1>
+        <h1 class="h-1">Step 2：计划名称——您希望制定什么训练计划？</h1>
         <div class="input-container">
           <input
             class="input"
@@ -29,10 +60,10 @@
 
       <!-- 用时目标 -->
       <section
-        class="section section-4"
+        class="section section-6"
         v-if="input_editingPlan.type === `daily`"
       >
-        <h1 class="h-1">用时目标——您计划每天训练它多久？</h1>
+        <h1 class="h-1">Step 3：用时目标——您计划每天训练它多久？</h1>
 
         <div class="input-container">
           <input
@@ -50,7 +81,7 @@
         class="section section-4"
         v-if="input_editingPlan.type == `temporary`"
       >
-        <h1 class="h-1">计划截止日期——最晚什么时候完成计划？</h1>
+        <h1 class="h-1">Step 3：计划截止日期——最晚什么时候完成计划？</h1>
         <div class="button">
           <span v-if="input_editingPlan.deadline.length === 0">
             请选择一个日期（选填）
@@ -69,7 +100,7 @@
 
       <!-- 关联能力 -->
       <section class="section section-2">
-        <h1 class="h-1">关联能力——完成计划会提升您的什么能力？</h1>
+        <h1 class="h-1">Step 4：关联能力——完成计划会提升您的什么能力？</h1>
         <div
           class="button"
           @click="click_relateAbility"
@@ -95,7 +126,7 @@
 
       <!-- 关联目标 -->
       <section class="section section-3">
-        <h1 class="h-1">Step 4：关联目标——完成计划会有助于实现什么目标？</h1>
+        <h1 class="h-1">Step 5：关联目标——完成计划会有助于实现什么目标？</h1>
         <div
           class="button"
           @click="click_relateTarget"
@@ -230,16 +261,24 @@ export default defineComponent({
       );
     };
 
+    // 格式化用户输入：截止日期
     const planDeadLineFormat = computed(() => {
       return UI.dateToYearMonthDay(new Date(input_editingPlan.deadline));
     });
+
+    // 计划类型选项
+    const playTypeList = ref([
+      { value: "temporary", label: "临时计划" },
+      { value: "daily", label: "每日计划" }
+    ]);
 
     return {
       input_editingPlan,
       click_relateAbility,
       click_relateTarget,
       click_createPlanButton,
-      planDeadLineFormat
+      planDeadLineFormat,
+      playTypeList
     };
   }
 });
@@ -268,6 +307,14 @@ export default defineComponent({
 
 .section-4 {
   background #1B3C79
+}
+
+.section-5 {
+  background #91A8D0
+}
+
+.section-6 {
+  background #E2583E
 }
 
 .h-1 {

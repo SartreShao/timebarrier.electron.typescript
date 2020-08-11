@@ -520,7 +520,10 @@ export default {
 
     // 输入检测：如果没有定义每日目标，则不允许保存为「每日计划」
     if (input_editingPlan.type === "daily") {
-      if (input_editingPlan.target === undefined) {
+      if (
+        input_editingPlan.target === undefined ||
+        input_editingPlan.target.length === 0
+      ) {
         UI.showNotification(vue.$notify, "请输入每日目标", "", "warning");
         return;
       }
@@ -551,18 +554,17 @@ export default {
           input_editingPlan.abilityList.map(ability => ability.id),
           input_editingPlan.targetList.map(target => target.id),
           new Date(
-            new Date(input_editingPlan.deadline).getTime() +
+            UI.getTodayStartTimestamp(
+              new Date(input_editingPlan.deadline).getTime()
+            ) +
               3600 * 1000 * 24 -
               1
           )
         );
 
         // 刷新计划列表
-        if (input_editingPlan.type === "daily") {
-          dailyPlanList.value = await Api.fetchPlanList(user, "daily");
-        } else if (input_editingPlan.type === "temporary") {
-          temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
-        }
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
 
         // 尝试获取目标列表
         unSubjectiveTargetList.value = await Api.fetchTargetList(
