@@ -19,15 +19,17 @@
       </transition-group>
     </draggable>
 
+    <!-- 新手提示 -->
     <ability-novice-tutorial
       v-if="abilityList.length === 0"
       style="margin-top:7.72vh"
     ></ability-novice-tutorial>
 
     <!-- 创建 Ability 的按钮 -->
-    <div class="create-ability-container" @click="click_createAbilityButton">
-      <img :src="assets.icon_plus" alt="icon_plus" />
-    </div>
+    <create-ability-button
+      @click="click_createAbilityButton"
+      class="create-ability"
+    ></create-ability-button>
   </div>
 </template>
 
@@ -51,6 +53,7 @@ import TbDrawer from "@/lib/components/TbDrawer.vue";
 import { InputAbilityType } from "@/lib/types/vue-viewmodels";
 import icon_plus from "@/assets/icon_plus.svg";
 import AbilityNoviceTutorial from "./components/AbilityNoviceTutorial.vue";
+import CreateAbilityButton from "./components/CreateAbilityButton.vue";
 
 export default defineComponent({
   setup(props, context) {
@@ -141,7 +144,8 @@ export default defineComponent({
     AbilityItem,
     TbInput,
     TbDrawer,
-    AbilityNoviceTutorial
+    AbilityNoviceTutorial,
+    CreateAbilityButton
   }
 });
 </script>
@@ -187,5 +191,12 @@ export default defineComponent({
     width 2.05vh
     height 2.05vh
   }
+}
+
+.create-ability {
+  position fixed
+  bottom 8.17vh
+  left 0
+  right 0
 }
 </style>
