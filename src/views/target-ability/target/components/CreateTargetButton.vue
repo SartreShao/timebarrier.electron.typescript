@@ -1,5 +1,5 @@
 <template>
-  <div class="create-plan-container">
+  <div class="create-target-container">
     <!-- button 的容器 -->
     <div class="click-button-container">
       <!-- 用于新手教程的外边的圈儿 -->
@@ -10,9 +10,9 @@
         height="148"
         viewBox="0 0 148 148"
         v-if="
-          dailyPlanList.length === 0 &&
-            temporaryPlanList.length === 0 &&
-            completedPlanList.length === 0
+          unSubjectiveTargetList.length === 0 &&
+            completedTargetList.length === 0 &&
+            targetSubjectList.length === 0
         "
       >
         <g
@@ -64,9 +64,9 @@
     <!-- 右箭头 -->
     <svg
       v-if="
-        dailyPlanList.length === 0 &&
-          temporaryPlanList.length === 0 &&
-          completedPlanList.length === 0
+        unSubjectiveTargetList.length === 0 &&
+          completedTargetList.length === 0 &&
+          targetSubjectList.length === 0
       "
       class="right-arrow"
       xmlns="http://www.w3.org/2000/svg"
@@ -100,12 +100,12 @@
     <div
       class="tip"
       v-if="
-        dailyPlanList.length === 0 &&
-          temporaryPlanList.length === 0 &&
-          completedPlanList.length === 0
+        unSubjectiveTargetList.length === 0 &&
+          completedTargetList.length === 0 &&
+          targetSubjectList.length === 0
       "
     >
-      点击它，创建您的第一个计划
+      点击它，创建您的第一个目标
     </div>
   </div>
 </template>
@@ -117,35 +117,35 @@ import AV from "leancloud-storage";
 
 export default defineComponent({
   setup(props, context) {
-    // 服务器拉取的数据：临时计划的列表
-    const temporaryPlanList: Ref<AV.Object[]> = inject(
-      Store.temporaryPlanList,
-      ref<AV.Object[]>([])
+    // 未分组的「目标」的列表
+    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
+      Store.unSubjectiveTargetList,
+      ref([])
     );
 
-    // 服务器拉取的数据：每日计划的列表
-    const dailyPlanList: Ref<AV.Object[]> = inject(
-      Store.dailyPlanList,
-      ref<AV.Object[]>([])
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
     );
 
-    // 服务器拉取的数据：已完成计划的列表
-    const completedPlanList: Ref<AV.Object[]> = inject(
-      Store.completedPlanList,
-      ref<AV.Object[]>([])
+    // 已完成的「目标」列表
+    const completedTargetList: Ref<AV.Object[]> = inject(
+      Store.completedTargetList,
+      ref([])
     );
 
     return {
-      temporaryPlanList,
-      dailyPlanList,
-      completedPlanList
+      unSubjectiveTargetList,
+      targetSubjectList,
+      completedTargetList
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
-.create-plan-container {
+.create-target-container {
   width 100%
   height 11.09vh
   display flex

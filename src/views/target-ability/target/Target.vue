@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <!-- 添加「目标」按钮 -->
-    <create-target-button
-      style="position:fixed;top:12.77vh;margin-top:0.15vh;"
-    ></create-target-button>
+    <create-target-button class="create-target"></create-target-button>
 
     <!-- 无目录的目标 -->
     <draggable
@@ -307,9 +305,11 @@ export default defineComponent({
 .flip-list-move {
   transition transform 0.5s
 }
+
 .ghost {
   opacity 0.7
 }
+
 .container {
   height 73.66vh
   overscroll-behavior none
@@ -319,6 +319,13 @@ export default defineComponent({
   display flex
   flex-direction column
   align-items center
-  margin-top 6.75vh
+  margin-top 0.15vh
+}
+
+.create-target {
+  position fixed
+  bottom 8.17vh
+  left 0
+  right 0
 }
 </style>
