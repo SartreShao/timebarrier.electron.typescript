@@ -537,7 +537,7 @@ export default defineComponent({});
 .item-1 {
   width 96.53vw
   height 6.67vh
-  background #3846CF
+  background #5A5B9F
   border-radius 1.42vh 1.42vh 0 0
 }
 

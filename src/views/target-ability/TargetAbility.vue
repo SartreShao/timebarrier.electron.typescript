@@ -1624,7 +1624,7 @@ export default defineComponent({
     top 12.77vh
     height 80.41vh
     width 100%
-    background #F5F5F5
+    background #F4F4F8
     display flex
     flex-direction column
     align-items center

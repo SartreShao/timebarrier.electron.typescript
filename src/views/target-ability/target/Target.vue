@@ -1,8 +1,5 @@
 <template>
-  <div class="container">
-    <!-- 添加「目标」按钮 -->
-    <create-target-button class="create-target"></create-target-button>
-
+  <div class="target-container">
     <!-- 无目录的目标 -->
     <draggable
       :options="draggableOptions"
@@ -76,6 +73,7 @@
 
     <!-- 已完成的目标目录 -->
     <target-subject-item
+      v-if="completedTargetList.length !== 0"
       v-darked-when-click
       :isShow.sync="isCompletedTargetShown"
       name="已完成的目标"
@@ -92,6 +90,18 @@
         :target="target"
       ></target-item>
     </div>
+
+    <target-novice-tutorial
+      v-if="
+        unSubjectiveTargetList.length === 0 &&
+          completedTargetList.length === 0 &&
+          targetSubjectList.length === 0
+      "
+      style="margin-top:10.36vh"
+    ></target-novice-tutorial>
+
+    <!-- 添加「目标」按钮 -->
+    <create-target-button class="create-target"></create-target-button>
 
     <div style="height:15vh"></div>
   </div>
@@ -119,9 +129,16 @@ import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
 import CreateTargetButton from "./components/CreateTargetButton.vue";
 import TargetItem from "./components/TargetItem.vue";
 import TargetSubjectItem from "./components/TargetSubjectItem.vue";
+import TargetNoviceTutorial from "./components/TargetNoviceTutorial.vue";
 
 export default defineComponent({
-  components: { draggable, CreateTargetButton, TargetItem, TargetSubjectItem },
+  components: {
+    draggable,
+    CreateTargetButton,
+    TargetItem,
+    TargetSubjectItem,
+    TargetNoviceTutorial
+  },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
     const isCreateTargetDrawerDisplayed: Ref<boolean> = inject(
@@ -310,12 +327,12 @@ export default defineComponent({
   opacity 0.7
 }
 
-.container {
-  height 73.66vh
+.target-container {
+  height 100%
   overscroll-behavior none
   overflow scroll
   width 100%
-  background #F5F5F5
+  background #F4F4F8
   display flex
   flex-direction column
   align-items center
