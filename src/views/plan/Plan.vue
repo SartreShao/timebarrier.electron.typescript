@@ -135,254 +135,6 @@
       </section>
     </el-drawer>
 
-    <!-- 抽屉菜单：编辑计划 -->
-    <el-drawer
-      class="edit-plan-container"
-      title="编辑计划"
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isPlanEditorDrawerDisplayed"
-    >
-      <!-- 输入框：计划名称 -->
-      <input
-        type="text"
-        class="input-plan-name"
-        placeholder="输入计划名称"
-        v-model="input_editingPlan.name"
-      />
-
-      <!-- 单选框：计划类别 -->
-      <el-select
-        placeholder="选择计划类型"
-        class="input-plan-type"
-        v-model="input_editingPlan.type"
-      >
-        <el-option label="临时计划" value="temporary"></el-option>
-        <el-option label="每日计划" value="daily"></el-option>
-      </el-select>
-
-      <!-- 输入框：目标番茄 -->
-      <input
-        :hidden="input_editingPlan.type === `temporary`"
-        :disabled="input_editingPlan.type === `temporary`"
-        class="input-plan-target"
-        v-bind:class="{ opacity40: input_editingPlan.type === `temporary` }"
-        type="number"
-        placeholder="每日目标番茄（0-48）"
-        v-model="input_editingPlan.target"
-      />
-
-      <!-- 按钮：关联相关能力 -->
-      <div
-        class="add-plan-related"
-        v-darked-when-click
-        @click="click_relatedAbilityButton"
-      >
-        <img
-          :src="assets.icon_add"
-          alt="icon_add"
-          v-if="input_editingPlan.abilityList.length === 0"
-        />
-        <span v-if="input_editingPlan.abilityList.length === 0"
-          >关联相关能力</span
-        >
-        <span v-else>{{
-          "相关能力：" +
-            input_editingPlan.abilityList
-              .map(ability => ability.name)
-              .join("、")
-        }}</span>
-      </div>
-
-      <!-- 按钮：关联相关目标 -->
-      <div
-        class="add-plan-related"
-        v-darked-when-click
-        @click="click_relatedTargetButton"
-      >
-        <img
-          :src="assets.icon_add"
-          alt="icon_add"
-          v-if="input_editingPlan.targetList.length === 0"
-        />
-        <span v-if="input_editingPlan.targetList.length === 0"
-          >关联相关目标</span
-        >
-        <span v-else>{{
-          "相关目标：" +
-            input_editingPlan.targetList.map(target => target.name).join("、")
-        }}</span>
-      </div>
-
-      <div class="radio-container">
-        <!-- 选择器：激活计划 -->
-        <div
-          v-darked-when-click
-          @click="input_editingPlan.isActived = !input_editingPlan.isActived"
-        >
-          <span>激活该计划</span
-          ><img
-            :src="
-              input_editingPlan.isActived
-                ? assets.icon_selected
-                : assets.icon_unselected
-            "
-            alt="icon_selected"
-          />
-        </div>
-
-        <!-- 选择器：完成计划 -->
-        <div
-          v-darked-when-click
-          @click="input_editingPlan.isFinished = !input_editingPlan.isFinished"
-        >
-          <span>完成该计划</span
-          ><img
-            :src="
-              input_editingPlan.isFinished
-                ? assets.icon_selected
-                : assets.icon_unselected
-            "
-            alt="icon_unselected"
-          />
-        </div>
-      </div>
-
-      <div class="button-container">
-        <!-- 按钮：删除计划 -->
-        <div
-          class="delete-button"
-          v-darked-when-click
-          @click="click_deletePlanButton"
-        >
-          删除
-        </div>
-
-        <!-- 按钮：保存计划 -->
-        <div
-          class="save-button"
-          v-darked-when-click
-          @click="click_savePlanButton"
-        >
-          保存
-        </div>
-      </div>
-    </el-drawer>
-
-    <!-- 抽屉菜单：关联相关能力 -->
-    <el-drawer
-      class="related-ability-container"
-      title="关联相关能力"
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isPlanRelateAbilityDrawerDisplayed"
-    >
-      <!-- 输入框：创建新能力 -->
-      <div class="input-ability-name-container">
-        <input
-          type="text"
-          placeholder="创建一个新能力"
-          class="input-ability-name"
-          @keyup.enter="keyUpEnter_abilityInputBox"
-          v-model="input_abilityName"
-        />
-
-        <img :src="assets.icon_enter" alt="icon_enter" />
-      </div>
-
-      <!-- 包含框：能力 Ability -->
-      <section class="ability-container">
-        <div
-          class="ability-item"
-          v-for="item in input_abilityListOfPlan"
-          v-bind:key="item.id"
-          @click="click_abilityItemSelector(item)"
-        >
-          <span>{{ item.attributes.name }}</span>
-          <img
-            v-if="item.attributes.selected"
-            :src="assets.icon_finished"
-            alt="icon_finished"
-          />
-          <img v-else src="" alt="" />
-        </div>
-        <div style="height:10vh"></div>
-      </section>
-
-      <div class="button-container">
-        <!-- 按钮：取消计划 -->
-        <div
-          class="delete-button"
-          v-darked-when-click
-          @click="isPlanRelateAbilityDrawerDisplayed = false"
-        >
-          取消
-        </div>
-
-        <!-- 按钮：选择计划 -->
-        <div class="save-button" v-darked-when-click @click="click_saveAbility">
-          选择
-        </div>
-      </div>
-    </el-drawer>
-
-    <!-- 抽屉菜单：关联相关目标 -->
-    <el-drawer
-      class="related-ability-container"
-      title="关联相关目标"
-      direction="btt"
-      size="86.64%"
-      :visible.sync="isPlanRelateTargetDrawerDisplayed"
-    >
-      <!-- 输入框：创建新能力 -->
-      <div class="input-ability-name-container">
-        <input
-          type="text"
-          placeholder="创建一个新目标"
-          class="input-ability-name"
-          @keyup.enter="keyUpEnter_targetInputBox"
-          v-model="input_targetName"
-        />
-
-        <img :src="assets.icon_enter" alt="icon_enter" />
-      </div>
-
-      <!-- 包含框：目标 Target -->
-      <section class="ability-container">
-        <div
-          class="ability-item"
-          v-for="item in input_targetListOfPlan"
-          v-bind:key="item.id"
-          @click="click_targetItemSelector(item)"
-        >
-          <span>{{ item.attributes.name }}</span>
-          <img
-            v-if="item.attributes.selected"
-            :src="assets.icon_finished"
-            alt="icon_finished"
-          />
-          <img v-else src="" alt="" />
-        </div>
-        <div style="height:10vh"></div>
-      </section>
-
-      <div class="button-container">
-        <!-- 按钮：取消计划 -->
-        <div
-          class="delete-button"
-          v-darked-when-click
-          @click="isPlanRelateTargetDrawerDisplayed = false"
-        >
-          取消
-        </div>
-
-        <!-- 按钮：选择计划 -->
-        <div class="save-button" v-darked-when-click @click="click_saveTarget">
-          选择
-        </div>
-      </div>
-    </el-drawer>
-
     <!-- Plan 的底边菜单 -->
     <plan-bottom-menu
       :isShow="isPlanBottomMenuShow"
@@ -441,12 +193,6 @@ export default defineComponent({
     // 用户输入：创建的「计划」的名称
     const input_planName: Ref<string> = ref("");
 
-    // 用户输入：创建的「能力」的名称
-    const input_abilityName: Ref<string> = ref("");
-
-    // 用户输入：创建的「目标」的名称
-    const input_targetName: Ref<string> = ref("");
-
     // 用户输入：当前编辑的「计划」
     const input_editingPlan: InputPlanType = inject(
       Store.input_editingPlan,
@@ -462,12 +208,6 @@ export default defineComponent({
         deadline: ""
       })
     );
-
-    // 用户输入：需要关联到计划的能力列表
-    const input_abilityListOfPlan: Ref<AV.Object[]> = ref([]);
-
-    // 用户输入：需要关联到计划的目标列表
-    const input_targetListOfPlan: Ref<AV.Object[]> = ref([]);
 
     // 服务器拉取的数据：临时计划的列表
     const temporaryPlanList: Ref<AV.Object[]> = inject(
@@ -511,15 +251,6 @@ export default defineComponent({
     // 「展示 `已完成的计划列表` 的抽屉」是否已经打开
     const isCompletedPlanDrawerDisplayed: Ref<Boolean> = ref(false);
 
-    // 「展示 `编辑计划` 的抽屉」是否已经打开
-    const isPlanEditorDrawerDisplayed: Ref<boolean> = ref(false);
-
-    // 「展示 `关联相关能力` 的抽屉」是否已经打开
-    const isPlanRelateAbilityDrawerDisplayed: Ref<boolean> = ref(false);
-
-    // 「展示 `关联相关目标` 的抽屉」是否已经打开
-    const isPlanRelateTargetDrawerDisplayed: Ref<boolean> = ref(false);
-
     // 颜色表
     const colormap = inject(Store.colormap, []);
 
@@ -559,35 +290,6 @@ export default defineComponent({
         context.root,
         input_planName,
         temporaryPlanList
-      );
-    };
-
-    // 在能力输入框回车：创建能力
-    const keyUpEnter_abilityInputBox = () => {
-      PlanPage.createAbility(
-        context.root,
-        input_abilityName,
-        input_abilityListOfPlan,
-        input_editingPlan,
-        null,
-        abilityList,
-        levelRuleList,
-        colormap
-      );
-    };
-
-    // 在目标输入框回车：创建目标
-    const keyUpEnter_targetInputBox = () => {
-      PlanPage.createTarget(
-        context.root,
-        input_targetName,
-        input_targetListOfPlan,
-        input_editingPlan,
-        null,
-        unSubjectiveTargetList,
-        completedTargetList,
-        targetSubjectList,
-        colormap
       );
     };
 
@@ -650,52 +352,6 @@ export default defineComponent({
       );
     };
 
-    // 点击事件：点击「关联相关能力」按钮
-    const click_relatedAbilityButton = () => {
-      PlanPage.relatedAbility(
-        context.root,
-        isPlanRelateAbilityDrawerDisplayed,
-        input_abilityListOfPlan,
-        input_editingPlan
-      );
-    };
-
-    // 点击事件：点击「关联相关目标」按钮
-    const click_relatedTargetButton = () => {
-      PlanPage.relatedTarget(
-        context.root,
-        isPlanRelateTargetDrawerDisplayed,
-        input_targetListOfPlan,
-        input_editingPlan
-      );
-    };
-
-    // 点击事件：点击选择 Ability 的项目
-    const click_abilityItemSelector = (ability: AV.Object) => {
-      PlanPage.selectAbilityToCommit(ability);
-    };
-
-    const click_targetItemSelector = (target: AV.Object) => {
-      PlanPage.selectTargetToComit(target);
-    };
-
-    // 点击事件：保存选择后的 Ability 结果
-    const click_saveAbility = () => {
-      PlanPage.saveSelectedAblityToEditingPlan(
-        isPlanRelateAbilityDrawerDisplayed,
-        input_abilityListOfPlan,
-        input_editingPlan
-      );
-    };
-
-    const click_saveTarget = () => {
-      PlanPage.saveSelectedTargetToEditingPlan(
-        isPlanRelateTargetDrawerDisplayed,
-        input_targetListOfPlan,
-        input_editingPlan
-      );
-    };
-
     // 点击事件：点击「每日计划」上的开始按钮
     const click_startTomatoButton = (plan: AV.Object) => {
       TomatoTimerPage.clickTomatoClock(
@@ -733,21 +389,12 @@ export default defineComponent({
 
     return {
       input_planName,
-      input_abilityName,
-      input_targetName,
       input_editingPlan,
-      input_abilityListOfPlan,
-      input_targetListOfPlan,
       temporaryPlanList,
       dailyPlanList,
       completedPlanList,
       isCompletedPlanDrawerDisplayed,
-      isPlanEditorDrawerDisplayed,
-      isPlanRelateAbilityDrawerDisplayed,
-      isPlanRelateTargetDrawerDisplayed,
       keyUpEnter_planInputBox,
-      keyUpEnter_abilityInputBox,
-      keyUpEnter_targetInputBox,
       click_completePlanButton,
       click_completedPlanListButton,
       click_cancelCompletePlanButton,
@@ -755,12 +402,6 @@ export default defineComponent({
       click_editPlan,
       click_savePlanButton,
       click_deletePlanButton,
-      click_relatedAbilityButton,
-      click_relatedTargetButton,
-      click_abilityItemSelector,
-      click_targetItemSelector,
-      click_saveAbility,
-      click_saveTarget,
       click_startTomatoButton,
       click_createPlanButton,
       dragend_templayPlanItem,
