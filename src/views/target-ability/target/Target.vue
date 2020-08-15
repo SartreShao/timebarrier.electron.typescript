@@ -101,7 +101,10 @@
     ></target-novice-tutorial>
 
     <!-- 添加「目标」按钮 -->
-    <create-target-button class="create-target"></create-target-button>
+    <create-target-button
+      class="create-target"
+      @click="click_createTarget"
+    ></create-target-button>
 
     <div style="height:15vh"></div>
   </div>
@@ -130,6 +133,7 @@ import CreateTargetButton from "./components/CreateTargetButton.vue";
 import TargetItem from "./components/TargetItem.vue";
 import TargetSubjectItem from "./components/TargetSubjectItem.vue";
 import TargetNoviceTutorial from "./components/TargetNoviceTutorial.vue";
+import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: {
@@ -289,6 +293,11 @@ export default defineComponent({
       );
     };
 
+    // 点击事件：创建 Target
+    const click_createTarget = () => {
+      Router.push(context.root.$router, "/choose-target-subject");
+    };
+
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
 
@@ -307,6 +316,7 @@ export default defineComponent({
       dragend_targetSubject,
       draggableOptions,
       click_unfinishedTargetButton,
+      click_createTarget,
       assets: {
         icon_create_target,
         icon_downward,

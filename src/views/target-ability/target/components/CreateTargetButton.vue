@@ -1,5 +1,5 @@
 <template>
-  <div class="create-target-container">
+  <div class="create-target-container" @click="$emit('click')">
     <!-- button 的容器 -->
     <div class="click-button-container">
       <!-- 用于新手教程的外边的圈儿 -->
