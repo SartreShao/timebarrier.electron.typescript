@@ -7,7 +7,13 @@
       height: isShow ? '100%' : '0'
     }"
   >
-    <section class="section">
+    <section
+      class="section"
+      :class="{
+        'show-section': isShow,
+        'hide-section': !isShow && isShowChangeTimes !== 1
+      }"
+    >
       <h1 class="h-1">自定义「目标类别」</h1>
 
       <div class="input-container">
@@ -35,10 +41,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import {
+  defineComponent,
+  onMounted,
+  watch,
+  watchEffect,
+  ref
+} from "@vue/composition-api";
 export default defineComponent({
   props: {
     isShow: Boolean
+  },
+  setup(props, context) {
+    const isShowChangeTimes = ref(0);
+
+    watch(
+      () => props.isShow,
+      value => {
+        isShowChangeTimes.value++;
+      }
+    );
+
+    return {
+      isShowChangeTimes
+    };
   }
 });
 </script>
@@ -67,10 +93,53 @@ export default defineComponent({
   display flex
   flex-direction column
   align-items center
-  left 0
-  right 0
-  margin-left auto
-  margin-right auto
+  right -(89.55vw)
+}
+
+@keyframes show {
+  0% {
+    right -(89.55vw)
+  }
+
+  70% {
+    right 9vw
+  }
+
+  100% {
+    right 5.225vw
+  }
+}
+
+.show-section {
+  animation-name show
+  animation-duration 0.5s
+  animation-iteration-count 1
+  animation-fill-mode forwards
+  animation-play-state pause
+  animation-timing-function ease-in-out
+}
+
+@keyframes hide {
+  0% {
+    right 5.225vw
+  }
+
+  30% {
+    right 9vw
+  }
+
+  100% {
+    right -(89.55vw)
+  }
+}
+
+.hide-section {
+  animation-timing-function ease-in-out
+  animation-name hide
+  animation-duration 1s
+  animation-iteration-count 1
+  animation-fill-mode forwards
+  animation-play-state pause
 }
 
 .h-1 {
@@ -78,7 +147,7 @@ export default defineComponent({
   line-height 2.92vh
   font-size 2.02vh
   margin-bottom 1.87vh
-  font-weight bo ld
+  font-weight bold
   color #222A36
 }
 

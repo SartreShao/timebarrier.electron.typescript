@@ -24,7 +24,10 @@
       </div>
     </main>
 
-    <custom-target-subject></custom-target-subject>
+    <custom-target-subject
+      :isShow="isCustomTargetSubjectShow"
+      @click-background="isCustomTargetSubjectShow = false"
+    ></custom-target-subject>
   </div>
 </template>
 
@@ -81,9 +84,13 @@ export default defineComponent({
       { icon: icon_create, color: "#59596F", title: "自定义目标" }
     ]);
 
+    // 创建自定义目标类别是否显示
+    const isCustomTargetSubjectShow = ref(false);
+
     // 点击事件：点击目标类别
     const click_targetSubject = (subjectName: string) => {
       if (subjectName === "自定义目标") {
+        isCustomTargetSubjectShow.value = true;
       } else {
         console.log(subjectName);
       }
@@ -105,7 +112,8 @@ export default defineComponent({
 
     return {
       targetSubjectList,
-      click_targetSubject
+      click_targetSubject,
+      isCustomTargetSubjectShow
     };
   }
 });
