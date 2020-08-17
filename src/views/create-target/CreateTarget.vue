@@ -43,10 +43,58 @@
           }}</span>
         </div>
         <h2 class="h-2">
-          例如：减肥 30 斤——跑步 2 公里<br />
-          提高语文成绩——训练语文习题 1 小时<br />
-          阅读一百本书——阅读 1 小时
+          例如：减肥 30 斤——每天跑步 2 公里<br />
+          提高语文成绩——每天训练语文习题 1 小时<br />
+          阅读一百本书——每日阅读 1 小时
         </h2>
+      </section>
+
+      <!-- 创建里程碑 -->
+      <section class="section section-3">
+        <h1 class="h-1">Step 3：创建目标里程碑——解构大目标为小目标</h1>
+        <div class="input-container">
+          <input
+            class="input"
+            type="text"
+            placeholder="请输入里程碑名称（选填）"
+            v-model="input_milestoneName"
+            @keyup.enter="keyUpEnter_milestoneName"
+          />
+
+          <svg
+            class="enter-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="17.787"
+            height="15.563"
+            viewBox="0 0 17.787 15.563"
+          >
+            <path
+              id="路径_778"
+              data-name="路径 778"
+              d="M72.452,124.893H63.558v4.447l-6.67-5.558,6.67-5.558v4.447h8.893v-8.893h2.223v11.117Z"
+              transform="translate(-56.888 -113.777)"
+            />
+          </svg>
+        </div>
+        <h2 class="h-2">
+          例如：目标是「获取产品经理 offer」，即可设置里程碑：<br />
+          1. 获取「产品」项目经验<br />
+          2. 学习「产品经理」相关知识<br />
+          3. 参加「创业比赛」<br />
+          4. 完成「产品经理」实习
+        </h2>
+      </section>
+
+      <!-- 里程碑列表 -->
+      <section class="section section-4">
+        <h1 class="h-1" style="color:#222A36">
+          Step 4：查看目标里程碑列表
+        </h1>
+        <h2 class="h-2" style="color:#222A36;font-weight:lighter;">
+          可以在这里调整里程碑的名称和优先级
+        </h2>
+
+        <place-holder tip="您还没有创建「里程碑」"></place-holder>
       </section>
     </main>
 
@@ -55,15 +103,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, inject } from "@vue/composition-api";
+import { defineComponent, reactive, inject, ref } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import CreateButton from "./components/CreateButton.vue";
 import { InputTargetType } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
+import PlaceHolder from "./components/PlaceHolder.vue";
 
 export default defineComponent({
-  components: { TopBar, TopTips, CreateButton },
+  components: { TopBar, TopTips, CreateButton, PlaceHolder },
   setup(props, context) {
     // 创建目标的数据容器
     const input_creatingTarget: InputTargetType = inject(
@@ -83,9 +132,17 @@ export default defineComponent({
 
     const click_relatePlan = () => {};
 
+    // 用户输入：里程碑的名称
+    const input_milestoneName = ref("");
+
+    // 回车事件：用户创建里程碑
+    const keyUpEnter_milestoneName = () => {};
+
     return {
       input_creatingTarget,
-      click_relatePlan
+      input_milestoneName,
+      click_relatePlan,
+      keyUpEnter_milestoneName
     };
   }
 });
@@ -105,15 +162,15 @@ export default defineComponent({
 }
 
 .section-2 {
-  background #22272C
+  background #59596F
 }
 
 .section-3 {
-  background #5F4B8B
+  background #252F3D
 }
 
 .section-4 {
-  background #5A5B9F
+  background #FFFFFF
 }
 
 .h-1 {
