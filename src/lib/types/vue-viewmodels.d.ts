@@ -59,6 +59,20 @@ export type InputTargetOrTargetSubjectType = {
   };
 };
 
+// 输入目标的类别
+export type InputTargetType = {
+  id: string | undefined;
+  subjectName: string;
+  name: string;
+  description: string;
+  validityType: "time-bound" | "indefinite" | "";
+  validity: Date | null;
+  abilityList: { id: string; name: string }[];
+  planList: { id: string; name: string }[];
+  isActived: boolean;
+  isFinished: boolean;
+};
+
 // 输入能力的类别
 export type InputAbilityType = {
   id: string | undefined;

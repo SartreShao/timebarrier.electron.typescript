@@ -5,7 +5,8 @@ import {
   TomatoCloudStatus,
   StatStatusMode,
   TomatoStatStatusMode,
-  InputPlanType
+  InputPlanType,
+  InputTargetType
 } from "@/lib/types/vue-viewmodels";
 import { UI } from "@/lib/vue-utils";
 
@@ -109,6 +110,8 @@ const isLoginSuccess = Symbol();
 const input_creatingPlan = Symbol();
 // 临时变量：正在编辑的计划
 const input_editingPlan = Symbol();
+// 临时变量：正在创建的目录
+const input_creatingTarget = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -336,6 +339,21 @@ function useProvider() {
       deadline: ""
     })
   );
+  provide(
+    input_creatingTarget,
+    reactive<InputTargetType>({
+      id: undefined,
+      subjectName: "",
+      name: "",
+      description: "",
+      validityType: "",
+      validity: null,
+      abilityList: [],
+      planList: [],
+      isActived: true,
+      isFinished: false
+    })
+  );
 }
 
 export default {
@@ -389,5 +407,6 @@ export default {
   totalTomatoNumber,
   isLoginSuccess,
   input_creatingPlan,
-  input_editingPlan
+  input_editingPlan,
+  input_creatingTarget
 };
