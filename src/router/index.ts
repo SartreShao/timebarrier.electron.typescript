@@ -191,6 +191,11 @@ const routes = [
     path: "/choose-target-subject",
     name: "choose-target-subject",
     component: () => import("../views/create-target/ChooseTargetSubject.vue")
+  },
+  {
+    path: "/create-target",
+    name: "create-target",
+    component: () => import("../views/create-target/CreateTarget.vue")
   }
 ];
 

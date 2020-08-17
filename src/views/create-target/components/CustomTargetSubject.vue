@@ -76,7 +76,6 @@ export default defineComponent({
         description: "",
         validityType: "",
         validity: null,
-        abilityList: [],
         planList: [],
         isActived: true,
         isFinished: false

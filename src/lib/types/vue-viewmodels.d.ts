@@ -67,7 +67,6 @@ export type InputTargetType = {
   description: string;
   validityType: "time-bound" | "indefinite" | "";
   validity: Date | null;
-  abilityList: { id: string; name: string }[];
   planList: { id: string; name: string }[];
   isActived: boolean;
   isFinished: boolean;

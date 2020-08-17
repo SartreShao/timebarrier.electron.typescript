@@ -348,7 +348,6 @@ function useProvider() {
       description: "",
       validityType: "",
       validity: null,
-      abilityList: [],
       planList: [],
       isActived: true,
       isFinished: false
