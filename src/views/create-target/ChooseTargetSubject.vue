@@ -23,6 +23,8 @@
         ></target-subject-item>
       </div>
     </main>
+
+    <custom-target-subject></custom-target-subject>
   </div>
 </template>
 
@@ -47,9 +49,10 @@ import icon_create from "@/assets/icon_create.svg";
 import Store from "@/store";
 import console from "console";
 import { InputTargetType } from "@/lib/types/vue-viewmodels";
+import CustomTargetSubject from "./components/CustomTargetSubject.vue";
 
 export default defineComponent({
-  components: { TopTips, TopBar, TargetSubjectItem },
+  components: { TopTips, TopBar, TargetSubjectItem, CustomTargetSubject },
   setup(props, context) {
     // 创建目标的数据容器
     const input_creatingTarget: InputTargetType = inject(
