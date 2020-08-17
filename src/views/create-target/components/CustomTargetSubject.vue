@@ -13,6 +13,7 @@
         'show-section': isShow,
         'hide-section': !isShow && isShowChangeTimes !== 1
       }"
+      @click.stop="doingNothing"
     >
       <h1 class="h-1">自定义「目标类别」</h1>
 
@@ -82,6 +83,8 @@ export default defineComponent({
       })
     );
 
+    const doingNothing = () => {};
+
     watch(
       () => props.isShow,
       value => {
@@ -91,7 +94,8 @@ export default defineComponent({
 
     return {
       isShowChangeTimes,
-      input_creatingTarget
+      input_creatingTarget,
+      doingNothing
     };
   }
 });
