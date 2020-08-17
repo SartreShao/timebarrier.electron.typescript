@@ -1,11 +1,13 @@
 import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
-import { UI } from "@/lib/vue-utils";
+import { UI, Router } from "@/lib/vue-utils";
 import {
   ElementVue,
-  InputTargetOrTargetSubjectType
+  InputTargetOrTargetSubjectType,
+  InputTargetType
 } from "@/lib/types/vue-viewmodels";
 import Api from "@/lib/api";
+import _ from "lodash";
 /**
  * 目标页
  */
@@ -1433,5 +1435,33 @@ export default {
         "error"
       );
     }
+  },
+
+  /**
+   * 提交自定义目标类别
+   */
+  commitCustomSubjectName: async (
+    vue: ElementVue,
+    input_creatingTarget: InputTargetType,
+    isCustomTargetSubjectShow: Ref<boolean>
+  ) => {
+    // 删除前后的空格
+    input_creatingTarget.subjectName = _.trim(input_creatingTarget.subjectName);
+
+    // 如果输入判断为空
+    if (input_creatingTarget.subjectName.length === 0) {
+      UI.showNotification(
+        vue.$notify,
+        "您的输入有误",
+        "「目标类别」不可为空",
+        "warning"
+      );
+      return;
+    }
+
+    // 关闭弹窗
+    isCustomTargetSubjectShow.value = false;
+
+    Router.push(vue.$router, "/create-target");
   }
 };

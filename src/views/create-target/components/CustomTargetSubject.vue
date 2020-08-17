@@ -23,6 +23,7 @@
           type="text"
           placeholder="请输入目标类别名称"
           v-model="input_creatingTarget.subjectName"
+          @keyup.enter="$emit('commit-subject-name')"
         />
 
         <svg

@@ -27,6 +27,7 @@
     <custom-target-subject
       :isShow="isCustomTargetSubjectShow"
       @click-background="isCustomTargetSubjectShow = false"
+      @commit-subject-name="click_commitSubjectName"
     ></custom-target-subject>
   </div>
 </template>
@@ -53,6 +54,9 @@ import Store from "@/store";
 import console from "console";
 import { InputTargetType } from "@/lib/types/vue-viewmodels";
 import CustomTargetSubject from "./components/CustomTargetSubject.vue";
+import { Router } from "@/lib/vue-utils";
+import _ from "lodash";
+import { TargetPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   components: { TopTips, TopBar, TargetSubjectItem, CustomTargetSubject },
@@ -92,8 +96,18 @@ export default defineComponent({
       if (subjectName === "自定义目标") {
         isCustomTargetSubjectShow.value = true;
       } else {
-        console.log(subjectName);
+        input_creatingTarget.subjectName = subjectName;
+        Router.push(context.root.$router, "/create-target");
       }
+    };
+
+    // 点击事件：提交自定义目标类别
+    const click_commitSubjectName = () => {
+      TargetPage.commitCustomSubjectName(
+        context.root,
+        input_creatingTarget,
+        isCustomTargetSubjectShow
+      );
     };
 
     // 初始化
@@ -104,7 +118,6 @@ export default defineComponent({
       input_creatingTarget.description = "";
       input_creatingTarget.validityType = "";
       input_creatingTarget.validity = null;
-      input_creatingTarget.abilityList = [];
       input_creatingTarget.planList = [];
       input_creatingTarget.isActived = true;
       input_creatingTarget.isFinished = false;
@@ -113,6 +126,7 @@ export default defineComponent({
     return {
       targetSubjectList,
       click_targetSubject,
+      click_commitSubjectName,
       isCustomTargetSubjectShow
     };
   }
