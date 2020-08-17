@@ -17,7 +17,12 @@
       <h1 class="h-1">自定义「目标类别」</h1>
 
       <div class="input-container">
-        <input class="input" type="text" placeholder="请输入目标类别名称" />
+        <input
+          class="input"
+          type="text"
+          placeholder="请输入目标类别名称"
+          v-model="input_creatingTarget.subjectName"
+        />
 
         <svg
           class="img"
@@ -46,14 +51,36 @@ import {
   onMounted,
   watch,
   watchEffect,
-  ref
+  ref,
+  inject,
+  reactive
 } from "@vue/composition-api";
+import Store from "@/store";
+import { InputTargetType } from "@/lib/types/vue-viewmodels";
+
 export default defineComponent({
   props: {
     isShow: Boolean
   },
   setup(props, context) {
     const isShowChangeTimes = ref(0);
+
+    // 创建目标的数据容器
+    const input_creatingTarget: InputTargetType = inject(
+      Store.input_creatingTarget,
+      reactive({
+        id: undefined,
+        subjectName: "",
+        name: "",
+        description: "",
+        validityType: "",
+        validity: null,
+        abilityList: [],
+        planList: [],
+        isActived: true,
+        isFinished: false
+      })
+    );
 
     watch(
       () => props.isShow,
@@ -63,7 +90,8 @@ export default defineComponent({
     );
 
     return {
-      isShowChangeTimes
+      isShowChangeTimes,
+      input_creatingTarget
     };
   }
 });
