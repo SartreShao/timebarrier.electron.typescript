@@ -7,7 +7,7 @@
     <main style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;">
       <!-- 顶部提示语 -->
       <top-tips
-        :title="`创建一个${input_creatingTarget.subjectName}`"
+        :title="`创建一个「${input_creatingTarget.subjectName}」`"
         sub-title="创建目标 + 制定计划 + 每日执行 = 得偿所愿"
       ></top-tips>
 
@@ -30,16 +30,16 @@
         <h1 class="h-1">Step 2：关联计划——为完成目标，您需要制定一个计划</h1>
         <div
           class="button"
-          @click="click_relateAbility"
-          v-if="input_creatingPlan.planList.length === 0"
+          @click="click_relatePlan"
+          v-if="input_creatingTarget.planList.length === 0"
         >
-          点击关联能力（选填）
+          点击关联计划（选填）
         </div>
 
-        <div class="button" @click="click_relateAbility" v-else>
+        <div class="button" @click="click_relatePlan" v-else>
           <span>{{
             "相关计划：" +
-              input_creatingPlan.planList.map(plan => plan.name).join("、")
+              input_creatingTarget.planList.map(plan => plan.name).join("、")
           }}</span>
         </div>
         <h2 class="h-2">
@@ -63,7 +63,7 @@ import { InputTargetType } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 
 export default defineComponent({
-  components: { TopBar, TopTips },
+  components: { TopBar, TopTips, CreateButton },
   setup(props, context) {
     // 创建目标的数据容器
     const input_creatingTarget: InputTargetType = inject(
@@ -81,8 +81,11 @@ export default defineComponent({
       })
     );
 
+    const click_relatePlan = () => {};
+
     return {
-      input_creatingTarget
+      input_creatingTarget,
+      click_relatePlan
     };
   }
 });
