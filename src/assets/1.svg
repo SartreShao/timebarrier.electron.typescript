@@ -1,3 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="14.971" height="14.971" viewBox="0 0 14.971 14.971">
-  <path id="路径_1032" data-name="路径 1032" d="M15.14,2.616l-5,5,4.926,4.926-2.469,2.469L7.667,10.088l-5,5-2.5-2.5,5-5L.246,2.667,2.715.2,7.641,5.124l5-5Z" transform="translate(-0.169 -0.121)" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="椭圆_178" data-name="椭圆 178" fill="#fff" stroke="#959595" stroke-width="1">
+    <circle cx="18" cy="18" r="18" stroke="none"/>
+    <circle cx="18" cy="18" r="17.5" fill="none"/>
+  </g>
 </svg>
