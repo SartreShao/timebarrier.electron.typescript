@@ -79,7 +79,8 @@ export default defineComponent({
         validity: null,
         planList: [],
         isActived: true,
-        isFinished: false
+        isFinished: false,
+        mileStoneList: []
       })
     );
 

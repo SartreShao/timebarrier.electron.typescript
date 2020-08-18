@@ -213,7 +213,12 @@ export default defineComponent({
 
     // 删除选中的 MileStone
     const click_deleteMileStone = (index: number) => {
-      input_creatingTarget.mileStoneList.splice(index, 1);
+      TargetPage.deleteMileStone(
+        context.root,
+        input_creatingTarget,
+        index,
+        mainElement
+      );
     };
 
     // 拖拽结束

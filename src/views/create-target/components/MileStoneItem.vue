@@ -70,6 +70,7 @@ export default defineComponent({
   align-items center
   box-sizing border-box
   padding-left 5.87vw
+  padding-right 6.5vw
   font-weight bold
   color white
   font-size 1.65vh

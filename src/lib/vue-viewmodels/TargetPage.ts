@@ -1509,5 +1509,31 @@ export default {
 
     // 清空输入框
     input_milestoneName.value = "";
+  },
+
+  /**
+   * 删除里程碑
+   */
+  deleteMileStone: async (
+    vue: ElementVue,
+    input_creatingTarget: InputTargetType,
+    index: number,
+    mainElement: Ref<HTMLElement | null>
+  ) => {
+    try {
+      await UI.showConfirm(
+        vue.$confirm,
+        "确认删除里程碑：" + input_creatingTarget.mileStoneList[index].name,
+        "您正在删除一个里程碑"
+      );
+      input_creatingTarget.mileStoneList.splice(index, 1);
+
+      // 将滚动条滚到最底部
+      if (mainElement.value !== null) {
+        mainElement.value.scrollTop = mainElement.value.scrollHeight;
+      }
+    } catch (error) {
+      // doing nothing
+    }
   }
 };
