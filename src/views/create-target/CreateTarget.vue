@@ -193,6 +193,7 @@ export default defineComponent({
 }
 
 .input-container {
+  position relative
   width 88.8vw
   height 6.22vh
   background white
@@ -255,5 +256,16 @@ export default defineComponent({
     color #222A36
     opacity 0.3
   }
+}
+
+.enter-icon {
+  position absolute
+  width 2.37vw
+  height 1.17vh
+  top 0
+  bottom 0
+  margin-top auto
+  margin-bottom auto
+  right 5.57vw
 }
 </style>
