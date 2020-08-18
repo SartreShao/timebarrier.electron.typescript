@@ -115,8 +115,7 @@
               :key="index"
               :name="mileStone.name"
               :order="index"
-              :mainColor="mileStone.mainColor"
-              :secondaryColor="mileStone.secondaryColor"
+              :color="mileStone.color"
               @click-delete="click_deleteMileStone(index)"
             ></mile-stone-item>
           </transition-group>
@@ -187,8 +186,6 @@ export default defineComponent({
     // 用户输入：里程碑的名称
     const input_milestoneName = ref("");
 
-    const colormap: string[] = inject(Store.colormapPantone, []);
-
     const colormapForTreeChart: string[] = inject(
       Store.colormapForTreeChart,
       []
@@ -202,7 +199,6 @@ export default defineComponent({
         context.root,
         input_milestoneName,
         input_creatingTarget,
-        colormap,
         colormapForTreeChart,
         mainElement
       );

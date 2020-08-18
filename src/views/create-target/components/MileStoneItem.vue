@@ -3,7 +3,7 @@
     <div
       class="left-part"
       :style="{
-        background: secondaryColor
+        background: color
       }"
     >
       {{ order + 1 }}
@@ -37,8 +37,7 @@
 import { defineComponent } from "@vue/composition-api";
 export default defineComponent({
   props: {
-    secondaryColor: String,
-    mainColor: String,
+    color: String,
     order: Number,
     name: String
   }

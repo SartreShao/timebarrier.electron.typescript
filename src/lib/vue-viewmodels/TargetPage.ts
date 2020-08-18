@@ -1472,8 +1472,7 @@ export default {
     vue: ElementVue,
     input_milestoneName: Ref<string>,
     input_creatingTarget: InputTargetType,
-    mainColormap: string[],
-    secondaryColormap: string[],
+    colormap: string[],
     mainElement: Ref<HTMLElement | null>
   ) => {
     const mileStoneName = _.trim(input_milestoneName.value);
@@ -1492,14 +1491,8 @@ export default {
     // 创建里程碑
     input_creatingTarget.mileStoneList.push({
       name: mileStoneName,
-      mainColor:
-        mainColormap[
-          input_creatingTarget.mileStoneList.length % mainColormap.length
-        ],
-      secondaryColor:
-        secondaryColormap[
-          input_creatingTarget.mileStoneList.length % secondaryColormap.length
-        ]
+      color:
+        colormap[input_creatingTarget.mileStoneList.length % colormap.length]
     });
 
     // 将滚动条滚到最底部

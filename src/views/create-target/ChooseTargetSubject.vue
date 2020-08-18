@@ -122,6 +122,7 @@ export default defineComponent({
       input_creatingTarget.planList = [];
       input_creatingTarget.isActived = true;
       input_creatingTarget.isFinished = false;
+      input_creatingTarget.mileStoneList = [];
     });
 
     return {

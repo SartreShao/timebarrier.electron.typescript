@@ -76,8 +76,7 @@ export type InputTargetType = {
 // 输入里程碑的类别
 export type InputMileStoneType = {
   name: string;
-  secondaryColor: String;
-  mainColor: String;
+  color: string;
 };
 
 // 输入能力的类别
