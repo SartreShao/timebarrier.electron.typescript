@@ -14,6 +14,7 @@ const AbilityTarget = AV.Object.extend("AbilityTarget");
 const LevelRule = AV.Object.extend("LevelRule");
 const TargetPlan = AV.Object.extend("TargetPlan");
 const Global = AV.Object.extend("Global");
+const MileStone = AV.Object.extend("MileStone");
 
 export default {
   init: () => {
@@ -1962,5 +1963,10 @@ export default {
         Log.error("isClosedBeta", error);
         reject(error);
       }
-    })
+    }),
+
+  /**
+   * 创建 MileStone
+   */
+  createMileStone: () => {}
 };

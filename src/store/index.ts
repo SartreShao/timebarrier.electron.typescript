@@ -350,7 +350,8 @@ function useProvider() {
       validity: null,
       planList: [],
       isActived: true,
-      isFinished: false
+      isFinished: false,
+      mileStoneList: []
     })
   );
 }

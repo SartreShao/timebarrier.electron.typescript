@@ -70,6 +70,14 @@ export type InputTargetType = {
   planList: { id: string; name: string }[];
   isActived: boolean;
   isFinished: boolean;
+  mileStoneList: InputMileStoneType[];
+};
+
+// 输入里程碑的类别
+export type InputMileStoneType = {
+  name: string;
+  secondaryColor: String;
+  mainColor: String;
 };
 
 // 输入能力的类别

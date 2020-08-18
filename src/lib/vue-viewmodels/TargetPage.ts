@@ -1463,5 +1463,51 @@ export default {
     isCustomTargetSubjectShow.value = false;
 
     Router.push(vue.$router, "/create-target");
+  },
+
+  /**
+   * 创建「里程碑」
+   */
+  createMileStone: async (
+    vue: ElementVue,
+    input_milestoneName: Ref<string>,
+    input_creatingTarget: InputTargetType,
+    mainColormap: string[],
+    secondaryColormap: string[],
+    mainElement: Ref<HTMLElement | null>
+  ) => {
+    const mileStoneName = _.trim(input_milestoneName.value);
+
+    // 输入检测
+    if (mileStoneName.length === 0) {
+      UI.showNotification(
+        vue.$notify,
+        "您的输入有误",
+        "「里程碑名称」不可为空",
+        "warning"
+      );
+      return;
+    }
+
+    // 创建里程碑
+    input_creatingTarget.mileStoneList.push({
+      name: mileStoneName,
+      mainColor:
+        mainColormap[
+          input_creatingTarget.mileStoneList.length % mainColormap.length
+        ],
+      secondaryColor:
+        secondaryColormap[
+          input_creatingTarget.mileStoneList.length % secondaryColormap.length
+        ]
+    });
+
+    // 将滚动条滚到最底部
+    if (mainElement.value !== null) {
+      mainElement.value.scrollTop = mainElement.value.scrollHeight;
+    }
+
+    // 清空输入框
+    input_milestoneName.value = "";
   }
 };

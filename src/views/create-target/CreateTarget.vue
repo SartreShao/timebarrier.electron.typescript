@@ -4,7 +4,10 @@
     <top-bar></top-bar>
 
     <!-- 主要页面 -->
-    <main style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;">
+    <main
+      style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;"
+      ref="mainElement"
+    >
       <!-- 顶部提示语 -->
       <top-tips
         :title="`创建一个「${input_creatingTarget.subjectName}」`"
@@ -94,7 +97,24 @@
           可以在这里调整里程碑的名称和优先级
         </h2>
 
-        <place-holder tip="您还没有创建「里程碑」"></place-holder>
+        <place-holder
+          tip="您还没有创建「里程碑」"
+          v-if="input_creatingTarget.mileStoneList.length === 0"
+        ></place-holder>
+
+        <mile-stone-item
+          v-for="(mileStone, index) in input_creatingTarget.mileStoneList"
+          :key="index"
+          :name="mileStone.name"
+          :order="index"
+          :mainColor="mileStone.mainColor"
+          :secondaryColor="mileStone.secondaryColor"
+        ></mile-stone-item>
+
+        <div
+          style="height:9.22vh"
+          v-if="input_creatingTarget.mileStoneList.length !== 0"
+        ></div>
       </section>
     </main>
 
@@ -103,16 +123,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, inject, ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  reactive,
+  inject,
+  ref,
+  Ref
+} from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
 import CreateButton from "./components/CreateButton.vue";
 import { InputTargetType } from "@/lib/types/vue-viewmodels";
 import Store from "@/store";
 import PlaceHolder from "./components/PlaceHolder.vue";
+import MileStoneItem from "./components/MileStoneItem.vue";
+import { TargetPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { TopBar, TopTips, CreateButton, PlaceHolder },
+  components: { TopBar, TopTips, CreateButton, PlaceHolder, MileStoneItem },
   setup(props, context) {
     // 创建目标的数据容器
     const input_creatingTarget: InputTargetType = inject(
@@ -126,7 +154,8 @@ export default defineComponent({
         validity: null,
         planList: [],
         isActived: true,
-        isFinished: false
+        isFinished: false,
+        mileStoneList: []
       })
     );
 
@@ -135,13 +164,32 @@ export default defineComponent({
     // 用户输入：里程碑的名称
     const input_milestoneName = ref("");
 
+    const colormap: string[] = inject(Store.colormapPantone, []);
+
+    const colormapForTreeChart: string[] = inject(
+      Store.colormapForTreeChart,
+      []
+    );
+
+    const mainElement: Ref<HTMLElement | null> = ref(null);
+
     // 回车事件：用户创建里程碑
-    const keyUpEnter_milestoneName = () => {};
+    const keyUpEnter_milestoneName = () => {
+      TargetPage.createMileStone(
+        context.root,
+        input_milestoneName,
+        input_creatingTarget,
+        colormap,
+        colormapForTreeChart,
+        mainElement
+      );
+    };
 
     return {
       input_creatingTarget,
       input_milestoneName,
       click_relatePlan,
+      mainElement,
       keyUpEnter_milestoneName
     };
   }

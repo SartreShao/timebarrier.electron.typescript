@@ -6,10 +6,10 @@
         background: secondaryColor
       }"
     >
-      {{ index }}
+      {{ order + 1 }}
     </div>
 
-    <div class="right-part">
+    <div class="right-part" :style="{ background: mainColor }">
       {{ name }}
 
       <div class="img-container" @click="$emit('click-delete')">
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {
     secondaryColor: String,
     mainColor: String,
-    index: Number,
+    order: Number,
     name: String
   }
 });
@@ -50,6 +50,7 @@ export default defineComponent({
   display flex
   width 88.8vw
   height 6.37vh
+  margin-bottom 0.9vh
 }
 
 .left-part {
@@ -65,7 +66,8 @@ export default defineComponent({
 }
 
 .right-part {
-  display align-items
+  display flex
+  align-items center
   box-sizing border-box
   padding-left 5.87vw
   font-weight bold
