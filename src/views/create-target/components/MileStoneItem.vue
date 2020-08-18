@@ -9,7 +9,7 @@
       {{ order + 1 }}
     </div>
 
-    <div class="right-part" :style="{ background: mainColor }">
+    <div class="right-part">
       {{ name }}
 
       <div class="img-container" @click="$emit('click-delete')">
@@ -77,6 +77,7 @@ export default defineComponent({
   width 74.67vw
   height 6.37vh
   position relative
+  background #222a36
 }
 
 .img-container {
