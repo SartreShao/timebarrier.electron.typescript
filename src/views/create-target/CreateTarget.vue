@@ -4,10 +4,7 @@
     <top-bar></top-bar>
 
     <!-- 主要页面 -->
-    <main
-      style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;"
-      ref="mainElement"
-    >
+    <main class="main" ref="mainElement">
       <!-- 顶部提示语 -->
       <top-tips
         :title="`创建一个「${input_creatingTarget.subjectName}」`"
@@ -53,8 +50,8 @@
       </section>
 
       <!-- 创建里程碑 -->
-      <section class="section section-3">
-        <h1 class="h-1">Step 3：创建目标里程碑——解构大目标为小目标</h1>
+      <section class="section section-3" ref="stickyElement">
+        <h1 class="h-1">Step 3：创建「目标里程碑」——解构大目标为小目标</h1>
         <div class="input-container">
           <input
             class="input"
@@ -79,37 +76,51 @@
             />
           </svg>
         </div>
-        <h2 class="h-2">
+
+        <h2 class="h-2" v-if="mileStoneTipIsShow">
           例如：目标是「获取产品经理 offer」，即可设置里程碑：<br />
           1. 获取「产品」项目经验<br />
           2. 学习「产品经理」相关知识<br />
           3. 参加「创业比赛」<br />
           4. 完成「产品经理」实习
         </h2>
+
+        <div style="height:4.57vh" v-else></div>
       </section>
 
       <!-- 里程碑列表 -->
       <section class="section section-4">
         <h1 class="h-1" style="color:#222A36">
-          Step 4：查看目标里程碑列表
+          Step 4：查看「目标里程碑」列表
         </h1>
         <h2 class="h-2" style="color:#222A36;font-weight:lighter;">
           可以在这里调整里程碑的名称和优先级
         </h2>
 
         <place-holder
-          tip="您还没有创建「里程碑」"
+          tip="您还没有创建「里程碑」，请在 Step 3 中创建"
           v-if="input_creatingTarget.mileStoneList.length === 0"
         ></place-holder>
 
-        <mile-stone-item
-          v-for="(mileStone, index) in input_creatingTarget.mileStoneList"
-          :key="index"
-          :name="mileStone.name"
-          :order="index"
-          :mainColor="mileStone.mainColor"
-          :secondaryColor="mileStone.secondaryColor"
-        ></mile-stone-item>
+        <draggable
+          class="draggable"
+          :options="draggableOptions"
+          v-model="input_creatingTarget.mileStoneList"
+          ghost-class="ghost"
+          @end="dragend_mileStone"
+        >
+          <transition-group type="transition" name="flip-list">
+            <mile-stone-item
+              v-for="(mileStone, index) in input_creatingTarget.mileStoneList"
+              :key="index"
+              :name="mileStone.name"
+              :order="index"
+              :mainColor="mileStone.mainColor"
+              :secondaryColor="mileStone.secondaryColor"
+              @click-delete="click_deleteMileStone(index)"
+            ></mile-stone-item>
+          </transition-group>
+        </draggable>
 
         <div
           style="height:9.22vh"
@@ -128,7 +139,11 @@ import {
   reactive,
   inject,
   ref,
-  Ref
+  Ref,
+  computed,
+  onMounted,
+  onUnmounted,
+  watch
 } from "@vue/composition-api";
 import TopBar from "../../components/TopBar.vue";
 import TopTips from "../../components/TopTips.vue";
@@ -138,9 +153,17 @@ import Store from "@/store";
 import PlaceHolder from "./components/PlaceHolder.vue";
 import MileStoneItem from "./components/MileStoneItem.vue";
 import { TargetPage } from "@/lib/vue-viewmodels";
+import draggable from "vuedraggable";
 
 export default defineComponent({
-  components: { TopBar, TopTips, CreateButton, PlaceHolder, MileStoneItem },
+  components: {
+    draggable,
+    TopBar,
+    TopTips,
+    CreateButton,
+    PlaceHolder,
+    MileStoneItem
+  },
   setup(props, context) {
     // 创建目标的数据容器
     const input_creatingTarget: InputTargetType = inject(
@@ -185,18 +208,64 @@ export default defineComponent({
       );
     };
 
+    // 配置信息
+    const draggableOptions = inject(Store.draggableOptions, {});
+
+    // 删除选中的 MileStone
+    const click_deleteMileStone = (index: number) => {
+      input_creatingTarget.mileStoneList.splice(index, 1);
+    };
+
+    // 拖拽结束
+    const dragend_mileStone = () => {};
+
+    // 这是那个输入框
+    const stickyElement: Ref<HTMLElement | null> = ref(null);
+
+    // 是否显示提示语（当 Sticky 粘贴到顶部就不显示了）
+    const mileStoneTipIsShow = computed(() => {
+      return input_creatingTarget.mileStoneList.length === 0;
+    });
+
     return {
       input_creatingTarget,
       input_milestoneName,
       click_relatePlan,
+      click_deleteMileStone,
+      draggableOptions,
       mainElement,
-      keyUpEnter_milestoneName
+      keyUpEnter_milestoneName,
+      dragend_mileStone,
+      mileStoneTipIsShow,
+      stickyElement
     };
   }
 });
 </script>
 
 <style lang="stylus" scoped>
+.flip-list-move {
+  transition transform 0.5s
+}
+
+.ghost {
+  opacity 0.7
+}
+
+.draggable {
+  width 100%
+  display flex
+  flex-direction column
+  align-items center
+}
+
+.main {
+  margin-top 7.52vh
+  overflow scroll
+  height 92.48vh
+  width 100%
+}
+
 .section {
   width 100%
   display flex
@@ -214,7 +283,10 @@ export default defineComponent({
 }
 
 .section-3 {
+  position sticky
+  top 0
   background #252F3D
+  z-index 999
 }
 
 .section-4 {

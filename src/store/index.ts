@@ -208,11 +208,12 @@ function useProvider() {
   provide(colormapPantone, [
     "#1B3C79",
     "#1A2634",
+    "#91A8D0",
+    "#039E7E",
     "#5F4B8B",
     "#F0C05A",
     "#D94F70",
-    "#45B5AA",
-    "#91A8D0"
+    "#45B5AA"
   ]);
   provide(colormapForTreeChart, [
     "#F9385E",
