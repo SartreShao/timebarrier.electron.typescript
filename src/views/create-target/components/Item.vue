@@ -109,6 +109,8 @@ export default defineComponent({
   position absolute
   right -1.2vw
   top -1.05vh
+  display flex
+  align-items center
 
   span {
     line-height 1.87vh

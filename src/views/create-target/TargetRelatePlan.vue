@@ -76,6 +76,7 @@
       :isShow="isInputPlanTargetShow"
       @commit="commitPlanTarget"
       @cancel-commit="cancelCommitPlanTarget"
+      v-model="input_dailyPlanTarget"
     ></input-plan-target>
   </div>
 </template>
@@ -133,6 +134,12 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
     // 用户输入：正在创建的目标
     const input_creatingTarget: InputTargetType = inject(
       Store.input_creatingTarget,
@@ -167,9 +174,16 @@ export default defineComponent({
       })
     );
 
+    // 每日计划的目标番茄
+    const input_dailyPlanTarget: Ref<string> = ref("");
+
     // 在目标输入框回车：创建目标
     const keyUpEnter_planInputBox = () => {
-      isInputPlanTargetShow.value = true;
+      TargetPage.openPlanTargetInputBox(
+        input_planName,
+        isInputPlanTargetShow,
+        input_dailyPlanTarget
+      );
     };
 
     // 选择目标
@@ -228,7 +242,31 @@ export default defineComponent({
       }
     };
 
-    const commitPlanTarget = () => {};
+    const commitPlanTarget = () => {
+      if (props.isCreateTarget) {
+        TargetPage.createDailyPlan(
+          context.root,
+          input_planName,
+          input_dailyPlanTarget,
+          null,
+          input_creatingTarget,
+          input_planListOfTarget,
+          dailyPlanList,
+          isInputPlanTargetShow
+        );
+      } else {
+        TargetPage.createDailyPlan(
+          context.root,
+          input_planName,
+          input_dailyPlanTarget,
+          input_editingTarget,
+          null,
+          input_planListOfTarget,
+          dailyPlanList,
+          isInputPlanTargetShow
+        );
+      }
+    };
 
     onMounted(() => {
       console.log("props.isCreateTarget", props.isCreateTarget);
@@ -261,7 +299,8 @@ export default defineComponent({
       click_planItem,
       click_saveRelatedPlan,
       cancelCommitPlanTarget,
-      commitPlanTarget
+      commitPlanTarget,
+      input_dailyPlanTarget
     };
   }
 });
