@@ -70,6 +70,13 @@
     </main>
 
     <create-button @click="click_saveRelatedPlan"></create-button>
+
+    <input-plan-target
+      :isShow="isInputPlanTargetShow"
+      @click-background="isInputPlanTargetShow = false"
+      @commit="commitPlanTarget"
+      @cancel-commit="cancelCommitPlanTarget"
+    ></input-plan-target>
   </div>
 </template>
 
@@ -92,9 +99,17 @@ import Store from "@/store";
 import CreateButton from "./components/CreateButton.vue";
 import { InputPlanType, InputTargetType } from "@/lib/types/vue-viewmodels";
 import { Router } from "@/lib/vue-utils";
+import InputPlanTarget from "./components/InputPlanTarget.vue";
 
 export default defineComponent({
-  components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
+  components: {
+    TopBar,
+    TopTips,
+    PlaceHolder,
+    Item,
+    CreateButton,
+    InputPlanTarget
+  },
   props: {
     isCreateTarget: Boolean
   },
@@ -109,6 +124,8 @@ export default defineComponent({
     const colormap = inject(Store.colormap, []);
 
     const colormapForTreeChart = inject(Store.colormapForTreeChart, []);
+
+    const isInputPlanTargetShow = ref(false);
 
     // 用户输入：正在创建的目标
     const input_creatingTarget: InputTargetType = inject(
@@ -183,6 +200,10 @@ export default defineComponent({
       }
     };
 
+    const cancelCommitPlanTarget = () => {};
+
+    const commitPlanTarget = () => {};
+
     onMounted(() => {
       console.log("props.isCreateTarget", props.isCreateTarget);
       if (props.isCreateTarget) {
@@ -208,10 +229,13 @@ export default defineComponent({
       input_planListOfTarget,
       input_creatingTarget,
       input_editingTarget,
+      isInputPlanTargetShow,
       colormap,
       colormapForTreeChart,
       click_planItem,
-      click_saveRelatedPlan
+      click_saveRelatedPlan,
+      cancelCommitPlanTarget,
+      commitPlanTarget
     };
   }
 });
