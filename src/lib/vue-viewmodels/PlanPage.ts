@@ -7,6 +7,7 @@ import {
   InputPlanType
 } from "@/lib/types/vue-viewmodels";
 import Api from "@/lib/api";
+import _ from "lodash";
 
 /**
  * 计划页
@@ -1089,8 +1090,10 @@ export default {
       return;
     }
 
+    const targetName = _.trim(input_targetName.value);
+
     // 检查传入数据
-    if (input_targetName.value.length === 0) {
+    if (targetName.length === 0) {
       // doing nothing
       return;
     }

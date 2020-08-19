@@ -61,9 +61,10 @@
         ></place-holder>
 
         <item
-          v-for="plan in input_planListOfTarget"
+          v-for="(plan, index) in input_planListOfTarget"
           :key="plan.id"
           :data="plan"
+          :buttonColor="colormap[index % colormap.length]"
           @click="click_planItem(plan)"
         ></item>
       </section>
@@ -73,7 +74,6 @@
 
     <input-plan-target
       :isShow="isInputPlanTargetShow"
-      @click-background="isInputPlanTargetShow = false"
       @commit="commitPlanTarget"
       @cancel-commit="cancelCommitPlanTarget"
     ></input-plan-target>
@@ -127,6 +127,12 @@ export default defineComponent({
 
     const isInputPlanTargetShow = ref(false);
 
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
     // 用户输入：正在创建的目标
     const input_creatingTarget: InputTargetType = inject(
       Store.input_creatingTarget,
@@ -163,9 +169,7 @@ export default defineComponent({
 
     // 在目标输入框回车：创建目标
     const keyUpEnter_planInputBox = () => {
-      if (props.isCreateTarget === true) {
-      } else {
-      }
+      isInputPlanTargetShow.value = true;
     };
 
     // 选择目标
@@ -200,7 +204,29 @@ export default defineComponent({
       }
     };
 
-    const cancelCommitPlanTarget = () => {};
+    const cancelCommitPlanTarget = () => {
+      if (props.isCreateTarget) {
+        TargetPage.createTemporaryPlan(
+          context.root,
+          input_planName,
+          null,
+          input_creatingTarget,
+          input_planListOfTarget,
+          temporaryPlanList,
+          isInputPlanTargetShow
+        );
+      } else {
+        TargetPage.createTemporaryPlan(
+          context.root,
+          input_planName,
+          input_editingTarget,
+          null,
+          input_planListOfTarget,
+          temporaryPlanList,
+          isInputPlanTargetShow
+        );
+      }
+    };
 
     const commitPlanTarget = () => {};
 

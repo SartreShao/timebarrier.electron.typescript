@@ -1,7 +1,7 @@
 <template>
   <div
     class="background"
-    @click="$emit('click-background')"
+    @click="$emit('cancel-commit')"
     :style="{
       background: isShow ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0)',
       height: isShow ? '100%' : '0'
@@ -20,7 +20,7 @@
       <div class="input-container">
         <input
           class="input"
-          type="text"
+          type="number"
           placeholder="请输入每日训练目标番茄数"
           v-bind:value="value"
           v-on:input="$emit('input', $event.target.value)"
@@ -220,9 +220,11 @@ export default defineComponent({
   width 81.07vw
   display flex
   justify-content space-between
+  margin-top 2.77vh
 }
 
 .button-1 {
+  cursor pointer
   width 39.73vw
   height 6.45vh
   border-radius 0.75vh
@@ -236,6 +238,7 @@ export default defineComponent({
 }
 
 .button-2 {
+  cursor pointer
   width 39.73vw
   height 6.45vh
   border-radius 0.75vh

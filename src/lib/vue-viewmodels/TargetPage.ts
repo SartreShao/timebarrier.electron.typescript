@@ -1610,5 +1610,114 @@ export default {
         "error"
       );
     }
+  },
+  /**
+   * 创建临时计划
+   */
+  createTemporaryPlan: async (
+    vue: ElementVue,
+    input_planName: Ref<string>,
+    input_editingTarget: InputTargetType | null,
+    input_creatingTarget: InputTargetType | null,
+    input_planListOfTarget: Ref<AV.Object[]>,
+    temporaryPlanList: Ref<AV.Object[]>,
+    isInputPlanTargetShow: Ref<boolean>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    const planName = _.trim(input_planName.value);
+
+    // 传入数据检查
+    if (planName.length === 0) {
+      return;
+    }
+
+    // 尝试请求带有 selected 属性的 Target
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建计划...");
+
+    try {
+      // 创建计划
+      await Api.createPlan(
+        planName,
+        "temporary",
+        user,
+        undefined,
+        true,
+        false,
+        [],
+        [],
+        undefined
+      );
+
+      // 当前在创建计划
+      if (input_editingTarget === null && input_creatingTarget !== null) {
+        input_planListOfTarget.value = await Api.fetchPlanList(user, "all");
+
+        input_creatingTarget.planList.forEach(input_plan => {
+          input_planListOfTarget.value.forEach(plan => {
+            if (input_plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+
+        UI.hideLoading(loadingInstance);
+      }
+      // 当前正在编辑计划
+      else if (input_editingTarget !== null && input_creatingTarget === null) {
+        if (input_editingTarget.id === undefined) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingTarget.id === undefined",
+            "error"
+          );
+          return;
+        }
+
+        input_planListOfTarget.value = await Api.fetchPlanList(user, "all");
+
+        input_editingTarget.planList.forEach(input_plan => {
+          input_planListOfTarget.value.forEach(plan => {
+            if (input_plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+
+        UI.hideLoading(loadingInstance);
+      } else {
+        Log.error(
+          "vm: TargetPage's initRelatedPlan",
+          new Error(
+            "please select input_editingTarget or input_creatingTarget to input"
+          )
+        );
+        return;
+      }
+
+      // 尝试获取临时计划列表
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+
+      input_planName.value = "";
+
+      isInputPlanTargetShow.value = false;
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "网络出错",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
   }
 };
