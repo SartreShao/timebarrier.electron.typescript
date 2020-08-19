@@ -110,8 +110,10 @@ const isLoginSuccess = Symbol();
 const input_creatingPlan = Symbol();
 // 临时变量：正在编辑的计划
 const input_editingPlan = Symbol();
-// 临时变量：正在创建的目录
+// 临时变量：正在创建的目标
 const input_creatingTarget = Symbol();
+// 临时变量：正在编辑的目标
+const input_editingTarget = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -355,6 +357,21 @@ function useProvider() {
       mileStoneList: []
     })
   );
+  provide(
+    input_editingTarget,
+    reactive<InputTargetType>({
+      id: undefined,
+      subjectName: "",
+      name: "",
+      description: "",
+      validityType: "",
+      validity: null,
+      planList: [],
+      isActived: true,
+      isFinished: false,
+      mileStoneList: []
+    })
+  );
 }
 
 export default {
@@ -409,5 +426,6 @@ export default {
   isLoginSuccess,
   input_creatingPlan,
   input_editingPlan,
-  input_creatingTarget
+  input_creatingTarget,
+  input_editingTarget
 };

@@ -860,10 +860,7 @@ export default {
     try {
       // 当前在创建计划
       if (input_editingPlan === null && input_creatingPlan !== null) {
-        input_targetListOfPlan.value = await Api.fetchTargetList(
-          user,
-          "uncompleted"
-        );
+        input_targetListOfPlan.value = await Api.fetchTargetList(user, "all");
 
         input_creatingPlan.targetList.forEach(input_target => {
           input_targetListOfPlan.value.forEach(target => {
@@ -887,10 +884,7 @@ export default {
           return;
         }
 
-        input_targetListOfPlan.value = await Api.fetchTargetList(
-          user,
-          "uncompleted"
-        );
+        input_targetListOfPlan.value = await Api.fetchTargetList(user, "all");
 
         input_editingPlan.targetList.forEach(input_target => {
           input_targetListOfPlan.value.forEach(target => {
@@ -902,7 +896,7 @@ export default {
         UI.hideLoading(loadingInstance);
       } else {
         Log.error(
-          "vm: PlaPage's initRelatedAbility",
+          "vm: PlanPage's initRelatedAbility",
           new Error(
             "please select input_editingPlan or input_creatingPlan to input"
           )
@@ -1122,10 +1116,7 @@ export default {
 
       // 当前在创建计划
       if (input_editingPlan === null && input_creatingPlan !== null) {
-        input_targetListOfPlan.value = await Api.fetchTargetList(
-          user,
-          "uncompleted"
-        );
+        input_targetListOfPlan.value = await Api.fetchTargetList(user, "all");
 
         input_creatingPlan.targetList.forEach(input_target => {
           input_targetListOfPlan.value.forEach(target => {
@@ -1142,10 +1133,7 @@ export default {
           return;
         }
 
-        input_targetListOfPlan.value = await Api.fetchTargetList(
-          user,
-          "uncompleted"
-        );
+        input_targetListOfPlan.value = await Api.fetchTargetList(user, "all");
 
         input_editingPlan.targetList.forEach(input_target => {
           input_targetListOfPlan.value.forEach(target => {
@@ -1196,7 +1184,7 @@ export default {
   selectAbilityToCommit: (ability: { attributes: { selected: boolean } }) => {
     ability.attributes.selected = !ability.attributes.selected;
   },
-  selectTargetToComit: (target: { attributes: { selected: boolean } }) => {
+  selectTargetToCommit: (target: { attributes: { selected: boolean } }) => {
     target.attributes.selected = !target.attributes.selected;
   },
   /**

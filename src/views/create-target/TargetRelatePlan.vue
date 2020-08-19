@@ -7,7 +7,11 @@
       <!-- 主要页面 -->
       <top-tips
         title="为「目标」制定训练「计划」"
-        :sub-title="'目标：' + input_creatingTarget.name"
+        :sub-title="
+          isCreateTarget
+            ? `目标：${input_creatingTarget.name}`
+            : `目标：${input_editingTarget.name}`
+        "
       ></top-tips>
 
       <!-- 创建目标 -->
@@ -52,24 +56,20 @@
         </h2>
 
         <place-holder
-          v-if="input_targetListOfPlan.length === 0"
+          v-if="input_planListOfTarget.length === 0"
           tip="您还没有创建「训练计划」，创建后才可以关联哦"
         ></place-holder>
 
         <item
-          v-for="(target, index) in input_targetListOfPlan"
-          :key="target.id"
-          :data="target"
-          :background-color="target.attributes.color"
-          :button-color="
-            colormapForTreeChart[index % colormapForTreeChart.length]
-          "
-          @click="click_targetItem(target)"
+          v-for="plan in input_planListOfTarget"
+          :key="plan.id"
+          :data="plan"
+          @click="click_planItem(plan)"
         ></item>
       </section>
     </main>
 
-    <create-button @click="click_saveRelatedTarget"></create-button>
+    <create-button @click="click_saveRelatedPlan"></create-button>
   </div>
 </template>
 
@@ -87,134 +87,95 @@ import TopTips from "../../components/TopTips.vue";
 import PlaceHolder from "./components/PlaceHolder.vue";
 import Item from "./components/Item.vue";
 import AV from "leancloud-storage";
-import { PlanPage } from "@/lib/vue-viewmodels";
+import { PlanPage, TargetPage } from "@/lib/vue-viewmodels";
 import Store from "@/store";
 import CreateButton from "./components/CreateButton.vue";
-import { InputPlanType } from "@/lib/types/vue-viewmodels";
+import { InputPlanType, InputTargetType } from "@/lib/types/vue-viewmodels";
 import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: { TopBar, TopTips, PlaceHolder, Item, CreateButton },
   props: {
-    isCreatePlan: Boolean
+    isCreateTarget: Boolean
   },
   setup(props, context) {
     // 用户输入：创建的「目标」的名称
     const input_planName: Ref<string> = ref("");
 
     // 用户输入：需要关联到计划的目标列表
-    const input_targetListOfPlan: Ref<AV.Object[]> = ref([]);
-
-    // Target
-    // 未分组的「目标」的列表
-    const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
-      Store.unSubjectiveTargetList,
-      ref([])
-    );
-
-    //「目标类别」的列表
-    const targetSubjectList: Ref<AV.Object[]> = inject(
-      Store.targetSubjectList,
-      ref([])
-    );
-
-    // 已完成的「目标」列表
-    const completedTargetList: Ref<AV.Object[]> = inject(
-      Store.completedTargetList,
-      ref([])
-    );
+    const input_planListOfTarget: Ref<AV.Object[]> = ref([]);
 
     // 颜色表
     const colormap = inject(Store.colormap, []);
 
     const colormapForTreeChart = inject(Store.colormapForTreeChart, []);
 
-    // 正在创建的计划
-    const input_creatingPlan: InputPlanType = inject(
-      Store.input_creatingPlan,
+    // 用户输入：正在创建的目标
+    const input_creatingTarget: InputTargetType = inject(
+      Store.input_creatingTarget,
       reactive({
         id: undefined,
+        subjectName: "",
         name: "",
-        abilityList: [],
-        targetList: [],
-        type: "temporary",
-        target: "",
-        isActived: false,
+        description: "",
+        validityType: "",
+        validity: null,
+        planList: [],
+        isActived: true,
         isFinished: false,
-        deadline: ""
+        mileStoneList: []
       })
     );
 
-    // 用户输入：当前编辑的「计划」
-    const input_editingPlan: InputPlanType = inject(
-      Store.input_editingPlan,
+    // 用户输入：正在编辑的目标
+    const input_editingTarget: InputTargetType = inject(
+      Store.input_editingTarget,
       reactive({
         id: undefined,
+        subjectName: "",
         name: "",
-        abilityList: [],
-        targetList: [],
-        type: "temporary",
-        target: "",
-        isActived: false,
+        description: "",
+        validityType: "",
+        validity: null,
+        planList: [],
+        isActived: true,
         isFinished: false,
-        deadline: ""
+        mileStoneList: []
       })
     );
 
     // 在目标输入框回车：创建目标
     const keyUpEnter_planInputBox = () => {
-      if (props.isCreatePlan === true) {
-        PlanPage.createTarget(
-          context.root,
-          input_planName,
-          input_targetListOfPlan,
-          null,
-          input_creatingPlan,
-          unSubjectiveTargetList,
-          completedTargetList,
-          targetSubjectList,
-          colormap
-        );
+      if (props.isCreateTarget === true) {
       } else {
-        PlanPage.createTarget(
-          context.root,
-          input_planName,
-          input_targetListOfPlan,
-          input_editingPlan,
-          null,
-          unSubjectiveTargetList,
-          completedTargetList,
-          targetSubjectList,
-          colormap
-        );
       }
     };
 
     // 选择目标
-    const click_targetItem = (target: AV.Object) => {
-      PlanPage.selectTargetToComit(target);
+    const click_planItem = (plan: AV.Object) => {
+      TargetPage.selectPlanToCommit(plan);
     };
 
     // 保存已关联的目标列表
-    const click_saveRelatedTarget = () => {
-      if (props.isCreatePlan) {
-        input_creatingPlan.targetList = [];
-        input_targetListOfPlan.value.forEach(target => {
-          if (target.attributes.selected === true) {
-            input_creatingPlan.targetList.push({
-              id: target.id as string,
-              name: target.attributes.name
+    const click_saveRelatedPlan = () => {
+      if (props.isCreateTarget) {
+        input_creatingTarget.planList = [];
+        input_planListOfTarget.value.forEach(plan => {
+          if (plan.attributes.selected === true) {
+            input_creatingTarget.planList.push({
+              id: plan.id as string,
+              name: plan.attributes.name
             });
           }
         });
         Router.back(context.root.$router);
       } else {
-        input_editingPlan.targetList = [];
-        input_targetListOfPlan.value.forEach(target => {
-          if (target.attributes.selected === true) {
-            input_editingPlan.targetList.push({
-              id: target.id as string,
-              name: target.attributes.name
+        input_editingTarget.planList = [];
+        input_planListOfTarget.value.forEach(plan => {
+          if (plan.attributes.selected === true) {
+            input_editingTarget.planList.push({
+              id: plan.id as string,
+              name: plan.attributes.name
             });
           }
         });
@@ -223,18 +184,19 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      if (props.isCreatePlan) {
-        PlanPage.initRelatedTarget(
+      console.log("props.isCreateTarget", props.isCreateTarget);
+      if (props.isCreateTarget) {
+        TargetPage.initRelatedPlan(
           context.root,
-          input_targetListOfPlan,
+          input_planListOfTarget,
           null,
-          input_creatingPlan
+          input_creatingTarget
         );
       } else {
-        PlanPage.initRelatedTarget(
+        TargetPage.initRelatedPlan(
           context.root,
-          input_targetListOfPlan,
-          input_editingPlan,
+          input_planListOfTarget,
+          input_editingTarget,
           null
         );
       }
@@ -243,11 +205,13 @@ export default defineComponent({
     return {
       input_planName,
       keyUpEnter_planInputBox,
-      input_targetListOfPlan,
+      input_planListOfTarget,
+      input_creatingTarget,
+      input_editingTarget,
       colormap,
       colormapForTreeChart,
-      click_targetItem,
-      click_saveRelatedTarget
+      click_planItem,
+      click_saveRelatedPlan
     };
   }
 });

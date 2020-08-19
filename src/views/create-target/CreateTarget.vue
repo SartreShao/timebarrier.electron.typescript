@@ -153,6 +153,7 @@ import PlaceHolder from "./components/PlaceHolder.vue";
 import MileStoneItem from "./components/MileStoneItem.vue";
 import { TargetPage } from "@/lib/vue-viewmodels";
 import draggable from "vuedraggable";
+import { Router } from "@/lib/vue-utils";
 
 export default defineComponent({
   components: {
@@ -181,7 +182,11 @@ export default defineComponent({
       })
     );
 
-    const click_relatePlan = () => {};
+    const click_relatePlan = () => {
+      Router.pushWithParams(context.root.$router, "target-relate-plan", {
+        isCreateTarget: true
+      });
+    };
 
     // 用户输入：里程碑的名称
     const input_milestoneName = ref("");

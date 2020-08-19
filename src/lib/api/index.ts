@@ -170,7 +170,7 @@ export default {
    */
   fetchPlanList: (
     user: AV.User,
-    planType: PlanType | "completed",
+    planType: PlanType | "completed" | "all",
     currentPage?: number,
     pageSize?: number
   ): Promise<AV.Object[]> =>
@@ -203,6 +203,9 @@ export default {
           case "completed": {
             query.equalTo("isFinished", true).descending("updatedAt");
             break;
+          }
+          case "all": {
+            query.descending("createdAt");
           }
         }
         const planList = await query.find();
@@ -1047,7 +1050,7 @@ export default {
    */
   fetchTargetList: (
     user: AV.User,
-    targetType: "completed" | "unsubjective" | "uncompleted"
+    targetType: "completed" | "unsubjective" | "uncompleted" | "all"
   ): Promise<AV.Object[]> =>
     new Promise(async (resolve, reject) => {
       try {
@@ -1064,6 +1067,8 @@ export default {
           targetListQuery.equalTo("isFinished", false);
         } else if (targetType === "uncompleted") {
           targetListQuery.equalTo("isFinished", false);
+        } else if (targetType === "all") {
+          // doing nothing
         }
 
         // 获取 targetList

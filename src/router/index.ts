@@ -196,6 +196,12 @@ const routes = [
     path: "/create-target",
     name: "create-target",
     component: () => import("../views/create-target/CreateTarget.vue")
+  },
+  {
+    path: "/target-relate-plan",
+    name: "target-relate-plan",
+    component: () => import("../views/create-target/TargetRelatePlan.vue"),
+    props: true
   }
 ];
 

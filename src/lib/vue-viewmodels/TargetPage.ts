@@ -1,6 +1,6 @@
 import AV from "leancloud-storage";
 import { Ref } from "@vue/composition-api";
-import { UI, Router } from "@/lib/vue-utils";
+import { UI, Router, Log } from "@/lib/vue-utils";
 import {
   ElementVue,
   InputTargetOrTargetSubjectType,
@@ -1527,6 +1527,88 @@ export default {
       }
     } catch (error) {
       // doing nothing
+    }
+  },
+  selectPlanToCommit: (plan: { attributes: { selected: boolean } }) => {
+    plan.attributes.selected = !plan.attributes.selected;
+  },
+  /**
+   * 初始化关联计划时的数据
+   */
+  initRelatedPlan: async (
+    vue: ElementVue,
+    input_planListOfTarget: Ref<AV.Object[]>,
+    input_editingTarget: InputTargetType | null,
+    input_creatingTarget: InputTargetType | null
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 尝试请求带有 selected 属性的 Ability
+    const loadingInstance = UI.showLoading(vue.$loading, "正在请求相关的计划");
+
+    try {
+      // 当前在创建计划
+      if (input_editingTarget === null && input_creatingTarget !== null) {
+        input_planListOfTarget.value = await Api.fetchPlanList(user, "all");
+
+        input_creatingTarget.planList.forEach(input_plan => {
+          input_planListOfTarget.value.forEach(plan => {
+            if (input_plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+
+        UI.hideLoading(loadingInstance);
+      }
+      // 当前正在编辑计划
+      else if (input_editingTarget !== null && input_creatingTarget === null) {
+        if (input_editingTarget.id === undefined) {
+          UI.hideLoading(loadingInstance);
+          UI.showNotification(
+            vue.$notify,
+            "出现错误",
+            "input_editingTarget.id === undefined",
+            "error"
+          );
+          return;
+        }
+
+        input_planListOfTarget.value = await Api.fetchPlanList(user, "all");
+
+        input_editingTarget.planList.forEach(input_plan => {
+          input_planListOfTarget.value.forEach(plan => {
+            if (input_plan.id === plan.id) {
+              plan.attributes.selected = true;
+            }
+          });
+        });
+
+        UI.hideLoading(loadingInstance);
+      } else {
+        Log.error(
+          "vm: TargetPage's initRelatedPlan",
+          new Error(
+            "please select input_editingTarget or input_creatingTarget to input"
+          )
+        );
+        return;
+      }
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "网络出错",
+        `错误原因：${error.message}`,
+        "error"
+      );
     }
   }
 };

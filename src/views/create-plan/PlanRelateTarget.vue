@@ -192,7 +192,7 @@ export default defineComponent({
 
     // 选择目标
     const click_targetItem = (target: AV.Object) => {
-      PlanPage.selectTargetToComit(target);
+      PlanPage.selectTargetToCommit(target);
     };
 
     // 保存已关联的目标列表
