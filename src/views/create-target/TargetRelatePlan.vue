@@ -42,7 +42,7 @@
           </svg>
         </div>
         <h2 class="h-2">
-          例如：每日阅读 1 小时、撰写「时间壁垒」App、学习产品经理课程
+          例如：每日阅读 1 小时、学习产品经理课程
         </h2>
       </section>
 
@@ -321,7 +321,6 @@ export default defineComponent({
 
 .section-2 {
   background white
-  margin-bottom 13vh
 }
 
 .h-1 {
