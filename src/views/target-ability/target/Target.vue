@@ -36,6 +36,9 @@
         >
           <!-- 目标目录 -->
           <target-subject-item
+            v-if="
+              targetSubject.attributes.targetListOfTargetSubject.length !== 0
+            "
             v-splash-when-click
             @click="() => click_editTargetSubjectButton(targetSubject)"
             :isShow.sync="targetSubject.attributes.showSubjectList"

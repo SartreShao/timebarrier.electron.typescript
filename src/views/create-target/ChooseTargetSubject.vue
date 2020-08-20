@@ -82,7 +82,7 @@ export default defineComponent({
     // 可以选择的 subject 名称
     const targetSubjectList: Ref<[]> = ref([
       { icon: icon_body, color: "#DA4B6E", title: "身体目标" },
-      { icon: icon_brain, color: "#053D75", title: "精神目标" },
+      { icon: icon_brain, color: "#039E7E", title: "精神目标" },
       { icon: icon_school, color: "#5F4B8B", title: "学业目标" },
       { icon: icon_work, color: "#222A36", title: "职业目标" },
       { icon: icon_money, color: "#AE5B99", title: "财务目标" },
