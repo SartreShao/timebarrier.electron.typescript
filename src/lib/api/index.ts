@@ -1046,6 +1046,7 @@ export default {
               AV.Object.createWithoutData("Target", targetId)
             )
           )
+          .descending("order")
           .find();
 
         // 接下来组合它们
@@ -1055,7 +1056,7 @@ export default {
               target.attributes.mileStoneListOfTarget = [];
               mileStoneList.forEach(mileStone => {
                 if (mileStone.attributes.target.id === target.id) {
-                  target.attributes.abilityListOfTarget.push(mileStone);
+                  target.attributes.mileStoneListOfTarget.push(mileStone);
                 }
               });
             }

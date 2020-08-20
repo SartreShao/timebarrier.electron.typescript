@@ -6,55 +6,72 @@
   >
     <!-- 完成目标 -->
     <div class="finished-button-container">
-      <!-- 点击「取消完成目标」 -->
       <svg
-        v-if="target.attributes.isFinished"
-        v-darked-when-click
-        class="unfinished-button"
-        @click="click_unfinishedTargetButton(target)"
-        xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="21.484"
-        viewBox="0 0 28 21.484"
-      >
-        <g id="组_1370" data-name="组 1370" transform="translate(-0.385)">
-          <path
-            id="路径_418"
-            data-name="路径 418"
-            d="M15.126,319.693l-3.4,3.436a.8.8,0,0,1-1.1,0L.6,313.08a.8.8,0,0,1,0-1.1l3.4-3.4a.8.8,0,0,1,1.1,0L15.126,318.59A.8.8,0,0,1,15.126,319.693Z"
-            transform="translate(0 -301.863)"
-            :fill="target.attributes.color"
-          />
-          <path
-            id="路径_419"
-            data-name="路径 419"
-            d="M336.708.292l3.047,3.047a1.058,1.058,0,0,1,0,1.459L323.547,21.006a1.058,1.058,0,0,1-1.459,0l-3.047-3.047a1.058,1.058,0,0,1,0-1.459L335.249.292a1.057,1.057,0,0,1,1.459,0Z"
-            transform="translate(-311.662)"
-            :fill="target.attributes.color"
-          />
-        </g>
-      </svg>
-
-      <!-- 点击「完成目标」 -->
-      <svg
-        v-else
-        v-darked-when-click
-        @click="click_finishedTargetButton(target)"
+        v-if="isDone"
         class="finished-button"
         xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="28"
-        viewBox="0 0 28 28"
+        width="34"
+        height="34"
+        viewBox="0 0 34 34"
+      >
+        <path
+          id="路径_534"
+          data-name="路径 534"
+          d="M17,0A17,17,0,1,0,34,17,17,17,0,0,0,17,0Zm9.747,12.591L15.753,23.585a1.541,1.541,0,0,1-2.176,0L7.253,17.249a1.541,1.541,0,0,1,2.176-2.176l5.247,5.247,9.905-9.905a1.541,1.541,0,1,1,2.176,2.176Z"
+          fill="#f9385e"
+        />
+      </svg>
+
+      <svg
+        v-else
+        class="finished-button"
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
       >
         <g
-          id="椭圆_53"
-          data-name="椭圆 53"
-          fill="none"
-          :stroke="target.attributes.color"
-          stroke-width="3"
+          id="组_1639"
+          data-name="组 1639"
+          transform="translate(-406 75) rotate(-90)"
         >
-          <circle cx="14" cy="14" r="14" stroke="none" />
-          <circle cx="14" cy="14" r="12.5" fill="none" />
+          <circle
+            id="椭圆_105"
+            data-name="椭圆 105"
+            cx="15"
+            cy="15"
+            r="15"
+            transform="translate(45 406)"
+            fill="#fff"
+          />
+          <g
+            id="椭圆_105-2"
+            data-name="椭圆 105"
+            transform="translate(45 406)"
+            fill="none"
+            :stroke="
+              target.attributes.color ? target.attributes.color : `#222a36`
+            "
+            stroke-width="3"
+            opacity="0.395"
+          >
+            <circle cx="15" cy="15" r="15" stroke="none" />
+            <circle cx="15" cy="15" r="13.5" fill="none" />
+          </g>
+          <g
+            id="椭圆_106"
+            data-name="椭圆 106"
+            transform="translate(45 406)"
+            fill="none"
+            :stroke="
+              target.attributes.color ? target.attributes.color : `#222a36`
+            "
+            stroke-width="3"
+            :stroke-dasharray="percent"
+          >
+            <circle cx="15" cy="15" r="15" stroke="none" />
+            <circle cx="15" cy="15" r="13.5" fill="none" />
+          </g>
         </g>
       </svg>
     </div>
@@ -65,37 +82,17 @@
     <!-- 目标主体 -->
     <div class="target-body-container">
       <div class="target-type">
-        {{
-          target.attributes.validityType === "time-bound"
-            ? "时限目标"
-            : "长期目标"
-        }}{{
-          target.attributes.validityType === "time-bound"
-            ? "｜剩余 " +
-              parseInt(
-                (target.attributes.validity.getTime() - new Date().getTime()) /
-                  (1000 * 60 * 60 * 24) +
-                  1
-              ) +
-              " 天"
-            : ""
-        }}｜累计
+        {{ mileStoneTip }}已累计
         {{
           target.attributes.totalTime
             ? (target.attributes.totalTime / (3600 * 1000)).toFixed(1)
             : 0
         }}
-        小时
+        小时｜关联 {{ target.attributes.planListOfTarget.length }} 个计划
       </div>
       <div class="target-name">{{ target.attributes.name }}</div>
       <div class="target-ability-container">
-        <div
-          class="target-ability"
-          v-for="ability in target.attributes.abilityListOfTarget"
-          v-bind:key="ability.id"
-        >
-          · {{ ability.attributes.name }}
-        </div>
+        {{ currentMileStone ? currentMileStone.attributes.name : "" }}
       </div>
     </div>
   </div>
@@ -107,7 +104,8 @@ import {
   Ref,
   inject,
   ref,
-  reactive
+  reactive,
+  computed
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { TargetPage } from "@/lib/vue-viewmodels";
@@ -118,6 +116,8 @@ export default defineComponent({
     target: AV.Object
   },
   setup(props, context) {
+    console.log("color", (props.target as AV.Object).attributes.color);
+
     // 未分组的「目标」的列表
     const unSubjectiveTargetList: Ref<AV.Object[]> = inject(
       Store.unSubjectiveTargetList,
@@ -158,7 +158,85 @@ export default defineComponent({
       );
     };
 
-    return { click_finishedTargetButton, click_unfinishedTargetButton };
+    // 如何判断是否已完成
+    const isDone = computed(() => {
+      let totalTomatoNumber = 0;
+      let todayTomatoNumber = 0;
+      (props.target as AV.Object).attributes.planListOfTarget.forEach(
+        (plan: AV.Object) => {
+          totalTomatoNumber += plan.attributes.target;
+          todayTomatoNumber += plan.attributes.todayTomatoNumber;
+        }
+      );
+      if (totalTomatoNumber === 0) {
+        return false;
+      } else {
+        return totalTomatoNumber === todayTomatoNumber;
+      }
+    });
+
+    // 判断当前处于什么位置
+    const percent = computed(() => {
+      let totalTomatoNumber = 0;
+      let todayTomatoNumber = 0;
+      (props.target as AV.Object).attributes.planListOfTarget.forEach(
+        (plan: AV.Object) => {
+          totalTomatoNumber += plan.attributes.target;
+          todayTomatoNumber += plan.attributes.todayTomatoNumber;
+        }
+      );
+      if (totalTomatoNumber === 0) {
+        return 1;
+      } else {
+        return todayTomatoNumber / totalTomatoNumber;
+      }
+    });
+
+    // 里程碑提示语
+    const mileStoneTip = computed(() => {
+      let totalMileStone = (props.target as AV.Object).attributes
+        .mileStoneListOfTarget.length;
+      let completedMileStone = 0;
+      (props.target as AV.Object).attributes.mileStoneListOfTarget.forEach(
+        (mileStone: AV.Object) => {
+          if (mileStone.attributes.isFinished) {
+            completedMileStone++;
+          }
+        }
+      );
+      if (totalMileStone === 0) {
+        return "";
+      } else {
+        return `里程碑 ${completedMileStone}/${totalMileStone}｜`;
+      }
+    });
+
+    const currentMileStone = computed(() => {
+      let currentMileStone: AV.Object | null = null;
+      const mileStoneList = (props.target as AV.Object).attributes
+        .mileStoneListOfTarget;
+      try {
+        mileStoneList.forEach((mileStone: AV.Object) => {
+          if (mileStone.attributes.isFinished === false) {
+            currentMileStone = mileStone;
+            throw "";
+          }
+        });
+        currentMileStone = null;
+        throw "";
+      } catch (error) {
+        return currentMileStone;
+      }
+    });
+
+    return {
+      click_finishedTargetButton,
+      click_unfinishedTargetButton,
+      isDone,
+      percent,
+      mileStoneTip,
+      currentMileStone
+    };
   }
 });
 </script>
@@ -217,7 +295,7 @@ export default defineComponent({
     }
 
     .target-name {
-      margin-top 0.30vh
+      margin-top 0.3vh
       margin-left 8.53vw
       margin-right 8.53vw
       font-size 2.02vh
@@ -230,22 +308,14 @@ export default defineComponent({
     }
 
     .target-ability-container {
-      margin-top 0.30vh
+      margin-top 0.3vh
       margin-bottom 1.95vh
       margin-left 8.53vw
       margin-right 8.53vw
-
-      .target-ability {
-        height 2.7vh
-        opacity 0.4
-        font-size 1.65vh
-        font-weight normal
-        font-stretch normal
-        font-style normal
-        letter-spacing 0.01vh
-        text-align left
-        color #222a36
-      }
+      line-height 2.4vh
+      opacity 0.4
+      font-size 1.65vh
+      color #222a36
     }
   }
 }

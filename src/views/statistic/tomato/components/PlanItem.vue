@@ -132,6 +132,7 @@ export default defineComponent({
   flex-direction column
   background white
 }
+
 .name {
   width 52.13vw
   margin-top 2.32vh
@@ -145,6 +146,7 @@ export default defineComponent({
   text-align left
   color #222a36
 }
+
 .percent {
   height 2.62vh
   opacity 0.5
@@ -160,6 +162,7 @@ export default defineComponent({
   margin-left 19.47vw
   margin-bottom 2.32vh
 }
+
 .time {
   position absolute
   height 2.17vh
@@ -175,6 +178,7 @@ export default defineComponent({
   text-align right
   color #222a36
 }
+
 .tomato {
   position absolute
   bottom 3.22vh
@@ -190,6 +194,7 @@ export default defineComponent({
   text-align right
   color #222a36
 }
+
 .line-container {
   position absolute
   height 100%
@@ -198,12 +203,14 @@ export default defineComponent({
   top 0
   bottom 0
 }
+
 .progress {
   position absolute
   width 2.55vh
   height 2.55vh
   top 2.77vh
 }
+
 .line {
   position absolute
   height 100%
