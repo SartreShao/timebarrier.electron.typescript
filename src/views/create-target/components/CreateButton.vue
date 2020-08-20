@@ -26,7 +26,7 @@ export default defineComponent({});
 
 <style lang="stylus" scoped>
 .create-button {
-  opacity 0.2
+  opacity 0.9
   cursor pointer
   height 7.5vh
   width 7.5vh
@@ -40,6 +40,7 @@ export default defineComponent({});
   bottom 5.85vh
   background white
   transition all 0.2s linear
+  z-index 1000
 
   &:hover {
     opacity 1
