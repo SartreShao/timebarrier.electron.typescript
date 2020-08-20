@@ -47,6 +47,7 @@ const Router = {
       if (router.currentRoute.name === name) {
         return;
       }
+      // @ts-ignore
       await router.push({ name: name, params: params });
     } catch (error) {
       console.log("pushWithParams router:", name, "params:", params, error);

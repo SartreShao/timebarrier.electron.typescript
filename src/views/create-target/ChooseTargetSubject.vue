@@ -7,7 +7,7 @@
     <main style="margin-top: 7.52vh; overflow:scroll; height: 92.48vh;">
       <!-- 顶部提示语 -->
       <top-tips
-        title="Step 0：请选择一个「目标类别」"
+        title="请选择一个「目标类别」"
         sub-title="您希望创建哪个方向的目标？"
       >
       </top-tips>
@@ -70,7 +70,7 @@ export default defineComponent({
         name: "",
         description: "",
         validityType: "",
-        validity: null,
+        validity: "",
         abilityList: [],
         planList: [],
         isActived: true,
@@ -118,7 +118,7 @@ export default defineComponent({
       input_creatingTarget.name = "";
       input_creatingTarget.description = "";
       input_creatingTarget.validityType = "";
-      input_creatingTarget.validity = null;
+      input_creatingTarget.validity = "";
       input_creatingTarget.planList = [];
       input_creatingTarget.isActived = true;
       input_creatingTarget.isFinished = false;

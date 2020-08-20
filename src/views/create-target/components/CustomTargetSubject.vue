@@ -76,7 +76,7 @@ export default defineComponent({
         name: "",
         description: "",
         validityType: "",
-        validity: null,
+        validity: "",
         planList: [],
         isActived: true,
         isFinished: false,

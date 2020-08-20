@@ -25,9 +25,28 @@
         <h2 class="h-2">例如：减肥 30 斤、百米 11 秒、体悟瑜伽与冥想</h2>
       </section>
 
+      <!-- 截止日期 -->
+      <section class="section section-5">
+        <h1 class="h-1">Step 2：目标截止日期——最晚什么时候完成目标？</h1>
+        <div class="button">
+          <span v-if="input_creatingTarget.validity.length === 0">
+            请选择一个日期（选填）
+          </span>
+
+          <span v-else>{{ targetValidityFormat }}</span>
+          <el-date-picker
+            class="date-picker"
+            v-model="input_creatingTarget.validity"
+            type="date"
+          >
+          </el-date-picker>
+        </div>
+        <h2 class="h-2">例如：2020 年 1 月 1 日</h2>
+      </section>
+
       <!-- 关联计划 -->
       <section class="section section-2">
-        <h1 class="h-1">Step 2：关联计划——为完成目标，您需要制定一个计划</h1>
+        <h1 class="h-1">Step 3：关联计划——为完成目标，您需要制定一个计划</h1>
         <div
           class="button"
           @click="click_relatePlan"
@@ -51,7 +70,7 @@
 
       <!-- 创建里程碑 -->
       <section class="section section-3" ref="stickyElement">
-        <h1 class="h-1">Step 3：创建「目标里程碑」——解构大目标为小目标</h1>
+        <h1 class="h-1">Step 4：创建「目标里程碑」——解构大目标为小目标</h1>
         <div class="input-container">
           <input
             class="input"
@@ -91,7 +110,7 @@
       <!-- 里程碑列表 -->
       <section class="section section-4">
         <h1 class="h-1" style="color:#222A36">
-          Step 4：查看「目标里程碑」列表
+          Step 5：查看「目标里程碑」列表
         </h1>
         <h2 class="h-2" style="color:#222A36;font-weight:lighter;">
           可以在这里调整里程碑的名称和优先级
@@ -153,7 +172,7 @@ import PlaceHolder from "./components/PlaceHolder.vue";
 import MileStoneItem from "./components/MileStoneItem.vue";
 import { TargetPage } from "@/lib/vue-viewmodels";
 import draggable from "vuedraggable";
-import { Router } from "@/lib/vue-utils";
+import { Router, UI } from "@/lib/vue-utils";
 import AV from "leancloud-storage";
 
 export default defineComponent({
@@ -175,7 +194,7 @@ export default defineComponent({
         name: "",
         description: "",
         validityType: "",
-        validity: null,
+        validity: "",
         planList: [],
         isActived: true,
         isFinished: false,
@@ -273,6 +292,10 @@ export default defineComponent({
       );
     };
 
+    const targetValidityFormat = computed(() =>
+      UI.dateToYearMonthDay(new Date(input_creatingTarget.validity))
+    );
+
     return {
       input_creatingTarget,
       input_milestoneName,
@@ -284,7 +307,8 @@ export default defineComponent({
       keyUpEnter_milestoneName,
       dragend_mileStone,
       mileStoneTipIsShow,
-      stickyElement
+      stickyElement,
+      targetValidityFormat
     };
   }
 });
@@ -338,6 +362,10 @@ export default defineComponent({
 
 .section-4 {
   background #FFFFFF
+}
+
+.section-5 {
+  background #D45070
 }
 
 .h-1 {

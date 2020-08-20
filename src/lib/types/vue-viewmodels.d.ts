@@ -66,7 +66,7 @@ export type InputTargetType = {
   name: string;
   description: string;
   validityType: "time-bound" | "indefinite" | "";
-  validity: Date | null;
+  validity: string;
   planList: { id: string; name: string }[];
   isActived: boolean;
   isFinished: boolean;

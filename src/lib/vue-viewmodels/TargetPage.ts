@@ -1901,7 +1901,13 @@ export default {
         input_creatingTarget.name,
         input_creatingTarget.description,
         "indefinite",
-        input_creatingTarget.validity,
+        input_creatingTarget.validity.length !== 0
+          ? new Date(
+              new Date(input_creatingTarget.validity).getTime() +
+                3600 * 1000 * 24 -
+                1
+            )
+          : null,
         [],
         input_creatingTarget.planList,
         input_creatingTarget.mileStoneList,

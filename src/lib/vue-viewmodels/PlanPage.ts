@@ -1112,6 +1112,7 @@ export default {
         null,
         [],
         [],
+        [],
         true,
         false,
         colormap

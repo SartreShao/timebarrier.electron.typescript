@@ -341,6 +341,7 @@ export default {
           null,
           [],
           [],
+          [],
           true,
           false,
           colormap
@@ -401,6 +402,7 @@ export default {
           "",
           "indefinite",
           null,
+          [],
           [],
           [],
           true,
