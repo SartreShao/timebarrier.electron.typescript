@@ -1037,6 +1037,31 @@ export default {
           );
         });
 
+        // 查询 mileStoneList
+        const mileStoneList = await new AV.Query(MileStone)
+          .include("target")
+          .containedIn(
+            "target",
+            targetIdList.map(targetId =>
+              AV.Object.createWithoutData("Target", targetId)
+            )
+          )
+          .find();
+
+        // 接下来组合它们
+        targetSubjectList.forEach(targetSubject => {
+          targetSubject.attributes.targetListOfTargetSubject.forEach(
+            (target: AV.Object) => {
+              target.attributes.mileStoneListOfTarget = [];
+              mileStoneList.forEach(mileStone => {
+                if (mileStone.attributes.target.id === target.id) {
+                  target.attributes.abilityListOfTarget.push(mileStone);
+                }
+              });
+            }
+          );
+        });
+
         Log.success("fetchTargetSubjectList", targetSubjectList);
         resolve(targetSubjectList);
       } catch (error) {
