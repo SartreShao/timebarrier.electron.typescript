@@ -55,22 +55,23 @@ export default defineComponent({
   user-select none
   margin-bottom 0.15vh
   position relative
-  height 6.52vh
+  height 4.87vh
   width 100%
   flex-shrink 0
-  background-color #fcfbfc
+  background-color #FCFBFC
   display flex
   align-items center
   justify-content center
-  font-size 2.02vh
+  font-size 1.72vh
   font-weight normal
   font-stretch normal
   font-style normal
-  line-height 1.44
+  line-height 2.55vh
   letter-spacing 0.02vh
   text-align left
   color #9a9a9a
-  img.icon-downward {
+
+  .icon-downward {
     position absolute
     width 2.35vw
     height 0.65vh
@@ -81,7 +82,8 @@ export default defineComponent({
     margin-top auto
     margin-bottom auto
   }
-  img.icon-leftward {
+
+  .icon-leftward {
     position absolute
     width 1.16vw
     height 1.32vh
