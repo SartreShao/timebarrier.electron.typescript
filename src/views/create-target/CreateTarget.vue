@@ -277,7 +277,7 @@ export default defineComponent({
       return input_creatingTarget.mileStoneList.length === 0;
     });
 
-    const colormap: string[] = inject(Store.colormapPantone, []);
+    const colormap: string[] = inject(Store.colormapForTreeChart, []);
 
     // 用户输入：创建 Target
     const click_createTargetButton = () => {

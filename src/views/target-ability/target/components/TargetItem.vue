@@ -94,6 +94,13 @@
       <div class="target-ability-container">
         {{ currentMileStone ? currentMileStone.attributes.name : "" }}
       </div>
+      <div
+        class="target-validity"
+        v-if="target.attributes.validity"
+        :style="{ background: color }"
+      >
+        {{ validity }}
+      </div>
     </div>
   </div>
 </template>
@@ -111,6 +118,7 @@ import AV from "leancloud-storage";
 import { TargetPage } from "@/lib/vue-viewmodels";
 import Store from "@/store";
 import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
+import { UI } from "@/lib/vue-utils";
 export default defineComponent({
   props: {
     target: AV.Object
@@ -229,13 +237,53 @@ export default defineComponent({
       }
     });
 
+    const validity = computed(() => {
+      if ((props.target as AV.Object).attributes.validity === undefined) {
+        return "";
+      }
+
+      const validity: Date = (props.target as AV.Object).attributes.validity;
+
+      const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
+
+      const result = (validity.getTime() - todayStartTime) / (1000 * 3600 * 24);
+      if (result > 1) {
+        return `剩余 ${parseInt(String(result))} 天`;
+      } else if (result >= 0) {
+        return `今日截止`;
+      } else {
+        return `过期 ${parseInt(String(-result)) + 1} 天`;
+      }
+    });
+
+    const color = computed(() => {
+      if ((props.target as AV.Object).attributes.validity === undefined) {
+        return "";
+      }
+
+      const validity: Date = (props.target as AV.Object).attributes.validity;
+
+      const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
+
+      const result = (validity.getTime() - todayStartTime) / (1000 * 3600 * 24);
+      if (result > 1) {
+        return `#039E7E`;
+      } else if (result >= 0) {
+        return `#6566A9`;
+      } else {
+        return `#D45070`;
+      }
+    });
+
     return {
       click_finishedTargetButton,
       click_unfinishedTargetButton,
       isDone,
       percent,
       mileStoneTip,
-      currentMileStone
+      currentMileStone,
+      validity,
+      color
     };
   }
 });
@@ -278,6 +326,7 @@ export default defineComponent({
     user-select none
     width 84vw
     background-color #ffffff
+    position relative
 
     .target-type {
       margin-top 1.8vh
@@ -316,6 +365,19 @@ export default defineComponent({
       opacity 0.4
       font-size 1.65vh
       color #222a36
+    }
+
+    .target-validity {
+      position absolute
+      right 0
+      top 0
+      padding-top 0.15vh
+      padding-bottom 0.15vh
+      padding-left 1.6vw
+      padding-right 1.6vw
+      color #FFFFFF
+      font-size 1.27vh
+      font-weight 500
     }
   }
 }

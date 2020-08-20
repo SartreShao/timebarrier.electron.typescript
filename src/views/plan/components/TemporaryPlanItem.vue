@@ -63,11 +63,11 @@ export default defineComponent({
       }
       const result = (deadline.getTime() - todayStartTime) / (1000 * 3600 * 24);
       if (result > 1) {
-        return `#F9385E`;
+        return `#039E7E`;
       } else if (result >= 0) {
-        return `#FF9300`;
+        return `#6566A9`;
       } else {
-        return `#99A8B8`;
+        return `#D45070`;
       }
     });
 
