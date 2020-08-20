@@ -173,48 +173,54 @@ export default defineComponent({
   margin-bottom 0.15vh
   align-items stretch
   flex-shrink 0
+
   .finished-button-container {
-    width 19.6vw
+    width 15.73vw
     background-color #fcfbfc
     display flex
     justify-content center
     align-items center
+
     .finished-button {
       width 2.1vh
       height 2.1vh
     }
+
     .unfinished-button {
       width 2.1vh
       height 1.61vh
     }
   }
+
   .placeholder {
     width 0.15vh
   }
+
   .target-body-container {
     user-select none
-    width 80.13vw
+    width 84vw
     background-color #ffffff
+
     .target-type {
-      margin-top 2.4vh
+      margin-top 1.8vh
       margin-left 8.53vw
       margin-right 8.53vw
-      height 2.4vh
+      height 2.17vh
       opacity 0.4
-      font-size 1.65vh
+      font-size 1.5vh
       font-weight normal
       font-stretch normal
       font-style normal
-      line-height 1.45
       letter-spacing 0.01vh
       text-align left
       color #222a36
     }
+
     .target-name {
-      margin-top 0.75vh
+      margin-top 0.30vh
       margin-left 8.53vw
       margin-right 8.53vw
-      font-size 2.17vh
+      font-size 2.02vh
       font-weight 500
       font-stretch normal
       font-style normal
@@ -222,19 +228,20 @@ export default defineComponent({
       text-align left
       color #222a36
     }
+
     .target-ability-container {
-      margin-top 0.75vh
-      margin-bottom 2.4vh
+      margin-top 0.30vh
+      margin-bottom 1.95vh
       margin-left 8.53vw
       margin-right 8.53vw
+
       .target-ability {
         height 2.7vh
         opacity 0.4
-        font-size 1.87vh
+        font-size 1.65vh
         font-weight normal
         font-stretch normal
         font-style normal
-        line-height 1.44
         letter-spacing 0.01vh
         text-align left
         color #222a36
