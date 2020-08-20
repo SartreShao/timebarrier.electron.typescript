@@ -1,6 +1,6 @@
 import * as AV from "leancloud-storage";
 import { Log } from "@/lib/vue-utils";
-import { PlanType } from "@/lib/types/vue-viewmodels";
+import { PlanType, InputMileStoneType } from "@/lib/types/vue-viewmodels";
 import _ from "lodash";
 
 const Plan = AV.Object.extend("Plan");
@@ -1135,6 +1135,7 @@ export default {
     validity: Date | null,
     abilityList: { id: string; name: string }[],
     planList: { id: string; name: string }[],
+    mileStoneList: InputMileStoneType[],
     isActived: boolean,
     isFinished: boolean,
     colormap: string[]
@@ -1205,6 +1206,18 @@ export default {
         if (targetPlanList.length !== 0) {
           await AV.Object.saveAll(targetPlanList);
         }
+
+        // 创建 MileStone
+        await AV.Object.saveAll(
+          mileStoneList.map((mileStone, index) =>
+            new MileStone()
+              .set("name", mileStone.name)
+              .set("color", mileStone.color)
+              .set("isFinished", false)
+              .set("target", target)
+              .set("order", index)
+          )
+        );
 
         Log.success("createTarget", target);
         resolve(target);
@@ -1973,5 +1986,43 @@ export default {
   /**
    * 创建 MileStone
    */
-  createMileStone: () => {}
+  createMileStone: () => {},
+
+  /**
+   * 寻找或创建一个 TargetSubject by name
+   */
+  findOrCreateTargetSubject: async (
+    targetSubjectName: string,
+    user: AV.User
+  ): Promise<AV.Object> =>
+    new Promise(async (resolve, reject) => {
+      try {
+        // 查询数据库中是否有 targetSubject
+        const targetSubjectList = await new AV.Query(TargetSubject)
+          .equalTo("name", targetSubjectName)
+          .equalTo("user", user)
+          .find();
+
+        // 如果存在 targetSubject
+        if (targetSubjectList.length !== 0) {
+          Log.success("findOrCreateTargetSubject", targetSubjectList[0]);
+          resolve(targetSubjectList[0]);
+        }
+
+        // 如果不存在 targetSubject
+        else {
+          const targetSubject = await new TargetSubject()
+            .set("name", targetSubjectName)
+            .set("user", user)
+            .set("order", 0)
+            .save();
+
+          Log.success("findOrCreateTargetSubject", targetSubject);
+          resolve(targetSubject);
+        }
+      } catch (error) {
+        Log.error("findOrCreateTargetSubject", error);
+        reject(error);
+      }
+    })
 };

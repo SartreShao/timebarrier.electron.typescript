@@ -128,7 +128,7 @@
       </section>
     </main>
 
-    <create-button></create-button>
+    <create-button @click="click_createTargetButton"></create-button>
   </div>
 </template>
 
@@ -154,6 +154,7 @@ import MileStoneItem from "./components/MileStoneItem.vue";
 import { TargetPage } from "@/lib/vue-viewmodels";
 import draggable from "vuedraggable";
 import { Router } from "@/lib/vue-utils";
+import AV from "leancloud-storage";
 
 export default defineComponent({
   components: {
@@ -180,6 +181,30 @@ export default defineComponent({
         isFinished: false,
         mileStoneList: []
       })
+    );
+
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    //「目标类别」的列表
+    const targetSubjectList: Ref<AV.Object[]> = inject(
+      Store.targetSubjectList,
+      ref([])
     );
 
     const click_relatePlan = () => {
@@ -233,11 +258,27 @@ export default defineComponent({
       return input_creatingTarget.mileStoneList.length === 0;
     });
 
+    const colormap: string[] = inject(Store.colormapPantone, []);
+
+    // 用户输入：创建 Target
+    const click_createTargetButton = () => {
+      TargetPage.createTarget(
+        context.root,
+        input_creatingTarget,
+        colormap,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList,
+        targetSubjectList
+      );
+    };
+
     return {
       input_creatingTarget,
       input_milestoneName,
       click_relatePlan,
       click_deleteMileStone,
+      click_createTargetButton,
       draggableOptions,
       mainElement,
       keyUpEnter_milestoneName,

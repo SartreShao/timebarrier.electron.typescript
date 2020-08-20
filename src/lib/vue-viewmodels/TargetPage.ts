@@ -158,6 +158,7 @@ export default {
           input_creatingTargetOrTargetSubject.target.validity,
           input_creatingTargetOrTargetSubject.target.abilityList,
           input_creatingTargetOrTargetSubject.target.planList,
+          [],
           input_creatingTargetOrTargetSubject.target.isActived,
           input_creatingTargetOrTargetSubject.target.isFinished,
           colormap
@@ -1853,5 +1854,80 @@ export default {
     }
     input_dailyPlanTarget.value = "";
     isInputPlanTargetShow.value = true;
+  },
+  createTarget: async (
+    vue: ElementVue,
+    input_creatingTarget: InputTargetType,
+    colormap: string[],
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 输入检测
+    const targetName = _.trim(input_creatingTarget.name);
+    if (targetName.length === 0) {
+      UI.showNotification(
+        vue.$notify,
+        "输入有误",
+        "目标名称不可为空",
+        "warning"
+      );
+      return;
+    }
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在创建目标");
+
+    try {
+      // 获取 TargetSubject
+      const targetSubject = await Api.findOrCreateTargetSubject(
+        input_creatingTarget.subjectName,
+        user
+      );
+
+      // 创建 Target
+      const target = await Api.createTarget(
+        user,
+        targetSubject.id as string,
+        input_creatingTarget.name,
+        input_creatingTarget.description,
+        "indefinite",
+        input_creatingTarget.validity,
+        [],
+        input_creatingTarget.planList,
+        input_creatingTarget.mileStoneList,
+        true,
+        false,
+        colormap
+      );
+
+      // 刷新计划列表
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 刷新目标列表
+      targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+      UI.hideLoading(loadingInstance);
+      Router.replace(vue.$router, "/target-ability");
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取目标列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
   }
 };
