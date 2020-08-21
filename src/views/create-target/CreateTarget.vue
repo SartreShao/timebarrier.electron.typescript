@@ -286,7 +286,6 @@ export default defineComponent({
         input_creatingTarget,
         colormap,
         temporaryPlanList,
-        
         dailyPlanList,
         completedPlanList,
         targetSubjectList

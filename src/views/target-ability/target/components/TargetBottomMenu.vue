@@ -18,6 +18,7 @@
           'item-4': target.attributes.planListOfTarget.length === index + 1
         }"
         @click="click_startTomatoButton(plan)"
+        style="color:#222A36"
       >
         开始训练：{{
           plan.attributes.target !== undefined
