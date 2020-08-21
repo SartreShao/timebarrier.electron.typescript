@@ -301,7 +301,7 @@ export default defineComponent({
   flex-shrink 0
 
   .finished-button-container {
-    width 15.73vw
+    width 16vw
     background-color #fcfbfc
     display flex
     justify-content center
