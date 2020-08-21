@@ -52,7 +52,6 @@ export default defineComponent({
 
 .section {
   width 100%
-  height 39.58vh
   border-radius 1.65vh 1.65vh 0 0
   position fixed
   bottom 0
