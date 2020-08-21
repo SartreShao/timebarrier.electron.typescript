@@ -632,7 +632,10 @@ export default {
     input_editingPlan: InputPlanType,
     temporaryPlanList: Ref<AV.Object[]>,
     dailyPlanList: Ref<AV.Object[]>,
-    completedPlanList: Ref<AV.Object[]>
+    completedPlanList: Ref<AV.Object[]>,
+    unSubjectiveTargetList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>,
+    completedTargetList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -666,6 +669,21 @@ export default {
           temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
           dailyPlanList.value = await Api.fetchPlanList(user, "daily");
           completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+          // 尝试获取目标列表
+          unSubjectiveTargetList.value = await Api.fetchTargetList(
+            user,
+            "unsubjective"
+          );
+
+          // 尝试获取已完成的目标列表
+          completedTargetList.value = await Api.fetchTargetList(
+            user,
+            "completed"
+          );
+
+          // 尝试获取目标类别列表
+          targetSubjectList.value = await Api.fetchTargetSubjectList(user);
 
           // 保存成功
           UI.hideLoading(loadingInstance);

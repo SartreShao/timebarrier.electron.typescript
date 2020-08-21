@@ -532,7 +532,7 @@
         <div
           class="delete-button"
           v-darked-when-click
-          @click="click_deleteTargetOrTargetSubject"
+          @click="click_deleteTarget"
         >
           删除
         </div>
@@ -949,6 +949,7 @@
       :target="currentClickTarget"
       @click-cancel="isTargetBottomMenuShow = false"
       @click-background="isTargetBottomMenuShow = false"
+      @click-delete="click_deleteTarget"
     ></target-bottom-menu>
   </div>
 </template>
@@ -1171,6 +1172,24 @@ export default defineComponent({
     // 用户输入：需要关联到能力的计划列表
     const input_planListOfAbility: Ref<AV.Object[]> = ref([]);
 
+    // 服务器拉取的数据：临时计划的列表
+    const temporaryPlanList: Ref<AV.Object[]> = inject(
+      Store.temporaryPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：每日计划的列表
+    const dailyPlanList: Ref<AV.Object[]> = inject(
+      Store.dailyPlanList,
+      ref<AV.Object[]>([])
+    );
+
+    // 服务器拉取的数据：已完成计划的列表
+    const completedPlanList: Ref<AV.Object[]> = inject(
+      Store.completedPlanList,
+      ref<AV.Object[]>([])
+    );
+
     // 回车事件：能力输入框
     const keyUpEnter_abilityInputBox = () => {
       if (isCreateTarget.value) {
@@ -1265,14 +1284,16 @@ export default defineComponent({
     };
 
     // 点击事件：删除目标或目标目录
-    const click_deleteTargetOrTargetSubject = () => {
-      TargetPage.deleteTargetOrTargetSubject(
+    const click_deleteTarget = () => {
+      TargetPage.deleteTarget(
         context.root,
-        isEditTargetDrawerDisplayed,
-        input_editingTargetOrTargetSubject,
+        input_editingTarget,
         unSubjectiveTargetList,
         targetSubjectList,
-        completedTargetList
+        completedTargetList,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList
       );
     };
 
@@ -1517,7 +1538,7 @@ export default defineComponent({
       currentClickTarget,
       currentTab,
       click_createTargetOrTargetSubject,
-      click_deleteTargetOrTargetSubject,
+      click_deleteTarget,
       click_saveTargetOrTargetSubject,
       isCreateTargetDrawerDisplayed,
       isEditTargetDrawerDisplayed,

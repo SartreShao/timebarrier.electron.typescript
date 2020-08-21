@@ -348,7 +348,10 @@ export default defineComponent({
         input_editingPlan,
         temporaryPlanList,
         dailyPlanList,
-        completedPlanList
+        completedPlanList,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList
       );
     };
 

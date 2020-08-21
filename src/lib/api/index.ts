@@ -1089,8 +1089,9 @@ export default {
         if (targetType === "completed") {
           targetListQuery.equalTo("isFinished", true);
         } else if (targetType === "unsubjective") {
-          targetListQuery.equalTo("targetSubject", null);
-          targetListQuery.equalTo("isFinished", false);
+          targetListQuery
+            .equalTo("targetSubject", null)
+            .equalTo("isFinished", false);
         } else if (targetType === "uncompleted") {
           targetListQuery.equalTo("isFinished", false);
         } else if (targetType === "all") {
@@ -1142,10 +1143,10 @@ export default {
           });
         });
 
-        Log.success("fetchTargetList", targetList);
+        Log.success("fetchTargetList " + targetType, targetList);
         resolve(targetList);
       } catch (error) {
-        Log.error("fetchTargetList", error);
+        Log.error("fetchTargetList " + targetType, error);
         reject(error);
       }
     }),

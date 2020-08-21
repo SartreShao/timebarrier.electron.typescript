@@ -532,13 +532,15 @@ export default {
   /**
    * 删除「目标」或「目标目录」
    */
-  deleteTargetOrTargetSubject: async (
+  deleteTarget: async (
     vue: ElementVue,
-    isEditTargetDrawerDisplayed: Ref<boolean>,
-    input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
+    input_edtingTarget: InputTargetType,
     unSubjectiveTargetList: Ref<AV.Object[]>,
     targetSubjectList: Ref<AV.Object[]>,
-    completedTargetList: Ref<AV.Object[]>
+    completedTargetList: Ref<AV.Object[]>,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>
   ) => {
     // 获取传入参数
     const user = Api.getCurrentUser();
@@ -548,166 +550,66 @@ export default {
       UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
       return;
     }
-
-    if (input_editingTargetOrTargetSubject.inputType === "target") {
-      deleteTarget(
-        vue,
-        isEditTargetDrawerDisplayed,
-        input_editingTargetOrTargetSubject,
-        unSubjectiveTargetList,
-        targetSubjectList,
-        completedTargetList
+    if (input_edtingTarget.id === undefined) {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "input_edtingTarget.id is undefined",
+        "error"
       );
-    } else if (
-      input_editingTargetOrTargetSubject.inputType === "targetSubject"
-    ) {
-      deleteTargetSubject(
-        vue,
-        isEditTargetDrawerDisplayed,
-        input_editingTargetOrTargetSubject,
-        unSubjectiveTargetList,
-        targetSubjectList
-      );
+      return;
     }
+    // 弹窗询问用户是否确定删除
+    try {
+      await UI.showConfirm(
+        vue.$confirm,
+        "这将导致该目标及其背后的记录永久丢失",
+        "是否确定删掉该目标"
+      );
 
-    async function deleteTarget(
-      vue: ElementVue,
-      isEditTargetDrawerDisplayed: Ref<boolean>,
-      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
-      unSubjectiveTargetList: Ref<AV.Object[]>,
-      targetSubjectList: Ref<AV.Object[]>,
-      completedTargetList: Ref<AV.Object[]>
-    ) {
-      if (input_editingTargetOrTargetSubject.target.id !== undefined) {
-        // 弹窗询问用户是否确定删除
-        try {
-          await UI.showConfirm(
-            vue.$confirm,
-            "这将导致该目标及其背后的记录永久丢失",
-            "是否确定删掉该目标"
-          );
+      // 确认删除
+      // 显示进度条
+      const loadingInstance = UI.showLoading(
+        vue.$loading,
+        "正在删除您的目标..."
+      );
 
-          // 确认删除
-          // 显示进度条
-          const loadingInstance = UI.showLoading(
-            vue.$loading,
-            "正在删除您的目标..."
-          );
+      // 尝试删除目标，并刷新列表
+      try {
+        await Api.deleteTarget(input_edtingTarget.id);
 
-          // 尝试删除目标，并刷新列表
-          try {
-            await Api.deleteTarget(
-              input_editingTargetOrTargetSubject.target.id
-            );
+        // 尝试获取已完成的目标列表
+        completedTargetList.value = await Api.fetchTargetList(
+          user,
+          "completed"
+        );
+        // 尝试获取未分类的目标列表
+        unSubjectiveTargetList.value = await Api.fetchTargetList(
+          user,
+          "unsubjective"
+        );
+        // 尝试获取目标类别列表
+        targetSubjectList.value = await Api.fetchTargetSubjectList(user);
 
-            // 尝试获取已完成的目标列表
-            completedTargetList.value = await Api.fetchTargetList(
-              user,
-              "completed"
-            );
-            // 尝试获取未分类的目标列表
-            unSubjectiveTargetList.value = await Api.fetchTargetList(
-              user,
-              "unsubjective"
-            );
-            // 尝试获取目标类别列表
-            targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+        temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+        dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+        completedPlanList.value = await Api.fetchPlanList(user, "completed");
 
-            // 保存成功
-            UI.hideLoading(loadingInstance);
-            UI.showNotification(vue.$notify, "目标删除成功", "", "success");
-
-            // 关闭窗口
-            isEditTargetDrawerDisplayed.value = false;
-          } catch (error) {
-            UI.hideLoading(loadingInstance);
-            UI.showNotification(
-              vue.$notify,
-              "目标删除失败",
-              `错误原因：${error.message},`,
-              "error"
-            );
-          }
-        } catch (error) {
-          // 取消删除
-          // doing nothing
-        }
-      } else {
+        // 保存成功
+        UI.hideLoading(loadingInstance);
+        UI.showNotification(vue.$notify, "目标删除成功", "", "success");
+      } catch (error) {
+        UI.hideLoading(loadingInstance);
         UI.showNotification(
           vue.$notify,
-          "数据出错",
-          "input_editingTargetOrTargetSubject.target.id is undefined",
+          "目标删除失败",
+          `错误原因：${error.message},`,
           "error"
         );
       }
-    }
-
-    async function deleteTargetSubject(
-      vue: ElementVue,
-      isEditTargetDrawerDisplayed: Ref<boolean>,
-      input_editingTargetOrTargetSubject: InputTargetOrTargetSubjectType,
-      unSubjectiveTargetList: Ref<AV.Object[]>,
-      targetSubjectList: Ref<AV.Object[]>
-    ) {
-      if (input_editingTargetOrTargetSubject.targetSubject.id !== undefined) {
-        // 弹窗询问用户是否确定删除
-        try {
-          await UI.showConfirm(
-            vue.$confirm,
-            "这将导致该目标目录下的目标变为无目录目标",
-            "是否确定删掉该目标目录"
-          );
-
-          // 确认删除
-          // 显示进度条
-          const loadingInstance = UI.showLoading(
-            vue.$loading,
-            "正在删除您的目标目录..."
-          );
-
-          // 尝试删除目标目录，并刷新列表
-          try {
-            await Api.deleteTargetSubject(
-              input_editingTargetOrTargetSubject.targetSubject.id
-            );
-
-            // 请求刷新对应的列表
-
-            // 尝试获取未分类的目标列表
-            unSubjectiveTargetList.value = await Api.fetchTargetList(
-              user,
-              "unsubjective"
-            );
-            // 尝试获取目标类别列表
-            targetSubjectList.value = await Api.fetchTargetSubjectList(user);
-
-            // 保存成功
-            UI.hideLoading(loadingInstance);
-            UI.showNotification(vue.$notify, "目标目录删除成功", "", "success");
-
-            // 关闭窗口
-            isEditTargetDrawerDisplayed.value = false;
-          } catch (error) {
-            UI.hideLoading(loadingInstance);
-            UI.showNotification(
-              vue.$notify,
-              "目标目录删除失败",
-              `错误原因：${error.message},`,
-              "error"
-            );
-          }
-        } catch (error) {
-          // 取消删除
-          // doing nothing
-        }
-      } else {
-        UI.showNotification(
-          vue.$notify,
-          "数据出错",
-          "input_editingTargetOrTargetSubject.targetSubject.id is undefined",
-          "error"
-        );
-      }
+    } catch (error) {
+      // 取消删除
+      // doing nothing
     }
   },
   /**
