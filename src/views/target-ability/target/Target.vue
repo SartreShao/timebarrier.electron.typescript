@@ -95,11 +95,7 @@
     </div>
 
     <target-novice-tutorial
-      v-if="
-        unSubjectiveTargetList.length === 0 &&
-          completedTargetList.length === 0 &&
-          targetSubjectList.length === 0
-      "
+      v-if="isTargetTutorialShow"
       style="margin-top:10.36vh"
     ></target-novice-tutorial>
 
@@ -304,6 +300,31 @@ export default defineComponent({
     // 配置信息
     const draggableOptions = inject(Store.draggableOptions, {});
 
+    // 是否显示 Target 新手提示
+    const isTargetTutorialShow = computed(() => {
+      if (
+        unSubjectiveTargetList.value.length === 0 &&
+        completedTargetList.value.length === 0 &&
+        targetSubjectList.value.length === 0
+      ) {
+        return true;
+      } else if (
+        unSubjectiveTargetList.value.length === 0 &&
+        completedTargetList.value.length === 0 &&
+        targetSubjectList.value.length !== 0
+      ) {
+        let isSubjectEmpty = true;
+        targetSubjectList.value.forEach(targetSubject => {
+          if (targetSubject.attributes.targetListOfTargetSubject.length !== 0) {
+            isSubjectEmpty = false;
+          }
+        });
+        return isSubjectEmpty;
+      } else {
+        return false;
+      }
+    });
+
     return {
       click_editTargetButton,
       click_createTargetButton,
@@ -320,6 +341,7 @@ export default defineComponent({
       draggableOptions,
       click_unfinishedTargetButton,
       click_createTarget,
+      isTargetTutorialShow,
       assets: {
         icon_create_target,
         icon_downward,
