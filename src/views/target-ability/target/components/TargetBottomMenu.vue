@@ -8,7 +8,7 @@
       height: isShow ? '100%' : '0'
     }"
   >
-    <section class="section" :style="{ height: isShow ? '39.58vh' : `0` }">
+    <section class="section" :style="{ height: isShow ? sectionHeight : `0` }">
       <div
         v-for="(plan, index) in target.attributes.planListOfTarget"
         class="item"
@@ -64,10 +64,10 @@
 <script lang="ts">
 import {
   defineComponent,
-  computed,
   Ref,
   inject,
-  ref
+  ref,
+  computed
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { TomatoTimerPage } from "@/lib/vue-viewmodels";
@@ -154,9 +154,44 @@ export default defineComponent({
       );
     };
 
+    // 动态计算弹出框高度
+    const sectionHeight = computed(() => {
+      const fixHeight = 3 * (7.65 + 0.15) + (7.65 + 0.9);
+      function getPlanHeight(target: AV.Object) {
+        if (target.attributes.planListOfTarget.length === 0) {
+          return 0;
+        } else if (target.attributes.planListOfTarget.length > 0) {
+          return (
+            7.65 +
+            0.9 +
+            (7.65 + 0.15) * (target.attributes.planListOfTarget.length - 1)
+          );
+        } else {
+          return 0;
+        }
+      }
+
+      if (props.target === undefined) {
+        return (
+          String(
+            fixHeight + mileStoneTip.value.length !== 0 ? 7.65 + 0.15 : 0
+          ) + "vh"
+        );
+      } else {
+        return (
+          String(
+            fixHeight +
+              getPlanHeight(props.target) +
+              (mileStoneTip.value.length !== 0 ? 7.65 + 0.15 : 0)
+          ) + "vh"
+        );
+      }
+    });
+
     return {
       mileStoneTip,
-      click_startTomatoButton
+      click_startTomatoButton,
+      sectionHeight
     };
   }
 });

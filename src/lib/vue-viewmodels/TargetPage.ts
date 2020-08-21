@@ -1943,9 +1943,6 @@ export default {
     currentClickTarget: Ref<AV.Object | null>,
     target: AV.Object
   ) => {
-    // 打开底边菜单
-    isTargetBottomMenuShow.value = true;
-
     // 初始化当前点击的 Target
     currentClickTarget.value = target;
 
@@ -1976,5 +1973,8 @@ export default {
         };
       }
     );
+
+    // 打开底边菜单
+    isTargetBottomMenuShow.value = true;
   }
 };

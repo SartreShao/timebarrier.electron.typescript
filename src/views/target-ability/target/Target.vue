@@ -105,13 +105,6 @@
       @click="click_createTarget"
     ></create-target-button>
 
-    <target-bottom-menu
-      :isShow="isTargetBottomMenuShow"
-      :target="currentClickTarget"
-      @click-cancel="isTargetBottomMenuShow = false"
-      @click-background="isTargetBottomMenuShow = false"
-    ></target-bottom-menu>
-
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -143,7 +136,6 @@ import TargetItem from "./components/TargetItem.vue";
 import TargetSubjectItem from "./components/TargetSubjectItem.vue";
 import TargetNoviceTutorial from "./components/TargetNoviceTutorial.vue";
 import { Router } from "@/lib/vue-utils";
-import TargetBottomMenu from "./components/TargetBottomMenu.vue";
 
 export default defineComponent({
   components: {
@@ -151,8 +143,7 @@ export default defineComponent({
     CreateTargetButton,
     TargetItem,
     TargetSubjectItem,
-    TargetNoviceTutorial,
-    TargetBottomMenu
+    TargetNoviceTutorial
   },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
