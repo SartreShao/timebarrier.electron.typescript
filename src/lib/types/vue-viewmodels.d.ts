@@ -75,6 +75,7 @@ export type InputTargetType = {
 
 // 输入里程碑的类别
 export type InputMileStoneType = {
+  id?: string;
   name: string;
   color: string;
 };

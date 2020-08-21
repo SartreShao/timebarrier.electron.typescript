@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="target !== null"
     @click="$emit('click-background')"
     class="background"
     :style="{

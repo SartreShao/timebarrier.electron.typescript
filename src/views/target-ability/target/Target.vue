@@ -105,6 +105,13 @@
       @click="click_createTarget"
     ></create-target-button>
 
+    <target-bottom-menu
+      :isShow="isTargetBottomMenuShow"
+      :target="currentClickTarget"
+      @click-cancel="isTargetBottomMenuShow = false"
+      @click-background="isTargetBottomMenuShow = false"
+    ></target-bottom-menu>
+
     <div style="height:15vh"></div>
   </div>
 </template>
@@ -114,10 +121,10 @@ import {
   defineComponent,
   Ref,
   ref,
-  inject,
   onMounted,
   computed,
-  reactive
+  reactive,
+  inject
 } from "@vue/composition-api";
 import icon_create_target from "../../../assets/icon_create_target.svg";
 import icon_downward from "../../../assets/icon_downward.svg";
@@ -127,12 +134,16 @@ import Store from "../../../store";
 import AV from "leancloud-storage";
 import { TargetPage } from "../../../lib/vue-viewmodels";
 import draggable from "vuedraggable";
-import { InputTargetOrTargetSubjectType } from "@/lib/types/vue-viewmodels";
+import {
+  InputTargetOrTargetSubjectType,
+  InputTargetType
+} from "@/lib/types/vue-viewmodels";
 import CreateTargetButton from "./components/CreateTargetButton.vue";
 import TargetItem from "./components/TargetItem.vue";
 import TargetSubjectItem from "./components/TargetSubjectItem.vue";
 import TargetNoviceTutorial from "./components/TargetNoviceTutorial.vue";
 import { Router } from "@/lib/vue-utils";
+import TargetBottomMenu from "./components/TargetBottomMenu.vue";
 
 export default defineComponent({
   components: {
@@ -140,7 +151,8 @@ export default defineComponent({
     CreateTargetButton,
     TargetItem,
     TargetSubjectItem,
-    TargetNoviceTutorial
+    TargetNoviceTutorial,
+    TargetBottomMenu
   },
   setup(props, context) {
     // 控制变量：「创建目标」的抽屉菜单是否打开
@@ -223,6 +235,23 @@ export default defineComponent({
       })
     );
 
+    // 创建目标的数据容器
+    const input_editingTarget: InputTargetType = inject(
+      Store.input_editingTarget,
+      reactive({
+        id: undefined,
+        subjectName: "",
+        name: "",
+        description: "",
+        validityType: "",
+        validity: "",
+        planList: [],
+        isActived: true,
+        isFinished: false,
+        mileStoneList: []
+      })
+    );
+
     // 拖动结束：未分类的目标
     const dragend_unSubjectiveTarget = () => {
       TargetPage.changeTargetListOrder(unSubjectiveTargetList.value);
@@ -246,11 +275,18 @@ export default defineComponent({
 
     // 点击事件：编辑目标
     const click_editTargetButton = (target: AV.Object) => {
-      TargetPage.openTargetEditDrawer(
-        isEditTargetDrawerDisplayed,
-        input_editingTargetOrTargetSubject,
+      TargetPage.openTargetBottomMenu(
+        isTargetBottomMenuShow,
+        input_editingTarget,
+        currentClickTarget,
         target
       );
+
+      // TargetPage.openTargetEditDrawer(
+      //   isEditTargetDrawerDisplayed,
+      //   input_editingTargetOrTargetSubject,
+      //   target
+      // );
     };
 
     // 点击事件：创建目标
@@ -325,6 +361,18 @@ export default defineComponent({
       }
     });
 
+    // 是否显示底部的菜单
+    const isTargetBottomMenuShow: Ref<boolean> = inject(
+      Store.isTargetBottomMenuShow,
+      ref(false)
+    );
+
+    // 当前点击的 Target
+    const currentClickTarget: Ref<AV.Object | null> = inject(
+      Store.currentClickTarget,
+      ref(null)
+    );
+
     return {
       click_editTargetButton,
       click_createTargetButton,
@@ -342,6 +390,8 @@ export default defineComponent({
       click_unfinishedTargetButton,
       click_createTarget,
       isTargetTutorialShow,
+      isTargetBottomMenuShow,
+      currentClickTarget,
       assets: {
         icon_create_target,
         icon_downward,

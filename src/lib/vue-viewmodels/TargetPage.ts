@@ -1935,5 +1935,46 @@ export default {
         "error"
       );
     }
+  },
+
+  openTargetBottomMenu: async (
+    isTargetBottomMenuShow: Ref<boolean>,
+    input_editingTarget: InputTargetType,
+    currentClickTarget: Ref<AV.Object | null>,
+    target: AV.Object
+  ) => {
+    // 打开底边菜单
+    isTargetBottomMenuShow.value = true;
+
+    // 初始化当前点击的 Target
+    currentClickTarget.value = target;
+
+    // 初始化用户输入数据
+    input_editingTarget.id = target.id;
+    input_editingTarget.subjectName =
+      target.attributes.targetSubject.attributes.name;
+    input_editingTarget.name = target.attributes.name;
+    input_editingTarget.description = target.attributes.description;
+    input_editingTarget.validity = target.attributes.validity;
+    input_editingTarget.validityType = target.attributes.validityType;
+    input_editingTarget.planList = target.attributes.planListOfTarget.map(
+      (plan: AV.Object) => {
+        return {
+          id: plan.id,
+          name: plan.attributes.name
+        };
+      }
+    );
+    input_editingTarget.isActived = target.attributes.isActived;
+    input_editingTarget.isFinished = target.attributes.isFinished;
+    input_editingTarget.mileStoneList = target.attributes.mileStoneListOfTarget.map(
+      (mileStone: AV.Object) => {
+        return {
+          id: mileStone.id,
+          name: mileStone.attributes.name,
+          color: mileStone.attributes.color
+        };
+      }
+    );
   }
 };

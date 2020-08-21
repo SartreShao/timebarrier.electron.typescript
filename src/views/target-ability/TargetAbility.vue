@@ -943,6 +943,13 @@
         </div>
       </div>
     </tb-drawer>
+
+    <target-bottom-menu
+      :isShow="isTargetBottomMenuShow"
+      :target="currentClickTarget"
+      @click-cancel="isTargetBottomMenuShow = false"
+      @click-background="isTargetBottomMenuShow = false"
+    ></target-bottom-menu>
   </div>
 </template>
 <script lang="ts">
@@ -960,7 +967,8 @@ import Ability from "./ability/Ability.vue";
 import {
   TargetAbilityTabType,
   InputTargetOrTargetSubjectType,
-  InputAbilityType
+  InputAbilityType,
+  InputTargetType
 } from "@/lib/types/vue-viewmodels";
 import Store from "../../store";
 import AV from "leancloud-storage";
@@ -971,6 +979,8 @@ import icon_enter from "../../assets/icon_enter.svg";
 import icon_finished from "../../assets/icon_finished.svg";
 import TbDrawer from "@/lib/components/TbDrawer.vue";
 import TbInput from "@/lib/components/TbInput.vue";
+import TargetBottomMenu from "./target/components/TargetBottomMenu.vue";
+
 import {
   TargetPage,
   AbilityPage,
@@ -978,7 +988,7 @@ import {
 } from "../../lib/vue-viewmodels";
 
 export default defineComponent({
-  components: { TopBar, Target, Ability, TbDrawer, TbInput },
+  components: { TopBar, Target, Ability, TbDrawer, TbInput, TargetBottomMenu },
   setup(props, context) {
     // 色彩表
     const colormap: string[] = inject(Store.colormap, []);
@@ -1473,7 +1483,38 @@ export default defineComponent({
       TargetAbilityPage.switchTab(context.root, "ability");
     };
 
+    // 是否显示底部的菜单
+    const isTargetBottomMenuShow: Ref<boolean> = inject(
+      Store.isTargetBottomMenuShow,
+      ref(false)
+    );
+
+    // 当前点击的 Target
+    const currentClickTarget: Ref<AV.Object | null> = inject(
+      Store.currentClickTarget,
+      ref(null)
+    );
+
+    // 创建目标的数据容器
+    const input_editingTarget: InputTargetType = inject(
+      Store.input_editingTarget,
+      reactive({
+        id: undefined,
+        subjectName: "",
+        name: "",
+        description: "",
+        validityType: "",
+        validity: "",
+        planList: [],
+        isActived: true,
+        isFinished: false,
+        mileStoneList: []
+      })
+    );
+
     return {
+      isTargetBottomMenuShow,
+      currentClickTarget,
       currentTab,
       click_createTargetOrTargetSubject,
       click_deleteTargetOrTargetSubject,
@@ -1538,13 +1579,16 @@ export default defineComponent({
 .fade-enter-active, .fade-leave-active {
   transition opacity 0.1s
 }
+
 .fade-enter, .fade-leave-to { /* .fade-leave-active below version 2.1.8 */
   opacity 0
 }
+
 .container {
   display flex
   flex-direction column
   background #f0f1f3
+
   // 顶部的 TAB 栏
   .tab-container {
     position fixed
@@ -1553,6 +1597,7 @@ export default defineComponent({
     height 5.17vh
     display flex
     flex-direction row
+
     .tab-target {
       cursor pointer
       width 50vw
@@ -1568,6 +1613,7 @@ export default defineComponent({
       letter-spacing 0.02vh
       text-align center
       color #434343
+
       &-unselected {
         cursor pointer
         width 50vw
@@ -1585,6 +1631,7 @@ export default defineComponent({
         color #cecece
       }
     }
+
     .tab-ability {
       cursor pointer
       width 50vw
@@ -1600,6 +1647,7 @@ export default defineComponent({
       letter-spacing 0.02vh
       text-align center
       color #434343
+
       &-unselected {
         cursor pointer
         width 50vw
@@ -1618,6 +1666,7 @@ export default defineComponent({
       }
     }
   }
+
   // 主要界面
   main {
     position fixed
@@ -1629,6 +1678,7 @@ export default defineComponent({
     flex-direction column
     align-items center
   }
+
   // 抽屉菜单 item：选择框
   .select-target >>> .el-input__inner {
     flex-shrink 0
@@ -1646,6 +1696,7 @@ export default defineComponent({
     letter-spacing 0.21px
     text-align left
     color #363636
+
     &::-webkit-input-placeholder {
       font-size 1.95vh
       font-weight normal
@@ -1657,12 +1708,14 @@ export default defineComponent({
       color #969294
     }
   }
+
   // 抽屉菜单 item：日期选择器
   .date-select-target >>> .el-date-editor.el-input, .el-date-editor.el-input__inner {
     flex-shrink 0
     width 89.6vw
     height 6.9vh
   }
+
   .date-select-target >>> .el-input__inner {
     flex-shrink 0
     width 89.6vw
@@ -1679,6 +1732,7 @@ export default defineComponent({
     letter-spacing 0.21px
     text-align left
     color #363636
+
     &::-webkit-input-placeholder {
       font-size 1.95vh
       font-weight normal
@@ -1690,14 +1744,17 @@ export default defineComponent({
       color #969294
     }
   }
+
   .data-select-picker-item >>> .el-input__prefix {
     left 4.8vw
   }
+
   .data-select-picker-item >>> .el-input__icon {
     width 3.41vw
     height 100%
     line-height 7vh
   }
+
   // 按钮：关联相关能力
   .related-ability {
     flex-shrink 0
@@ -1709,12 +1766,14 @@ export default defineComponent({
     align-items center
     cursor pointer
     padding-left 3.92vw
+
     img {
       width 1.92vh
       height 1.92vh
       margin-right 2.8vw
       opacity 0.5
     }
+
     span {
       opacity 0.5
       font-size 1.95vh
@@ -1727,6 +1786,7 @@ export default defineComponent({
       color #636971
     }
   }
+
   // 按钮：保存与删除
   .button-container {
     flex-shrink 0
@@ -1740,6 +1800,7 @@ export default defineComponent({
     justify-content space-between
     align-items center
   }
+
   .delete-button {
     width 46.8vw
     height 6.82vh
@@ -1759,6 +1820,7 @@ export default defineComponent({
     margin-left 2.13vw
     cursor pointer
   }
+
   .save-button {
     width 46.8vw
     height 6.82vh
@@ -1778,11 +1840,13 @@ export default defineComponent({
     margin-right 2.13vw
     cursor pointer
   }
+
   .radio-container {
     flex-shrink 0
     display flex
     width 89.6vw
     justify-content space-between
+
     div {
       cursor pointer
       width 42.93vw
@@ -1791,6 +1855,7 @@ export default defineComponent({
       background-color #f4f4f8
       display flex
       align-items center
+
       span {
         opacity 0.3
         font-size 2.02vh
@@ -1803,6 +1868,7 @@ export default defineComponent({
         color #222a36
         margin-left 4.8vw
       }
+
       img {
         width 2.1vh
         height 2.1vh
@@ -1811,10 +1877,12 @@ export default defineComponent({
     }
   }
 }
+
 .input-ability-name-container {
   position relative
   width 89.6vw
   height 6.9vh
+
   img {
     position absolute
     right 5.93vw
@@ -1825,6 +1893,7 @@ export default defineComponent({
     width 3.27vw
     height 1.3vh
   }
+
   .input-ability-name {
     outline none
     -webkit-appearance none /* 去除系统默认的样式 */
@@ -1844,6 +1913,7 @@ export default defineComponent({
     letter-spacing 0.21px
     text-align left
     color #363636
+
     &::-webkit-input-placeholder {
       font-size 1.95vh
       font-weight normal
@@ -1856,12 +1926,14 @@ export default defineComponent({
     }
   }
 }
+
 .ability-container {
   margin-top 2.4vh
   width 100%
   display flex
   flex-direction column
   align-items center
+
   .ability-item {
     cursor pointer
     width 89.6vw
@@ -1873,6 +1945,7 @@ export default defineComponent({
     justify-content space-between
     align-items center
     margin-bottom 1.5vh
+
     span {
       font-size 1.95vh
       font-weight normal
@@ -1884,6 +1957,7 @@ export default defineComponent({
       color #969294
       margin-left 4.8vw
     }
+
     img {
       height 2.7vh
       width 2.7vh

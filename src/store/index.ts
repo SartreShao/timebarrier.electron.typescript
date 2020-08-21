@@ -114,6 +114,10 @@ const input_editingPlan = Symbol();
 const input_creatingTarget = Symbol();
 // 临时变量：正在编辑的目标
 const input_editingTarget = Symbol();
+// 控制变量：Target 是否打开底部菜单
+const isTargetBottomMenuShow = Symbol();
+// 控制变量：当前点击的 Target
+const currentClickTarget = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -372,6 +376,8 @@ function useProvider() {
       mileStoneList: []
     })
   );
+  provide(isTargetBottomMenuShow, ref(false));
+  provide(currentClickTarget, ref(null));
 }
 
 export default {
@@ -427,5 +433,7 @@ export default {
   input_creatingPlan,
   input_editingPlan,
   input_creatingTarget,
-  input_editingTarget
+  input_editingTarget,
+  isTargetBottomMenuShow,
+  currentClickTarget
 };
