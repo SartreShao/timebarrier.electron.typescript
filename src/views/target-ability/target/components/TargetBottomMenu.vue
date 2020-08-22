@@ -9,6 +9,7 @@
     }"
   >
     <section class="section" :style="{ height: isShow ? sectionHeight : `0` }">
+      <!-- 开始训练 -->
       <div
         v-for="(plan, index) in target.attributes.planListOfTarget"
         class="item"
@@ -21,32 +22,30 @@
         style="color:#222A36"
       >
         开始训练：{{
-          plan.attributes.target !== undefined
+          plan.attributes.target !== undefined && plan.attributes.target !== 0
             ? `${plan.attributes.name}（${plan.attributes.todayTomatoNumber}/${plan.attributes.target}）`
             : `${plan.attributes.name}`
         }}
       </div>
+
+      <!-- 创建里程碑 -->
       <div
         class="item"
-        :class="{ 'item- 1': target.attributes.planListOfTarget.length === 0 }"
+        :class="{ 'item-1': target.attributes.planListOfTarget.length === 0 }"
         v-darked-when-click
-        v-if="mileStoneTip.length !== 0"
       >
-        {{ mileStoneTip }}
+        {{ mileStoneTip.length !== 0 ? mileStoneTip : "创建里程碑" }}
       </div>
-      <div
-        class="item"
-        :class="{
-          'item- 1':
-            mileStoneTip.length !== 0 &&
-            target.attributes.planListOfTarget.length === 0
-        }"
-        @click="$emit('click-edit')"
-        v-darked-when-click
-      >
+
+      <!-- 编辑目标 -->
+      <div class="item" @click="$emit('click-edit')" v-darked-when-click>
         编辑目标
       </div>
+
+      <!-- 转变未激活 -->
       <div class="item" v-darked-when-click>转变为「未激活」状态</div>
+
+      <!-- 删除目标 -->
       <div
         class="item item-4"
         @click="$emit('click-delete')"
@@ -54,6 +53,8 @@
       >
         删除目标
       </div>
+
+      <!-- 取消 -->
       <div class="item" @click="$emit('click-cancel')" v-darked-when-click>
         取消
       </div>
@@ -95,7 +96,7 @@ export default defineComponent({
       if (totalMileStone === 0) {
         return "";
       } else {
-        return `查看里程碑 ${completedMileStone}/${totalMileStone}｜`;
+        return `查看里程碑（${completedMileStone}/${totalMileStone}）`;
       }
     });
     // 番茄时钟的状态值
@@ -156,7 +157,7 @@ export default defineComponent({
 
     // 动态计算弹出框高度
     const sectionHeight = computed(() => {
-      const fixHeight = 3 * (7.65 + 0.15) + (7.65 + 0.9);
+      const fixHeight = 3 * (7.65 + 0.15) + (7.65 + 0.9) + 7.65 + 0.15;
       function getPlanHeight(target: AV.Object) {
         if (target.attributes.planListOfTarget.length === 0) {
           return 0;
@@ -172,19 +173,9 @@ export default defineComponent({
       }
 
       if (props.target === undefined) {
-        return (
-          String(
-            fixHeight + mileStoneTip.value.length !== 0 ? 7.65 + 0.15 : 0
-          ) + "vh"
-        );
+        return String(fixHeight) + "vh";
       } else {
-        return (
-          String(
-            fixHeight +
-              getPlanHeight(props.target) +
-              (mileStoneTip.value.length !== 0 ? 7.65 + 0.15 : 0)
-          ) + "vh"
-        );
+        return String(fixHeight + getPlanHeight(props.target)) + "vh";
       }
     });
 
