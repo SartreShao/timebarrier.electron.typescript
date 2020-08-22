@@ -950,6 +950,7 @@
       @click-cancel="isTargetBottomMenuShow = false"
       @click-background="isTargetBottomMenuShow = false"
       @click-delete="click_deleteTarget"
+      @click-edit="click_editTarget"
     ></target-bottom-menu>
   </div>
 </template>
@@ -1533,11 +1534,16 @@ export default defineComponent({
       })
     );
 
+    const click_editTarget = () => {
+      TargetPage.openEditTargetPage(context.root);
+    };
+
     return {
       isTargetBottomMenuShow,
       currentClickTarget,
       currentTab,
       click_createTargetOrTargetSubject,
+      click_editTarget,
       click_deleteTarget,
       click_saveTargetOrTargetSubject,
       isCreateTargetDrawerDisplayed,

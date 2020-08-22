@@ -202,6 +202,11 @@ const routes = [
     name: "target-relate-plan",
     component: () => import("../views/create-target/TargetRelatePlan.vue"),
     props: true
+  },
+  {
+    path: "/edit-target",
+    name: "edit-target",
+    component: () => import("../views/edit-target/EditTarget.vue")
   }
 ];
 

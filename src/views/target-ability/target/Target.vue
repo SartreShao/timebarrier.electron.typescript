@@ -272,12 +272,6 @@ export default defineComponent({
         currentClickTarget,
         target
       );
-
-      // TargetPage.openTargetEditDrawer(
-      //   isEditTargetDrawerDisplayed,
-      //   input_editingTargetOrTargetSubject,
-      //   target
-      // );
     };
 
     // 点击事件：创建目标

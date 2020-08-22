@@ -1797,7 +1797,7 @@ export default {
       );
 
       // 创建 Target
-      const target = await Api.createTarget(
+      await Api.createTarget(
         user,
         targetSubject.id as string,
         input_creatingTarget.name,
@@ -1854,7 +1854,9 @@ export default {
       target.attributes.targetSubject.attributes.name;
     input_editingTarget.name = target.attributes.name;
     input_editingTarget.description = target.attributes.description;
-    input_editingTarget.validity = target.attributes.validity;
+    input_editingTarget.validity = target.attributes.validity
+      ? target.attributes.validity
+      : "";
     input_editingTarget.validityType = target.attributes.validityType;
     input_editingTarget.planList = target.attributes.planListOfTarget.map(
       (plan: AV.Object) => {
@@ -1878,5 +1880,106 @@ export default {
 
     // 打开底边菜单
     isTargetBottomMenuShow.value = true;
+  },
+  saveTarget: async (
+    vue: ElementVue,
+    input_editingTarget: InputTargetType,
+    temporaryPlanList: Ref<AV.Object[]>,
+    dailyPlanList: Ref<AV.Object[]>,
+    completedPlanList: Ref<AV.Object[]>,
+    targetSubjectList: Ref<AV.Object[]>
+  ) => {
+    // 获取传入参数
+    const user = Api.getCurrentUser();
+
+    // 如果未登录，提示用户请先登录
+    if (user === null) {
+      UI.showNotification(vue.$notify, "尚未登录", "请先去登录", "warning");
+      return;
+    }
+
+    // 检查数据
+    if (input_editingTarget.id === undefined) {
+      UI.showNotification(
+        vue.$notify,
+        "数据出错",
+        "input_editingTarget.id === undefined",
+        "warning"
+      );
+      return;
+    }
+
+    // 输入检测：目标名称
+    const targetName = _.trim(input_editingTarget.name);
+    if (targetName.length === 0) {
+      UI.showNotification(
+        vue.$notify,
+        "输入有误",
+        "目标名称不可为空",
+        "warning"
+      );
+      return;
+    }
+
+    // 输入检测：目标类别名称
+    const targetSubjectName = _.trim(input_editingTarget.subjectName);
+
+    const loadingInstance = UI.showLoading(vue.$loading, "正在保存您的目标...");
+    try {
+      // 目标类别
+      const targetSubjectId: string | null =
+        targetSubjectName.length === 0
+          ? null
+          : ((
+              await Api.findOrCreateTargetSubject(
+                input_editingTarget.subjectName,
+                user
+              )
+            ).id as string);
+
+      // 保存 Target
+      await Api.saveTarget(
+        input_editingTarget.id,
+        user,
+        targetSubjectId,
+        input_editingTarget.name,
+        input_editingTarget.description,
+        "indefinite",
+        input_editingTarget.validity.length !== 0
+          ? new Date(
+              new Date(input_editingTarget.validity).getTime() +
+                3600 * 1000 * 24 -
+                1
+            )
+          : null,
+        [],
+        input_editingTarget.planList,
+        true,
+        false
+      );
+
+      // 刷新计划列表
+      temporaryPlanList.value = await Api.fetchPlanList(user, "temporary");
+      dailyPlanList.value = await Api.fetchPlanList(user, "daily");
+      completedPlanList.value = await Api.fetchPlanList(user, "completed");
+
+      // 刷新目标列表
+      targetSubjectList.value = await Api.fetchTargetSubjectList(user);
+
+      UI.hideLoading(loadingInstance);
+      Router.replace(vue.$router, "/target-ability");
+    } catch (error) {
+      UI.hideLoading(loadingInstance);
+      UI.showNotification(
+        vue.$notify,
+        "获取目标列表失败",
+        `失败原因：${error.message}`,
+        "error"
+      );
+    }
+  },
+  openEditTargetPage: (vue: ElementVue) => {
+    // 跳转页面
+    Router.push(vue.$router, "/edit-target");
   }
 };
