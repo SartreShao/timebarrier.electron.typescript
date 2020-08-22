@@ -9,11 +9,7 @@
         width="148"
         height="148"
         viewBox="0 0 148 148"
-        v-if="
-          unSubjectiveTargetList.length === 0 &&
-            completedTargetList.length === 0 &&
-            targetSubjectList.length === 0
-        "
+        v-if="isTargetTutorialShow"
       >
         <g
           id="椭圆_129"
@@ -63,11 +59,7 @@
 
     <!-- 右箭头 -->
     <svg
-      v-if="
-        unSubjectiveTargetList.length === 0 &&
-          completedTargetList.length === 0 &&
-          targetSubjectList.length === 0
-      "
+      v-if="isTargetTutorialShow"
       class="right-arrow"
       xmlns="http://www.w3.org/2000/svg"
       width="26.281"
@@ -97,21 +89,20 @@
     </svg>
 
     <!-- 提示语句 -->
-    <div
-      class="tip"
-      v-if="
-        unSubjectiveTargetList.length === 0 &&
-          completedTargetList.length === 0 &&
-          targetSubjectList.length === 0
-      "
-    >
+    <div class="tip" v-if="isTargetTutorialShow">
       点击它，创建您的第一个目标
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, inject, ref } from "@vue/composition-api";
+import {
+  defineComponent,
+  Ref,
+  inject,
+  ref,
+  computed
+} from "@vue/composition-api";
 import Store from "@/store";
 import AV from "leancloud-storage";
 
@@ -135,10 +126,36 @@ export default defineComponent({
       ref([])
     );
 
+    // 是否显示 Target 新手提示
+    const isTargetTutorialShow = computed(() => {
+      if (
+        unSubjectiveTargetList.value.length === 0 &&
+        completedTargetList.value.length === 0 &&
+        targetSubjectList.value.length === 0
+      ) {
+        return true;
+      } else if (
+        unSubjectiveTargetList.value.length === 0 &&
+        completedTargetList.value.length === 0 &&
+        targetSubjectList.value.length !== 0
+      ) {
+        let isSubjectEmpty = true;
+        targetSubjectList.value.forEach(targetSubject => {
+          if (targetSubject.attributes.targetListOfTargetSubject.length !== 0) {
+            isSubjectEmpty = false;
+          }
+        });
+        return isSubjectEmpty;
+      } else {
+        return false;
+      }
+    });
+
     return {
       unSubjectiveTargetList,
       targetSubjectList,
-      completedTargetList
+      completedTargetList,
+      isTargetTutorialShow
     };
   }
 });
