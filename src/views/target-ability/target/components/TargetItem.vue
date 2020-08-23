@@ -223,18 +223,13 @@ export default defineComponent({
       let currentMileStone: AV.Object | null = null;
       const mileStoneList = (props.target as AV.Object).attributes
         .mileStoneListOfTarget;
-      try {
-        mileStoneList.forEach((mileStone: AV.Object) => {
-          if (mileStone.attributes.isFinished === false) {
-            currentMileStone = mileStone;
-            throw "";
-          }
-        });
-        currentMileStone = null;
-        throw "";
-      } catch (error) {
-        return currentMileStone;
+      for (let mileStone of mileStoneList) {
+        if (mileStone.attributes.isFinished === false) {
+          currentMileStone = mileStone;
+          break;
+        }
       }
+      return currentMileStone;
     });
 
     const validity = computed(() => {

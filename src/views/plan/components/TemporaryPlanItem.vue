@@ -14,7 +14,10 @@
 
     <div
       class="deadline"
-      v-if="plan.attributes.deadline !== undefined"
+      v-if="
+        plan.attributes.deadline !== undefined &&
+          plan.attributes.deadline !== null
+      "
       :style="{ background: color }"
     >
       {{ tip }}
@@ -38,7 +41,7 @@ export default defineComponent({
       }
       const deadline: Date = props.plan.attributes.deadline;
       const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
-      if (deadline === undefined) {
+      if (deadline === undefined || deadline === null) {
         return "";
       }
       const result = (deadline.getTime() - todayStartTime) / (1000 * 3600 * 24);
@@ -57,8 +60,9 @@ export default defineComponent({
         return "";
       }
       const deadline: Date = props.plan.attributes.deadline;
+
       const todayStartTime = UI.getTodayStartTimestamp(new Date().getTime());
-      if (deadline === undefined) {
+      if (deadline === undefined || deadline === null) {
         return "";
       }
       const result = (deadline.getTime() - todayStartTime) / (1000 * 3600 * 24);

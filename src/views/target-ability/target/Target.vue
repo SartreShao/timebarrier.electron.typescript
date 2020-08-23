@@ -40,7 +40,6 @@
               targetSubject.attributes.targetListOfTargetSubject.length !== 0
             "
             v-splash-when-click
-            @click="() => click_editTargetSubjectButton(targetSubject)"
             :isShow.sync="targetSubject.attributes.showSubjectList"
             :name="targetSubject.attributes.name"
             :length="targetSubject.attributes.targetListOfTargetSubject.length"

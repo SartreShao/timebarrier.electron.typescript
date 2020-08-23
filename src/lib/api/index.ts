@@ -1143,6 +1143,23 @@ export default {
           });
         });
 
+        // 获取 mileStoneList
+        const mileStoneList = await new AV.Query(MileStone)
+          .include("target")
+          .containedIn("target", targetList)
+          .descending("order")
+          .find();
+
+        // 组合它们
+        targetList.forEach(target => {
+          target.attributes.mileStoneListOfTarget = [];
+          mileStoneList.forEach(mileStone => {
+            if (mileStone.attributes.target.id === target.id) {
+              target.attributes.mileStoneListOfTarget.push(mileStone);
+            }
+          });
+        });
+
         Log.success("fetchTargetList " + targetType, targetList);
         resolve(targetList);
       } catch (error) {
