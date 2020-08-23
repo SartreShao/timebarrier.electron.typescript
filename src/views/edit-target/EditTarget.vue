@@ -11,6 +11,20 @@
         sub-title="创建目标 + 制定计划 + 每日执行 = 得偿所愿"
       ></top-tips>
 
+      <!-- 目标类别 -->
+      <section class="section section-6">
+        <h1 class="h-1">Step 1：目标类别——您的目标属于哪个类别？</h1>
+        <div class="input-container">
+          <input
+            class="input"
+            type="text"
+            placeholder="目标无所属类别"
+            v-model="input_editingTarget.subjectName"
+          />
+        </div>
+        <h2 class="h-2">不输入目标类别，目标即为「无类别」</h2>
+      </section>
+
       <!-- 目标名称 -->
       <section class="section section-1">
         <h1 class="h-1">Step 1：目标名称——您希望达成什么目标？</h1>
@@ -278,6 +292,10 @@ export default defineComponent({
 
 .section-5 {
   background #D45070
+}
+
+.section-6 {
+  background #123456
 }
 
 .h-1 {

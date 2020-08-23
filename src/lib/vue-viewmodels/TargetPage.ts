@@ -1978,7 +1978,11 @@ export default {
       );
     }
   },
-  openEditTargetPage: (vue: ElementVue) => {
+  openEditTargetPage: (
+    vue: ElementVue,
+    isTargetBottomMenuShow: Ref<boolean>
+  ) => {
+    isTargetBottomMenuShow.value = false;
     // 跳转页面
     Router.push(vue.$router, "/edit-target");
   }

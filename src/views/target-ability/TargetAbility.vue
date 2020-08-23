@@ -1535,7 +1535,7 @@ export default defineComponent({
     );
 
     const click_editTarget = () => {
-      TargetPage.openEditTargetPage(context.root);
+      TargetPage.openEditTargetPage(context.root, isTargetBottomMenuShow);
     };
 
     return {
