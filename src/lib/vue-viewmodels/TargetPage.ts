@@ -1850,8 +1850,9 @@ export default {
 
     // 初始化用户输入数据
     input_editingTarget.id = target.id;
-    input_editingTarget.subjectName =
-      target.attributes.targetSubject.attributes.name;
+    input_editingTarget.subjectName = target.attributes.targetSubject
+      ? target.attributes.targetSubject.attributes.name
+      : "";
     input_editingTarget.name = target.attributes.name;
     input_editingTarget.description = target.attributes.description;
     input_editingTarget.validity = target.attributes.validity
