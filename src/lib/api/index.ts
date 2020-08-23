@@ -1046,7 +1046,7 @@ export default {
               AV.Object.createWithoutData("Target", targetId)
             )
           )
-          .descending("order")
+          .ascending("order")
           .find();
 
         // 接下来组合它们
@@ -1147,7 +1147,7 @@ export default {
         const mileStoneList = await new AV.Query(MileStone)
           .include("target")
           .containedIn("target", targetList)
-          .descending("order")
+          .ascending("order")
           .find();
 
         // 组合它们
