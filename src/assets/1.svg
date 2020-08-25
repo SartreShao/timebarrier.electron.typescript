@@ -1,6 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-  <g id="椭圆_53" data-name="椭圆 53" fill="none" stroke="#3846cf" stroke-width="3">
-    <circle cx="14" cy="14" r="14" stroke="none"/>
-    <circle cx="14" cy="14" r="12.5" fill="none"/>
+  <g id="组_2093" data-name="组 2093" transform="translate(17486 -11626)">
+    <g id="椭圆_53" data-name="椭圆 53" transform="translate(-17486 11626)" fill="none" stroke="#f9385e" stroke-width="3"
+      opacity="0.2">
+      <circle cx="14" cy="14" r="14" stroke="none" />
+      <circle cx="14" cy="14" r="12.5" fill="none" />
+    </g>
+    <g id="椭圆_219" data-name="椭圆 219" transform="translate(-17486 11626)" fill="none" stroke="#f9385e" stroke-width="3"
+      stroke-dasharray="78 100">
+      <circle cx="14" cy="14" r="14" stroke="none" />
+      <circle cx="14" cy="14" r="12.5" fill="none" />
+    </g>
   </g>
 </svg>

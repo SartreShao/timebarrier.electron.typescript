@@ -67,7 +67,7 @@
               target.attributes.color ? target.attributes.color : `#222a36`
             "
             stroke-width="3"
-            :stroke-dasharray="percent"
+            :stroke-dasharray="strokeDasharray"
           >
             <circle cx="15" cy="15" r="15" stroke="none" />
             <circle cx="15" cy="15" r="13.5" fill="none" />
@@ -112,7 +112,8 @@ import {
   inject,
   ref,
   reactive,
-  computed
+  computed,
+  watchEffect
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { TargetPage } from "@/lib/vue-viewmodels";
@@ -185,19 +186,24 @@ export default defineComponent({
 
     // 判断当前处于什么位置
     const percent = computed(() => {
+      if (props.target === undefined) {
+        return 1;
+      }
       let totalTomatoNumber = 0;
       let todayTomatoNumber = 0;
-      (props.target as AV.Object).attributes.planListOfTarget.forEach(
-        (plan: AV.Object) => {
-          totalTomatoNumber += plan.attributes.target;
-          todayTomatoNumber += plan.attributes.todayTomatoNumber;
-        }
-      );
+      props.target.attributes.planListOfTarget.forEach((plan: AV.Object) => {
+        totalTomatoNumber += plan.attributes.target;
+        todayTomatoNumber += plan.attributes.todayTomatoNumber;
+      });
       if (totalTomatoNumber === 0) {
         return 1;
       } else {
         return todayTomatoNumber / totalTomatoNumber;
       }
+    });
+
+    const strokeDasharray = computed(() => {
+      return String(percent.value * 85) + " 100";
     });
 
     // 里程碑提示语
@@ -278,7 +284,8 @@ export default defineComponent({
       mileStoneTip,
       currentMileStone,
       validity,
-      color
+      color,
+      strokeDasharray
     };
   }
 });
