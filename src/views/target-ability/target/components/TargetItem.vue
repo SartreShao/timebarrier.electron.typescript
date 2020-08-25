@@ -77,7 +77,7 @@
 
       <span class="tomato-text">{{
         target.attributes.planListOfTarget.length === 0
-          ? "无关联计划"
+          ? "无训练计划"
           : totalTomatoNumber === 0
           ? `番茄 ${todayTomatoNumber}`
           : `番茄 ${todayTomatoNumber}/${totalTomatoNumber}`

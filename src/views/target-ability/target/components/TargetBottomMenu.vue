@@ -39,7 +39,11 @@
 
       <!-- 编辑目标 -->
       <div class="item" @click="$emit('click-edit')" v-darked-when-click>
-        编辑目标
+        {{
+          target.attributes.planListOfTarget.length === 0
+            ? "编辑目标"
+            : "编辑目标（可添加训练计划）"
+        }}
       </div>
 
       <!-- 转变未激活 -->
