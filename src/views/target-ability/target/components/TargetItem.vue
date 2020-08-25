@@ -74,6 +74,14 @@
           </g>
         </g>
       </svg>
+
+      <span class="tomato-text">{{
+        target.attributes.planListOfTarget.length === 0
+          ? "无关联计划"
+          : totalTomatoNumber === 0
+          ? `番茄 ${todayTomatoNumber}`
+          : `番茄 ${todayTomatoNumber}/${totalTomatoNumber}`
+      }}</span>
     </div>
 
     <!-- 占位符 -->
@@ -112,8 +120,8 @@ import {
   inject,
   ref,
   reactive,
-  computed,
-  watchEffect
+  watchEffect,
+  computed
 } from "@vue/composition-api";
 import AV from "leancloud-storage";
 import { TargetPage } from "@/lib/vue-viewmodels";
@@ -202,6 +210,28 @@ export default defineComponent({
       }
     });
 
+    const totalTomatoNumber = computed(() => {
+      if (props.target === undefined) {
+        return 0;
+      }
+      let totalTomatoNumber = 0;
+      props.target.attributes.planListOfTarget.forEach((plan: AV.Object) => {
+        totalTomatoNumber += plan.attributes.target;
+      });
+      return totalTomatoNumber;
+    });
+
+    const todayTomatoNumber = computed(() => {
+      if (props.target === undefined) {
+        return 0;
+      }
+      let todayTomatoNumber = 0;
+      props.target.attributes.planListOfTarget.forEach((plan: AV.Object) => {
+        todayTomatoNumber += plan.attributes.todayTomatoNumber;
+      });
+      return todayTomatoNumber;
+    });
+
     const strokeDasharray = computed(() => {
       return String(percent.value * 85) + " 100";
     });
@@ -285,7 +315,9 @@ export default defineComponent({
       currentMileStone,
       validity,
       color,
-      strokeDasharray
+      strokeDasharray,
+      totalTomatoNumber,
+      todayTomatoNumber
     };
   }
 });
@@ -302,12 +334,30 @@ export default defineComponent({
   align-items stretch
   flex-shrink 0
 
+  .tomato-text {
+    color #222A36
+    opacity 0
+    font-size 0
+    margin-top 0
+    transition all 0.2s ease-in-out
+  }
+
+  &:hover {
+    .tomato-text {
+      color #222A36
+      opacity 0.4
+      font-size 1.35vh
+      margin-top 1vh
+    }
+  }
+
   .finished-button-container {
     width 16vw
     background-color #fcfbfc
     display flex
     justify-content center
     align-items center
+    flex-direction column
 
     .finished-button {
       width 2.1vh
