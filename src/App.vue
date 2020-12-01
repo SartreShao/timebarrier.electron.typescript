@@ -5,6 +5,7 @@
       <router-view v-else />
     </transition>
     <bottom-bar v-if="isCurrentPageHome && isClosedBeta"></bottom-bar>
+    <Loading title="正在加载：番茄列表..."></Loading>
   </div>
 </template>
 <script lang="ts">
@@ -33,9 +34,10 @@ import {
 import AV from "leancloud-storage";
 import { UI } from "./lib/vue-utils";
 import Api from "@/lib/api";
+import Loading from "@/components/Loading.vue";
 
 export default defineComponent({
-  components: { BottomBar, CheckIsClosedBeta },
+  components: { BottomBar, CheckIsClosedBeta, Loading },
   setup(props, context) {
     // 提供依赖注入
     Store.useProvider();

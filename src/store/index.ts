@@ -118,6 +118,10 @@ const input_editingTarget = Symbol();
 const isTargetBottomMenuShow = Symbol();
 // 控制变量：当前点击的 Target
 const currentClickTarget = Symbol();
+// 控制变量：Loading 的 Boolean
+const showLoading = Symbol();
+// 显示数据：Loading 的 title
+const loadingTitle = Symbol();
 
 /**
  * @TODO 像 vuex 一样，可以把在哪里调用的打印出来
@@ -378,6 +382,8 @@ function useProvider() {
   );
   provide(isTargetBottomMenuShow, ref(false));
   provide(currentClickTarget, ref(null));
+  provide(showLoading, ref(true));
+  provide(loadingTitle, ref(""));
 }
 
 export default {
@@ -435,5 +441,7 @@ export default {
   input_creatingTarget,
   input_editingTarget,
   isTargetBottomMenuShow,
-  currentClickTarget
+  currentClickTarget,
+  showLoading,
+  loadingTitle
 };

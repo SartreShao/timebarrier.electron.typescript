@@ -1,9 +1,15 @@
 <template>
   <div class="loading-container">
-    <div class="background"></div>
+    <div
+      class="background"
+      :class="{ appear: showLoading, disappear: !showLoading }"
+    ></div>
 
-    <div class="container">
-      <div class="loading">{{ title }}</div>
+    <div
+      class="container"
+      :class="{ 'slide-in': showLoading, 'slide-out': !showLoading }"
+    >
+      <div class="loading">{{ loadingTitle }}</div>
       <svg
         class="loading-icon"
         xmlns="http://www.w3.org/2000/svg"
@@ -368,16 +374,68 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import Store from "@/store";
+import { defineComponent, ref, Ref, inject } from "@vue/composition-api";
 export default defineComponent({
-  props: {
-    title: String
-  },
-  setup(props, context) {}
+  setup(props, context) {
+    const showLoading: Ref<boolean> = inject(Store.showLoading, ref(false));
+
+    const loadingTitle: Ref<string> = inject(Store.loadingTitle, ref(""));
+
+
+    return {
+      showLoading,
+      loadingTitle
+    };
+  }
 });
 </script>
 
 <style lang="stylus" scoped>
+@keyframes slide-from-bottom {
+  0% {
+    opacity 0
+    transform translateY(500px)
+  }
+
+  100% {
+    opacity 1
+    transform translateY(0)
+  }
+}
+
+@keyframes slide-to-bottom {
+  0% {
+    opacity 1
+    transform translateY(0)
+  }
+
+  100% {
+    opacity 0
+    transform translateY(500px)
+  }
+}
+
+@keyframes disappear {
+  0% {
+    opacity 0.7
+  }
+
+  100% {
+    opacity 0
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity 0
+  }
+
+  100% {
+    opacity 0.7
+  }
+}
+
 .loading-container {
   width 100vw
   height 100vh
@@ -393,7 +451,7 @@ export default defineComponent({
 }
 
 .background {
-  width 100vh
+  width 100vw
   height 100vh
   position absolute
   background #222A36
@@ -411,6 +469,26 @@ export default defineComponent({
   align-items center
   background white
   z-index 99
+}
+
+.slide-in {
+  animation slide-from-bottom 1s
+  animation-fill-mode forwards
+}
+
+.slide-out {
+  animation slide-to-bottom 1s
+  animation-fill-mode forwards
+}
+
+.appear {
+  animation appear 1s
+  animation-fill-mode forwards
+}
+
+.disappear {
+  animation disappear 1s
+  animation-fill-mode forwards
 }
 
 .loading {

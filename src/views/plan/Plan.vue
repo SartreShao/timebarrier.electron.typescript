@@ -143,8 +143,6 @@
       @click-edit="click_editPlan"
       @click-delete="click_deletePlanButton"
     ></plan-bottom-menu>
-
-    <Loading style="position: fixed" title="正在加载：番茄列表..."></Loading>
   </div>
 </template>
 <script lang="ts">
@@ -179,7 +177,6 @@ import CreatePlanButton from "./components/CreatePlanButton.vue";
 import TemporaryPlanItem from "./components/TemporaryPlanItem.vue";
 import DailyPlanItem from "./components/DailyPlanItem.vue";
 import PlanBottomMenu from "./components/PlanBottomMenu.vue";
-import Loading from "@/components/Loading.vue";
 
 export default defineComponent({
   components: {
@@ -190,8 +187,7 @@ export default defineComponent({
     CreatePlanButton,
     TemporaryPlanItem,
     DailyPlanItem,
-    PlanBottomMenu,
-    Loading
+    PlanBottomMenu
   },
   setup(props, context) {
     // 用户输入：创建的「计划」的名称
