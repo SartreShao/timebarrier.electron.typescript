@@ -53,6 +53,7 @@ img {
   left 0
   right 0
 }
+
 header {
   position fixed
   display flex
@@ -60,12 +61,14 @@ header {
   width 100%
   flex-direction column
   align-items center
+
   h2 {
     font-size 1.8vh
     font-weight normal
     color rgba(216, 115, 102, 1)
     opacity 1
   }
+
   h1 {
     margin-bottom 2.1vh
     margin-top 0.67vh
@@ -74,6 +77,7 @@ header {
     color rgba(3, 38, 56, 1)
     opacity 1
   }
+
   h3 {
     margin-bottom 0.5vh
     font-size 2.25vh
@@ -82,6 +86,7 @@ header {
     opacity 1
     white-space pre
   }
+
   p {
     margin-top 59.82vh
     font-size 1.8vh
