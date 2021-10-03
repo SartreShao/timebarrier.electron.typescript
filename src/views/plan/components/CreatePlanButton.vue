@@ -29,7 +29,7 @@
       </svg>
 
       <!-- 创建 Plan 的按钮 -->
-      <div class="click-button" @click="$emit('click')">
+      <div class="click-button" @click="click_createPlanButton">
         <svg
           class="add-icon"
           id="组_1328"
@@ -114,6 +114,7 @@
 import { defineComponent, Ref, inject, ref } from "@vue/composition-api";
 import Store from "@/store";
 import AV from "leancloud-storage";
+import { PlanPage } from "@/lib/vue-viewmodels";
 
 export default defineComponent({
   setup(props, context) {
@@ -135,10 +136,16 @@ export default defineComponent({
       ref<AV.Object[]>([])
     );
 
+    // 点击事件：点击创建计划按钮
+    const click_createPlanButton = () => {
+      PlanPage.openChoosePlanTypePage(context.root);
+    };
+
     return {
       temporaryPlanList,
       dailyPlanList,
-      completedPlanList
+      completedPlanList,
+      click_createPlanButton
     };
   }
 });
@@ -146,7 +153,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .create-plan-container {
-  width 100%
+  pointer-events none
   height 11.09vh
   display flex
   flex-direction row-reverse
@@ -171,6 +178,7 @@ export default defineComponent({
 }
 
 .click-button {
+  pointer-events auto
   cursor pointer
   width 7.5vh
   height 7.5vh
