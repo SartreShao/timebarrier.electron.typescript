@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844" role="img" aria-label="TimeBarrier welcome background">
+  <rect width="390" height="844" fill="#F7F8FB"/>
+  <path d="M0 520 C52 492 94 492 146 520 C198 548 242 548 294 520 C330 501 362 495 390 504 L390 844 L0 844 Z" fill="#D87366"/>
+  <path d="M0 588 C58 563 100 563 156 588 C212 613 260 613 318 588 C348 575 372 570 390 574 L390 844 L0 844 Z" fill="#222A36"/>
+  <path d="M36 742 H354" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.72"/>
+  <path d="M72 706 H318" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.38"/>
+  <g transform="translate(156 616)">
+    <rect x="28" y="34" width="52" height="82" rx="12" fill="#D87366"/>
+    <path d="M36 34 C38 20 46 9 54 0 C62 9 70 20 72 34" fill="none" stroke="#F7F8FB" stroke-width="7" stroke-linecap="round"/>
+    <rect x="38" y="51" width="32" height="38" rx="7" fill="#F7F8FB" opacity="0.95"/>
+    <path d="M0 116 H108" stroke="#F7F8FB" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g fill="#222A36" opacity="0.08">
+    <rect x="28" y="132" width="74" height="10" rx="5"/>
+    <rect x="28" y="158" width="132" height="10" rx="5"/>
+    <rect x="230" y="188" width="96" height="10" rx="5"/>
+    <rect x="260" y="214" width="74" height="10" rx="5"/>
+  </g>
+</svg>

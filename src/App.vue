@@ -20,7 +20,8 @@ import {
   Ref,
   ref,
   computed,
-  watchEffect
+  watchEffect,
+  onMounted
 } from "@vue/composition-api";
 import Store from "./store";
 import * as _ from "lodash";
@@ -189,35 +190,47 @@ export default defineComponent({
       ref(false)
     );
 
-    watch(isLoginSuccess, () => {
-      if (Api.isLoggedIn()) {
-        App.fetchAppData(
-          context.root,
-          temporaryPlanList,
-          dailyPlanList,
-          completedPlanList,
-          unSubjectiveTargetList,
-          targetSubjectList,
-          completedTargetList,
-          abilityList,
-          levelRuleList,
-          tomatoList,
-          totalTomatoNumber,
-          totalTime,
-          thisYearTomatoList
-        );
-
-        const startTime = dateRange.value[0];
-        const endTime = dateRange.value[1];
-        dateTip.value = StatPage.getDateTip(startTime, endTime);
-        StatPage.initTomatoListWithDateRange(
-          context.root,
-          tomatoListWithDateRange,
-          startTime,
-          endTime
-        );
+    const refreshDateRangeStats = async () => {
+      if (dateRange.value.length !== 2) {
+        return;
       }
-    });
+      const startTime = dateRange.value[0];
+      const endTime = dateRange.value[1];
+      dateTip.value = StatPage.getDateTip(startTime, endTime);
+      await StatPage.initTomatoListWithDateRange(
+        context.root,
+        tomatoListWithDateRange,
+        startTime,
+        endTime
+      );
+    };
+
+    const loadLoggedInData = async () => {
+      if (!Api.isLoggedIn()) {
+        return;
+      }
+
+      await App.fetchAppData(
+        context.root,
+        temporaryPlanList,
+        dailyPlanList,
+        completedPlanList,
+        unSubjectiveTargetList,
+        targetSubjectList,
+        completedTargetList,
+        abilityList,
+        levelRuleList,
+        tomatoList,
+        totalTomatoNumber,
+        totalTime,
+        thisYearTomatoList
+      );
+
+      await refreshDateRangeStats();
+    };
+
+    watch(isLoginSuccess, loadLoggedInData);
+    onMounted(loadLoggedInData);
 
     return {
       isCurrentPageHome,

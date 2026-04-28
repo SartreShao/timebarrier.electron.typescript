@@ -1,0 +1,16 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: timebarrier-mysql
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: timebarrier
+      MYSQL_DATABASE: timebarrier_ts
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - timebarrier-mysql-data:/var/lib/mysql
+
+volumes:
+  timebarrier-mysql-data:

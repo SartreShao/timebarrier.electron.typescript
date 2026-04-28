@@ -417,7 +417,7 @@ export default {
 
       try {
         const tempList = await Api.fetchAbilityList(user, false);
-        input_abilityListOfTarget.value = tempList.map(item => {
+        input_abilityListOfTarget.value = tempList.map((item: any) => {
           item.attributes.selected = false;
           return item;
         });

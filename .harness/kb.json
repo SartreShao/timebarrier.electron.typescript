@@ -1,0 +1,37 @@
+{
+  "name": "timebarrier.electron.typescript",
+  "kind": "local-harness-knowledge-base",
+  "repoPath": "F:\\code\\harness\\timebarrier.electron.typescript",
+  "activeRuntime": {
+    "frontend": "http://127.0.0.1:8090",
+    "api": "http://127.0.0.1:3999/api",
+    "mysql": "127.0.0.1:3307/timebarrier_ts"
+  },
+  "entrypoints": {
+    "frontend": "src/main.ts",
+    "apiAdapter": "src/lib/api/index.ts",
+    "server": "server/index.js",
+    "schema": "server/schema.sql"
+  },
+  "commands": {
+    "startMysql": "docker compose up -d mysql",
+    "initDb": "npm run db:init",
+    "startApi": "npm run server:dev",
+    "startFrontend": "$env:NODE_OPTIONS='--openssl-legacy-provider'; npm run serve -- --port 8090",
+    "smoke": "npm run server:smoke",
+    "build": "$env:NODE_OPTIONS='--openssl-legacy-provider'; npm run build"
+  },
+  "maintenanceDocs": [
+    ".harness/project-map.md",
+    ".harness/runbook.md",
+    ".harness/data-model.md",
+    ".harness/ai-maintenance.md",
+    ".harness/verification.md",
+    ".harness/decision-log.md",
+    "docs/mysql-backend.md",
+    "docs/ai-maintenance-harness.md"
+  ],
+  "doNotUseAsCurrentProduct": [
+    "F:\\code\\harness\\timebarrier.electron"
+  ]
+}

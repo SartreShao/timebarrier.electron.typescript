@@ -70,6 +70,5 @@ export default {
   },
   isClosedBeta: async (isClosedBeta: Ref<boolean>) => {
     isClosedBeta.value = await Api.isClosedBeta();
-    console.log("fuck", isClosedBeta.value);
   }
 };

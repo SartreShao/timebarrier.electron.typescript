@@ -1,9 +1,6 @@
 <template>
   <div>
-    <img
-      src="https://timebarrier.file.hearfresh.cn/f84d622cf905debee6ea.png"
-      alt="background"
-    />
+    <img :src="assets.welcomeBackground" alt="background" />
     <header>
       <h2>NEVER STOP THINKING</h2>
       <h1>时间壁垒</h1>
@@ -19,6 +16,7 @@ import Store from "../../store";
 import Api from "../../lib/api";
 import AV from "leancloud-storage";
 import { SplashPage } from "../../lib/vue-viewmodels";
+import welcomeBackground from "@/assets/welcome_background.svg";
 
 export default defineComponent({
   setup(props, context) {
@@ -42,6 +40,12 @@ export default defineComponent({
           }
         })
     );
+
+    return {
+      assets: {
+        welcomeBackground
+      }
+    };
   }
 });
 </script>
@@ -49,6 +53,8 @@ export default defineComponent({
 img {
   position fixed
   width 100%
+  height 100%
+  object-fit cover
   bottom 0
   left 0
   right 0

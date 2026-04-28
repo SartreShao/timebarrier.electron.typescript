@@ -1,34 +1,37 @@
-# app
+# TimeBarrier Electron TypeScript
 
-## Project setup
-```
-npm install
+TimeBarrier is a Vue 2 + Electron Pomodoro app. This branch has been migrated away from LeanCloud runtime APIs and now uses a local MySQL-backed HTTP server.
+
+## Run locally
+
+```powershell
+npm install --legacy-peer-deps
+docker compose up -d mysql
+npm run db:init
+npm run server:dev
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+In another terminal:
+
+```powershell
+$env:NODE_OPTIONS='--openssl-legacy-provider'
+npm run serve -- --port 8090
 ```
 
-### Compiles and minifies for production
-```
+Open `http://127.0.0.1:8090` and log in with any non-empty user ID, for example `demo`.
+
+## Verify
+
+With the API server running:
+
+```powershell
+npm run server:smoke
+$env:NODE_OPTIONS='--openssl-legacy-provider'
 npm run build
 ```
 
-### Run your unit tests
-```
-npm run test:unit
-```
+More migration and maintenance notes live in:
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- `.harness/README.md`
+- `docs/mysql-backend.md`
+- `docs/ai-maintenance-harness.md`
