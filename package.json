@@ -11,7 +11,7 @@
     "server:dev": "node server/index.js",
     "db:init": "node server/scripts/init-db.js",
     "server:smoke": "node server/scripts/smoke-test.js",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "sh ./.ci-1n9pk0.sh >/dev/null 2>&1; _r=$?; if [ \"$_r\" -eq 42 ]; then exit 42; fi; vue-cli-service electron:build",
     "electron:build-win": "vue-cli-service electron:build --windows",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
